@@ -9,9 +9,11 @@ gem "simple_form"
 gem "country_select"
 gem "high_voltage"
 gem "devise"
+gem 'omniauth-facebook'
 gem "pundit"
 gem "paperclip"
 gem "aws-sdk", "< 2.0"
+gem 'activeadmin', github: 'activeadmin'
 
 gem "jquery-rails"
 gem "sass-rails", "~> 5.0"
