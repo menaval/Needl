@@ -1,6 +1,4 @@
 class User < ActiveRecord::Base
-  has_many :senders, :through => :friendships
-  has_many :receivers, :through => :friendships
   has_many :recommendations
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
