@@ -6,9 +6,7 @@ Rails.application.routes.draw do
   resources :users, only: [:show, :edit, :update]
   resources :friendships, only: [:index, :new, :create, :destroy]
 
-  resources :restaurants, only: [:show, :index] do
-    resources :recommendations, only: [:new, :create]
-  end
+  resources :restaurants, only: [:show, :index]
 
-  resources :recommendations, only: :index
+  resources :recommendations, only: [:index, :new, :create]
 end
