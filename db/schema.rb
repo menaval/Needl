@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150428100701) do
+ActiveRecord::Schema.define(version: 20150428103250) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,16 +59,6 @@ ActiveRecord::Schema.define(version: 20150428100701) do
   add_index "recommendations", ["restaurant_id"], name: "index_recommendations_on_restaurant_id", using: :btree
   add_index "recommendations", ["user_id"], name: "index_recommendations_on_user_id", using: :btree
 
-  create_table "restaurant_foods", force: :cascade do |t|
-    t.integer  "food_id"
-    t.integer  "restaurant_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-  end
-
-  add_index "restaurant_foods", ["food_id"], name: "index_restaurant_foods_on_food_id", using: :btree
-  add_index "restaurant_foods", ["restaurant_id"], name: "index_restaurant_foods_on_restaurant_id", using: :btree
-
   create_table "restaurant_pictures", force: :cascade do |t|
     t.integer  "restaurant_id"
     t.datetime "created_at",           null: false
@@ -86,7 +76,10 @@ ActiveRecord::Schema.define(version: 20150428100701) do
     t.string   "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "food_id"
   end
+
+  add_index "restaurants", ["food_id"], name: "index_restaurants_on_food_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "",    null: false
@@ -115,7 +108,6 @@ ActiveRecord::Schema.define(version: 20150428100701) do
 
   add_foreign_key "recommendations", "restaurants"
   add_foreign_key "recommendations", "users"
-  add_foreign_key "restaurant_foods", "foods"
-  add_foreign_key "restaurant_foods", "restaurants"
   add_foreign_key "restaurant_pictures", "restaurants"
+  add_foreign_key "restaurants", "foods"
 end
