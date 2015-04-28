@@ -28,7 +28,18 @@ class Restaurant < ActiveRecord::Base
         hash[strength] += 1
       end
     end
-    hash.sort_by { |_name, count| -count }.first(3).to_h
+    sorted = hash.sort_by { |_name, count| -count }.first(3).to_h
+    # rajouter les photos pour chacun des 3
+
+    end
+  end
+
+  def price
+    array = []
+    self.recommendations.each do |reco|
+      array << reco.price
+    end
+    return array.inject(:+)/array.length
   end
 
 end
