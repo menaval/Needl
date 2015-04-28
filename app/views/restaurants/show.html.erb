@@ -1,2 +1,22 @@
-<h1>Restaurants#show</h1>
-<p>Find me in app/views/restaurants/show.html.erb</p>
+<h1><%= @restaurant.name %></h1>
+<p><%= @restaurant.number %></p>
+<div>
+  <% @restaurant.ambiences.each do |name,count|%>
+    <%= name %>
+    <%= count %>
+  <% end %>
+</div>
+
+<div>
+  <% @restaurant.strengths.each do |name,count|%>
+    <%= name %>
+    <%= count %>
+  <% end %>
+</div>
+
+<div>
+  <% @restaurant.recommendations.each do |reco| %>
+    <%= reco.reviews %>
+  <% end %>
+</div>
+
