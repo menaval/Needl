@@ -32,7 +32,6 @@ class Restaurant < ActiveRecord::Base
     # rajouter les photos pour chacun des 3
 
     end
-  end
 
   def price
     array = []
