@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150427165624) do
+ActiveRecord::Schema.define(version: 20150428100701) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,63 @@ ActiveRecord::Schema.define(version: 20150427165624) do
   add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id", using: :btree
   add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace", using: :btree
   add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id", using: :btree
+
+  create_table "foods", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "friendships", force: :cascade do |t|
+    t.string   "status"
+    t.integer  "receiver_id"
+    t.integer  "sender_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  create_table "recommendations", force: :cascade do |t|
+    t.integer  "price"
+    t.string   "review"
+    t.string   "strengths",                  array: true
+    t.string   "ambiences",                  array: true
+    t.integer  "user_id"
+    t.integer  "restaurant_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "recommendations", ["restaurant_id"], name: "index_recommendations_on_restaurant_id", using: :btree
+  add_index "recommendations", ["user_id"], name: "index_recommendations_on_user_id", using: :btree
+
+  create_table "restaurant_foods", force: :cascade do |t|
+    t.integer  "food_id"
+    t.integer  "restaurant_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "restaurant_foods", ["food_id"], name: "index_restaurant_foods_on_food_id", using: :btree
+  add_index "restaurant_foods", ["restaurant_id"], name: "index_restaurant_foods_on_restaurant_id", using: :btree
+
+  create_table "restaurant_pictures", force: :cascade do |t|
+    t.integer  "restaurant_id"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.string   "picture_file_name"
+    t.string   "picture_content_type"
+    t.integer  "picture_file_size"
+    t.datetime "picture_updated_at"
+  end
+
+  add_index "restaurant_pictures", ["restaurant_id"], name: "index_restaurant_pictures_on_restaurant_id", using: :btree
+
+  create_table "restaurants", force: :cascade do |t|
+    t.string   "name"
+    t.string   "address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "",    null: false
@@ -56,4 +113,9 @@ ActiveRecord::Schema.define(version: 20150427165624) do
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
+  add_foreign_key "recommendations", "restaurants"
+  add_foreign_key "recommendations", "users"
+  add_foreign_key "restaurant_foods", "foods"
+  add_foreign_key "restaurant_foods", "restaurants"
+  add_foreign_key "restaurant_pictures", "restaurants"
 end
