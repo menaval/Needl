@@ -1,2 +1,19 @@
-<h1>Recommendations#new</h1>
-<p>Find me in app/views/recommendations/new.html.erb</p>
+<div id="reco-bg">
+<h1>Ajouter une Recommandation</h1>
+
+<%= simple_form_for(@recommendation) do |reco| %>
+
+  <%= reco.input :restaurant_id, label: 'Nom du restaurant', placeholder: 'Slizze Pizza' %>
+
+  <%= reco.input :ambiences, as: :select, collection:['Chic', 'Festif', 'Typique', 'En cas de Soleil', 'Fast & Good'], label: 'Sélectionnez 2 ambiances' %>
+
+  <%= reco.input :strengths, as: :select, collection:['Cuisine', 'Service', 'Cadre', 'Originalité du plat', 'Générosité', 'Carte des vins', 'Rapport qualité/prix'], label: 'Sélectionnez 3 points forts' %>
+
+  <%= reco.input :price, label: 'Prix du plat' %>
+
+  <%= reco.input :review, as: :text, label: 'Commentaire' %>
+
+  <%= reco.submit(class: "btn btn-danger") %>
+<% end %>
+
+</div>
