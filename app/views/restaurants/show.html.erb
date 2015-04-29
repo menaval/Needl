@@ -1,34 +1,46 @@
-<h1><%= @restaurant.name %></h1>
-  <h2><%= Food.find(@restaurant.food_id).name %></h2>
-  <h2><%= @restaurant.price %> €</h2>
+<div class="text-center">
+  <div id="image">
+    <h1><%= @restaurant.name %></h1>
+      <h2><%= Food.find(@restaurant.food_id).name %></h2>
+      <h2><%= @restaurant.price %> €</h2>
 
-<p><%= @restaurant.number %> recommandations</p>
-<div>
-  <h2>Ambiance</h2>
-  <% @restaurant.ambiences.each do |name,ids|%>
-    <p>
+    <p><%= @restaurant.number %> recommandations</p>
+  </div>
+
+  <div>
+    <h2>Ambiance</h2>
+    <% @restaurant.ambiences.each do |name,ids|%>
+      <p>
+          <%= image_tag "#{name}.svg" %>
+          <%= name %>
+          <%= ids.length %>
+          <% ids.each do |id| %>
+            <%= image_tag User.find(id.to_i).picture.url(:medium) %>
+          <% end %>
+      </p>
+    <% end %>
+  </div>
+
+  <div>
+    <h2>Points forts</h2>
+    <% @restaurant.strengths.each do |name,ids|%>
+      <p>
         <%= image_tag "#{name}.svg" %>
         <%= name %>
         <%= ids.length %>
-    </p>
-  <% end %>
+        <% ids.each do |id| %>
+          <%= image_tag User.find(id.to_i).picture %>
+        <% end %>
+      </p>
+    <% end %>
+  </div>
+
+  <div>
+    <h2>Mots de la fin</h2>
+    <% @restaurant.recommendations.each do |reco| %>
+      <p><%= reco.review %></p>
+    <% end %>
+  </div>
 </div>
 
-<div>
-  <h2>Points forts</h2>
-  <% @restaurant.strengths.each do |name,ids|%>
-    <p>
-      <%= image_tag "#{name}.svg" %>
-      <%= name %>
-      <%= ids.length %>
-    </p>
-  <% end %>
-</div>
-
-<div>
-  <h2>Mots de la fin</h2>
-  <% @restaurant.recommendations.each do |reco| %>
-    <p><%= reco.review %></p>
-  <% end %>
-</div>
 

@@ -13,7 +13,7 @@ class Restaurant < ActiveRecord::Base
 
     self.recommendations.each do |reco|
       reco.ambiences.each do |ambience|
-        hash[strength] ||= []
+        hash[ambience] ||= []
         hash[ambience] << reco.user_id
       end
     end
