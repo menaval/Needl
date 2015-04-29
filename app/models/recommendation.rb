@@ -5,4 +5,10 @@ class Recommendation < ActiveRecord::Base
   validates :strengths, presence: true
   validates :ambiences, presence: true
   # checker comment faire pour limiter le nombre d'ambiances que l'on peut remplir et comment rajouter cette liste dans la database
+
+  def ambiences_result
+    restaurant_ambiences = []
+    @restaurant.recommendation.each do |reco|
+    end
+  end
 end

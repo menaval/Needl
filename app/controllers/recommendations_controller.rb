@@ -8,10 +8,9 @@ class RecommendationsController < ApplicationController
   end
 
   def create
-    @recommendation = Recommendation.new(recommendation_params)
-    @restaurant = Restaurant.find_by_name(params[:name])
+    @recommendation = current_user.recommendations.new(recommendation_params)
     if @recommendation.save
-      redirect_to restaurant_path(@restaurant.id)
+      redirect_to restaurant_path(params[:recommendation][:restaurant_id])
     else
       render 'new'
     end
@@ -20,7 +19,7 @@ class RecommendationsController < ApplicationController
   private
 
   def recommendation_params
-    params.require(:recommendation).permit(:price, :review, :strengths, :ambiences)
+    params.require(:recommendation).permit(:price, :review, { strengths: [] }, { ambiences: [] }, :restaurant_id)
   end
 
 end
