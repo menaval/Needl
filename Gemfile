@@ -1,5 +1,5 @@
 source "https://rubygems.org"
-
+source 'https://rails-assets.org'
 ruby "2.2.0"
 
 gem "rails", "4.2.0"
@@ -14,6 +14,9 @@ gem "pundit"
 gem "paperclip"
 gem "aws-sdk", "< 2.0"
 gem 'activeadmin', github: 'activeadmin'
+gem "geocoder"
+gem "gmaps4rails"
+gem "rails-assets-underscore"
 
 gem "jquery-rails"
 gem "sass-rails", "~> 5.0"
