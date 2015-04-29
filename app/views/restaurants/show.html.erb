@@ -5,22 +5,22 @@
 <p><%= @restaurant.number %> recommandations</p>
 <div>
   <h2>Ambiance</h2>
-  <% @restaurant.ambiences.each do |name,count|%>
+  <% @restaurant.ambiences.each do |name,ids|%>
     <p>
         <%= image_tag "#{name}.svg" %>
         <%= name %>
-        <%= count %>
+        <%= ids.length %>
     </p>
   <% end %>
 </div>
 
 <div>
   <h2>Points forts</h2>
-  <% @restaurant.strengths.each do |name,count|%>
+  <% @restaurant.strengths.each do |name,ids|%>
     <p>
       <%= image_tag "#{name}.svg" %>
       <%= name %>
-      <%= count %>
+      <%= ids.length %>
     </p>
   <% end %>
 </div>

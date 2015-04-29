@@ -9,27 +9,29 @@ class Restaurant < ActiveRecord::Base
 
   def ambiences
 
-    hash = Hash.new(0)
+    hash = {}
 
     self.recommendations.each do |reco|
       reco.ambiences.each do |ambience|
-        hash[ambience] += 1
+        hash[strength] ||= []
+        hash[ambience] << reco.user_id
       end
     end
-    hash.sort_by { |_name, count| -count }.first(2).to_h
+    hash.sort_by { |_name, ids| -ids.length }.first(2).to_h
   end
 
   def strengths
 
-    hash = Hash.new(0)
+    hash = {}
 
     self.recommendations.each do |reco|
       reco.strengths.each do |strength|
-        hash[strength] += 1
+        hash[strength] ||= []
+        hash[strength] << reco.user_id
       end
     end
-    sorted = hash.sort_by { |_name, count| -count }.first(3).to_h
-    # rajouter les photos pour chacun des 3
+
+    hash.sort_by { |_name, ids| -ids.length }.first(3).to_h
 
     end
 
