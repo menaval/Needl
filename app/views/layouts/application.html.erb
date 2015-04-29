@@ -10,7 +10,7 @@
   <%= stylesheet_link_tag :application, media: "all" %>
   <%= csrf_meta_tags %>
 </head>
-<body>
+<body id="<%= "#{params[:controller].gsub(/\//, '_')}_#{params[:action]}" %>" >
   <%= render "shared/flashes" %>
 
   <%= yield %>

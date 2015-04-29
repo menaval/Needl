@@ -1,27 +1,26 @@
 <div class="text-center">
-  <div id="image">
-    <h1><%= @restaurant.name %></h1>
+  <div id="image_field" style="background: url(<%= @restaurant.restaurant_pictures.first.picture.url %>); background-repeat:no-repeat; background-size:cover">
+    <h2><%= @restaurant.name %></h2>
       <h2><%= Food.find(@restaurant.food_id).name %></h2>
       <h2><%= @restaurant.price %> €</h2>
 
     <p><%= @restaurant.number %> recommandations</p>
   </div>
 
-  <div>
+  <div id="ambiences">
     <h2>Ambiance</h2>
     <% @restaurant.ambiences.each do |name,ids|%>
       <p>
           <%= image_tag "#{name}.svg" %>
           <%= name %>
-          <%= ids.length %>
           <% ids.each do |id| %>
-            <%= image_tag User.find(id.to_i).picture.url(:medium) %>
+            <%= image_tag User.find(id.to_i).picture.url(:thumb), class: "img-circle" %>
           <% end %>
       </p>
     <% end %>
   </div>
 
-  <div>
+  <div id="strengths">
     <h2>Points forts</h2>
     <% @restaurant.strengths.each do |name,ids|%>
       <p>
@@ -29,17 +28,21 @@
         <%= name %>
         <%= ids.length %>
         <% ids.each do |id| %>
-          <%= image_tag User.find(id.to_i).picture %>
+          <%= image_tag User.find(id.to_i).picture.url(:thumb), class: "img-circle" %>
         <% end %>
       </p>
     <% end %>
   </div>
 
-  <div>
+  <div id="mots_de_la_fin">
     <h2>Mots de la fin</h2>
-    <% @restaurant.recommendations.each do |reco| %>
-      <p><%= reco.review %></p>
-    <% end %>
+    <div>
+      <% @restaurant.recommendations.each do |reco| %>
+        <%= image_tag User.find(reco.user_id).picture.url(:thumb), class: "img-circle" %>
+        <%= reco.review %>
+      <% end %>
+    </div>
+
   </div>
 </div>
 
