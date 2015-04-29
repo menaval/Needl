@@ -1,8 +1,10 @@
 class Restaurant < ActiveRecord::Base
-  has_many :restaurant_pictures
-  has_many :recommendations
-  belongs_to :food
 
+  has_many :restaurant_pictures, dependent: :destroy
+  has_many :recommendations, dependent: :destroy
+  belongs_to :food
+  geocoded_by :address
+  after_validation :geocode, if: :address_changed?
   def number
     self.recommendations.count
   end
@@ -40,7 +42,11 @@ class Restaurant < ActiveRecord::Base
     self.recommendations.each do |reco|
       array << reco.price
     end
-    return array.inject(:+)/array.length
+    if array == []
+      return 0
+    else
+      return array.inject(:+)/array.length
+    end
   end
 
 end
