@@ -1,0 +1,17 @@
+<% block.each do |name,ids|%>
+  <div class="row">
+    <div class= "col-xs-4">
+      <%= image_tag "#{name}.svg" %>
+      <%= name.capitalize.gsub(/-/," ").gsub(/&/, "and") %>
+    </div>
+    <div class= "col-xs-8">
+      <ul>
+       <% ids.each do |id| %>
+        <li class="list-inline">
+          <%= image_tag User.find(id.to_i).picture.url(:thumb), class: "img-circle" %>
+        </li>
+       <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>

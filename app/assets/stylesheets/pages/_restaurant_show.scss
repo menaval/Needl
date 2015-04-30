@@ -4,19 +4,27 @@
     top: 0;
     margin-top: 0;
     position: relative;
+    #text-left {
+      position: absolute;
+      bottom: 20px;
+      left: 40px;
+    }
+    #text-right {
+      position: absolute;
+      bottom: 35px;
+      right: 20px;
+    }
   }
-
   #ambiences {
-    height: 200px;
     background-color: white;
+    position: relative;
   }
   #strengths {
-    height: 300px;
     background-color: #EEEEEE;
+    position: relative;
   }
   #mots_de_la_fin {
-    height: 200px;
     background-color: white;
+    position: relative;
   }
-
 }
