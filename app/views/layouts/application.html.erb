@@ -12,8 +12,12 @@
 </head>
 <body id="<%= "#{params[:controller].gsub(/\//, '_')}_#{params[:action]}" %>" >
   <%= render "shared/flashes" %>
-
-  <%= yield %>
+  <% if params[:controller] + "_" + params[:action] == "restaurants_index" %>
+    <%= render "shared/sidebar" %>
+  <% end %>
+  <div class="wrap">
+    <%= yield %>
+  </div>
 
   <%= javascript_include_tag "https://maps.google.com/maps/api/js?sensor=false&key=AIzaSyCOmsyWHOongAOfaB1f8iHk3CY7XVuUBs0" %>
   <%= javascript_include_tag "https://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.14/src/markerclusterer_packed.js" %>
@@ -22,6 +26,25 @@
   <%= yield(:after_js) %>
 
   <%= render "shared/footer" %>
+
+  <% if params[:controller] + "_" + params[:action] == "restaurants_index" %>
+  <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+   <script>
+     (function(document) {
+       var toggle = document.querySelector('.sidebar-toggle');
+       var sidebar = document.querySelector('#sidebar');
+       var checkbox = document.querySelector('#sidebar-checkbox');
+       document.addEventListener('click', function(e) {
+         var target = e.target;
+         if(!checkbox.checked ||
+            sidebar.contains(target) ||
+            (target === checkbox || target === toggle)) return;
+         checkbox.checked = false;
+       }, false);
+     })(document);
+   </script>
+  <% end %>
 
 </body>
 </html>
