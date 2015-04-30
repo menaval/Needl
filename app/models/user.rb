@@ -1,7 +1,11 @@
 class User < ActiveRecord::Base
+
   has_many :recommendations, dependent: :destroy
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
+  has_many :friendships
+  has_many :senders, :through => :friendships
+  has_many :receivers, :through => :friendships
+
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable, :omniauth_providers => [ :facebook ]
@@ -10,6 +14,30 @@ class User < ActiveRecord::Base
       styles: { large: "800x800", medium: "300x300>", thumb: "50x50#" }
     validates_attachment_content_type :picture,
       content_type: /\Aimage\/.*\z/
+
+
+  def friendships_by_status()
+    user_friends = []
+    user_requests = []
+    user_propositions = []
+    my_friendships = Friendship.includes([:sender, :receiver]).where("sender_id = ? or receiver_id = ?",  self.id, self.id)
+    my_friendships.each do |friendship|
+      if friendship.accepted
+        if friendship.receiver_id == self.id
+          user_friends << friendship.sender
+        else
+          user_friends << friendship.receiver
+        end
+      else
+        if friendship.receiver_id == self.id
+          user_propositions << friendship.sender
+        else
+          user_requests << friendship.receiver
+        end
+      end
+    end
+    {user_friends: user_friends, user_propositions: user_propositions, user_requests: user_requests}
+  end
 
   def self.find_for_facebook_oauth(auth)
       where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
