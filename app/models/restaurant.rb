@@ -19,20 +19,21 @@ class Restaurant < ActiveRecord::Base
     hash = {}
     self.recommendations.each do |reco|
       reco.ambiences.each do |number|
-        case number
+        ambience = ""
+        case number.to_i
           when 1
-            number = "Chic"
+            ambience = "chic"
           when 2
-            number = "Festif"
+            ambience = "festif"
           when 3
-            number = "Typique"
+            ambience = "typique"
           when 4
-            number = "En cas de Soleil"
+            ambience = "en-cas-de-soleil"
           when 5
-            number = "Fast & Good"
+            ambience = "fast-and-good"
         end
-        hash[number] ||= []
-        hash[number] << reco.user_id
+        hash[ambience] ||= []
+        hash[ambience] << reco.user_id
       end
     end
     hash.sort_by { |_name, ids| -ids.length }.first(2).to_h
@@ -41,7 +42,24 @@ class Restaurant < ActiveRecord::Base
   def strengths
     hash = {}
     self.recommendations.each do |reco|
-      reco.strengths.each do |strength|
+      reco.strengths.each do |number|
+        strength = ""
+        case number.to_i
+          when 1
+            strength = "nourriture"
+          when 2
+            strength = "service"
+          when 3
+            strength = "cadre"
+          when 4
+            strength = "originalite"
+          when 5
+            strength = "generosite"
+          when 6
+            strength = "carte-des-vins"
+          when 7
+            strength = "rapport-qualite-prix"
+        end
         hash[strength] ||= []
         hash[strength] << reco.user_id
       end

@@ -10,22 +10,19 @@
   <div id="ambiences">
     <h2>Ambiance</h2>
     <% @restaurant.ambiences.each do |name,ids|%>
-      <p>
           <%= image_tag "#{name}.svg" %>
-          <%= name %>
+          <%= name.capitalize.gsub(/-/," ").gsub(/&/, "and") %>
           <% ids.each do |id| %>
             <%= image_tag User.find(id.to_i).picture.url(:thumb), class: "img-circle" %>
           <% end %>
-      </p>
     <% end %>
   </div>
 
   <div id="strengths">
     <h2>Points forts</h2>
-      <% restaurant.strengths.each do |name,ids|%>
+      <% @restaurant.strengths.each do |name,ids|%>
         <%= image_tag "#{name}.svg" %>
-        <%= name %>
-        <%= ids.length %>
+        <%= name.capitalize.gsub(/-/, " ") %>
         <% ids.each do |id| %>
           <%= image_tag User.find(id.to_i).picture.url(:thumb), class: "img-circle" %>
         <% end %>
