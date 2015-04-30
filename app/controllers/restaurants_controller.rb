@@ -4,6 +4,9 @@ class RestaurantsController < ApplicationController
   end
 
   def index
+    # query = params[:query]
+    # @restaurants = Restaurant.cheaper_than(query[:price].to_i)
+
     @restaurants = Restaurant.all
     @markers = Gmaps4rails.build_markers(@restaurants) do |restaurant, marker|
       marker.lat restaurant.latitude
