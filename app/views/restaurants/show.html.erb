@@ -1,36 +1,31 @@
-<div class="text-center">
+<div>
   <div id="image_field" style="background: url(<%= @restaurant.restaurant_pictures.first.picture.url %>); background-repeat:no-repeat; background-size:cover">
-    <h2><%= @restaurant.name %></h2>
-      <h2><%= Food.find(@restaurant.food_id).name %></h2>
-      <h2><%= @restaurant.price %> €</h2>
-
-    <p><%= @restaurant.number %> recommandations</p>
+    <div id="text-left">
+     <h2><%= @restaurant.name %></h2>
+     <h2><%= Food.find(@restaurant.food_id).name %></h2>
+     <h3><%= @restaurant.number %> recos</h3>
+    </div>
+    <div id="text-right">
+     <h2><%= @restaurant.price %> €</h2>
+    </div>
   </div>
 
   <div id="ambiences">
-    <h2>Ambiance</h2>
-    <% @restaurant.ambiences.each do |name,ids|%>
-      <p>
-          <%= image_tag "#{name}.svg" %>
-          <%= name %>
-          <% ids.each do |id| %>
-            <%= image_tag User.find(id.to_i).picture.url(:thumb), class: "img-circle" %>
-          <% end %>
-      </p>
-    <% end %>
+   <div class="container">
+     <div class="row text-center">
+       <h2>Ambiance</h2>
+     </div>
+     <%= render "block", block: @restaurant.ambiences %>
+   </div>
   </div>
 
   <div id="strengths">
-    <h2>Points forts</h2>
-      <% restaurant.strengths.each do |name,ids|%>
-        <%= image_tag "#{name}.svg" %>
-        <%= name %>
-        <%= ids.length %>
-        <% ids.each do |id| %>
-          <%= image_tag User.find(id.to_i).picture.url(:thumb), class: "img-circle" %>
-        <% end %>
-
-    <% end %>
+   <div class="container">
+     <div class="row text-center">
+       <h2>Points forts</h2>
+     </div>
+     <%= render "block", block: @restaurant.strengths %>
+   </div>
   </div>
 
   <div id="mots_de_la_fin">
