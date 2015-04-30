@@ -12,13 +12,13 @@
   <nav class="sidebar-nav">
     <%=simple_form_for :query, { url: restaurants_path, method: :get }  do |f| %>
 
-      <%= f.input :price, label: 'Prix du plat', placeholder: '10 €' %>
+      <%= f.input :price, label: 'Prix du plat', prompt: "Quel prix max ?" %>
       <%= f.input :food, collection: Food.all, label: 'Style de Cuisine', prompt: "Quel type ?" %>
       <%= f.input :ambiences, as: :check_boxes,
       collection:[["Chic", 1], ["Festif", 2], ["Typique", 3], ["En Cas de Soleil", 4], ["Fast & Good", 5]], input_html: { class: 'multiselectuser', multiple: true}, label: 'Ambiances' %>
       <%= f.input :strengths, as: :check_boxes,
       collection: [["Nourriture", 1], ["Service", 2], ["Cadre", 3], ["Originalite", 4], ["Générosité", 5], ["Carte des Vins", 6], ["Rapport Qualité / Prix", 7]], input_html: { class: 'multiselectuser', multiple: true}, label: 'Points Forts' %>
-      <%=f.submit(class: "btn btn-danger") %>
+      <%=f.submit("Chercher", class: "btn btn-danger") %>
     <% end %>
   </nav>
 
