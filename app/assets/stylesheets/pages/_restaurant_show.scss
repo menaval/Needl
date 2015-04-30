@@ -4,15 +4,24 @@
     top: 0;
     margin-top: 0;
     position: relative;
+    opacity: 0.9;
     #text-left {
       position: absolute;
       bottom: 20px;
       left: 40px;
+      h2, h3 {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        color: rgb(242, 242, 242);
+      }
     }
     #text-right {
       position: absolute;
       bottom: 35px;
       right: 20px;
+      h2 {
+        color: rgb(242, 242, 242);
+      }
     }
   }
   #ambiences {
@@ -26,5 +35,13 @@
   #mots_de_la_fin {
     background-color: white;
     position: relative;
+  }
+  .icon {
+    height:80px;
+    margin-bottom: 0px;
+  }
+  .avatar {
+    height: 60px;
+    margin: 0;
   }
 }

@@ -1,9 +1,13 @@
 <div>
-  <div id="image_field" style="background: url(<%= @restaurant.restaurant_pictures.first.picture.url %>); background-repeat:no-repeat; background-size:cover">
+  <div id="image_field" style="background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2)),url(<%= @restaurant.restaurant_pictures.first.picture.url %>); background-repeat:no-repeat; background-size:cover">
     <div id="text-left">
-     <h2><%= @restaurant.name %></h2>
-     <h2><%= Food.find(@restaurant.food_id).name %></h2>
-     <h3><%= @restaurant.number %> recos</h3>
+      <h2><%= @restaurant.name %></h2>
+      <h3><%= Food.find(@restaurant.food_id).name %></h3>
+      <% if @restaurant.number < 2 %>
+        <h3><%= @restaurant.number %> reco</h3>
+      <% else %>
+        <h3><%= @restaurant.number %> recos</h3>
+      <% end %>
     </div>
     <div id="text-right">
      <h2><%= @restaurant.price %> €</h2>
@@ -28,13 +32,19 @@
    </div>
   </div>
 
-  <div id="mots_de_la_fin">
+  <div id="mots_de_la_fin" class="text-center">
     <h2>Mots de la fin</h2>
     <div>
-      <% @restaurant.recommendations.each do |reco| %>
-        <%= image_tag User.find(reco.user_id).picture.url(:thumb), class: "img-circle" %>
-        <%= reco.review %>
-      <% end %>
+      <ul class="list-inline">
+        <% @restaurant.recommendations.each do |reco| %>
+          <li>
+            <%= image_tag User.find(reco.user_id).picture.url(:thumb), class: "img-circle avatar img-responsive" %>
+          </li>
+          <li>
+            <p><%= reco.review %></p>
+          </li>
+        <% end %>
+      </ul>
     </div>
 
   </div>
