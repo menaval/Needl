@@ -6,17 +6,37 @@
  left: 0;
  right: 0;
  height: 70px;
+ text-align: center;
  img {
    height: 70%;
    margin: auto;
    display: block;
   }
- ul {
+  ul {
    height: 60px;
    li {
      height: 100%;
      padding-left: 28px;
      margin-top: 10px;
     }
+  }
+}
+
+.footer_bis {
+ background: $red;
+ position: fixed;
+ z-index: 9;
+ bottom: 0;
+ left: 0;
+ right: 0;
+ height: 70px;
+ img {
+   height: 70%;
+   margin: auto;
+   display: block;
+  }
+ .nav-icone {
+   height: 60px;
+     margin-top: 10px;
   }
 }
