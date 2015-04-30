@@ -18,9 +18,21 @@ class Restaurant < ActiveRecord::Base
   def ambiences
     hash = {}
     self.recommendations.each do |reco|
-      reco.ambiences.each do |ambience|
-        hash[ambience] ||= []
-        hash[ambience] << reco.user_id
+      reco.ambiences.each do |number|
+        case number
+          when 1
+            number = "Chic"
+          when 2
+            number = "Festif"
+          when 3
+            number = "Typique"
+          when 4
+            number = "En cas de Soleil"
+          when 5
+            number = "Fast & Good"
+        end
+        hash[number] ||= []
+        hash[number] << reco.user_id
       end
     end
     hash.sort_by { |_name, ids| -ids.length }.first(2).to_h

@@ -22,15 +22,14 @@
 
   <div id="strengths">
     <h2>Points forts</h2>
-    <% @restaurant.strengths.each do |name,ids|%>
-      <p>
+      <% restaurant.strengths.each do |name,ids|%>
         <%= image_tag "#{name}.svg" %>
         <%= name %>
         <%= ids.length %>
         <% ids.each do |id| %>
           <%= image_tag User.find(id.to_i).picture.url(:thumb), class: "img-circle" %>
         <% end %>
-      </p>
+
     <% end %>
   </div>
 
