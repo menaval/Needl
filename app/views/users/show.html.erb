@@ -1,2 +1,19 @@
-<h1>Users#show</h1>
-<p>Find me in app/views/users/show.html.erb</p>
+<h1>Profil</h1>
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class = "text-center">
+      <div><%= image_tag(current_user.picture(:medium), class: "img-circle") %></div>
+      <div><%= current_user.name %></div>
+      <div><%= current_user.email %></div>
+      </div>
+      <ul class="text-center">
+        <li><%= link_to("Edit", edit_user_registration_path(current_user), class: "btn btn-default btn-xs btn-right") %></li>
+        <li><%= link_to destroy_user_session_path, method: :delete do %>
+        <i class="fa fa-sign-out"></i>  <%= t ".sign_out", default: "Sign out" %>
+      <% end %></li>
+      </ul>
+    </div>
+  </div>
+</div>

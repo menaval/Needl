@@ -2,9 +2,8 @@ class UsersController < ApplicationController
   def show
   end
 
-  def edit
+  def my_restaurant
+    @restaurants = current_user.restaurants
   end
 
-  def update
-  end
 end
