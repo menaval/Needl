@@ -80,6 +80,7 @@ GEM
     bootstrap-sass (3.3.4.1)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
+    bootstrap_form (2.3.0)
     bourbon (4.2.2)
       sass (~> 3.4)
       thor
@@ -299,6 +300,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bootstrap-sass
+  bootstrap_form
   country_select
   devise
   devise-i18n
