@@ -1,10 +1,9 @@
 class FriendshipsController < ApplicationController
-  before_action :set_friend, only: [:destroy, :answer_request]
+  before_action :set_friendship, only: [:destroy, :answer_request]
   def index
     @users = User.all
     @friendship = Friendship.new
     @friendships = current_user.friendships_by_status
-
   end
 
   def create
@@ -20,16 +19,17 @@ class FriendshipsController < ApplicationController
 
   def answer_request
     status = params[:accepted]
+    raise
     if status == "true"
       @friendship.accepted = true
       @friendship.save
       @friendship.sender.save
       @friendship.receiver.save
-      flash[:notice] = 'accept_friend'
+      flash[:notice] = 'Ami ajouté'
       redirect_to friendships_path
     else
       @friendship.destroy
-      flash[:notice] = 'refuse_friend'
+      flash[:notice] = 'Ami refusé'
       redirect_to friendships_path
     end
   end
@@ -48,7 +48,7 @@ class FriendshipsController < ApplicationController
   private
 
     def set_friendship
-      @friendship = Friendship.find(params[:id])
+      @friendship = Friendship.find(eval(params[:id])[:value])
     end
 
     def friendship_params
