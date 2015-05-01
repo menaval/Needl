@@ -47,7 +47,7 @@ class Restaurant < ActiveRecord::Base
     hash = {}
     self.recommendations.each do |reco|
       reco.ambiences.each do |number|
-        ambiences_list = ["chic", "festif", "typique", "en-cas-de-soleil", "fast-and-good"]
+        ambiences_list = ["chic", "festif", "typique", "en_cas_de_soleil", "fast_and_good"]
         ambience = ambiences_list[number.to_i - 1]
         hash[ambience] ||= []
         hash[ambience] << reco.user_id
@@ -60,7 +60,7 @@ class Restaurant < ActiveRecord::Base
     hash = {}
     self.recommendations.each do |reco|
       reco.strengths.each do |number|
-        strengths_list = ["nourriture", "service", "cadre", "originalite", "generosite", "carte-des-vins", "rapport-qualite-prix"]
+        strengths_list = ["nourriture", "service", "cadre", "originalite", "generosite", "carte_des_vins", "rapport_qualite_prix"]
         strength = strengths_list[number.to_i - 1]
         hash[strength] ||= []
         hash[strength] << reco.user_id
