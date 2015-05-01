@@ -1,8 +1,10 @@
 <% block.each do |name,ids|%>
   <div class="row">
     <div class= "col-xs-4">
-      <%= image_tag "#{name}.svg", class: "icon"%>
-      <h3><%= name.capitalize.gsub(/-/," ").gsub(/&/, "and") %></h3>
+      <div class="icon-box">
+        <%= render "restaurants/strengths_and_ambiences/#{name}.svg" %>
+        <h3><%= name.capitalize.gsub(/_/," ").gsub(/&/, "and") %></h3>
+      </div>
     </div>
     <div class= "col-xs-8">
       <ul class="list-inline">
