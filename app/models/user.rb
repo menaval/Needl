@@ -46,12 +46,7 @@ class User < ActiveRecord::Base
         user.email = auth.info.email
         user.password = Devise.friendly_token[0,20]  # Fake password for validation
         user.name = auth.info.name
-        user.picture = auth.info.image.gsub('http://','https://')
-
-        # require "open-uri" en haut
-        # user.picture = open("http://la/bonne/url/#{auth.uid}/image?type=large")
-        # p auth
-
+        user.picture = auth.info.image.gsub('http://','https://') + "?width=1000&height=1000"
         user.token = auth.credentials.token
         user.token_expiry = Time.at(auth.credentials.expires_at)
       end
