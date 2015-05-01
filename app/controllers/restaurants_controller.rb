@@ -5,8 +5,8 @@ class RestaurantsController < ApplicationController
 
   def index
     query = params[:query]
-
-    @restaurants = Restaurant.cheaper_than(query[:max_price]).by_ambience(query[:ambience]).by_strength(query[:strength])
+    @restaurants = Restaurant.all
+    # @restaurants = Restaurant.cheaper_than(query[:max_price]).by_ambience(query[:ambience]).by_strength(query[:strength])
     #.by_food(query[:food])
 
     @markers = Gmaps4rails.build_markers(@restaurants) do |restaurant, marker|
