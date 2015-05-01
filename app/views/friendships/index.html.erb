@@ -1,50 +1,47 @@
-<% for user in @users %>
-  <div class="user">
-    <p>
-      <strong><%= user.name %></strong>
-      <%= bootstrap_form_for(@friendship, class: 'form') do |f| %>
-      <!-- comment est-ce que c'est relié avec create? -->
-        <%= f.hidden_field :receiver_id, :value => user.id %>
-        <%= f.hidden_field :sender_id, :value => current_user.id %>
-        <%= f.hidden_field :accepted, :value => true %>
-        <%= f.submit class: "btn btn-default", value: "Add as a friend" %>
-      <% end %>
-
-    </p>
-  </div>
-<% end %>
-
-<div class="container">
-  <div class="col-xs-12" id="propositions">
-    <% if @friendships[:user_propositions].count > 0 %>
-      <ul class="list-unstyled">
-        <% @friendships[:user_propositions].each do |user| %>
-          <li>
-            <div class="row myfriends">
-              <div class="col-xs-8 col-xs-offset-2">
-                <%= image_tag(user.picture, class: "img-circle img-thumbnail") %>
-              </div>
-              <div class="col-xs-8 col-xs-offset-2">
-                <%= user.name %>
-              </div>
-            </div>
-            <div class="row accept-refuse">
-              <div class="col-xs-6 text-right">
-                <%= form_tag answer_request_friendships_path, :method => "post" do %>
-                <%= hidden_field_tag "accepted", "true" %>
-                <%= submit_tag "Accept", class: "btn btn-success" %>
-                <% end %>
-              </div>
-              <div class="col-xs-6 text-left">
-                <%= form_tag answer_request_friendships_path, :method => "post" do %>
-                <%= hidden_field_tag "accepted", "false" %>
-                <%= submit_tag "Refuse", class: "btn btn-danger" %>
-                <% end %>
-              </div>
-            </div>
-          </li>
+<div id="ask_for_friends">
+  <div class="container">
+    <h3>Les connais-tu?</h3>
+    <% for user in @users %>
+    <% if user != current_user %>
+      <!-- mettre mes amis qui sont sur facebook à la place de tous les utilisateurs -->
+        <strong><%= user.name %></strong>
+        <%= image_tag user.picture %>
+        <%= bootstrap_form_for(@friendship, class: 'form') do |f| %>
+          <%= f.hidden_field :receiver_id, :value => user.id %>
+          <%= f.hidden_field :sender_id, :value => current_user.id %>
+          <%= f.hidden_field :accepted, :value => true %>
+          <%= f.submit class: "btn btn-success", value: "Add as a friend" %>
         <% end %>
-      </ul>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+
+
+<div id="accept_or_refuse_friends">
+  <div class="container">
+    <h3>Ils t'ont invité</h3>
+    <% if @friendships[:user_propositions].count > 0 %>
+      <% @friendships[:user_propositions].each do |user| %>
+        <div class="row">
+          <%= user.name %>
+          <%= image_tag user.picture.url(:thumb), class: "img-circle"%>
+        </div>
+        <div class="row accept_or_refuse">
+          <div class="col-xs-6 text-right">
+            <%= form_tag answer_request_friendships_path, :method => "post" do %>
+              <%= hidden_field_tag "accepted", "true" %>
+              <%= submit_tag "Accept", class: "btn btn-success" %>
+            <% end %>
+          </div>
+          <div class="col-xs-6 text-left">
+            <%= form_tag answer_request_friendships_path, :method => "post" do %>
+              <%= hidden_field_tag "accepted", "false" %>
+              <%= submit_tag "Refuse", class: "btn btn-danger" %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     <% else %>
       <p> Hey, <%= current_user.name %> you have no friend request ! </p>
     <% end %>

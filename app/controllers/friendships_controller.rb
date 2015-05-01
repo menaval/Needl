@@ -4,7 +4,6 @@ class FriendshipsController < ApplicationController
     @users = User.all
     @friendship = Friendship.new
     @friendships = current_user.friendships_by_status
-
   end
 
   def create
