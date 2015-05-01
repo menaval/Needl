@@ -9,12 +9,14 @@
         <div><%= current_user.name %></div>
         <div><%= current_user.email %></div>
         </div>
-        <ul class="text-center">
-          <li><%= link_to("Edit", edit_user_registration_path(current_user), class: "btn btn-default btn-xs btn-right") %></li>
-          <li><%= link_to destroy_user_session_path, method: :delete do %>
-          <i class="fa fa-sign-out"></i>  <%= t ".sign_out", default: "Sign out" %>
-        <% end %></li>
-        </ul>
+        <div class="text-center">
+          <%= link_to("Edit", edit_user_registration_path(current_user), class: "btn btn-success btn-xs btn-right") %></li>
+          <br>
+          <br>
+          <%= link_to destroy_user_session_path, method: :delete do %>
+            <i class="fa fa-sign-out"></i>  <%= t ".sign_out", default: "Sign out" %>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>
