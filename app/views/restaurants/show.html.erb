@@ -1,12 +1,12 @@
 <div>
   <div id="image_field" style="background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2)),url(<%= @restaurant.restaurant_pictures.first.picture.url %>); background-repeat:no-repeat; background-size:cover">
     <div id="text-left">
-      <h2><%= @restaurant.name %></h2>
+      <h1><%= @restaurant.name %></h1>
       <h3><%= Food.find(@restaurant.food_id).name %></h3>
       <% if @restaurant.number < 2 %>
-        <h3><%= @restaurant.number %> reco</h3>
+        <h3><span class="label label-success"><%= @restaurant.number %> reco </span></h3>
       <% else %>
-        <h3><%= @restaurant.number %> recos</h3>
+        <h3><span class="label label-success"><%= @restaurant.number %> recos </span></h3>
       <% end %>
     </div>
     <div id="text-right">

@@ -9,10 +9,13 @@
       position: absolute;
       bottom: 20px;
       left: 40px;
-      h2, h3 {
+      h1, h2, h3 {
         margin-top: 5px;
         margin-bottom: 5px;
         color: rgb(242, 242, 242);
+        margin-left: 0px;
+        background-color: transparent;
+        padding-left: 0px;
       }
     }
     #text-right {

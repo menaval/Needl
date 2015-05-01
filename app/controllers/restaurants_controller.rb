@@ -6,7 +6,6 @@ class RestaurantsController < ApplicationController
   def index
     if params[:query]
       query = params[:query]
-      raise ""
       @restaurants = Restaurant.cheaper_than(query[:price]).by_food(query[:food])
     else
       @restaurants = Restaurant.all
