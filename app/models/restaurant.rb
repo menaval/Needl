@@ -1,15 +1,15 @@
 class Restaurant < ActiveRecord::Base
 
   has_many :restaurant_pictures, dependent: :destroy
-  has_many :recommendations, dependent: :destroy
+  has_many :recommendations, dependent: :destroy, after_add: :recompute_price
   belongs_to :food
   geocoded_by :address
   after_validation :geocode, if: :address_changed?
 
-
-  def self.cheaper_than(max_price)
-    self.where {|restaurant| restaurant.price < max_price }
-  end
+  scope :cheaper_than, ->(max_price) { where { |restaurant| restaurant.price < max_price.to_i } if max_price }
+  scope :by_ambience,  ->(ambience)  { where { |restaurant| restaurant.ambiences == ambience } if ambience }
+  scope :by_strength,  ->(strength)  { where { |restaurant| restaurant.strengths == strength } if strength }
+  # scope :by_food,      ->(food)      { where { |restaurant| restaurant.food_id == food.to_i } if food }
 
   def number
     self.recommendations.count
@@ -67,7 +67,13 @@ class Restaurant < ActiveRecord::Base
     hash.sort_by { |_name, ids| -ids.length }.first(3).to_h
   end
 
-  def price
+  def recompute_price(recommendation)
+    self.price += recommendation.price
+    self.price /= self.recommendation_ids.count
+    self.save!
+  end
+
+  def old_price
     array = []
     self.recommendations.each do |reco|
       array << reco.price
@@ -78,5 +84,4 @@ class Restaurant < ActiveRecord::Base
       return array.inject(:+)/array.length
     end
   end
-
 end

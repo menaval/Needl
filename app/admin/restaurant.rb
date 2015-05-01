@@ -1,6 +1,6 @@
 ActiveAdmin.register Restaurant do
 
-  permit_params :name, :address, :food_id, :longitude, :latitude
+  permit_params :name, :address, :food_id, :longitude, :latitude, :price
 
 
 end
