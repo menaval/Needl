@@ -28,7 +28,7 @@
   <%= render "shared/footer" %>
 
   <% if params[:controller] + "_" + params[:action] == "restaurants_index" %>
-  <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+  <label for="sidebar-checkbox" class="sidebar-toggle"><%= image_tag "loupe.svg" %></label>
 
    <script>
      (function(document) {
