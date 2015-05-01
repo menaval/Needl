@@ -6,32 +6,49 @@ class Restaurant < ActiveRecord::Base
   geocoded_by :address
   after_validation :geocode, if: :address_changed?
 
-  scope :cheaper_than, ->(max_price) { where { |restaurant| restaurant.price < max_price.to_i } if max_price }
-  scope :by_ambience,  ->(ambience)  { where { |restaurant| restaurant.ambiences == ambience } if ambience }
-  scope :by_strength,  ->(strength)  { where { |restaurant| restaurant.strengths == strength } if strength }
-  # scope :by_food,      ->(food)      { where { |restaurant| restaurant.food_id == food.to_i } if food }
+  scope :cheaper_than, ->(max_price) { where("price < ?", max_price.to_i) if max_price.present? }
+  #scope :by_ambience,  ->(ambiences) {
+  #  if ambiences.present?
+  #    where("ARRAY(ambiences) && ARRAY(?)", ambiences)
+  #  end
+  #}
+  # scope :by_strength,  ->(strengths)  { where("strengths = ?", strengths) if strengths.present? }
+  scope :by_food,      ->(food)      { where("food_id = ?", food.to_i) if food.present? }
 
   def number
     self.recommendations.count
   end
 
-  def ambiences
+  def recompute_ambiences
+    self.ambiences = self.recommendations
+    .map(&:ambiences)
+    .flatten
+    .each_with_object(Hash.new(0)) { |num,counts| counts[num] += 1 }
+    .sort_by { |_ambience, count| -count }
+    .take(2)
+    .to_h.keys
+
+    self.save!
+  end
+
+  def recompute_strengths
+    self.strengths = self.recommendations
+    .map(&:strengths)
+    .flatten
+    .each_with_object(Hash.new(0)) { |num,counts| counts[num] += 1 }
+    .sort_by { |_ambience, count| -count }
+    .take(2)
+    .to_h.keys
+
+    self.save!
+  end
+
+  def get_ambiences_with_users
     hash = {}
     self.recommendations.each do |reco|
       reco.ambiences.each do |number|
-        ambience = ""
-        case number.to_i
-          when 1
-            ambience = "chic"
-          when 2
-            ambience = "festif"
-          when 3
-            ambience = "typique"
-          when 4
-            ambience = "en-cas-de-soleil"
-          when 5
-            ambience = "fast-and-good"
-        end
+        ambiences_list = ["chic", "festif", "typique", "en-cas-de-soleil", "fast-and-good"]
+        ambience = ambiences_list[number.to_i - 1]
         hash[ambience] ||= []
         hash[ambience] << reco.user_id
       end
@@ -39,27 +56,12 @@ class Restaurant < ActiveRecord::Base
     hash.sort_by { |_name, ids| -ids.length }.first(2).to_h
   end
 
-  def strengths
+  def get_strengths_with_users
     hash = {}
     self.recommendations.each do |reco|
       reco.strengths.each do |number|
-        strength = ""
-        case number.to_i
-          when 1
-            strength = "nourriture"
-          when 2
-            strength = "service"
-          when 3
-            strength = "cadre"
-          when 4
-            strength = "originalite"
-          when 5
-            strength = "generosite"
-          when 6
-            strength = "carte-des-vins"
-          when 7
-            strength = "rapport-qualite-prix"
-        end
+        strengths_list = ["nourriture", "service", "cadre", "originalite", "generosite", "carte-des-vins", "rapport-qualite-prix"]
+        strength = strengths_list[number.to_i - 1]
         hash[strength] ||= []
         hash[strength] << reco.user_id
       end
