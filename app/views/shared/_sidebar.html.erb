@@ -10,7 +10,7 @@
   </div>
 
   <nav class="sidebar-nav">
-    <%=simple_form_for :query, { url: restaurants_path, method: :get }  do |f| %>
+    <%=simple_form_for :query, { url: restaurants_path, method: :get, class: "sidebar-form", id: "search-form" }  do |f| %>
 
       <%= f.input :price, label: 'Prix du plat', prompt: "Quel prix max ?" %>
       <%= f.input :food, collection: Food.all, label: 'Style de Cuisine', prompt: "Quel type ?" %>
@@ -28,4 +28,5 @@
     </p>
   </div>
 </div>
+
 
