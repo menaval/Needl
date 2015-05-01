@@ -24,15 +24,15 @@ class User < ActiveRecord::Base
     my_friendships.each do |friendship|
       if friendship.accepted
         if friendship.receiver_id == self.id
-          user_friends << friendship.sender
+          user_friends << { friendship_user: friendship.sender, friendship_relation: friendship }
         else
-          user_friends << friendship.receiver
+          user_friends << { friendship_user: friendship.receiver, friendship_relation: friendship }
         end
       else
         if friendship.receiver_id == self.id
-          user_propositions << friendship.sender
+          user_propositions << { friendship_user: friendship.sender, friendship_relation: friendship }
         else
-          user_requests << friendship.receiver
+          user_requests << { friendship_user: friendship.receiver, friendship_relation: friendship }
         end
       end
     end

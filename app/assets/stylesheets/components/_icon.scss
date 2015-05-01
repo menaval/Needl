@@ -1,0 +1,29 @@
+$icon-width: 60px;
+$icon-height: 60px;
+
+
+.icon-box {
+  position: relative;
+  background: $green;
+  width: $icon-width;
+  height: $icon-height;
+  border-radius: 50%;
+  text-align: center;
+  svg {
+    margin-top: $icon-height / 4;
+    width: $icon-width / 2;
+    height: $icon-height / 2;
+    path {
+      fill: white;
+    }
+  }
+  h3 {
+    position: absolute;
+    top: 0;
+    margin-left: $icon-width + 5px;
+    margin-top: $icon-height / 3;
+    font-size: 15px;
+    line-height: $icon-height / 3;
+    color: rgb(50, 183, 150);
+  }
+}

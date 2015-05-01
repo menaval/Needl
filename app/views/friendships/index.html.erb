@@ -7,9 +7,9 @@
         <strong><%= user.name %></strong>
         <%= image_tag user.picture %>
         <%= bootstrap_form_for(@friendship, class: 'form') do |f| %>
-          <%= f.hidden_field :receiver_id, :value => user.id %>
-          <%= f.hidden_field :sender_id, :value => current_user.id %>
-          <%= f.hidden_field :accepted, :value => true %>
+          <%= f.hidden_field :receiver_id, value: user.id %>
+          <%= f.hidden_field :sender_id, value: current_user.id %>
+          <%= f.hidden_field :accepted, value: nil %>
           <%= f.submit class: "btn btn-success", value: "Add as a friend" %>
         <% end %>
       <% end %>
@@ -22,21 +22,23 @@
   <div class="container">
     <h3>Ils t'ont invité</h3>
     <% if @friendships[:user_propositions].count > 0 %>
-      <% @friendships[:user_propositions].each do |user| %>
+      <% @friendships[:user_propositions].each do |hash| %>
         <div class="row">
-          <%= user.name %>
-          <%= image_tag user.picture.url(:thumb), class: "img-circle"%>
+          <%= hash[:friendship_user].name %>
+          <%= image_tag hash[:friendship_user].picture.url(:thumb), class: "img-circle"%>
         </div>
         <div class="row accept_or_refuse">
           <div class="col-xs-6 text-right">
-            <%= form_tag answer_request_friendships_path, :method => "post" do %>
-              <%= hidden_field_tag "accepted", "true" %>
+            <%= form_tag answer_request_friendships_path, method: "post" do %>
+              <%= hidden_field_tag :accepted, value: true %>
+              <%= hidden_field_tag :id, value: hash[:friendship_relation].id %>
               <%= submit_tag "Accept", class: "btn btn-success" %>
             <% end %>
           </div>
           <div class="col-xs-6 text-left">
-            <%= form_tag answer_request_friendships_path, :method => "post" do %>
-              <%= hidden_field_tag "accepted", "false" %>
+            <%= form_tag answer_request_friendships_path, method: "post" do %>
+              <%= hidden_field_tag :accepted, value: false %>
+              <%= hidden_field_tag :id, value: hash[:friendship_relation].id %>
               <%= submit_tag "Refuse", class: "btn btn-danger" %>
             <% end %>
           </div>
