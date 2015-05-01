@@ -9,7 +9,7 @@ class Restaurant < ActiveRecord::Base
   scope :cheaper_than, ->(max_price) { where { |restaurant| restaurant.price < max_price.to_i } if max_price }
   scope :by_ambience,  ->(ambience)  { where { |restaurant| restaurant.ambiences == ambience } if ambience }
   scope :by_strength,  ->(strength)  { where { |restaurant| restaurant.strengths == strength } if strength }
-  scope :by_food,      ->(food)      { where { |restaurant| restaurant.food_id == food.to_i } if food }
+  # scope :by_food,      ->(food)      { where { |restaurant| restaurant.food_id == food.to_i } if food }
 
   def number
     self.recommendations.count
