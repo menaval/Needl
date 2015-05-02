@@ -6,9 +6,16 @@
 #profil {
   background-color: white;
   border-radius: 2px;
+  margin-top: 20px;
+  h2 {
+    margin: 0px;
+  }
 }
 
-.bg {
-  background-color: $gray-lighter;
+#action-btn ul {
+  padding-bottom: 10px;
+}
 
+#friends img {
+  margin: 0px;
 }

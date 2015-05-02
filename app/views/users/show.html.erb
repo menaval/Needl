@@ -1,21 +1,56 @@
-<div class="bg">
-  <h1>Profil</h1>
 
-  <div class="container">
-    <div class="row">
-      <div class="col-xs-12">
+<h1>Profil</h1>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="card-white">
         <div class = "text-center" id ="profil">
-        <div><%= image_tag(current_user.picture(:medium), class: "img-circle", id: "img-profil") %></div>
-        <div><%= current_user.name %></div>
-        <div><%= current_user.email %></div>
+          <div><%= image_tag(current_user.picture(:medium), class: "img-circle padded", id: "img-profil") %></div>
+          <h2><%= current_user.name %></h2>
+          <p><%= current_user.email %></p>
         </div>
-        <div class="text-center">
-          <%= link_to("Edit", edit_user_registration_path(current_user), class: "btn btn-success btn-xs btn-right") %></li>
-          <br>
-          <br>
-          <%= link_to destroy_user_session_path, method: :delete do %>
-            <i class="fa fa-sign-out"></i>  <%= t ".sign_out", default: "Sign out" %>
-          <% end %>
+        <div class="text-center" id="action-btn">
+          <ul class="list-inline">
+            <li>
+              <%= link_to("Modifier", edit_user_registration_path(current_user), class: "btn btn-success btn-xs btn-right") %></li>
+            </li>
+            <li>
+              <%= link_to destroy_user_session_path, class: "btn btn-success btn-xs", method: :delete do %>
+              <i class="fa fa-sign-out"></i>  <%= t ".sign_out", default: "Se Déconnecter" %>
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="card-white text-center">
+          <h2 class= "padded">Amis de <%= current_user.name %></h2>
+          <div id ="friends">
+          <!-- remplacer les prochains current_user par les friends -->
+          <ul class="list-inline">
+            <li>
+              <div><%= image_tag(current_user.picture(:thumb), class: "img-circle", id: "img-friend") %></div>
+              <p><%= current_user.name %></p>
+            </li>
+            <li>
+              <div><%= image_tag(current_user.picture(:thumb), class: "img-circle", id: "img-friend") %></div>
+              <p><%= current_user.name %></p>
+            </li>
+            <li>
+              <div><%= image_tag(current_user.picture(:thumb), class: "img-circle", id: "img-friend") %></div>
+              <p><%= current_user.name %></p>
+            </li>
+            <li>
+              <div><%= image_tag(current_user.picture(:thumb), class: "img-circle", id: "img-friend") %></div>
+              <p><%= current_user.name %></p>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
