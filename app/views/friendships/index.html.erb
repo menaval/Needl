@@ -1,51 +1,68 @@
-<div id="ask_for_friends">
-  <div class="container">
-    <h3>Les connais-tu?</h3>
-    <% for user in @users %>
-    <% if user != current_user %>
-      <!-- mettre mes amis qui sont sur facebook à la place de tous les utilisateurs -->
-        <strong><%= user.name %></strong>
-        <%= image_tag user.picture %>
-        <%= bootstrap_form_for(@friendship, class: 'form') do |f| %>
-          <%= f.hidden_field :receiver_id, value: user.id %>
-          <%= f.hidden_field :sender_id, value: current_user.id %>
-          <%= f.hidden_field :accepted, value: nil %>
-          <%= f.submit class: "btn btn-success", value: "Add as a friend" %>
-        <% end %>
-      <% end %>
-    <% end %>
-  </div>
-</div>
-
-
 <div id="accept_or_refuse_friends">
   <div class="container">
     <h3>Ils t'ont invité</h3>
     <% if @friendships[:user_propositions].count > 0 %>
       <% @friendships[:user_propositions].each do |hash| %>
-        <div class="row">
-          <%= hash[:friendship_user].name %>
-          <%= image_tag hash[:friendship_user].picture.url(:thumb), class: "img-circle"%>
-        </div>
-        <div class="row accept_or_refuse">
-          <div class="col-xs-6 text-right">
-            <%= form_tag answer_request_friendships_path, method: "post" do %>
-              <%= hidden_field_tag :accepted, value: true %>
-              <%= hidden_field_tag :id, value: hash[:friendship_relation].id %>
-              <%= submit_tag "Accept", class: "btn btn-success" %>
-            <% end %>
+        <% if hash[:friendship_relation].interested == true %>
+          <div class="row">
+            <%= hash[:friendship_user].name %>
+            <%= image_tag hash[:friendship_user].picture.url(:thumb), class: "img-circle"%>
           </div>
-          <div class="col-xs-6 text-left">
-            <%= form_tag answer_request_friendships_path, method: "post" do %>
-              <%= hidden_field_tag :accepted, value: false %>
-              <%= hidden_field_tag :id, value: hash[:friendship_relation].id %>
-              <%= submit_tag "Refuse", class: "btn btn-danger" %>
-            <% end %>
+          <div class="row accept_or_refuse">
+            <div class="col-xs-6 text-right">
+              <%= form_tag answer_request_friendships_path, method: "post" do %>
+                <%= hidden_field_tag :accepted, value: true %>
+                <%= hidden_field_tag :id, value: hash[:friendship_relation].id %>
+                <%= submit_tag "Accept", class: "btn btn-success" %>
+              <% end %>
+            </div>
+            <div class="col-xs-6 text-left">
+              <%= form_tag answer_request_friendships_path, method: "post" do %>
+                <%= hidden_field_tag :accepted, value: false %>
+                <%= hidden_field_tag :id, value: hash[:friendship_relation].id %>
+                <%= submit_tag "Refuse", class: "btn btn-danger" %>
+              <% end %>
+            </div>
           </div>
-        </div>
+        <% end %>
       <% end %>
     <% else %>
-      <p> Hey, <%= current_user.name %> tu n'as pas d'amis :(  </p>
+      <p> Hey, <%= current_user.name %> tu n'as pas de nouvelles demandes d'amis :(  </p>
     <% end %>
   </div>
 </div>
+
+
+<div id="ask_for_friends">
+  <div class="container">
+    <h3>Les connais-tu?</h3>
+    <% for user in @new_potential_friends %>
+      <!-- mettre mes amis qui sont sur facebook à la place de tous les utilisateurs -->
+      <strong><%= user.name %></strong>
+      <%= image_tag user.picture %>
+      <div class="row add_or_not">
+        <div class="col-xs-6 text-right">
+          <%= bootstrap_form_for(@friendship, class: 'form') do |f| %>
+            <%= f.hidden_field :receiver_id, value: user.id %>
+            <%= f.hidden_field :sender_id, value: current_user.id %>
+            <%= f.hidden_field :accepted, value: false %>
+            <%= hidden_field :interested, value: true %>
+            <%= f.submit class: "btn btn-success", value: "Add" %>
+          <% end %>
+        </div>
+        <div class="col-xs-6 text-right">
+          <%= bootstrap_form_for(@friendship, class: 'form') do |f| %>
+            <%= f.hidden_field :receiver_id, value: user.id %>
+            <%= f.hidden_field :sender_id, value: current_user.id %>
+            <%= f.hidden_field :accepted, value: false %>
+            <%= hidden_field :interested, value: false %>
+            <%= f.submit class: "btn btn-danger", value: "No" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+
+
