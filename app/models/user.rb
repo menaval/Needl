@@ -49,6 +49,14 @@ class User < ActiveRecord::Base
     list
   end
 
+  def refused
+    list = []
+    Friendship.includes([:sender, :receiver]).where("sender_id = ? or receiver_id = ?",  self.id, self.id).where("interested = false").each do |friendship|
+      list << User.find(friendship.sender_id)
+    end
+    list
+  end
+
   def self.find_for_facebook_oauth(auth)
       where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
         user.provider = auth.provider

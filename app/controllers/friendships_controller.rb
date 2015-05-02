@@ -5,18 +5,12 @@ class FriendshipsController < ApplicationController
     @friendship = Friendship.new
     @friendships = current_user.friendships_by_status
     # enlever ceux qui ont été mis en not interested
-    @new_potential_friends = @users - current_user.all_my_pending_and_accepted_friends - [current_user]
+    @new_potential_friends = @users - current_user.all_my_pending_and_accepted_friends - current_user.refused - [current_user]
   end
 
   def create
     @friendship = Friendship.new(friendship_params)
-    if @friendship.save
-      flash[:notice] = "Votre demande a bien été envoyée"
-      redirect_to friendships_path
-    else
-      flash[:notice] = "Nous n'avons pas pu envoyer votre demande"
-      redirect_to friendships_path
-    end
+    @friendship.save
   end
 
   def answer_request
@@ -27,25 +21,16 @@ class FriendshipsController < ApplicationController
       flash[:notice] = 'Ami ajouté'
       redirect_to friendships_path
     else
-      @friendship.destroy
+      @friendship.update_attribute(:interested, false)
       flash[:notice] = 'Ami refusé'
       redirect_to friendships_path
     end
   end
 
-  def destroy
-    @friendship = Friendship.find(eval(params[:id]))
-    if @friendship.nil?
-      redirect_to friendships_path, notice: "unknown relation"
-    else
-      @friendship.update_attribute(:interested, false)
-      redirect_to friendships_path, notice: "relation destroyed"
-    end
-  end
-
-  def not_interested
-    @friendship = Friendship.new(friendship_params)
-    @friendship.update_attribute(:interested, params(:interested))
+  def unfriend
+    @friendship = Friendship.find(eval(params[:id])[:value])
+    @friendship.update_attribute(:interested, false)
+    redirect_to friendships_path, notice: "Vous n'êtes plus amis"
   end
 
   private
@@ -53,4 +38,5 @@ class FriendshipsController < ApplicationController
     def friendship_params
       params.require(:friendship).permit(:sender_id, :receiver_id, :accepted, :interested)
     end
+
 end

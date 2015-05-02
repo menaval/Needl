@@ -1,7 +1,14 @@
 <h1>Mes amis</h1>
 
 <% current_user.friendships_by_status[:user_friends].each do |friendship| %>
-  <%= friendship[:friendship_user].name %>
-  <%= image_tag friendship[:friendship_user].picture %>
-  <%= link_to "retirer", friendship_path(friendship[:friendship_relation].id), method: :delete %>
+  <% if friendship[:friendship_relation].interested == true %>
+    <%= friendship[:friendship_user].name %>
+    <%= image_tag friendship[:friendship_user].picture %>
+    <%= link_to friendships_path do %>
+      <%= form_tag unfriend_friendships_path, method: "post" do %>
+        <%= hidden_field_tag :id, value: friendship[:friendship_relation].id %>
+        <%= submit_tag "retirer", class: "btn btn-success" %>
+      <% end %>
+    <% end %>
+  <% end %>
 <% end %>
