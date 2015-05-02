@@ -1,0 +1,32 @@
+<div class="activities">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-1">
+      </div>
+      <div class="col-xs-10">
+        <ul class="list-group">
+          <% @activities.each do |activity| %>
+          <li class="list-group-item">
+            <% if activity.trackable %>
+              <%= image_tag activity.owner.picture %>
+              <div class="activity-bloc">
+                <span class="glyphicon glyphicon-plus"></span>
+                <small class="text-muted"><%= activity.created_at.strftime('%H:%M:%S %-d %B %Y') %></small><br>
+                <strong><%= activity.owner ? activity.owner.name : 'Guest' %></strong>
+                a ajoutée une nouvelle recommendation pour le restaurant <%= link_to activity.trackable.restaurant_id, restaurant_path(activity.trackable.restaurant_id) %>.
+              </div>
+            <% else %>
+              Une recommandation supprimée vient d'être ajoutée.
+            <% end %>
+          </li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="col-xs-1">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
