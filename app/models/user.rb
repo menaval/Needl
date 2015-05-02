@@ -39,6 +39,16 @@ class User < ActiveRecord::Base
     {user_friends: user_friends, user_propositions: user_propositions, user_requests: user_requests}
   end
 
+  def all_my_pending_and_accepted_friends
+    list = []
+    self.friendships_by_status.each do |_type_of_friendship, content|
+      content.each do |friendship|
+        list << friendship[:friendship_user]
+      end
+    end
+    list
+  end
+
   def self.find_for_facebook_oauth(auth)
       where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
         user.provider = auth.provider

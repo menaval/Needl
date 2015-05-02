@@ -1,0 +1,7 @@
+<h1>Mes amis</h1>
+
+<% current_user.friendships_by_status[:user_friends].each do |friendship| %>
+  <%= friendship[:friendship_user].name %>
+  <%= image_tag friendship[:friendship_user].picture %>
+  <%= link_to "retirer", friendship_path(friendship[:friendship_relation].id), method: :delete %>
+<% end %>

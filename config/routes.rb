@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   resources :friendships, only: [:index, :new, :create, :destroy] do
     collection do
       post :answer_request
+      post :not_interested
+      get :my_friends
     end
   end
 

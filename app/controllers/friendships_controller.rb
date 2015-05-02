@@ -1,30 +1,29 @@
 class FriendshipsController < ApplicationController
-  before_action :set_friendship, only: [:destroy, :answer_request]
+
   def index
     @users = User.all
     @friendship = Friendship.new
     @friendships = current_user.friendships_by_status
+    # enlever ceux qui ont été mis en not interested
+    @new_potential_friends = @users - current_user.all_my_pending_and_accepted_friends - [current_user]
   end
 
   def create
     @friendship = Friendship.new(friendship_params)
     if @friendship.save
-      flash[:notice] = 'request_sent'
+      flash[:notice] = "Votre demande a bien été envoyée"
       redirect_to friendships_path
     else
-      flash[:notice] = 'request_not_sent'
+      flash[:notice] = "Nous n'avons pas pu envoyer votre demande"
       redirect_to friendships_path
     end
   end
 
   def answer_request
-    status = params[:accepted]
-    raise
-    if status == "true"
-      @friendship.accepted = true
-      @friendship.save
-      @friendship.sender.save
-      @friendship.receiver.save
+    @friendship = Friendship.find(eval(params[:id])[:value])
+    status = eval(params[:accepted])[:value]
+    if status == true
+      @friendship.update_attribute(:accepted, true)
       flash[:notice] = 'Ami ajouté'
       redirect_to friendships_path
     else
@@ -35,23 +34,23 @@ class FriendshipsController < ApplicationController
   end
 
   def destroy
-    friendship_id = params[:friendship_id]
-    relation = Friendship.where("sender_id = ? or receiver_id = ?", current_user.id, current_user.id).where("sender_id = ? or receiver_id = ?",  friendship_id, friendship_id).first
-    if relation.nil?
+    @friendship = Friendship.find(eval(params[:id]))
+    if @friendship.nil?
       redirect_to friendships_path, notice: "unknown relation"
     else
-      relation.destroy
+      @friendship.update_attribute(:interested, false)
       redirect_to friendships_path, notice: "relation destroyed"
     end
   end
 
+  def not_interested
+    @friendship = Friendship.new(friendship_params)
+    @friendship.update_attribute(:interested, params(:interested))
+  end
+
   private
 
-    def set_friendship
-      @friendship = Friendship.find(eval(params[:id])[:value])
-    end
-
     def friendship_params
-      params.require(:friendship).permit(:sender_id, :receiver_id, :accepted)
+      params.require(:friendship).permit(:sender_id, :receiver_id, :accepted, :interested)
     end
 end
