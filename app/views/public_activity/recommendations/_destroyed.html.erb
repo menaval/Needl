@@ -1,0 +1,6 @@
+<li class="list-group-item">
+  <span class="glyphicon glyphicon-remove"></span>
+  <small class="text-muted"><%= a.created_at.strftime('%H:%M:%S %-d %B %Y') %></small><br/>
+  <strong><%= activity.owner ? activity.owner.name : 'Guest' %></strong>
+  Une recommandation pour le restaurant <%= a.trackable.restaurant_id %> a été supprimée.
+</li>

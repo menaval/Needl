@@ -11,6 +11,7 @@ gem "country_select"
 gem "high_voltage"
 gem "devise"
 gem 'omniauth-facebook'
+gem 'public_activity'
 gem "pundit"
 gem "paperclip"
 gem "aws-sdk", "< 2.0"
