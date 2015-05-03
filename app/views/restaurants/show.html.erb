@@ -19,7 +19,7 @@
      <div class="row text-center">
        <h2>Ambiance</h2>
      </div>
-     <%= render "block", block: @restaurant.get_ambiences_with_users %>
+     <%= render "block", block: @restaurant.ambiences_from_my_friends(current_user) %>
    </div>
   </div>
 
@@ -28,7 +28,7 @@
      <div class="row text-center">
        <h2>Points forts</h2>
      </div>
-     <%= render "block", block: @restaurant.get_strengths_with_users %>
+     <%= render "block", block: @restaurant.strengths_from_my_friends(current_user) %>
    </div>
   </div>
 
@@ -36,12 +36,13 @@
     <h2>Mots de la fin</h2>
     <div>
       <ul class="list-inline">
-        <% @restaurant.recommendations.each do |reco| %>
+        <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
           <li>
-            <%= image_tag User.find(reco.user_id).picture.url(:thumb), class: "img-circle avatar img-responsive" %>
+            <%= image_tag User.find(friend_id).picture.url(:thumb), class: "img-circle avatar img-responsive" %>
           </li>
           <li>
-            <p><%= reco.review %></p>
+            <p><%= content_and_date[0] %></p>
+            <p><%= content_and_date[1] %></p>
           </li>
         <% end %>
       </ul>
