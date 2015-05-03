@@ -1,5 +1,5 @@
-class RestaurantPerUser < ActiveRecord::Base
-  belongs_to :restaurant
+class RecommendationPerUser < ActiveRecord::Base
+  belongs_to :recommendation
   belongs_to :user
 
   def number

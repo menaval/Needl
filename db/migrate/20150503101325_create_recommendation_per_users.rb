@@ -1,7 +1,7 @@
-class CreateRestaurantPerUsers < ActiveRecord::Migration
+class CreateRecommendationPerUsers < ActiveRecord::Migration
   def change
     create_table :restaurant_per_users do |t|
-      t.references :restaurant, index: true
+      t.references :recommendation, index: true
       t.references :user, index: true
       t.string :strengths, array: true
       t.string :ambiences, array: true

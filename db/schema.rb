@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150503101325) do
+ActiveRecord::Schema.define(version: 20150503070828) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,18 +65,6 @@ ActiveRecord::Schema.define(version: 20150503101325) do
 
   add_index "recommendations", ["restaurant_id"], name: "index_recommendations_on_restaurant_id", using: :btree
   add_index "recommendations", ["user_id"], name: "index_recommendations_on_user_id", using: :btree
-
-  create_table "restaurant_per_users", force: :cascade do |t|
-    t.integer  "restaurant_id"
-    t.integer  "user_id"
-    t.string   "strengths",                  array: true
-    t.string   "ambiences",                  array: true
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-  end
-
-  add_index "restaurant_per_users", ["restaurant_id"], name: "index_restaurant_per_users_on_restaurant_id", using: :btree
-  add_index "restaurant_per_users", ["user_id"], name: "index_restaurant_per_users_on_user_id", using: :btree
 
   create_table "restaurant_pictures", force: :cascade do |t|
     t.integer  "restaurant_id"
@@ -134,8 +122,6 @@ ActiveRecord::Schema.define(version: 20150503101325) do
 
   add_foreign_key "recommendations", "restaurants"
   add_foreign_key "recommendations", "users"
-  add_foreign_key "restaurant_per_users", "restaurants"
-  add_foreign_key "restaurant_per_users", "users"
   add_foreign_key "restaurant_pictures", "restaurants"
   add_foreign_key "restaurants", "foods"
 end

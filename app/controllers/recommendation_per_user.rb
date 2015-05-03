@@ -1,6 +1,12 @@
-class RestaurantsController < ApplicationController
+class RecommendationPerUserController < ApplicationController
+
+  def create
+
+  end
+
   def show
-    @restaurant = Restaurant.find(params[:id])
+    @restaurant = RecommendationPerUser.find(params[:id]).restaurant
+    @restaurant_per_user = RecommendationPerUser.find(params[:id])
   end
 
   def index

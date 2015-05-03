@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
 
   has_many :recommendations, dependent: :destroy
-  has_many :restaurant_per_users
+  has_many :recommendation_per_users
   has_many :friendships
   has_many :senders, :through => :friendships
   has_many :receivers, :through => :friendships
@@ -73,6 +73,16 @@ class User < ActiveRecord::Base
         end
     end
     list
+  end
+
+  def my_friends_restaurants
+    list = []
+    Recommendations.all.each do |reco|
+      if self.my_friends.include?(User.find(reco.user_id)) || User.find(reco.user_id) == self
+        list << Restaurant.find(reco.restaurant_id)
+      end
+    end
+    list.uniq
   end
 
   def self.find_for_facebook_oauth(auth)

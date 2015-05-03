@@ -1,0 +1,53 @@
+<div>
+  <div id="image_field" style="background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2)),url(<%= @restaurant.restaurant_pictures.first.picture.url %>); background-repeat:no-repeat; background-size:cover">
+    <div id="text-left">
+      <h1><%= @restaurant.name %></h1>
+      <h3><%= Food.find(@restaurant.food_id).name %></h3>
+      <% if @restaurant_per_user.number < 2 %>
+        <h3><span class="label label-success"><%= @restaurant_per_user.number %> reco </span></h3>
+      <% else %>
+        <h3><span class="label label-success"><%= @restaurant_per_user.number %> recos </span></h3>
+      <% end %>
+    </div>
+    <div id="text-right">
+     <h2><%= @restaurant.price %> €</h2>
+    </div>
+  </div>
+
+  <div id="ambiences">
+   <div class="container">
+     <div class="row text-center">
+       <h2>Ambiance</h2>
+     </div>
+     <%= render "block", block: @restaurant_per_user.get_ambiences_with_users %>
+   </div>
+  </div>
+
+  <div id="strengths">
+   <div class="container">
+     <div class="row text-center">
+       <h2>Points forts</h2>
+     </div>
+     <%= render "block", block: @restaurant_per_user.get_strengths_with_users %>
+   </div>
+  </div>
+
+  <div id="mots_de_la_fin" class="text-center">
+    <h2>Mots de la fin</h2>
+    <div>
+      <ul class="list-inline">
+        <% @restaurant.recommendations.each do |reco| %>
+          <li>
+            <%= image_tag User.find(reco.user_id).picture.url(:thumb), class: "img-circle avatar img-responsive" %>
+          </li>
+          <li>
+            <p><%= reco.review %></p>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+
+    <!-- Ne mettre que les commentaires de ses amis -->
+
+  </div>
+</div>
