@@ -1,6 +1,7 @@
 class Restaurant < ActiveRecord::Base
 
   has_many :restaurant_pictures, dependent: :destroy
+  has_many :restaurant_per_users
   has_many :recommendations, dependent: :destroy, after_add: :recompute_price
   belongs_to :food
   geocoded_by :address

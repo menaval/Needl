@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
 
   has_many :recommendations, dependent: :destroy
+  has_many :restaurant_per_users
   has_many :friendships
   has_many :senders, :through => :friendships
   has_many :receivers, :through => :friendships
