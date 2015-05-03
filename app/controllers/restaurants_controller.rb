@@ -7,9 +7,9 @@ class RestaurantsController < ApplicationController
 
     if params[:query]
       query = params[:query]
-      @restaurants = Restaurant.cheaper_than(query[:price]).by_food(query[:food])
+      @restaurants = current_user.my_friends_restaurants.cheaper_than(query[:price]).by_food(query[:food])
     else
-      @restaurants = Restaurant.all
+      @restaurants = current_user.my_friends_restaurants
     end
 
 

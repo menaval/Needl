@@ -74,6 +74,16 @@ class User < ActiveRecord::Base
     list
   end
 
+  def my_friends_restaurants
+    list = []
+    Recommendation.all.each do |reco|
+      if self.my_friends.include?(User.find(reco.user_id)) || User.find(reco.user_id) == self
+        list << Restaurant.find(reco.restaurant_id)
+      end
+    end
+    list.uniq
+  end
+
   def self.find_for_facebook_oauth(auth)
       where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
         user.provider = auth.provider

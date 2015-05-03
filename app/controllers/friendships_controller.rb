@@ -27,10 +27,15 @@ class FriendshipsController < ApplicationController
   end
 
   def destroy
-    @friendship = Friendship.find(eval(params[:id]))
-    NotInterestedRelation.create(member_one_id: @friendship.sender_id, member_two_id: @friendship.receiver_id)
-    @friendship.destroy
-    redirect_to friendships_path, notice: "Vous n'êtes plus amis"
+    if eval(params[:id]).is_a? Integer
+      friendship = Friendship.find(eval(params[:id]))
+    else
+      friendship = Friendship.find(eval(params[:id])[:value])
+    end
+    NotInterestedRelation.create(member_one_id: friendship.sender_id, member_two_id: friendship.receiver_id)
+    friendship.destroy
+    redirect_to friendships_path
+    # comprendre l'histoire de value qui n'y est pas suivant que ce soit un refuse ou un delete
   end
 
   private
