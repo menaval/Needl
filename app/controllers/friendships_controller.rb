@@ -4,13 +4,14 @@ class FriendshipsController < ApplicationController
     @users = User.all
     @friendship = Friendship.new
     @friendships = current_user.friendships_by_status
-    # enlever ceux qui ont été mis en not interested
+    @not_interested_relation = NotInterestedRelation.new
     @new_potential_friends = @users - current_user.all_my_pending_and_accepted_friends - current_user.refused - [current_user]
   end
 
   def create
     @friendship = Friendship.new(friendship_params)
     @friendship.save
+    redirect_to friendships_path
   end
 
   def answer_request
@@ -21,22 +22,21 @@ class FriendshipsController < ApplicationController
       flash[:notice] = 'Ami ajouté'
       redirect_to friendships_path
     else
-      @friendship.update_attribute(:interested, false)
-      flash[:notice] = 'Ami refusé'
-      redirect_to friendships_path
+      destroy
     end
   end
 
-  def unfriend
-    @friendship = Friendship.find(eval(params[:id])[:value])
-    @friendship.update_attribute(:interested, false)
+  def destroy
+    @friendship = Friendship.find(eval(params[:id]))
+    NotInterestedRelation.create(member_one_id: @friendship.sender_id, member_two_id: @friendship.receiver_id)
+    @friendship.destroy
     redirect_to friendships_path, notice: "Vous n'êtes plus amis"
   end
 
   private
 
     def friendship_params
-      params.require(:friendship).permit(:sender_id, :receiver_id, :accepted, :interested)
+      params.require(:friendship).permit(:sender_id, :receiver_id, :accepted)
     end
 
 end

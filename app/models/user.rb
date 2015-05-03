@@ -5,6 +5,10 @@ class User < ActiveRecord::Base
   has_many :senders, :through => :friendships
   has_many :receivers, :through => :friendships
 
+  has_many :not_interested_relations
+  has_many :member_ones, :through => :not_interested_relations
+  has_many :member_twos, :through => :not_interested_relations
+
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
@@ -51,8 +55,12 @@ class User < ActiveRecord::Base
 
   def refused
     list = []
-    Friendship.includes([:sender, :receiver]).where("sender_id = ? or receiver_id = ?",  self.id, self.id).where("interested = false").each do |friendship|
-      list << User.find(friendship.sender_id)
+    NotInterestedRelation.includes([:member_one, :member_two]).where("member_one_id = ? or member_two_id = ?",  self.id, self.id).each do |relation|
+        if User.find(relation.member_one_id).id == self.id
+          list << User.find(relation.member_two_id)
+        else
+          list << User.find(relation.member_one_id)
+        end
     end
     list
   end

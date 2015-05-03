@@ -6,14 +6,14 @@ Rails.application.routes.draw do
   root to: 'restaurants#index'
 
   resources :users, only: [:show, :edit, :update]
-  resources :friendships, only: [:index, :new, :create] do
+  resources :friendships, only: [:index, :create, :destroy] do
     collection do
       post :answer_request
-      post :not_interested
-      post :unfriend
       get :my_friends
     end
   end
+
+  resources :not_interested_relations, only: [:create]
 
   resources :restaurants, only: [:show, :index]
 

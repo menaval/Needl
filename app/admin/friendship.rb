@@ -1,6 +1,6 @@
 ActiveAdmin.register Friendship do
 
-  permit_params :sender_id, :receiver_id, :accepted, :interested
+  permit_params :sender_id, :receiver_id, :accepted
 
 
 end
