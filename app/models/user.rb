@@ -43,17 +43,26 @@ class User < ActiveRecord::Base
     {user_friends: user_friends, user_propositions: user_propositions, user_requests: user_requests}
   end
 
-  def all_my_pending_and_accepted_friends
+  def my_friends
     list = []
-    self.friendships_by_status.each do |_type_of_friendship, content|
-      content.each do |friendship|
+    self.friendships_by_status[:user_friends].each do|friendship|
         list << friendship[:friendship_user]
-      end
     end
     list
   end
 
-  def refused
+  def pending_friends
+    list = []
+    self.friendships_by_status[:user_propositions].each do|friendship|
+        list << friendship[:friendship_user]
+    end
+    self.friendships_by_status[:user_requests].each do|friendship|
+        list << friendship[:friendship_user]
+    end
+    list
+  end
+
+  def refused_friends
     list = []
     NotInterestedRelation.includes([:member_one, :member_two]).where("member_one_id = ? or member_two_id = ?",  self.id, self.id).each do |relation|
         if User.find(relation.member_one_id).id == self.id
