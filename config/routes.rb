@@ -6,9 +6,10 @@ Rails.application.routes.draw do
   root to: 'restaurants#index'
 
   resources :users, only: [:show, :edit, :update]
-  resources :friendships, only: [:index, :new, :create, :destroy] do
+  resources :friendships, only: [:index, :create, :destroy] do
     collection do
       post :answer_request
+      get :my_friends
     end
   end
 

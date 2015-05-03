@@ -1,57 +1,47 @@
 class FriendshipsController < ApplicationController
-  before_action :set_friendship, only: [:destroy, :answer_request]
+
   def index
     @users = User.all
     @friendship = Friendship.new
     @friendships = current_user.friendships_by_status
+    @not_interested_relation = NotInterestedRelation.new
+    @new_potential_friends = @users - current_user.my_friends - current_user.pending_friends - current_user.refused_friends - [current_user]
   end
 
   def create
     @friendship = Friendship.new(friendship_params)
-    if @friendship.save
-      flash[:notice] = 'request_sent'
-      redirect_to friendships_path
-    else
-      flash[:notice] = 'request_not_sent'
-      redirect_to friendships_path
-    end
+    @friendship.save
+    redirect_to friendships_path
   end
 
   def answer_request
-    status = params[:accepted]
-    raise
-    if status == "true"
-      @friendship.accepted = true
-      @friendship.save
-      @friendship.sender.save
-      @friendship.receiver.save
+    @friendship = Friendship.find(eval(params[:id])[:value])
+    status = eval(params[:accepted])[:value]
+    if status == true
+      @friendship.update_attribute(:accepted, true)
       flash[:notice] = 'Ami ajouté'
       redirect_to friendships_path
     else
-      @friendship.destroy
-      flash[:notice] = 'Ami refusé'
-      redirect_to friendships_path
+      destroy
     end
   end
 
   def destroy
-    friendship_id = params[:friendship_id]
-    relation = Friendship.where("sender_id = ? or receiver_id = ?", current_user.id, current_user.id).where("sender_id = ? or receiver_id = ?",  friendship_id, friendship_id).first
-    if relation.nil?
-      redirect_to friendships_path, notice: "unknown relation"
+    if eval(params[:id]).is_a? Integer
+      friendship = Friendship.find(eval(params[:id]))
     else
-      relation.destroy
-      redirect_to friendships_path, notice: "relation destroyed"
+      friendship = Friendship.find(eval(params[:id])[:value])
     end
+    NotInterestedRelation.create(member_one_id: friendship.sender_id, member_two_id: friendship.receiver_id)
+    friendship.destroy
+    redirect_to friendships_path
+    # comprendre l'histoire de value qui n'y est pas suivant que ce soit un refuse ou un delete
   end
 
   private
 
-    def set_friendship
-      @friendship = Friendship.find(eval(params[:id])[:value])
-    end
-
     def friendship_params
       params.require(:friendship).permit(:sender_id, :receiver_id, :accepted)
     end
+
 end

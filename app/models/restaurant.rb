@@ -43,35 +43,51 @@ class Restaurant < ActiveRecord::Base
     self.save!
   end
 
-  def get_ambiences_with_users
+  def ambiences_from_my_friends(current_user)
     hash = {}
     self.recommendations.each do |reco|
-      reco.ambiences.each do |number|
-        ambiences_list = ["chic", "festif", "typique", "en_cas_de_soleil", "fast_and_good"]
-        ambience = ambiences_list[number.to_i - 1]
-        hash[ambience] ||= []
-        hash[ambience] << reco.user_id
+      if current_user.my_friends.include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
+        reco.ambiences.each do |number|
+          ambiences_list = ["chic", "festif", "typique", "en_cas_de_soleil", "fast_and_good"]
+          ambience = ambiences_list[number.to_i - 1]
+          hash[ambience] ||= []
+          hash[ambience] << reco.user_id
+        end
       end
     end
     hash.sort_by { |_name, ids| -ids.length }.first(2).to_h
   end
 
-  def get_strengths_with_users
+  def strengths_from_my_friends(current_user)
     hash = {}
     self.recommendations.each do |reco|
-      reco.strengths.each do |number|
-        strengths_list = ["nourriture", "service", "cadre", "originalite", "generosite", "carte_des_vins", "rapport_qualite_prix"]
-        strength = strengths_list[number.to_i - 1]
-        hash[strength] ||= []
-        hash[strength] << reco.user_id
+      if current_user.my_friends.include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
+        reco.strengths.each do |number|
+          ambiences_list = ["chic", "festif", "typique", "en_cas_de_soleil", "fast_and_good"]
+          ambience = ambiences_list[number.to_i - 1]
+          hash[ambience] ||= []
+          hash[ambience] << reco.user_id
+        end
       end
     end
-    hash.sort_by { |_name, ids| -ids.length }.first(3).to_h
+    hash.sort_by { |_name, ids| -ids.length }.first(2).to_h
   end
+
+  def reviews_from_my_friends(current_user)
+    hash = {}
+    self.recommendations.each do |reco|
+      if current_user.my_friends.include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
+        hash[reco.user_id] = [reco.review, reco.created_at]
+      end
+    end
+    hash.sort_by { |_user_id, content_and_date| content_and_date[1] }.reverse.to_h
+  end
+
 
   def recompute_price(recommendation)
     self.price += recommendation.price
     self.price /= self.recommendation_ids.count
+    raise
     self.save!
   end
 
