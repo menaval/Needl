@@ -7,7 +7,6 @@ class Recommendation < ActiveRecord::Base
   # checker comment faire pour limiter le nombre d'ambiances que l'on peut remplir et comment rajouter cette liste dans la database
 
   include PublicActivity::Model
-  tracked
-  tracked owner: Proc.new { |controller, model| controller.user.my_friends ? controller.user.my_friends : nil }
+  tracked owner: Proc.new { |controller, _model| controller.current_user }
 
 end
