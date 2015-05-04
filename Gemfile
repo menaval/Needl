@@ -19,6 +19,7 @@ gem 'activeadmin', github: 'activeadmin'
 gem "geocoder"
 gem "gmaps4rails"
 gem "rails-assets-underscore"
+gem "rails-assets-slick.js"
 
 gem "jquery-rails"
 gem "sass-rails", "~> 5.0"
