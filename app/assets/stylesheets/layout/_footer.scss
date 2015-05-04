@@ -5,18 +5,23 @@
  bottom: 0;
  left: 0;
  right: 0;
- height: 70px;
+ height: 60px;
  text-align: center;
  .div-footer {
     float: left;
     width: 20%;
     text-align: center;
+    a {
+     color: white;
+     font-size: 10px;
+     text-decoration: none;
+    }
     .nav-icone {
       height: 50px;
       margin-top: 10px;
       opacity: 0.5;
         img {
-          heigth: 20px;
+          height: 50%;
           margin: auto;
         }
      }

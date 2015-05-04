@@ -1,0 +1,24 @@
+#devise_sessions_new {
+  background-color: $red;
+  // height: 100%;
+  h2 {
+    color: white;
+    font-weight: 300;
+  }
+  .brand-box {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    margin-bottom: 100px;
+    img {
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+      padding-top: 100px;
+    }
+  }
+  .footer {
+    display: none;
+  }
+}
+
