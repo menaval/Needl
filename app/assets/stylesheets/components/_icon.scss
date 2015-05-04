@@ -9,6 +9,9 @@ $icon-height: 60px;
   height: $icon-height;
   border-radius: 50%;
   text-align: center;
+  margin: auto;
+  transition: 0.3s ease transform;
+
   svg {
     margin-top: $icon-height / 4;
     width: $icon-width / 2;
@@ -27,3 +30,4 @@ $icon-height: 60px;
     color: rgb(50, 183, 150);
   }
 }
+

@@ -1,21 +1,30 @@
 <div id="reco-bg">
   <h1>Ajouter une Recommandation</h1>
 
-  <div class="form-size">
+  <div class="form-size text-center">
     <%= simple_form_for @recommendation, html: { id: "form-reco"} do |reco| %>
 
       <%= reco.input :restaurant_id, label: 'Nom du restaurant', placeholder: 'Slizze Pizza' %>
 
-      <%= reco.input :ambiences, as: :check_boxes, :wrapper_html => { 'data-max' => '2' }, collection:[["Chic<br>#{render 'restaurants/strengths_and_ambiences/chic.svg'}".html_safe, 1], ["Festif<br>#{render 'restaurants/strengths_and_ambiences/festif.svg'}".html_safe, 2], ["Typique<br>#{render 'restaurants/strengths_and_ambiences/typique.svg'}".html_safe, 3], ["En Cas de Soleil<br>#{render 'restaurants/strengths_and_ambiences/en_cas_de_soleil.svg'}".html_safe, 4], ["Fast & Good<br>#{render 'restaurants/strengths_and_ambiences/fast_and_good.svg'}".html_safe, 5]], input_html: { class: 'multiselectuser', multiple: true}, label: 'Sélectionnez 2 ambiances', :include_hidden => false  %>
+      <%= reco.input :ambiences, as: :check_boxes, :wrapper_html => { 'data-max' => '2' }, collection:[["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/chic.svg'}</div>Chic".html_safe, 1], ["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/festif.svg'}</div>Festif".html_safe, 2], ["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/typique.svg'}</div>Typique".html_safe, 3], ["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/ensoleille.svg'}</div>Ensoleillé".html_safe, 4], ["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/fast_and_good.svg'}</div>Fast & Good".html_safe, 5]], input_html: { class: 'multiselectuser', multiple: true}, label: '<h3>Choisis 2 ambiances</h3>'.html_safe, item_wrapper_class: 'simple_form_inline', :include_hidden => false  %>
+
 
       <%= reco.input :strengths, as: :check_boxes, :wrapper_html => { 'data-max' => '3' },
-      collection:[["Nourriture<br>#{render 'restaurants/strengths_and_ambiences/nourriture.svg'}".html_safe, 1], ["Service<br>#{render 'restaurants/strengths_and_ambiences/service.svg'}".html_safe, 2], ["Cadre<br>#{render 'restaurants/strengths_and_ambiences/cadre.svg'}".html_safe, 3], ["Originalite<br>#{render 'restaurants/strengths_and_ambiences/originalite.svg'}".html_safe, 4], ["Générosité<br>#{render 'restaurants/strengths_and_ambiences/generosite.svg'}".html_safe, 5], ["Carte des Vins<br>#{render 'restaurants/strengths_and_ambiences/carte_des_vins.svg'}".html_safe, 6], ["Rapport Qualité / Prix<br>#{render 'restaurants/strengths_and_ambiences/rapport_qualite_prix.svg'}".html_safe, 7]], input_html: { class: 'multiselectuser', multiple: true}, label: 'Sélectionnez 3 points forts', :include_hidden => false  %>
+      collection:[["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/nourriture.svg'}</div>Nourriture".html_safe, 1], ["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/service.svg'}</div>Service".html_safe, 2], ["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/cadre.svg'}</div>Cadre".html_safe, 3], ["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/original.svg'}</div>Original".html_safe, 4], ["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/genereux.svg'}</div>Généreux".html_safe, 5], ["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/vins.svg'}</div>Vins".html_safe, 6], ["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/qualite_prix.svg'}</div>Qualité / Prix".html_safe, 7]], input_html: { class: 'multiselectuser', multiple: true}, label: '<h3>Choisis 3 points forts</h3>'.html_safe, item_wrapper_class: 'simple_form_inline', :include_hidden => false  %>
 
       <%= reco.input :price, label: 'Prix du plat' %>
 
-      <%= reco.input :review, as: :text, label: 'Commentaire' %>
+      <%= reco.input :review, label: 'Mot de la fin (40 caractères max)', maxlength: 40, placeholder: "Un plat à ne pas louper?" %>
 
-      <%= reco.submit(class: "btn btn-danger") %>
+      <%= reco.submit("Recommander !", class: "btn btn-danger") %>
     <% end %>
   </div>
 </div>
+
+<%= content_for(:after_js) do %>
+  <%= javascript_tag do %>
+  $(document).ready(function() {
+     $('abbr').remove();
+    });
+  <% end %>
+<% end %>
