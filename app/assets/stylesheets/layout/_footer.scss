@@ -7,18 +7,19 @@
  right: 0;
  height: 70px;
  text-align: center;
- img {
-   height: 70%;
-   margin: auto;
-   display: block;
-  }
-  ul {
-   height: 60px;
-   li {
-     height: 100%;
-     padding-left: 28px;
-     margin-top: 10px;
-    }
+ .div-footer {
+    float: left;
+    width: 20%;
+    text-align: center;
+    .nav-icone {
+      height: 50px;
+      margin-top: 10px;
+      opacity: 0.5;
+        img {
+          heigth: 20px;
+          margin: auto;
+        }
+     }
   }
 }
 
@@ -29,14 +30,56 @@
  bottom: 0;
  left: 0;
  right: 0;
- height: 70px;
+ height: 60px;
+ text-align: center;
+ padding-top: 5px;
+ .container {
+ padding-left: 0px;
+ padding-right: 0px;
+}
+ a {
+  color: white;
+  font-size: 10px;
+  text-decoration: none;
+ }
  img {
-   height: 70%;
+   height: 50%;
    margin: auto;
    display: block;
   }
  .nav-icone {
-   height: 60px;
+   height: 50px;
      margin-top: 10px;
+     opacity: 0.5;
+  }
+}
+
+#users_show {
+  .nav-profil {
+    opacity: 1;
+  }
+}
+
+#recommendations_index {
+  .nav-notif {
+    opacity: 1;
+  }
+}
+
+#recommendations_new {
+  .nav-reco {
+    opacity: 1;
+  }
+}
+
+#friendships_new {
+  .nav-friend {
+    opacity: 1;
+  }
+}
+
+#restaurants_index {
+  .nav-home {
+    opacity: 1;
   }
 }

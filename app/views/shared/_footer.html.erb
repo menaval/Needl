@@ -1,29 +1,37 @@
 <div class="footer">
-   <ul class='list-inline'>
-     <li>
-       <%= link_to restaurants_path do %>
-         <%= image_tag "home-white.svg" %>
-       <% end %>
-     </li>
-     <li>
-       <%= link_to friendships_path do %>
-         <%= image_tag "new-friend-white.svg" %>
-       <% end %>
-     </li>
-     <li>
-       <%= link_to new_recommendation_path do %>
-         <%= image_tag "new-restaurant-white.svg" %>
-       <% end %>
-     </li>
-     <li>
-       <%= link_to recommendations_path do %>
-         <%= image_tag "notif-white.svg" %>
-       <% end %>
-     </li>
-     <li>
-       <%= link_to user_path(:id) do %>
-         <%= image_tag "account-white.svg" %>
-       <% end %>
-     </li>
-   </ul>
+  <div class="div-footer">
+    <div class= "nav-icone nav-home">
+      <%= link_to restaurants_path do %>
+        <%= image_tag "home-white.svg" %>
+      <% end %>
+    </div>
+  </div>
+  <div class="div-footer">
+    <div class= "nav-icone nav-friend">
+      <%= link_to new_friendship_path do %>
+        <%= image_tag "new-friend-white.svg" %>
+      <% end %>
+    </div>
+  </div>
+  <div class="div-footer">
+    <div class= "nav-icone nav-reco">
+      <%= link_to new_recommendation_path do %>
+        <%= image_tag "new-restaurant-white.svg" %>
+      <% end %>
+    </div>
+  </div>
+  <div class="div-footer">
+    <div class= "nav-icone nav-notif">
+      <%= link_to recommendations_path do %>
+        <%= image_tag "notif-white.svg" %>
+      <% end %>
+    </div>
+  </div>
+  <div class="div-footer">
+    <div class= "nav-icone nav-profil">
+      <%= link_to user_path(:id) do %>
+        <%= image_tag "account-white.svg" %>
+      <% end %>
+    </div>
+  </div>
 </div>
