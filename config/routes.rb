@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   end
 
   resources :restaurants, only: [:show, :index]
+  resources :not_interested_relations, only: [:create]
 
   resources :recommendations, only: [:index, :new, :create]
 end
