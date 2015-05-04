@@ -20,17 +20,20 @@
   .simple_form_inline {
     display: inline-block;
     text-align: center;
+    padding-top: 20px;
   }
 
   label {
     width: 100%;
     h3 {
-      margin-left: -19px;
-      width: 114%;
-      background-color: $gray-lighter;
       padding-top: 10px;
       padding-bottom: 10px;
+      border-bottom: 1px solid rgb(240, 239, 239);
     }
+  }
+
+  .icon-box {
+    background: #444444;
   }
 
   .check_boxes {
