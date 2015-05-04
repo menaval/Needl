@@ -30,9 +30,8 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="card-white text-center">
-          <h2 class= "padded">Amis de <%= current_user.name %></h2>
-          <div id ="friends">
-          <!-- remplacer les prochains current_user par les friends -->
+        <h2 class= "padded">Mes amis</h2>
+        <div id ="friends">
           <ul class="list-inline">
             <li>
               <div><%= image_tag(current_user.picture(:thumb), class: "img-circle", id: "img-friend") %></div>
@@ -52,6 +51,7 @@
             </li>
           </ul>
         </div>
+        <%= link_to("Gérer mes amis", friendships_path, class: "btn btn-danger") %>
       </div>
     </div>
   </div>

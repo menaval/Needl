@@ -6,7 +6,6 @@ ActiveAdmin.register User do
     f.inputs "Identity" do
       f.input :name
       f.input :email
-      f.input :password
       f.file_field :picture
     end
     f.inputs "Admin" do
