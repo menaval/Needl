@@ -7,40 +7,10 @@ class Restaurant < ActiveRecord::Base
   after_validation :geocode, if: :address_changed?
 
   scope :cheaper_than, ->(max_price) { where("price < ?", max_price.to_i) if max_price.present? }
-  #scope :by_ambience,  ->(ambiences) {
-  #  if ambiences.present?
-  #    where("ARRAY(ambiences) && ARRAY(?)", ambiences)
-  #  end
-  #}
-  # scope :by_strength,  ->(strengths)  { where("strengths = ?", strengths) if strengths.present? }
   scope :by_food,      ->(food)      { where("food_id = ?", food.to_i) if food.present? }
 
   def number
     self.recommendations.count
-  end
-
-  def recompute_ambiences
-    self.ambiences = self.recommendations
-    .map(&:ambiences)
-    .flatten
-    .each_with_object(Hash.new(0)) { |num,counts| counts[num] += 1 }
-    .sort_by { |_ambience, count| -count }
-    .take(2)
-    .to_h.keys
-
-    self.save!
-  end
-
-  def recompute_strengths
-    self.strengths = self.recommendations
-    .map(&:strengths)
-    .flatten
-    .each_with_object(Hash.new(0)) { |num,counts| counts[num] += 1 }
-    .sort_by { |_ambience, count| -count }
-    .take(2)
-    .to_h.keys
-
-    self.save!
   end
 
   def ambiences_from_my_friends(current_user)

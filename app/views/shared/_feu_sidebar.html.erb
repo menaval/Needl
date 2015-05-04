@@ -1,3 +1,5 @@
+<!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
 <input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
 
 <!-- Toggleable sidebar -->
@@ -11,6 +13,10 @@
 
       <%= f.input :price, label: 'Prix du plat', placeholder: "Quel prix max ?", id: "price" %>
       <%= f.input :food, collection: Food.all, label: 'Style de Cuisine', prompt: "Quel type ?", id: "food" %>
+      <%= f.input :ambiences, as: :check_boxes,
+      collection:[["Chic", 1], ["Festif", 2], ["Typique", 3], ["Ensoleillé", 4], ["Fast & Good", 5]], input_html: { class: 'multiselectuser', multiple: true}, label: 'Ambiances', :include_hidden => false %>
+      <%= f.input :strengths, as: :check_boxes,
+      collection: [["Nourriture", 1], ["Service", 2], ["Cadre", 3], ["Originalite", 4], ["Générosité", 5], ["Vins", 6], ["Rapport Qualité / Prix", 7]], input_html: { class: 'multiselectuser', multiple: true},  :include_hidden => false, label: 'Points Forts' %>
       <%=f.submit("Chercher", class: "btn btn-danger") %>
     <% end %>
   </nav>
