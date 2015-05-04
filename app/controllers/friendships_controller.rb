@@ -11,7 +11,7 @@ class FriendshipsController < ApplicationController
   def create
     @friendship = Friendship.new(friendship_params)
     @friendship.save
-    redirect_to friendships_path
+    redirect_to new_friendship_path
   end
 
   def answer_request
@@ -19,7 +19,7 @@ class FriendshipsController < ApplicationController
     status = eval(params[:accepted])[:value]
     if status == true
       @friendship.update_attribute(:accepted, true)
-      redirect_to friendships_path
+      redirect_to new_friendship_path
     else
       destroy
     end
@@ -28,12 +28,15 @@ class FriendshipsController < ApplicationController
   def destroy
     if eval(params[:id]).is_a? Integer
       friendship = Friendship.find(eval(params[:id]))
+      NotInterestedRelation.create(member_one_id: friendship.sender_id, member_two_id: friendship.receiver_id)
+      friendship.destroy
+      redirect_to friendships_path
     else
       friendship = Friendship.find(eval(params[:id])[:value])
+      NotInterestedRelation.create(member_one_id: friendship.sender_id, member_two_id: friendship.receiver_id)
+      friendship.destroy
+      redirect_to new_friendship_path
     end
-    NotInterestedRelation.create(member_one_id: friendship.sender_id, member_two_id: friendship.receiver_id)
-    friendship.destroy
-    redirect_to friendships_path
     # comprendre l'histoire de value qui n'y est pas suivant que ce soit un refuse ou un delete
   end
 

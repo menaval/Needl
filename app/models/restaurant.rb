@@ -9,8 +9,14 @@ class Restaurant < ActiveRecord::Base
   scope :cheaper_than, ->(max_price) { where("price < ?", max_price.to_i) if max_price.present? }
   scope :by_food,      ->(food)      { where("food_id = ?", food.to_i) if food.present? }
 
-  def number
-    self.recommendations.count
+  def number_from_my_friends(current_user)
+    number = 0
+    self.recommendations.each do |reco|
+      if current_user.my_friends.include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
+        number += 1
+      end
+    end
+    number
   end
 
   def ambiences_from_my_friends(current_user)
@@ -47,7 +53,9 @@ class Restaurant < ActiveRecord::Base
     hash = {}
     self.recommendations.each do |reco|
       if current_user.my_friends.include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
-        hash[reco.user_id] = [reco.review, reco.created_at]
+        if reco.review != ""
+          hash[reco.user_id] = [reco.review, reco.created_at]
+        end
       end
     end
     hash.sort_by { |_user_id, content_and_date| content_and_date[1] }.reverse.to_h

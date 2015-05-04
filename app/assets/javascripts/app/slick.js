@@ -1,10 +1,12 @@
 $(document).ready(function(){
-  $('.caroussel').slick();
+  $('.caroussel').slick({
+    arrows: false
+  });
+  $('.multiple-caroussel').slick({
+    infinite: true,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    arrows: false
+  });
 });
 
-
-// $('.caroussel_bis').slick({
-//   infinite: true,
-//   slidesToShow: 3,
-//   slidesToScroll: 3
-// });caroussel_bis

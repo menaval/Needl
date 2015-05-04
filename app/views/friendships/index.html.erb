@@ -1,9 +1,16 @@
 <h1>Mes amis</h1>
 
 <% current_user.friendships_by_status[:user_friends].each do |friendship| %>
-  <%= friendship[:friendship_user].name %>
-  <%= image_tag friendship[:friendship_user].picture %>
-  <%= link_to "Retirer", friendship_path(friendship[:friendship_relation].id), method: :delete  %>
+  <div class="friend">
+    <div class="infos">
+      <%= image_tag friendship[:friendship_user].picture %>
+      <%= friendship[:friendship_user].name %>
+      <p><%= Recommendation.where(user_id: friendship[:friendship_user]).count %> recos</p>
+    </div>
+    <div class="delete">
+      <%= link_to "Retirer", friendship_path(friendship[:friendship_relation].id), method: :delete  %>
+    </div>
+  </div>
 <% end %>
 
 

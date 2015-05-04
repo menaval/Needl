@@ -31,25 +31,15 @@
     <div class="col-xs-12">
       <div class="card-white text-center">
         <h2 class= "padded">Mes amis</h2>
-        <div id ="friends">
-          <ul class="list-inline">
-            <li>
-              <div><%= image_tag(current_user.picture(:thumb), class: "img-circle", id: "img-friend") %></div>
-              <p><%= current_user.name %></p>
-            </li>
-            <li>
-              <div><%= image_tag(current_user.picture(:thumb), class: "img-circle", id: "img-friend") %></div>
-              <p><%= current_user.name %></p>
-            </li>
-            <li>
-              <div><%= image_tag(current_user.picture(:thumb), class: "img-circle", id: "img-friend") %></div>
-              <p><%= current_user.name %></p>
-            </li>
-            <li>
-              <div><%= image_tag(current_user.picture(:thumb), class: "img-circle", id: "img-friend") %></div>
-              <p><%= current_user.name %></p>
-            </li>
-          </ul>
+        <div class="multiple-caroussel">
+          <% if current_user.my_friends.count > 0 %>
+            <% current_user.my_friends.each do |friend| %>
+              <div class="slick_icon">
+                <%= image_tag(friend.picture(:thumb), class: "img-circle img_friend ") %>
+                <%= friend.name.split(' ').first %>
+              </div>
+            <% end %>
+          <% end %>
         </div>
         <%= link_to("Gérer mes amis", friendships_path, class: "btn btn-danger") %>
       </div>
