@@ -19,7 +19,6 @@ class FriendshipsController < ApplicationController
     status = eval(params[:accepted])[:value]
     if status == true
       @friendship.update_attribute(:accepted, true)
-      flash[:notice] = 'Ami ajouté'
       redirect_to friendships_path
     else
       destroy
