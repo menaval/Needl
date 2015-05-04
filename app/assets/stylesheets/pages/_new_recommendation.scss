@@ -43,7 +43,7 @@
   }
 
   .check_boxes:checked ~ .icon-box {
-    background:#E15E38;
+    background: $green;
     // background: lighten($green, 10%);
     -webkit-animation: scaleUp 0.5s ease forwards;
   }
