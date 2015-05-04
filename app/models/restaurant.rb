@@ -61,15 +61,4 @@ class Restaurant < ActiveRecord::Base
     self.save!
   end
 
-  def old_price
-    array = []
-    self.recommendations.each do |reco|
-      array << reco.price
-    end
-    if array == []
-      return 0
-    else
-      return array.inject(:+)/array.length
-    end
-  end
 end
