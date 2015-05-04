@@ -8,6 +8,6 @@ class Recommendation < ActiveRecord::Base
 
   include PublicActivity::Model
   tracked
-  tracked owner: Proc.new { |controller, model| controller.current_user ? controller.current_user : nil }
+  tracked owner: Proc.new { |controller, model| controller.user.my_friends ? controller.user.my_friends : nil }
 
 end

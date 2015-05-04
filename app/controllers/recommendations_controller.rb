@@ -20,6 +20,14 @@ class RecommendationsController < ApplicationController
     end
   end
 
+  def user
+    # @current_user ||= User.find(session[:user_id]) if session[:user_id]
+    current_user
+  end
+
+  helper_method :current_user
+  hide_action :current_user
+
   private
 
   def recommendation_params
@@ -30,10 +38,4 @@ class RecommendationsController < ApplicationController
     @activities = PublicActivity::Activity.order('created_at DESC').limit(20)
   end
 
-  # def current_user
-  #   @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
-  # end
-
-  # helper_method :current_user
-  # hide_action :current_user
 end
