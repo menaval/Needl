@@ -81,7 +81,7 @@ class User < ActiveRecord::Base
         list << Restaurant.find(reco.restaurant_id)
       end
     end
-    list.uniq
+    list.uniq!
   end
 
   def self.find_for_facebook_oauth(auth)
