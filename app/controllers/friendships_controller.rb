@@ -1,6 +1,6 @@
 class FriendshipsController < ApplicationController
 
-  def index
+  def new
     @users = User.all
     @friendship = Friendship.new
     @friendships = current_user.friendships_by_status
