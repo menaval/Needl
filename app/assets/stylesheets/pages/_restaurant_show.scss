@@ -1,14 +1,36 @@
 #restaurants_show {
+  z-index: 9;
+  h1 {
+    text-shadow: 0 0 3px rgba(0, 0, 0, 1);
+  }
+  h2 {
+    font-size: 26px;
+    border-bottom: 1px solid $gray-light;
+    padding-bottom: 10px;
+    margin-top: 10px;
+  }
+
   #image_field {
     height: 400px;
     top: 0;
     margin-top: 0;
     position: relative;
     opacity: 0.9;
+    &:after {
+      content: "";
+      background: image-url('degrade.png') bottom left repeat-x;
+      // height: 200px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
     #text-left {
       position: absolute;
       bottom: 20px;
       left: 40px;
+      z-index: 9;
       h1, h2, h3 {
         margin-top: 5px;
         margin-bottom: 5px;
@@ -22,6 +44,7 @@
       position: absolute;
       bottom: 35px;
       right: 20px;
+      z-index: 9;
       h2 {
         color: rgb(242, 242, 242);
       }
@@ -30,14 +53,15 @@
   #ambiences {
     background-color: white;
     position: relative;
+    padding-bottom: 20px;
   }
   #strengths {
-    background-color: #EEEEEE;
+    background-color: $gray-lighter;
     position: relative;
+    padding-bottom: 20px;
   }
   #mots_de_la_fin {
     background-color: white;
-    position: relative;
   }
   .icon {
     height:80px;
@@ -46,5 +70,26 @@
   .avatar {
     height: 60px;
     margin: 0;
+  }
+
+  .bloc_bis
+  h3 {
+    font-size: 20px;
+    color: $green;
+    padding-top: 10px;
+    margin: 0px;
+  }
+  img {
+    // float: left;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .img-friend-ambiences {
+    display: none;
+  }
+
+  wrap {
+    margin-bottom: 0px;
   }
 }

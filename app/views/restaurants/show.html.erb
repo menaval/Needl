@@ -1,5 +1,5 @@
 <div>
-  <div id="image_field" style="background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2)),url(<%= @restaurant.restaurant_pictures.first.picture.url %>); background-repeat:no-repeat; background-size:cover">
+  <div id="image_field" style="background: url(<%= @restaurant.restaurant_pictures.first.picture.url %>); background-repeat:no-repeat; background-size:cover">
     <div id="text-left">
       <h1><%= @restaurant.name %></h1>
       <h3><%= Food.find(@restaurant.food_id).name %></h3>
@@ -19,7 +19,7 @@
      <div class="row text-center">
        <h2>Ambiance</h2>
      </div>
-     <%= render "block", block: @restaurant.ambiences_from_my_friends(current_user) %>
+     <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user) %>
    </div>
   </div>
 
@@ -28,26 +28,22 @@
      <div class="row text-center">
        <h2>Points forts</h2>
      </div>
-     <%= render "block", block: @restaurant.strengths_from_my_friends(current_user) %>
+     <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user) %>
    </div>
   </div>
 
   <div id="mots_de_la_fin" class="text-center">
-    <h2>Mots de la fin</h2>
-    <div>
-      <ul class="list-inline">
+    <div class="container">
+      <h2>Mots de la fin</h2>
+      <div class="caroussel">
         <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
-          <li>
-            <%= image_tag User.find(friend_id).picture.url(:thumb), class: "img-circle avatar img-responsive" %>
-          </li>
-          <li>
-            <p><%= content_and_date[0] %></p>
-            <p><%= content_and_date[1] %></p>
-          </li>
+          <div>
+              <%= image_tag User.find(friend_id).picture.url(:thumb), class: "img-circle avatar img-responsive" %>
+              <p><%= content_and_date[0] %></p>
+          </div>
         <% end %>
-      </ul>
+      </div>
     </div>
-
   </div>
 </div>
 

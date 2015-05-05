@@ -1,0 +1,27 @@
+<div class="bloc_bis">
+  <% block.each do |name,ids|%>
+    <div class="row">
+      <div class= "col-xs-4">
+        <div class="icon-box">
+          <%= render "restaurants/strengths_and_ambiences/#{name}.svg" %>
+        </div>
+      </div>
+      <div class= "col-xs-8">
+        <h3><%= name.capitalize.gsub(/_/," ").gsub(/&/, "and") %></h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-offset-4 col-xs-8">
+        <div class="img-friend-ambiences">
+          <ul class="list-inline">
+           <% ids.each do |id| %>
+            <li>
+              <%= image_tag User.find(id.to_i).picture.url(:thumb), class: "avatar img-circle img-responsive" %>
+            </li>
+           <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
