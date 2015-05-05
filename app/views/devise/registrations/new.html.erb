@@ -1,12 +1,9 @@
-<div class="container">
-  <div class="row">
-    <div class="col-sm-6 col-sm-offset-3">
-
-      <h2>S'inscrire</h2>
-
-
-      <%= link_to "Connect with Facebook", user_omniauth_authorize_path(:facebook) %>
-      <%= render "devise/shared/links" %>
-    </div>
+<div class= "text-center">
+  <div class="brand-box">
+    <%= image_tag "logo-white.png" %>
+    <h2>Partagez vos meilleurs restaurants <br> entre amis</h2>
+  </div>
+  <div class="sign-box">
+    <%= render "devise/shared/links" %>
   </div>
 </div>
