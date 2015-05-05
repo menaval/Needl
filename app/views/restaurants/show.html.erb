@@ -19,7 +19,7 @@
      <div class="row text-center">
        <h2>Ambiance</h2>
      </div>
-     <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user) %>
+     <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user), ambience_or_strength: "ambience" %>
    </div>
   </div>
 
@@ -28,7 +28,7 @@
      <div class="row text-center">
        <h2>Points forts</h2>
      </div>
-     <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user) %>
+     <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user), ambience_or_strength: "strength" %>
    </div>
   </div>
 
@@ -37,12 +37,13 @@
       <h2>Mots de la fin</h2>
       <div class="caroussel">
         <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
-          <div>
+          <div class= "padded">
               <%= image_tag User.find(friend_id).picture.url(:thumb), class: "img-circle avatar img-responsive" %>
-              <p><%= content_and_date[0] %></p>
+              <p>" <%= content_and_date[0] %> "</p>
           </div>
         <% end %>
       </div>
+      <%= link_to "Contacter #{@restaurant.name}", restaurants_path, class: "btn btn-danger" %>
     </div>
   </div>
 </div>
