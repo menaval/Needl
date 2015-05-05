@@ -12,6 +12,6 @@
 //= require app/checkbox.js
 //= require app/slick.js
 //= require app/footer.js
-
+//= require app/autocomplete.js
 
 
