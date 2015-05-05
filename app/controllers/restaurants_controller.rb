@@ -4,14 +4,11 @@ class RestaurantsController < ApplicationController
   end
 
   def index
+    query         = params[:query]
+    @restaurants  = current_user.my_friends_restaurants
 
-    my_restaurants = current_user.my_friends_restaurants
-    if params[:query]
-      query = params[:query]
-      @restaurants = Restaurant.cheaper_than(query[:price]).by_food(query[:food]) & my_restaurants
-      # à rendre plus performant parce que la va tester tous les restos de la base!
-    else
-      @restaurants = my_restaurants
+    if query
+      @restaurants = @restaurants.cheaper_than(query[:price]).by_food(query[:food])
     end
 
 

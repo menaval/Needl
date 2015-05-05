@@ -6,7 +6,7 @@ class Restaurant < ActiveRecord::Base
   geocoded_by :address
   after_validation :geocode, if: :address_changed?
 
-  scope :cheaper_than, ->(max_price) { where("price < ?", max_price.to_i) if max_price.present? }
+  scope :cheaper_than, ->(max_price) { where("restaurants.price < ?", max_price.to_i) if max_price.present? }
   scope :by_food,      ->(food)      { where("food_id = ?", food.to_i) if food.present? }
 
   def number_from_my_friends(current_user)
@@ -67,5 +67,4 @@ class Restaurant < ActiveRecord::Base
     self.price /= self.recommendation_ids.count
     self.save!
   end
-
 end

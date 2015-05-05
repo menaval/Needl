@@ -1,8 +1,11 @@
 class User < ActiveRecord::Base
 
   has_many :recommendations, dependent: :destroy
-  has_many :friendships
-  has_many :senders, :through => :friendships
+
+  has_many :friendships, foreign_key: :sender_id
+  has_many :received_friendships, foreign_key: :receiver_id, class_name: 'Friendship'
+
+  has_many :senders, :through => :received_friendships
   has_many :receivers, :through => :friendships
 
   has_many :not_interested_relations
@@ -20,7 +23,7 @@ class User < ActiveRecord::Base
       content_type: /\Aimage\/.*\z/
 
 
-  def friendships_by_status()
+  def friendships_by_status
     user_friends = []
     user_requests = []
     user_propositions = []
@@ -44,22 +47,17 @@ class User < ActiveRecord::Base
   end
 
   def my_friends
-    list = []
-    self.friendships_by_status[:user_friends].each do|friendship|
-        list << friendship[:friendship_user]
-    end
-    list
+    user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true }).pluck(:id)
+    user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true }).pluck(:id)
+
+    User.where(id: user_ids)
   end
 
   def pending_friends
-    list = []
-    self.friendships_by_status[:user_propositions].each do|friendship|
-        list << friendship[:friendship_user]
-    end
-    self.friendships_by_status[:user_requests].each do|friendship|
-        list << friendship[:friendship_user]
-    end
-    list
+    user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: false }).pluck(:id)
+    user_ids += self.senders.includes(:friendships).where(friendships: { accepted: false }).pluck(:id)
+
+    User.where(id: user_ids)
   end
 
   def refused_friends
@@ -75,25 +73,20 @@ class User < ActiveRecord::Base
   end
 
   def my_friends_restaurants
-    list = []
-    Recommendation.all.each do |reco|
-      if self.my_friends.include?(User.find(reco.user_id)) || User.find(reco.user_id) == self
-        list << Restaurant.find(reco.restaurant_id)
-      end
-    end
-    list.uniq!
+    user_ids = my_friends.map(&:id) + [self.id]
+    Restaurant.includes(:recommendations).where(recommendations: { user_id: user_ids })
   end
 
   def self.find_for_facebook_oauth(auth)
-      where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
-        user.provider = auth.provider
-        user.uid = auth.uid
-        user.email = auth.info.email
-        user.password = Devise.friendly_token[0,20]  # Fake password for validation
-        user.name = auth.info.name
-        user.picture = auth.info.image.gsub('http://','https://') + "?width=1000&height=1000"
-        user.token = auth.credentials.token
-        user.token_expiry = Time.at(auth.credentials.expires_at)
-      end
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+      user.provider = auth.provider
+      user.uid = auth.uid
+      user.email = auth.info.email
+      user.password = Devise.friendly_token[0,20]  # Fake password for validation
+      user.name = auth.info.name
+      user.picture = auth.info.image.gsub('http://','https://') + "?width=1000&height=1000"
+      user.token = auth.credentials.token
+      user.token_expiry = Time.at(auth.credentials.expires_at)
     end
+  end
 end
