@@ -13,6 +13,6 @@
 //= require app/slick.js
 //= require app/footer.js
 //= require app/disappear.js
-
+//= require app/flashes.js
 
 
