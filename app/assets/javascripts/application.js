@@ -2,6 +2,9 @@
 //= require jquery_ujs
 //= require bootstrap-sprockets
 //= require underscore
+//= require bloodhound
+//= require typeahead.bundle
+//= require typeahead.jquery
 //= require gmaps/google
 //= require_tree ./app
 //= require slick.js.js
@@ -12,6 +15,3 @@
 //= require app/checkbox.js
 //= require app/slick.js
 //= require app/footer.js
-
-
-
