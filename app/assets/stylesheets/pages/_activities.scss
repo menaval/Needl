@@ -1,9 +1,26 @@
-.activities {
-  img {
-    float: left;
+#recommendations_index {
+  font-size: 14px;
+  .list-group-item {
+    height: 100px;
   }
-}
+  .profil {
+    float: left;
+    img {
+      margin-bottom: 5px;
+    }
+    p {
+      font-weight: 700;
+    }
+  }
 
-.activity-bloc {
-  padding-left: 80px;
+  .activity-bloc {
+    padding-left: 80px;
+    a {
+      text-decoration: none;
+      color: $red;
+      &:hover {
+        color: $gray;
+      }
+    }
+  }
 }

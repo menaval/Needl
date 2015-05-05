@@ -6,14 +6,19 @@
       <div class="col-xs-10">
         <ul class="list-group">
           <% @activities.each do |activity| %>
-          <li class="list-group-item">
+          <li class="list-group-item border margin">
             <% if activity.trackable %>
-              <%= image_tag activity.owner.picture %>
+              <div class="profil">
+                <%= image_tag activity.owner.picture %>
+                <p><%= activity.owner ? activity.owner.name : 'Guest' %></p>
+              </div>
               <div class="activity-bloc">
                 <span class="glyphicon glyphicon-plus"></span>
                 <small class="text-muted"><%= activity.created_at.strftime('%H:%M:%S %-d %B %Y') %></small><br>
-                <strong><%= activity.owner ? activity.owner.name : 'Guest' %></strong>
-                a ajoutée une nouvelle recommendation pour le restaurant <%= link_to activity.trackable.restaurant_id, restaurant_path(activity.trackable.restaurant_id) %>.
+                Nouvelle recommandation pour le restaurant : <%= link_to Restaurant.find(activity.trackable.restaurant_id).name, restaurant_path(activity.trackable.restaurant_id) %> (<%= Restaurant.find(activity.trackable.restaurant_id).food.name %>)
+                <% if activity.trackable.review != "" %>
+                  - Mot de la fin : "<%= activity.trackable.review %>"
+                  <% end %>
               </div>
             <% else %>
               Une recommandation supprimée vient d'être ajoutée.
