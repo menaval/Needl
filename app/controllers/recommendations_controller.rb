@@ -14,7 +14,7 @@ class RecommendationsController < ApplicationController
   def create
     @recommendation = current_user.recommendations.new(recommendation_params)
     if @recommendation.save
-      Restaurant.find(@recommendation.restaurant_id).recompute_price(@recommendation)
+      @recommendation.restaurant.recompute_price(@recommendation)
       redirect_to restaurant_path(params[:recommendation][:restaurant_id])
     else
       render 'new'

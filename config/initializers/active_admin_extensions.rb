@@ -1,0 +1,1 @@
+ActiveAdmin::BaseController.send(:include, PublicActivity::StoreController)
