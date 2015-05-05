@@ -16,4 +16,8 @@ Rails.application.routes.draw do
   resources :not_interested_relations, only: [:create]
 
   resources :recommendations, only: [:index, :new, :create, :destroy]
+
+  namespace :api, defaults: { format: :json } do
+    resources :restaurants, only: :index
+  end
 end

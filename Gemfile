@@ -5,6 +5,7 @@ ruby "2.2.0"
 gem "rails", "4.2.0"
 gem "pg"
 gem "figaro"
+gem "jbuilder"
 gem "simple_form"
 gem 'bootstrap_form'
 gem "country_select"
