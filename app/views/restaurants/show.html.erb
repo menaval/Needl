@@ -1,5 +1,5 @@
 <div>
-  <div id="image_field" style="background: url(<%= @restaurant.restaurant_pictures.any? ? @restaurant.restaurant_pictures.first.picture.url : '' %>); background-repeat:no-repeat; background-size:cover">
+  <div id="image_field" style="background: url(<%= image_path(@restaurant.picture_url) %>); background-repeat:no-repeat; background-size:cover">
     <div id="text-left">
       <h1><%= @restaurant.name %></h1>
       <h3><%= Food.find(@restaurant.food_id).name %></h3>
@@ -43,7 +43,7 @@
           </div>
         <% end %>
       </div>
-      <%= link_to "Contacter #{@restaurant.name}", restaurants_path, class: "btn btn-danger" %>
+      <%= link_to "Contacter #{@restaurant.name}", "tel:{@restaurant.phone_number}", class: "btn btn-danger" %>
     </div>
   </div>
 </div>
