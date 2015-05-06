@@ -43,7 +43,7 @@
           </div>
         <% end %>
       </div>
-      <%= link_to "Contacter #{@restaurant.name}", restaurants_path, class: "btn btn-danger" %>
+      <%= link_to "Contacter #{@restaurant.name}", "tel:{@restaurant.phone_number}", class: "btn btn-danger" %>
     </div>
   </div>
 </div>
