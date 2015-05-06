@@ -8,7 +8,13 @@
     </div>
   </div>
   <div class="div-footer">
-    <span class="badge"><%= current_user.pending_friends.count %></span>
+    <% if current_user %>
+      <% if current_user.pending_friends.count > 0 %>
+        <span class="badge">
+          <%= current_user.pending_friends.count %>
+        </span>
+      <% end %>
+    <% end %>
     <div class= "nav-icone nav-friend" >
       <%= link_to new_friendship_path do %>
         <%= image_tag "new-friend-white.svg" %>
@@ -25,7 +31,13 @@
     </div>
   </div>
   <div class="div-footer">
-    <span class="badge"> X </span>
+    <% if current_user %>
+      <% if current_user.pending_friends.count > 0 %>
+        <span class="badge">
+          <%= current_user.pending_friends.count %>
+        </span>
+      <% end %>
+    <% end %>
     <div class= "nav-icone nav-notif">
       <%= link_to recommendations_path do %>
         <%= image_tag "notif-white.svg" %>

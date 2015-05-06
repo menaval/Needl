@@ -72,4 +72,6 @@ class RecommendationsController < ApplicationController
     @activities = PublicActivity::Activity.where(owner_id: current_user.my_friends.map(&:id), owner_type: 'User').order('created_at DESC').limit(20)
   end
 
+  def notification_activities
+  end
 end
