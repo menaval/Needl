@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
+  include PublicActivity::StoreController
   before_action :authenticate_user!, unless: :pages_controller?
+  before_action :count_notifs, unless: :devise_controller?
   # on laisse unless pages_controller au cas ou pour l'instant
   # include Pundit
 
@@ -12,6 +14,11 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   protected
+
+  def count_notifs
+    activities = PublicActivity::Activity.where(owner_id: current_user.my_friends.map(&:id), owner_type: 'User').order('created_at DESC').limit(20)
+    @notification_count = activities ? activities.where(read: false).count : 0
+  end
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:account_update) << :name

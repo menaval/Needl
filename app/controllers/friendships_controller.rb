@@ -5,7 +5,7 @@ class FriendshipsController < ApplicationController
     @friendship = Friendship.new
     @friendships = current_user.friendships_by_status
     @not_interested_relation = NotInterestedRelation.new
-    @new_potential_friends = @users - current_user.my_friends - current_user.pending_friends - current_user.refused_friends - [current_user]
+    @new_potential_friends = @users - current_user.my_friends - current_user.pending_invitations_sent - current_user.pending_invitations_received - current_user.refused_friends - [current_user]
   end
 
   def create

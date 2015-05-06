@@ -53,10 +53,13 @@ class User < ActiveRecord::Base
     User.where(id: user_ids)
   end
 
-  def pending_friends
-    user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: false }).pluck(:id)
-    user_ids += self.senders.includes(:friendships).where(friendships: { accepted: false }).pluck(:id)
+  def pending_invitations_received
+    user_ids = self.senders.includes(:friendships).where(friendships: { accepted: false }).pluck(:id)
+    User.where(id: user_ids)
+  end
 
+  def pending_invitations_sent
+    user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: false }).pluck(:id)
     User.where(id: user_ids)
   end
 
@@ -72,6 +75,11 @@ class User < ActiveRecord::Base
     list
   end
 
+  def user_friends
+    var url = "https://graph.facebook.com/v2.3/me?fields="
+    friends
+  end
+
   def my_friends_restaurants
     user_ids = my_friends.map(&:id) + [self.id]
     Restaurant.includes(:recommendations).where(recommendations: { user_id: user_ids })
@@ -82,7 +90,7 @@ class User < ActiveRecord::Base
       user.provider = auth.provider
       user.uid = auth.uid
       user.email = auth.info.email
-      user.password = Devise.friendly_token[0,20]  # Fake password for validation
+      user.password = Devise.friendly_token[0,20]
       user.name = auth.info.name
       user.picture = auth.info.image.gsub('http://','https://') + "?width=1000&height=1000"
       user.token = auth.credentials.token
