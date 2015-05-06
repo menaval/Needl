@@ -2,8 +2,6 @@
   <%= link_to restaurant_path(restaurant.id), class: "link" do %>
     <h2><%= restaurant.name %></h2>
     <p><%= restaurant.food.name %></p>
-    <% if restaurant.restaurant_pictures.count > 0 %>
-      <%= image_tag restaurant.restaurant_pictures.first.picture.url %>
-    <% end %>
+    <%= image_tag restaurant.picture_url %>
   <% end %>
 </div>
