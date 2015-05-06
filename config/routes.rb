@@ -15,7 +15,11 @@ Rails.application.routes.draw do
   resources :restaurants, only: [:show, :index]
   resources :not_interested_relations, only: [:create]
 
-  resources :recommendations, only: [:index, :new, :create, :destroy]
+  resources :recommendations, only: [:index, :new, :create, :destroy] do
+    collection do
+      post :read_all_notifications
+    end
+  end
 
   namespace :api, defaults: { format: :json } do
     resources :restaurants, only: :index

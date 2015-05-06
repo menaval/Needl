@@ -70,8 +70,10 @@ class RecommendationsController < ApplicationController
 
   def load_activities
     @activities = PublicActivity::Activity.where(owner_id: current_user.my_friends.map(&:id), owner_type: 'User').order('created_at DESC').limit(20)
+    @notification_count = @activities.where(read: false).count
   end
 
-  def notification_activities
+  def read_all_notification
+    PublicActivity::Activity.where(owner_id: current_user.my_friends.map(&:id), owner_type: 'User').update_all(:read => true)
   end
 end
