@@ -75,6 +75,11 @@ class User < ActiveRecord::Base
     list
   end
 
+  def user_friends
+    var url = "https://graph.facebook.com/v2.3/me?fields="
+    friends
+  end
+
   def my_friends_restaurants
     user_ids = my_friends.map(&:id) + [self.id]
     Restaurant.includes(:recommendations).where(recommendations: { user_id: user_ids })

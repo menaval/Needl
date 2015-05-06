@@ -1,5 +1,3 @@
-
-
 $(document).ready(function() {
   $(".friends-show").on("click", function() {
     var id = $(this).attr('id');
