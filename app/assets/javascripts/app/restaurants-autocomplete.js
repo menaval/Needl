@@ -14,7 +14,7 @@ $(document).ready(function(){
     $('.restaurants-autocomplete').typeahead(null, {
       name: 'best-pictures',
       display: 'name',
-      minLength: 4,
+      minLength: 3,
       source: restaurants
     }).on('typeahead:selected', function($e, restaurant) {
       $(".restaurants-autocomplete--id").val(restaurant.id);

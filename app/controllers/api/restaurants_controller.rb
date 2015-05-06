@@ -8,17 +8,17 @@ module Api
 
       @restaurants = search_via_database
 
-@restaurants = []
+      @restaurants = []
       @restaurants += search_via_foursquare
 
       @restaurants.uniq! { |restaurant| restaurant[:name] }
-      @restaurants.take(20)
+      @restaurants.take(5)
     end
 
     private
 
     def search_via_database
-      restaurants = Restaurant.where("name ilike ?", "%#{@query}%").limit(20)
+      restaurants = Restaurant.where("name ilike ?", "%#{@query}%").limit(5)
 
       restaurants = restaurants.map do |restaurant|
         { origin: 'db', name: restaurant.name, id: restaurant.id }
