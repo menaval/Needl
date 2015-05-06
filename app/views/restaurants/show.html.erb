@@ -15,21 +15,21 @@
   </div>
 
   <div id="ambiences">
-   <div class="container">
-     <div class="row text-center">
-       <h2>Ambiance</h2>
-     </div>
-     <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user), ambience_or_strength: "ambience" %>
-   </div>
+    <div class="container">
+      <div class="row text-center">
+        <h2>Ambiance</h2>
+      </div>
+      <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user), ambience_or_strength: "ambience" %>
+    </div>
   </div>
 
   <div id="strengths">
-   <div class="container">
-     <div class="row text-center">
-       <h2>Points forts</h2>
-     </div>
-     <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user), ambience_or_strength: "strength" %>
-   </div>
+    <div class="container">
+      <div class="row text-center">
+        <h2>Points forts</h2>
+      </div>
+      <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user), ambience_or_strength: "strength" %>
+    </div>
   </div>
 
   <div id="mots_de_la_fin" class="text-center">
