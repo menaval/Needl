@@ -5,7 +5,7 @@
   }
   h2 {
     font-size: 26px;
-    border-bottom: 1px solid $gray-light;
+    border-bottom: 1px solid $gray-lighter;
     padding-bottom: 10px;
     margin-top: 10px;
   }
@@ -56,12 +56,20 @@
     padding-bottom: 20px;
   }
   #strengths {
-    background-color: $gray-lighter;
+    background-color: #f7f4f4;
     position: relative;
     padding-bottom: 20px;
   }
   #mots_de_la_fin {
     background-color: white;
+    padding-bottom: 10px;
+    img{
+      margin-right: auto;
+      margin-left: auto;
+    }
+    p {
+      padding-top: 10px;
+    }
   }
   .icon {
     height:80px;
@@ -85,11 +93,22 @@
     margin-left: auto;
   }
 
-  .img-friend-ambiences {
-    display: none;
-  }
+
 
   wrap {
     margin-bottom: 0px;
   }
+  .caroussel {
+    margin-bottom: 10px;
+  }
 }
+
+.img-friend-ambiences {
+  transition: opacity 0.3s ease;
+    &.hidden-friend {
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
+}
+

@@ -1,6 +1,6 @@
 <div class="bloc_bis">
   <% block.each do |name,ids|%>
-    <div class="row">
+    <div class="row friends-show" id="<%= ambience_or_strength %>-<%= name %>">
       <div class= "col-xs-4">
         <div class="icon-box">
           <%= render "restaurants/strengths_and_ambiences/#{name}.svg" %>
@@ -12,7 +12,7 @@
     </div>
     <div class="row">
       <div class="col-xs-offset-4 col-xs-8">
-        <div class="img-friend-ambiences">
+        <div class="img-friend-ambiences hidden-friend" id="<%= ambience_or_strength %>-friends-<%= name %>">
           <ul class="list-inline">
            <% ids.each do |id| %>
             <li>

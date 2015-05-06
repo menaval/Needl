@@ -3,8 +3,11 @@
 
   <div class="form-size text-center">
     <%= simple_form_for @recommendation, html: { id: "form-reco"} do |reco| %>
+      <%= hidden_field_tag :restaurant_id, @restaurant_id, class: "restaurants-autocomplete--id" %>
+      <%= hidden_field_tag :restaurant_origin, @restaurant_origin, class: "restaurants-autocomplete--origin" %>
 
-      <%= reco.input :restaurant_id, label: 'Nom du restaurant', placeholder: 'Le nom du resto ...', id="user_input_autocomplete_name"  %>
+      <%= label_tag :restaurant_name, 'Nom du restaurant' %>
+      <%= text_field_tag :restaurant_name, @query, placeholder: 'Slizze Pizza', class: "restaurants-autocomplete", "data-url" => api_restaurants_path %>
 
       <%= reco.input :ambiences, as: :check_boxes, :wrapper_html => { 'data-max' => '2' }, collection:[["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/chic.svg'}</div>Chic".html_safe, 1], ["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/festif.svg'}</div>Festif".html_safe, 2], ["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/typique.svg'}</div>Typique".html_safe, 3], ["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/ensoleille.svg'}</div>Ensoleillé".html_safe, 4], ["<div class='icon-box'>#{render 'restaurants/strengths_and_ambiences/fast_and_good.svg'}</div>Fast & Good".html_safe, 5]], input_html: { class: 'multiselectuser', multiple: true}, label: '<h3>Choisis 2 ambiances</h3>'.html_safe, item_wrapper_class: 'simple_form_inline', :include_hidden => false  %>
 
