@@ -40,7 +40,7 @@ class RecommendationsController < ApplicationController
       food:         Food.where(name: search['categories'][0]["shortName"]).first_or_create,
       latitude:     search["location"]["lat"],
       longitude:    search["location"]["lng"],
-      picture_url:  search.photo ? "#{search.photo.prefix}1000x500#{search.photo.suffix}" : "app/assets/images/restaurant_default.jpg",
+      picture_url:  search["specials"]["items"].first.photo ? "#{search["specials"]["items"].first.photo.prefix}1000x500#{search["specials"]["items"].first.photo.suffix}" : "restaurant_default.jpg",
       phone_number: search.contact.phone ? search.contact.phone : nil
     )
 
@@ -74,6 +74,6 @@ class RecommendationsController < ApplicationController
   end
 
   def read_all_notification
-    PublicActivity::Activity.where(owner_id: current_user.my_friends.map(&:id), owner_type: 'User').update_all(:read => true)
+    PublicActivity::Activity.where(owner_id: current_user.my_friends.map(&:id), owner_type: 'User').update_all(read: true)
   end
 end
