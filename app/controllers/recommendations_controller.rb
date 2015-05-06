@@ -40,8 +40,8 @@ class RecommendationsController < ApplicationController
       food:         Food.where(name: search['categories'][0]["shortName"]).first_or_create,
       latitude:     search["location"]["lat"],
       longitude:    search["location"]["lng"],
-      picture_url:  "#{search.photo.prefix}1000x500#{search.photo.suffix}"
-      phone_number: search.contact.phone
+      picture_url:  search.photo? "#{search.photo.prefix}1000x500#{search.photo.suffix}" : "restaurant_default.jpg"
+      phone_number: search.contact.phone? search.contact.phone : nil
     )
 
     if restaurant.save
