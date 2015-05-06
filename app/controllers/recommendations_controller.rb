@@ -36,12 +36,12 @@ class RecommendationsController < ApplicationController
 
     search = client.venue(@restaurant_id)
     restaurant = Restaurant.where(name: @restaurant_name).first_or_initialize(
-      name:         search['name'],
-      address:      "#{search["location"]["address"]}, #{search["location"]["city"]}",
-      food:         Food.where(name: search['categories'][0]["shortName"]).first_or_create,
-      latitude:     search["location"]["lat"],
-      longitude:    search["location"]["lng"],
-      picture_url:  search["specials"]["items"].first.photo ? "#{search["specials"]["items"].first.photo.prefix}1000x500#{search["specials"]["items"].first.photo.suffix}" : "restaurant_default.jpg",
+      name:         search.name,
+      address:      "#{search.location.address}, #{search.location.city}",
+      food:         Food.where(name: search.categories[0].shortName).first_or_create,
+      latitude:     search.location.lat,
+      longitude:    search.location.lng,
+      picture_url:  search.photos ? "#{search.photos.groups[0].items[0].prefix}1000x1000#{search.photos.groups[0].items[0].suffix}" : "restaurant_default.jpg",
       phone_number: search.contact.phone ? search.contact.phone : nil
     )
 
@@ -71,7 +71,6 @@ class RecommendationsController < ApplicationController
 
   def load_activities
     @activities = PublicActivity::Activity.where(owner_id: current_user.my_friends.map(&:id), owner_type: 'User').order('created_at DESC').limit(20)
-    @notification_count = @activities.where(read: false).count
   end
 
   def read_all_notification

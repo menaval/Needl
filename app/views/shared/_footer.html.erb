@@ -9,9 +9,9 @@
   </div>
   <div class="div-footer">
     <% if current_user %>
-      <% if current_user.pending_friends.count > 0 %>
+      <% if current_user.pending_invitations_received.count > 0 %>
         <span class="badge">
-          <%= current_user.pending_friends.count %>
+          <%= current_user.pending_invitations_received.count %>
         </span>
       <% end %>
     <% end %>
@@ -32,13 +32,13 @@
   </div>
   <div class="div-footer">
     <% if current_user %>
-      <% if current_user.pending_friends.count > 0 %>
+      <% if @notification_count > 0 %>
         <span class="badge">
-          <%= current_user.pending_friends.count %>
+          <%= @notification_count %>
         </span>
       <% end %>
     <% end %>
-    <div class= "nav-icone nav-notif" id="activities-notif">
+    <div class= "nav-icone nav-notif" >
       <%= link_to recommendations_path do %>
         <%= image_tag "notif-white.svg" %>
         <p>Notif</p>
