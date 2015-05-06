@@ -1,7 +1,7 @@
 class FriendshipsController < ApplicationController
 
   def new
-    @users = User.all
+    @users = current_user.user_friends
     @friendship = Friendship.new
     @friendships = current_user.friendships_by_status
     @not_interested_relation = NotInterestedRelation.new

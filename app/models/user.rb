@@ -76,8 +76,9 @@ class User < ActiveRecord::Base
   end
 
   def user_friends
-    var url = "https://graph.facebook.com/v2.3/me?fields="
-    friends
+    graph = Koala::Facebook::API.new(self.token)
+    friends_uids = graph.get_connections("me", "friends").map { |friend| friend["id"] }
+    User.where(uid: friends_uids)
   end
 
   def my_friends_restaurants
