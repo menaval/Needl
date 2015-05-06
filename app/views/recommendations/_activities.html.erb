@@ -1,12 +1,9 @@
 <div class="activities">
   <div class="container">
-    <div class="row">
-      <div class="col-xs-1">
-      </div>
-      <div class="col-xs-10">
-        <ul class="list-group">
-          <% @activities.each do |activity| %>
-          <li class="list-group-item border margin">
+    <div class="list-group">
+      <% @activities.each do |activity| %>
+        <% if activity.owner.name %>
+          <div class="list-group-item border margin row">
             <% if activity.trackable %>
               <div class="col-xs-2">
                 <div class="profil">
@@ -24,15 +21,10 @@
                     <% end %>
                 </div>
               </div>
-            <% else %>
-              Une recommandation supprimée vient d'être ajoutée.
             <% end %>
-          </li>
-          <% end %>
-        </ul>
-      </div>
-      <div class="col-xs-1">
-      </div>
+          </div>
+        <% end %>
+      <% end %>
     </div>
   </div>
 </div>

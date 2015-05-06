@@ -4,9 +4,11 @@
     min-height: 100px;
   }
   .profil {
-    // float: left;
+    text-align: center
     img {
       margin-bottom: 5px;
+      margin-right: auto;
+      margin-left: auto;
     }
     p {
       font-weight: 700;
@@ -14,7 +16,7 @@
   }
 
   .activity-bloc {
-    padding-left: 5px;
+    padding-left: 15px;
     a {
       text-decoration: none;
       color: $red;
