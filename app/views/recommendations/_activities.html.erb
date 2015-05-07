@@ -7,7 +7,7 @@
             <% if activity.trackable %>
               <div class="col-xs-2">
                 <div class="profil">
-                  <%= image_tag activity.owner.picture %>
+                  <%= image_tag activity.owner.picture(:thumb), class: "img-circle" %>
                   <p><%= activity.owner ? activity.owner.name : 'Guest' %></p>
                 </div>
               </div>
