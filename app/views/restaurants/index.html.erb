@@ -1,17 +1,39 @@
-<div id="map" style="width: 100%; height: 800px;"></div>
+<div class="map-wrapper">
+  <div id="map"></div>
+</div>
 
 <% content_for(:after_js) do %>
 <%= javascript_include_tag "https://maps.google.com/maps/api/js?sensor=false&key=AIzaSyCOmsyWHOongAOfaB1f8iHk3CY7XVuUBs0" %>
 <%= javascript_include_tag "https://google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.14/src/markerclusterer_packed.js" %>
-  <%= javascript_tag do %>
+  <script>
+
     $(document).on('ready', function() {
+
+      var mapStyle =[{"featureType":"landscape.man_made","elementType":"all","stylers":[{"color":"#949191"},{"lightness":83},{"saturation":"7"}]},{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"lightness":77}]},{"featureType":"poi.park","elementType":"geometry.fill","stylers":[{"color":"#34ad6b"},{"lightness":"40"}]},{"featureType":"poi.school","elementType":"geometry.fill","stylers":[{"lightness":"39"},{"gamma":"0.76"},{"hue":"#fff700"},{"saturation":"67"}]},{"featureType":"poi.sports_complex","elementType":"geometry.fill","stylers":[{"color":"#c15e1f"},{"lightness":"12"},{"saturation":"45"},{"gamma":"2.07"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#f1b127"}]},{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#2f78c4"},{"gamma":"1.50"},{"lightness":"12"}]}]
+
       handler = Gmaps.build('Google');
-      handler.buildMap({ internal: { id: 'map' } }, function(){
-        markers = handler.addMarkers(<%= raw @markers.to_json %>);
-        handler.bounds.extendWith(markers);
-        handler.fitMapToBounds();
-      });
+      handler.buildMap({
+        internal: {
+          id: 'map'
+        },
+
+        provider: {
+          styles: mapStyle
+        }
+      }, function(){
+          markers = handler.addMarkers(<%= raw @markers.to_json %>);
+          handler.bounds.extendWith(markers);
+          handler.fitMapToBounds();
+          handler.getMap().setZoom(14);
+
+        }
+      );
+
+
+
+
+
     })
-  <% end %>
+  </script>
 <% end %>
 
