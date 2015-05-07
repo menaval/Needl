@@ -12,8 +12,8 @@
   <%= csrf_meta_tags %>
 </head>
 <body id="<%= "#{params[:controller].gsub(/\//, '_')}_#{params[:action]}" %>" >
+  <%= render "shared/flashes" %>
   <% if params[:controller] + "_" + params[:action] == "restaurants_index" %>
-    <%= render "shared/flashes" %>
     <%= render "shared/sidebar" %>
   <% end %>
   <div class="wrap">
