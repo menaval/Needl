@@ -1,16 +1,4 @@
 #recommendations_new {
-  #reco-bg {
-    background-image: asset-url("food.jpg");
-    width: 100%;
-    padding-bottom: 20px;
-   img {
-       filter: type(value);
-       -webkit-filter: type(value);
-       -moz-filter: type(value);
-       -ms-filter: type(value);
-       -o-filter: type(value);
-    }
-  }
 
   .checkbox {
     text-align: center;
@@ -20,7 +8,6 @@
   .simple_form_inline {
     display: inline-block;
     text-align: center;
-    padding-top: 20px;
   }
 
   label {
@@ -75,6 +62,10 @@
     border: 1px solid $gray-lighter;
     line-height: 1.428571429;
     width: 200px;
+  }
+
+  .btn {
+    margin-top: 30px;
   }
 }
   // CSS de la barre de recherche autocomplete
