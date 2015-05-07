@@ -2,15 +2,15 @@ class User < ActiveRecord::Base
 
   has_many :recommendations, dependent: :destroy
 
-  has_many :friendships, foreign_key: :sender_id
-  has_many :received_friendships, foreign_key: :receiver_id, class_name: 'Friendship'
+  has_many :friendships, foreign_key: :sender_id, dependent: :destroy
+  has_many :received_friendships, foreign_key: :receiver_id, class_name: 'Friendship', dependent: :destroy
 
-  has_many :senders, :through => :received_friendships
-  has_many :receivers, :through => :friendships
+  has_many :senders, :through => :received_friendships, dependent: :destroy
+  has_many :receivers, :through => :friendships, dependent: :destroy
 
-  has_many :not_interested_relations
-  has_many :member_ones, :through => :not_interested_relations
-  has_many :member_twos, :through => :not_interested_relations
+  has_many :not_interested_relations, dependent: :destroy
+  has_many :member_ones, :through => :not_interested_relations, dependent: :destroy
+  has_many :member_twos, :through => :not_interested_relations, dependent: :destroy
 
 
   devise :database_authenticatable, :registerable,

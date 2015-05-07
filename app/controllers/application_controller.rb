@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   include PublicActivity::StoreController
   before_action :authenticate_user!, unless: :pages_controller?
-  before_action :count_notifs, unless: :devise_controller?
+  before_action :count_notifs
   # on laisse unless pages_controller au cas ou pour l'instant
   # include Pundit
 
