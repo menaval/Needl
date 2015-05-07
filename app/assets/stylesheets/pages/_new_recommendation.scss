@@ -41,11 +41,36 @@
 
   .check_boxes:checked ~ .icon-box {
     background: $green;
-    // background: lighten($green, 10%);
     -webkit-animation: scaleUp 0.5s ease forwards;
+    -moz-animation: scaleUp 0.5s ease forwards;
+    animation: scaleUp 0.5s ease forwards;
   }
 
   @-webkit-keyframes scaleUp {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @-moz-keyframes scaleUp {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes scaleUp {
     0% {
       transform: scale(1);
     }
