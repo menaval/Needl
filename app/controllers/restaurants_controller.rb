@@ -14,6 +14,11 @@ class RestaurantsController < ApplicationController
         flash[:notice] = "Aucun restaurant pour cette recherche"
         # @restaurants
       end
+    else
+      if current_user.recommendations.count == 0
+        flash[:notice] = "Partager une adresse pour découvrir celles de vos amis"
+        redirect_to new_recommendation_path
+      end
     end
 
 
