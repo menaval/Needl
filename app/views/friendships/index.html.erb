@@ -1,16 +1,22 @@
 <h1>Mes amis</h1>
 
-<% current_user.friendships_by_status[:user_friends].each do |friendship| %>
-  <div class="friend">
-    <div class="infos">
-      <%= image_tag friendship[:friendship_user].picture %>
-      <%= friendship[:friendship_user].name %>
-      <p><%= Recommendation.where(user_id: friendship[:friendship_user]).count %> recos</p>
+<div class="container">
+  <% current_user.friendships_by_status[:user_friends].each do |friendship| %>
+    <div class="friend card-white">
+      <div class="row">
+        <div class="col-xs-3">
+          <%= image_tag friendship[:friendship_user].picture(:thumb), class: "img-circle" %>
+        </div>
+        <div class="col-xs-6 infos">
+          <h2><%= friendship[:friendship_user].name %></h2>
+          <p><%= Recommendation.where(user_id: friendship[:friendship_user]).count %> recos</p>
+        </div>
+        <div class="col-xs-3">
+          <div class="delete">
+            <%= link_to "Retirer", friendship_path(friendship[:friendship_relation].id), method: :delete, class: "btn-xs btn-danger"  %>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="delete">
-      <%= link_to "Retirer", friendship_path(friendship[:friendship_relation].id), method: :delete  %>
-    </div>
-  </div>
-<% end %>
-
-
+  <% end %>
+</div>
