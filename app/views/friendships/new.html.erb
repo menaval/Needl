@@ -50,14 +50,14 @@
                     <%= f.hidden_field :receiver_id, value: user.id %>
                     <%= f.hidden_field :sender_id, value: current_user.id %>
                     <%= f.hidden_field :accepted, value: false %>
-                    <%= f.submit class: "btn-xs btn-success", value: "Inviter" %>
+                    <%= f.submit class: "btn-xs btn-success", value: "Ajouter" %>
                   <% end %>
                 </div>
                 <div class="col-xs-6 text-left">
                   <%= bootstrap_form_for(@not_interested_relation, class: 'form') do |f| %>
                     <%= f.hidden_field :member_one_id, value: user.id %>
                     <%= f.hidden_field :member_two_id, value: current_user.id %>
-                    <%= f.submit class: "btn-xs btn-danger", value: "Non" %>
+                    <%= f.submit class: "btn-xs btn-danger", value: "Ignorer" %>
                   <% end %>
                 </div>
               </div>
