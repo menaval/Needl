@@ -127,3 +127,20 @@
 }
 
 
+.tt-hint {
+  color: transparent;
+}
+
+#restaurant_name {
+  border-radius: 50px !important;
+  padding: 10px 20px !important;
+  outline: none;
+}
+
+.check {
+  position: relative;
+  top: 7px;
+  left: 5px;
+  color: $green;
+  font-size: 20px;
+}

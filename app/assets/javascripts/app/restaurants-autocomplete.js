@@ -19,6 +19,11 @@ $(document).ready(function(){
     }).on('typeahead:selected', function($e, restaurant) {
       $(".restaurants-autocomplete--id").val(restaurant.id);
       $(".restaurants-autocomplete--origin").val(restaurant.origin);
+      $("#restaurant_name").css({
+        "border": "3px solid #32B796"
+      });
+      var $checker = $("<span class='check'><i class='fa fa-check'></i></span>");
+      $checker.insertAfter("#restaurant_name");
     });
   }
 });
