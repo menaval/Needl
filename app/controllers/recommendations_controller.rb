@@ -14,7 +14,6 @@ class RecommendationsController < ApplicationController
 
   def create
     @recommendation = current_user.recommendations.new(recommendation_params)
-    # @recommendation.restaurant = @restaurant
 
     if Recommendation.where(restaurant_id: @recommendation.restaurant_id, user_id: @recommendation.user_id).any?
       update
@@ -33,7 +32,6 @@ class RecommendationsController < ApplicationController
       redirect_to new_recommendation_path, notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmis la liste qui vous est proposée"
     end
   end
-
 
   private
 

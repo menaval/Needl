@@ -1,7 +1,9 @@
 $(document).ready(function() {
-$(function() {
-  setTimeout(function(){
-    $('.alert').fadeOut(500);
-  }, 2000);
-});
+  if ($('.alert').length > 0) {
+    $(function() {
+      setTimeout(function(){
+        $('.alert').fadeOut(800);
+      }, 4000);
+    });
+  ;}
 });
