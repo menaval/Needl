@@ -8,7 +8,7 @@
         <% @friendships[:user_propositions].each do |hash| %>
             <div>
               <div class="card-white-mini padded">
-                <%= image_tag hash[:friendship_user].picture, class: "img-circle"%>
+                <%= image_tag hash[:friendship_user].picture, class: "img-circle" %>
                 <%= hash[:friendship_user].name %>
               <div class="row accept_or_refuse">
                 <div class="col-xs-6 text-right">
