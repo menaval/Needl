@@ -1,0 +1,19 @@
+#registrations_edit {
+  #edit_user {
+    margin-top: 40px;
+  }
+  #user_name, #user_email {
+    padding: 5px 50px;
+    text-align: center;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    border: 1px solid $gray-lighter;
+  }
+  .btn {
+    margin-top: 10px;
+    margin-bottom: 30px;
+  }
+  #delete_account {
+    font-size: 12px;
+  }
+}
