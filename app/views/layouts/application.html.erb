@@ -13,6 +13,7 @@
 </head>
 <body id="<%= "#{params[:controller].gsub(/\//, '_')}_#{params[:action]}" %>" >
   <%= render "shared/flashes" %>
+
   <% if params[:controller] + "_" + params[:action] == "restaurants_index" %>
     <%= render "shared/sidebar" %>
   <% end %>
@@ -20,7 +21,6 @@
 
     <%= yield %>
   </div>
-
   <%= render "shared/footer" %>
 
   <%= javascript_include_tag :application %>

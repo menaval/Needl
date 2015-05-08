@@ -1,7 +1,6 @@
 class RecommendationsController < ApplicationController
   include PublicActivity::StoreController
   before_action :load_activities, only: [:index, :new, :edit]
-  before_action :find_restaurant_by_origin, only: :create
 
   def index
     @recommendations = Recommendation.all
@@ -15,20 +14,24 @@ class RecommendationsController < ApplicationController
 
   def create
     @recommendation = current_user.recommendations.new(recommendation_params)
-    @recommendation.restaurant = @restaurant
 
     if Recommendation.where(restaurant_id: @recommendation.restaurant_id, user_id: @recommendation.user_id).any?
-      @recommendation.update_attributes(recommendation_params)
-      @recommendation.restaurant.recompute_price(@recommendation)
-      redirect_to restaurant_path(@recommendation.restaurant)
-    elsif @recommendation.save
-      @recommendation.restaurant.recompute_price(@recommendation)
-      redirect_to restaurant_path(@recommendation.restaurant)
+      update
+
+    elsif find_restaurant_by_origin != nil
+
+      if @recommendation.save
+        find_restaurant_by_origin
+        @recommendation.restaurant.recompute_price(@recommendation)
+        redirect_to restaurant_path(@recommendation.restaurant)
+      else
+        redirect_to new_recommendation_path, notice: "Les ambiences, points forts ou le prix n'ont pas été remplis"
+      end
+
     else
-      render 'new', notice: "nous n'avons pas pu enregistrer votre recommandation"
+      redirect_to new_recommendation_path, notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmis la liste qui vous est proposée"
     end
   end
-
 
   private
 
@@ -59,15 +62,23 @@ class RecommendationsController < ApplicationController
   end
 
   def find_restaurant_by_origin
-    @restaurant_id      = params[:restaurant_id]
-    @restaurant_name    = params[:restaurant_name]
-    @restaurant_origin  = params[:restaurant_origin]
 
-    if @restaurant_origin == "foursquare"
-      @restaurant = create_restaurant_from_foursquare
+    if  params[:restaurant_origin] == "db" || params[:restaurant_origin] == "foursquare"
+
+      @restaurant_id      = params[:restaurant_id]
+      @restaurant_name    = params[:restaurant_name]
+      @restaurant_origin  = params[:restaurant_origin]
+
+      if @restaurant_origin == "foursquare"
+        @restaurant = create_restaurant_from_foursquare
+      else
+        @restaurant = Restaurant.find(@restaurant_id)
+      end
+
     else
-      @restaurant = Restaurant.find(@restaurant_id)
+      nil
     end
+
   end
 
   def recommendation_params
@@ -76,6 +87,12 @@ class RecommendationsController < ApplicationController
 
   def load_activities
     @activities = PublicActivity::Activity.where(owner_id: current_user.my_friends.map(&:id), owner_type: 'User').order('created_at DESC').limit(20)
+  end
+
+  def update
+    @recommendation.update_attributes(recommendation_params)
+    @recommendation.restaurant.recompute_price(@recommendation)
+    redirect_to restaurant_path(@recommendation.restaurant)
   end
 
   def read_all_notification

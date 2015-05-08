@@ -1,8 +1,14 @@
 .flash-box {
-  position: absolute;
   width: 100%;
   z-index: 2;
   color: white;
   opacity: 0.9;
   border: none;
+}
+
+.alert {
+  color: white;
+  background-color: #32B796;
+  margin-bottom: 0;
+  border-color: #32B796;
 }

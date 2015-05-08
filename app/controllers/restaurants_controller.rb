@@ -12,7 +12,6 @@ class RestaurantsController < ApplicationController
         @restaurants = @restaurants.cheaper_than(query[:price]).by_food(query[:food])
       else
         flash[:notice] = "Aucun restaurant pour cette recherche"
-        # @restaurants
       end
     else
       if current_user.recommendations.count == 0
