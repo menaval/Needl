@@ -8,5 +8,7 @@ $(document).ready(function(){
     slidesToScroll: 3,
     arrows: true
   });
+  $('.slick-prev').addClass('pulse')
+  $('.slick-next').addClass('pulse')
 });
 
