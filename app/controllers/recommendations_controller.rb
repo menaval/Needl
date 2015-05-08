@@ -26,11 +26,11 @@ class RecommendationsController < ApplicationController
         @recommendation.restaurant.recompute_price(@recommendation)
         redirect_to restaurant_path(@recommendation.restaurant)
       else
-        render 'new', notice: "Certains champs de votre recommandation n'ont pas été correctement remplis"
+        redirect_to new_recommendation_path, notice: "Les ambiences, points forts ou le prix n'ont pas été remplis"
       end
 
     else
-      render 'new', notice: "nous n'avons pas pu retrouver votre restaurant"
+      redirect_to new_recommendation_path, notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmis la liste qui vous est proposée"
     end
   end
 
