@@ -4,7 +4,7 @@
   <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
     <%= devise_error_messages! %>
 
-    <div><%= f.label :name %><br />
+    <div><%= f.label :nom %><br />
     <%= f.text_field :name %></div>
 
     <div><%= f.label :email %><br />
@@ -18,13 +18,10 @@
 
 
 
-    <div><%= f.submit t('.update', :default => "Update"), class: "btn btn-success"  %></div>
+    <div><%= f.submit t('.update', :default => "Valider"), class: "btn btn-success"  %></div>
   <% end %>
-
-  <h3><%= t('.cancel_my_account', :default => 'Cancel my account') %></h3>
-
-  <p><%= t('.unhappy', :default => 'Unhappy') %>? <%= link_to t('.cancel_my_account', :default => "Cancel my account"), registration_path(resource_name), :data => { :confirm => t('.are_you_sure', :default => "Are you sure?") }, :method => :delete %>.</p>
-
-  <%= link_to t('devise.shared.links.back', :default => "Back"), :back %>
+  <div id="delete_account">
+    <p><%= t('.unhappy', :default => 'Unhappy') %>? <%= link_to t('.cancel_my_account', :default => "Supprimer mon compte :("), registration_path(resource_name), :data => { :confirm => t('.are_you_sure', :default => "Really ? Pas de regret ?") }, :method => :delete %>.</p>
+  </div>
 
 </div>
