@@ -48,25 +48,25 @@
 
   @-webkit-keyframes scaleUp {
     0% {
-      transform: scale(1);
+      -webkit-transform: scale(1);
     }
     50% {
-      transform: scale(1.1);
+      -webkit-transform: scale(1.1);
     }
     100% {
-      transform: scale(1);
+      -webkit-transform: scale(1);
     }
   }
 
   @-moz-keyframes scaleUp {
     0% {
-      transform: scale(1);
+      -moz-transform: scale(1);
     }
     50% {
-      transform: scale(1.1);
+      -moz-transform: scale(1.1);
     }
     100% {
-      transform: scale(1);
+      -moz-transform: scale(1);
     }
   }
 
