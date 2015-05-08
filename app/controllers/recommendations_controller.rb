@@ -17,13 +17,18 @@ class RecommendationsController < ApplicationController
     @recommendation = current_user.recommendations.new(recommendation_params)
     @recommendation.restaurant = @restaurant
 
-    if @recommendation.save
+    if Recommendation.where(restaurant_id: @recommendation.restaurant_id, user_id: @recommendation.user_id).any?
+      @recommendation.update_attributes(recommendation_params)
+      @recommendation.restaurant.recompute_price(@recommendation)
+      redirect_to restaurant_path(@recommendation.restaurant)
+    elsif @recommendation.save
       @recommendation.restaurant.recompute_price(@recommendation)
       redirect_to restaurant_path(@recommendation.restaurant)
     else
-      render 'new'
+      render 'new', notice: "nous n'avons pas pu enregistrer votre recommandation"
     end
   end
+
 
   private
 
