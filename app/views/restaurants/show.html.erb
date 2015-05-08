@@ -38,7 +38,7 @@
       <div class="caroussel">
         <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
           <div class= "padded">
-              <%= image_tag User.find(friend_id).picture.url(:thumb), class: "img-circle avatar img-responsive" %>
+              <%= image_tag User.find(friend_id).picture, class: "img-circle avatar img-responsive" %>
               <p>" <%= content_and_date[0] %> "</p>
           </div>
         <% end %>
