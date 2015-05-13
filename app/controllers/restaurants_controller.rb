@@ -15,8 +15,7 @@ class RestaurantsController < ApplicationController
       end
     else
       if current_user.recommendations.count == 0
-        flash[:notice] = "Partager une adresse pour découvrir celles de vos amis"
-        redirect_to new_recommendation_path, notice: "Partages ta première recommandation !"
+        redirect_to access_users_path
       end
     end
 
