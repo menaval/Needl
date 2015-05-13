@@ -25,9 +25,10 @@ class RecommendationsController < ApplicationController
       if @recommendation.save
         find_restaurant_by_origin
         @recommendation.restaurant.recompute_price(@recommendation)
+        @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
         redirect_to restaurant_path(@recommendation.restaurant)
       else
-        redirect_to new_recommendation_path, notice: "Les ambiences, points forts ou le prix n'ont pas été remplis"
+        redirect_to new_recommendation_path, notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"
       end
 
     else

@@ -4,7 +4,7 @@
   </div>
   <div class= "form">
     <%= simple_form_for :verification, {url: verification_code_users_path}  do |f| %>
-      <%= f.input :code, label: "Code d'accès" %>
+      <%= f.input :code, label: "Code d'accès", placeholder: "write 'lewagon' for the test" %>
       <%= f.submit "Entrer !", class: "btn btn-primary" %>
     <% end %>
   </div>
