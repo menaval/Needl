@@ -1,6 +1,10 @@
+require 'mixpanel-ruby'
+
 class RestaurantsController < ApplicationController
   def show
     @restaurant = Restaurant.find(params[:id])
+    tracker = Mixpanel::Tracker.new(ENV['MIXPANEL_TOKEN'])
+    tracker.track(current_user.id, 'look restaurant page')
   end
 
   def index
