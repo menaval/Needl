@@ -1,7 +1,7 @@
 class RestaurantsController < ApplicationController
   def show
     @restaurant = Restaurant.find(params[:id])
-    @tracker.track(current_user.id, 'Restaurant Page', { "restaurant" => @restaurant.name, "user" => current_user.name })
+    @tracker.track(current_user.id, 'Restaurant Page', { "restaurant" => @restaurant.name, "user" => current_user.name, "browser" => browser.name })
   end
 
   def index

@@ -84,6 +84,7 @@ GEM
     bourbon (4.2.2)
       sass (~> 3.4)
       thor
+    browser (0.8.0)
     builder (3.2.2)
     byebug (4.0.5)
       columnize (= 0.9.0)
@@ -320,6 +321,7 @@ DEPENDENCIES
   binding_of_caller
   bootstrap-sass
   bootstrap_form
+  browser
   country_select
   devise
   devise-i18n

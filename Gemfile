@@ -23,6 +23,7 @@ gem "rails-assets-underscore"
 gem "foursquare2"
 gem "koala", "~> 2.0"
 gem "mixpanel-ruby"
+gem "browser"
 
 gem "jquery-rails"
 gem "sass-rails", "~> 5.0"
