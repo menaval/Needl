@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   include PublicActivity::StoreController
   before_action :authenticate_user!, unless: :pages_controller?
   before_action :count_notifs
+  before_action  :tracking
 
   # on laisse unless pages_controller au cas ou pour l'instant
   # include Pundit
@@ -39,5 +40,9 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     flash[:error] = I18n.t('controllers.application.user_not_authorized', default: "You can't access this page.")
     redirect_to(root_path)
+  end
+
+  def tracking
+    tracker = Mixpanel::Tracker.new(ENV['MIXPANEL_TOKEN'])
   end
 end
