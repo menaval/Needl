@@ -1,0 +1,17 @@
+#users_access {
+  background-color: $red;
+  .message {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    margin-bottom: 100px;
+  }
+  .form {
+    margin-left: auto;
+    margin-right: auto;
+    width: 60%;
+  }
+  .footer {
+    display: none;
+  }
+}

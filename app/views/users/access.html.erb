@@ -1,0 +1,11 @@
+<div class= "text-center">
+  <div class="message">
+    <h1> Béta restreinte aux utilisateurs tests </h1>
+  </div>
+  <div class= "form">
+    <%= simple_form_for :verification, {url: verification_code_users_path}  do |f| %>
+      <%= f.input :code, label: "Code d'accès" %>
+      <%= f.submit "Entrer !", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>

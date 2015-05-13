@@ -5,7 +5,12 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks", registrations: 'registrations' }
   root to: 'restaurants#index'
 
-  resources :users, only: [:show, :edit, :update]
+  resources :users, only: [:show, :edit, :update] do
+    collection do
+      get :access
+      post :verification_code
+    end
+  end
   resources :friendships, only: [:index, :new, :create, :destroy] do
     collection do
       post :answer_request
