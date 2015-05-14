@@ -43,9 +43,14 @@
           </div>
         <% end %>
       </div>
-      <%= link_to "Contacter #{@restaurant.name}", "tel:#{@restaurant.phone_number}", class: "btn btn-danger" %>
+      <%= link_to "Contacter #{@restaurant.name}", "tel:#{@restaurant.phone_number}", class: "btn btn-danger", id:"call" %>
     </div>
   </div>
+  <script>
+    mixpanel.track_links("#call", "call", {
+        "user": "<%= current_user.name %>", "restaurant": "<%= @restaurant.name %>", "browser": "<%= browser.name %>"
+    });
+  </script>
 </div>
 
 
