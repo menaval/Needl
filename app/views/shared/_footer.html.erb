@@ -23,12 +23,15 @@
     </div>
   </div>
   <div class="div-footer">
-    <div class= "nav-icone nav-reco">
+    <div class= "nav-icone nav-reco" id="reco_page">
       <%= link_to new_recommendation_path do %>
         <%= image_tag "new-restaurant-white.svg" %>
         <p>Recommande</p>
       <% end %>
     </div>
+    <script>
+      mixpanel.track_links("#reco_page a", "reco_view", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>"});
+    </script>
   </div>
   <div class="div-footer">
     <% if current_user %>
