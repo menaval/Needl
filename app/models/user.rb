@@ -5,12 +5,14 @@ class User < ActiveRecord::Base
   has_many :friendships, foreign_key: :sender_id, dependent: :destroy
   has_many :received_friendships, foreign_key: :receiver_id, class_name: 'Friendship', dependent: :destroy
 
+  has_many :not_interested_relations, foreign_key: :member_two_id, dependent: :destroy
+  has_many :received_not_interested_relations, foreign_key: :member_one_id, class_name: 'NotInterestedRelation', dependent: :destroy
+
   has_many :senders, :through => :received_friendships, dependent: :destroy
   has_many :receivers, :through => :friendships, dependent: :destroy
 
-  has_many :not_interested_relations, dependent: :destroy
   has_many :member_ones, :through => :not_interested_relations, dependent: :destroy
-  has_many :member_twos, :through => :not_interested_relations, dependent: :destroy
+  has_many :member_twos, :through => :received_not_interested_relations, dependent: :destroy
 
 
   devise :database_authenticatable, :registerable,
@@ -64,15 +66,9 @@ class User < ActiveRecord::Base
   end
 
   def refused_friends
-    list = []
-    NotInterestedRelation.includes([:member_one, :member_two]).where("member_one_id = ? or member_two_id = ?",  self.id, self.id).each do |relation|
-        if User.find(relation.member_one_id).id == self.id
-          list << User.find(relation.member_two_id)
-        else
-          list << User.find(relation.member_one_id)
-        end
-    end
-    list
+    user_ids = self.member_ones.pluck(:id)
+    user_ids += self.member_twos.pluck(:id)
+    User.where(id: user_ids)
   end
 
   def user_friends
