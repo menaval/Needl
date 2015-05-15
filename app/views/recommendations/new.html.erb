@@ -23,7 +23,7 @@
     <% end %>
   </div>
   <script>
-    mixpanel.track_forms("#form-reco", "reco_intent", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>", "restaurant": "<%= @restaurant ? @restaurant.name : '' %>"});
-    // a verifier
+    mixpanel.track_forms("#form-reco", "reco_intent", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
+    mixpanel.track("reco_view", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>"});
   </script>
 </div>

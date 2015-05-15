@@ -49,6 +49,17 @@
      })(document);
    </script>
   <% end %>
+  <script>
+    // ajouter if current_user.sign_in_count == 1 lorsque tout le monde aura ete tracké
+    <% if current_user %>
+      // mixpanel.identify("<%= current_user.id%>");
+      mixpanel.people.set({
+        "gender": "<%= current_user.gender%>"
+        "name": "<%= current_user.name %>"
+        "age": "<%= current_user.age_range %>"
+      });
+    <% end %>
+  </script>
 
 </body>
 </html>

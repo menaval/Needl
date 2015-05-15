@@ -18,7 +18,8 @@
         provider: {
           styles: mapStyle
         }
-      }, function(){
+      },
+        function(){
           markers = handler.addMarkers(<%= raw @markers.to_json %>);
           handler.bounds.extendWith(markers);
           handler.fitMapToBounds();

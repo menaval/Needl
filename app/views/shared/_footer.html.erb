@@ -29,9 +29,6 @@
         <p>Recommande</p>
       <% end %>
     </div>
-    <script>
-      mixpanel.track_links("#reco_page a", "reco_view", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>"});
-    </script>
   </div>
   <div class="div-footer">
     <% if current_user %>

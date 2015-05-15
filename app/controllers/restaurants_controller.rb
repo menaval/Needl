@@ -1,7 +1,6 @@
 class RestaurantsController < ApplicationController
   def show
     @restaurant = Restaurant.find(params[:id])
-    @tracker.track(current_user.id, 'Restaurant Page', { "restaurant" => @restaurant.name, "user" => current_user.name, "browser" => browser.name })
   end
 
   def index
@@ -16,7 +15,7 @@ class RestaurantsController < ApplicationController
       end
     else
       if current_user.recommendations.count == 0
-        redirect_to access_users_path
+        redirect_to new_recommendation_path, notice: "Partages ta première reco avant de découvrir celles de tes amis !"
       end
     end
 
