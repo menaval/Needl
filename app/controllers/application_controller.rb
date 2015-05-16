@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
+
   protected
 
   def count_notifs
@@ -45,4 +46,5 @@ class ApplicationController < ActionController::Base
   def tracking
     @tracker = Mixpanel::Tracker.new(ENV['MIXPANEL_TOKEN'])
   end
+
 end

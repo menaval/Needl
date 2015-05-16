@@ -18,14 +18,20 @@
         provider: {
           styles: mapStyle
         }
-      }, function(){
+      },
+        function(){
           markers = handler.addMarkers(<%= raw @markers.to_json %>);
+          // markers.forEach(function(marker){
+          //   google.maps.event.addListener(marker, 'click', function() {
+          //     mixpanel.track('restaurant_box')
+          //    });
+          // });
           handler.bounds.extendWith(markers);
           handler.fitMapToBounds();
           handler.getMap().setZoom(14);
         }
       );
-    })
+    });
   </script>
 <% end %>
 
