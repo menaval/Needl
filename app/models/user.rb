@@ -87,7 +87,7 @@ class User < ActiveRecord::Base
       user.provider = auth.provider
       user.uid = auth.uid
       # user.gender = auth.extra.raw_info.gender
-      # user.age_range = auth.extra.raw_info.age_range.min[1]
+      user.age_range = auth.extra.raw_info.age_range.min[1]
       if auth.info.email.nil?
         user.email = ""
       else
