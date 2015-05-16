@@ -1,17 +1,19 @@
 #card-box {
-  width: 150px;
+  width: 130px;
   height: 180px;
   img {
-    height : 40%;
+    width : 85%;
     margin: auto;
   }
   .link h2 {
     font-size: 22px;
     color: $red;
     text-decoration: none;
+    margin-top: 5px;
   }
   .link p{
     color: $gray;
+    margin-bottom: 8px;
   }
   a {
     text-decoration: none;
