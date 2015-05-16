@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
+
   protected
 
   def count_notifs
@@ -46,10 +47,4 @@ class ApplicationController < ActionController::Base
     @tracker = Mixpanel::Tracker.new(ENV['MIXPANEL_TOKEN'])
   end
 
-  # def after_sign_in_path_for(resource)
-  # @tracker.people.set(current_user.id, {
-  #     '$last_login'    => current_user.last_sign_in_at
-  # });
-  #   new_friendship_path
-  # end
 end
