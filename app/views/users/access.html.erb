@@ -8,4 +8,16 @@
       <%= f.submit "Entrer !", class: "btn btn-primary" %>
     <% end %>
   </div>
+  <script>
+    <% if current_user %>
+      <% if current_user.sign_in_count == 1 %>
+        mixpanel.identify("<%= current_user.id%>");
+        mixpanel.people.set({
+          "gender": "<%= current_user.gender%>",
+          "name": "<%= current_user.name %>",
+          "age": "<%= current_user.age_range %>"
+        });
+      <% end %>
+    <% end %>
+  </script>
 </div>
