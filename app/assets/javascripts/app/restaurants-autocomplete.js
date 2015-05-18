@@ -13,7 +13,7 @@ $(document).ready(function(){
 
     $('.restaurants-autocomplete').typeahead(null, {
       name: 'best-pictures',
-      display: 'name',
+      displayKey: 'name_and_address',
       minLength: 3,
       source: restaurants
     }).on('typeahead:selected', function($e, restaurant) {

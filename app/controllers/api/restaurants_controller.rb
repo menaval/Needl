@@ -7,11 +7,9 @@ module Api
       @query = params[:query]
 
       @restaurants = search_via_database
-
-      @restaurants = []
       @restaurants += search_via_foursquare
 
-      @restaurants.uniq! { |restaurant| restaurant[:name] }
+      @restaurants.uniq! { |restaurant| [ restaurant[:name], restaurant[:address] ] }
       @restaurants.take(5)
     end
 
@@ -21,7 +19,7 @@ module Api
       restaurants = Restaurant.where("name ilike ?", "%#{@query}%").limit(5)
 
       restaurants = restaurants.map do |restaurant|
-        { origin: 'db', name: restaurant.name, id: restaurant.id }
+        { origin: 'db', name: restaurant.name, address: restaurant.address, id: restaurant.id, name_and_address: "#{restaurant.name}: #{restaurant.address}" }
       end
 
       return restaurants
@@ -42,7 +40,7 @@ module Api
       )
 
       restaurants = search['venues'].map do |restaurant|
-        { origin: 'foursquare', name: restaurant['name'], id: restaurant['id'] }
+        { origin: 'foursquare', name: restaurant['name'], address: "#{restaurant.location.address}, #{restaurant.location.city}", id: restaurant['id'], name_and_address: "#{restaurant['name']}: #{restaurant.location.address}, #{restaurant.location.city}" }
       end
 
       return restaurants
