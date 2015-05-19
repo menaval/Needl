@@ -46,7 +46,7 @@ class Restaurant < ActiveRecord::Base
         end
       end
     end
-    hash.sort_by { |_name, ids| -ids.length }.first(2).to_h
+    hash.sort_by { |_name, ids| -ids.length }.first(3).to_h
   end
 
   def reviews_from_my_friends(current_user)
