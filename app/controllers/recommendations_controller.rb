@@ -19,11 +19,8 @@ class RecommendationsController < ApplicationController
       update
 
     elsif find_restaurant_by_origin != nil
-      find_restaurant_by_origin
-
       @recommendation.restaurant = @restaurant
       if @recommendation.save
-        find_restaurant_by_origin
         @recommendation.restaurant.recompute_price(@recommendation)
         @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
 
