@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150515164834) do
+ActiveRecord::Schema.define(version: 20150519074857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,8 +59,10 @@ ActiveRecord::Schema.define(version: 20150515164834) do
     t.boolean  "accepted"
     t.integer  "receiver_id"
     t.integer  "sender_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.boolean  "sender_invisible",   default: false
+    t.boolean  "receiver_invisible", default: false
   end
 
   create_table "not_interested_relations", force: :cascade do |t|
