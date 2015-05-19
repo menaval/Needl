@@ -14,6 +14,26 @@ class FriendshipsController < ApplicationController
     redirect_to new_friendship_path
   end
 
+  def invisible
+    @friendship = Friendship.find(eval(params[:id])[:value])
+    if @friendship.sender_id == current_user.id
+      @friendship.update_attribute(:receiver_invisible, true)
+    else
+      @friendship.update_attribute(:sender_invisible, true)
+    end
+    redirect_to friendships_path
+  end
+
+  def visible
+    @friendship = Friendship.find(eval(params[:id])[:value])
+    if @friendship.sender_id == current_user.id
+      @friendship.update_attribute(:receiver_invisible, false)
+    else
+      @friendship.update_attribute(:sender_invisible, false)
+    end
+    redirect_to friendships_path
+  end
+
   def answer_request
     @friendship = Friendship.find(eval(params[:id])[:value])
     status = eval(params[:accepted])[:value]
