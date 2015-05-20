@@ -13,15 +13,14 @@ class RecommendationsController < ApplicationController
   end
 
   def create
-    @recommendation = current_user.recommendations.new(recommendation_params)
 
-    if Recommendation.where(restaurant_id: @recommendation.restaurant_id, user_id: @recommendation.user_id).any?
+    if Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
       update
-
     elsif find_restaurant_by_origin != nil
+      @recommendation = current_user.recommendations.new(recommendation_params)
       @recommendation.restaurant = @restaurant
       if @recommendation.save
-        @recommendation.restaurant.recompute_price(@recommendation)
+        @recommendation.restaurant.recompute_price(@recommendation.price)
         @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
 
         redirect_to restaurant_path(@recommendation.restaurant)
@@ -91,9 +90,11 @@ class RecommendationsController < ApplicationController
   end
 
   def update
-    @recommendation.update_attributes(recommendation_params)
-    @recommendation.restaurant.recompute_price(@recommendation)
-    redirect_to restaurant_path(@recommendation.restaurant)
+    recommendation = Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).first
+    previous_price = recommendation.price
+    recommendation.update_attributes(recommendation_params)
+    recommendation.restaurant.recompute_with_previous_price(recommendation.price, previous_price)
+    redirect_to restaurant_path(recommendation.restaurant)
   end
 
   def read_all_notification
