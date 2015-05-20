@@ -20,7 +20,7 @@ class RecommendationsController < ApplicationController
       @recommendation = current_user.recommendations.new(recommendation_params)
       @recommendation.restaurant = @restaurant
       if @recommendation.save
-        @recommendation.restaurant.recompute_price(@recommendation)
+        @recommendation.restaurant.recompute_price(@recommendation.price)
         @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
 
         redirect_to restaurant_path(@recommendation.restaurant)
@@ -91,8 +91,9 @@ class RecommendationsController < ApplicationController
 
   def update
     recommendation = Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).first
+    previous_price = recommendation.price
     recommendation.update_attributes(recommendation_params)
-    recommendation.restaurant.recompute_price(recommendation)
+    recommendation.restaurant.recompute_with_previous_price(recommendation.price, previous_price)
     redirect_to restaurant_path(recommendation.restaurant)
   end
 
