@@ -56,8 +56,8 @@ class User < ActiveRecord::Base
   end
 
   def my_visible_friends
-    user_ids = self.receivers.includes([:received_friendships, :friendships]).where(friendships: { accepted: true }, friendships: { receiver_invisible: false }).pluck(:id)
-    user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true }, friendships: { sender_invisible: false }).pluck(:id)
+    user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
+    user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
 
     User.where(id: user_ids)
   end
