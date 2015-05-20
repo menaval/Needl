@@ -15,7 +15,8 @@
         mixpanel.people.set({
           "gender": "<%= current_user.gender%>",
           "name": "<%= current_user.name %>",
-          "age": "<%= current_user.age_range %>"
+          "age": "<%= current_user.age_range %>",
+          "$email": "<%= current_user.email %>"
         });
       <% end %>
     <% end %>
