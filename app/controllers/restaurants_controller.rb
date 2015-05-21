@@ -1,7 +1,7 @@
 class RestaurantsController < ApplicationController
   def show
     @restaurant = Restaurant.find(params[:id])
-    @picture = @restaurant.picture_url  == "" ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
+    @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
   end
 
   def index

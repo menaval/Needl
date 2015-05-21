@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
   end
 
   def tracking
-    @tracker = Mixpanel::Tracker.new(ENV['MIXPANEL_TOKEN_DEVELOPMENT'])
+    @tracker = Mixpanel::Tracker.new(ENV['MIXPANEL_TOKEN'])
   end
 
 end
