@@ -17,7 +17,7 @@
 
       <%= reco.input :price, label: '<div class= "title">Prix du <strong>plat</strong></div>'.html_safe %>
 
-      <%= reco.input :review, label: '<div class= "title">Mot de la fin <p>(40 caractères max)</p></div>'.html_safe,  maxlength: 40, placeholder: "Un plat à ne pas louper?" %>
+      <%= reco.input :review, label: '<div class= "title">Mot de la fin <p>(60 caractères max)</p></div>'.html_safe,  maxlength: 60, placeholder: "Un plat à ne pas louper?" %>
 
       <%= reco.submit("Recommander !", class: "btn btn-danger") %>
     <% end %>
