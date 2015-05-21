@@ -19,7 +19,7 @@
           <ul class="list-inline">
            <% ids.each do |id| %>
             <li>
-              <%= image_tag User.find(id.to_i).picture.url(:thumb), class: "avatar img-circle img-responsive" %>
+              <%= image_tag User.find(id.to_i).picture, class: "avatar img-circle img-responsive" %>
             </li>
            <% end %>
           </ul>
