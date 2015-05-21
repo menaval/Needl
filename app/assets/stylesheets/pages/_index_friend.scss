@@ -3,8 +3,16 @@
     position: relative;
     .delete {
       position: absolute;
-      top: 50px;
+      top: 30px;
       right: 30px;
+    }
+    .visibility {
+      position: absolute;
+      top: 90px;
+      right: 30px;
+      .btn-xs {
+        border-color: transparent;
+      }
     }
     img {
       padding: 25px 10px;
