@@ -24,6 +24,7 @@ gem "foursquare2"
 gem "koala", "~> 2.0"
 gem "mixpanel-ruby"
 gem "browser"
+gem 'newrelic_rpm'
 
 gem "jquery-rails"
 gem "sass-rails", "~> 5.0"
