@@ -1,8 +1,8 @@
 $(document).ready(function(){
-  $('.caroussel').slick({
+  $('.carousel').slick({
     arrows: true
   });
-  $('.multiple-caroussel').slick({
+  $('.multiple-carousel').slick({
     infinite: true,
     slidesToShow: 3,
     slidesToScroll: 3,

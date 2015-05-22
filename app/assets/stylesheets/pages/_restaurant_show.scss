@@ -19,7 +19,6 @@
     &:after {
       content: "";
       background: image-url('degrade.png') bottom left repeat-x;
-      // height: 200px;
       position: absolute;
       top: 0;
       left: 0;
@@ -98,8 +97,18 @@
   wrap {
     margin-bottom: 0px;
   }
-  .caroussel {
+  .carousel {
     margin-bottom: 10px;
+  }
+  .modal {
+    .slick-slide {
+      display: block;
+      width: 0;
+      overflow: hidden;
+    }
+    .slick-active {
+      width: auto;
+    }
   }
 
   i {
