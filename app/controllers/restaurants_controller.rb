@@ -10,8 +10,8 @@ class RestaurantsController < ApplicationController
     @restaurants  = current_user.my_friends_restaurants
 
     if query
-      if @restaurants.cheaper_than(query[:price]).by_food(query[:food]).count > 0
-        @restaurants = @restaurants.cheaper_than(query[:price]).by_food(query[:food])
+      if @restaurants.cheaper_than(query[:price]).by_food(query[:food]).by_friend(query[:friend]).count > 0
+        @restaurants = @restaurants.cheaper_than(query[:price]).by_food(query[:food]).by_friend(query[:friend])
       else
         flash[:notice] = "Aucun restaurant pour cette recherche"
       end

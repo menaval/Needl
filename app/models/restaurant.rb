@@ -8,6 +8,7 @@ class Restaurant < ActiveRecord::Base
 
   scope :cheaper_than, ->(max_price) { where("restaurants.price <= ?", max_price.to_i) if max_price.present? }
   scope :by_food,      ->(food)      { where("food_id = ?", food.to_i) if food.present? }
+  scope :by_friend,    ->(friend)    {includes(:recommendations).where(recommendations: { user_id: friend.to_i }) if friend.present?}
 
   def number_from_my_friends(current_user)
     number = 0
