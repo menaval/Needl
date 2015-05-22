@@ -1,5 +1,5 @@
 <div>
-  <div id="image_field" style="background: url(<%= image_path(@picture) %>); background-repeat:no-repeat; background-size:cover; background-position:50% 50%">
+  <div id="image_field" style="background: url(<%= image_path(@picture) %>); background-repeat:no-repeat; background-size:cover; background-position:50% 50%" data-toggle="modal" data-target="#photos">
     <div id="text-left">
       <h1><%= @restaurant.name %></h1>
       <h3><%= Food.find(@restaurant.food_id).name %></h3>
@@ -13,6 +13,7 @@
      <h2><%= @restaurant.price %> €</h2>
     </div>
   </div>
+  <%= render "modal_photos" %>
 
   <div id="ambiences">
     <div class="container">
@@ -31,11 +32,10 @@
       <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user), ambience_or_strength: "strength" %>
     </div>
   </div>
-
   <div id="mots_de_la_fin" class="text-center">
     <div class="container">
       <h2>Mots de la fin</h2>
-      <div class="caroussel">
+      <div class="carousel">
         <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
           <div class= "padded">
               <%= image_tag User.find(friend_id).picture, class: "img-circle avatar img-responsive" %>
@@ -46,6 +46,7 @@
       <%= link_to "Contacter #{@restaurant.name}", "tel:#{@restaurant.phone_number}", class: "btn btn-danger", id:"call" %>
     </div>
   </div>
+
   <script>
     mixpanel.track_links("#call", "call", {
         "user": "<%= current_user.name %>", "restaurant": "<%= @restaurant.name %>", "browser": "<%= browser.name %>"
