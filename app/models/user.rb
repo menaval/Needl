@@ -62,6 +62,14 @@ class User < ActiveRecord::Base
     User.where(id: user_ids)
   end
 
+  def my_visible_friends_and_me
+    user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
+    user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
+    user_ids += [self.id]
+
+    User.where(id: user_ids).order(:name)
+  end
+
   def pending_invitations_received
     user_ids = self.senders.includes(:friendships).where(friendships: { accepted: false }).pluck(:id)
     User.where(id: user_ids)
