@@ -86,7 +86,7 @@ class RecommendationsController < ApplicationController
   end
 
   def load_activities
-    @activities = PublicActivity::Activity.where(owner_id: current_user.my_friends.map(&:id), owner_type: 'User').order('created_at DESC').limit(20)
+    @activities = PublicActivity::Activity.where(owner_id: current_user.my_visible_friends.map(&:id), owner_type: 'User').order('created_at DESC').limit(20)
   end
 
   def update
