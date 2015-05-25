@@ -1,7 +1,7 @@
 <h1>Mes amis</h1>
 
 <div class="container">
-  <% current_user.my_friends.each do |friend| %>
+  <% User.where(id: current_user.my_friends_ids).each do |friend| %>
   <% friendship = Friendship.find_by(sender_id: [current_user.id, friend.id], receiver_id: [current_user.id, friend.id]) %>
 
     <div class="friend card-white">

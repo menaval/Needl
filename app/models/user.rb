@@ -24,29 +24,14 @@ class User < ActiveRecord::Base
     validates_attachment_content_type :picture,
       content_type: /\Aimage\/.*\z/
 
-  def my_friends
+  def my_friends_ids
     user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true }).pluck(:id)
     user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true }).pluck(:id)
-
-    User.where(id: user_ids)
-  end
-
-  def my_visible_friends
-    my_visible_friends_ids
-    User.where(id: @user_ids)
   end
 
   def my_visible_friends_ids
     @user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
     @user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
-  end
-
-  def my_visible_friends_and_me
-    user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
-    user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
-    user_ids += [self.id]
-
-    User.where(id: user_ids).order(:name)
   end
 
   def pending_invitations_received
@@ -65,19 +50,19 @@ class User < ActiveRecord::Base
     User.where(id: user_ids)
   end
 
-  def user_friends
-    graph = Koala::Facebook::API.new(self.token)
-    friends_uids = graph.get_connections("me", "friends").map { |friend| friend["id"] }
-    User.where(uid: friends_uids)
-  end
-
   def my_friends_restaurants
-    user_ids = my_visible_friends.map(&:id) + [self.id]
+    user_ids = my_visible_friends_ids + [self.id]
     Restaurant.joins(:recommendations).where(recommendations: { user_id: user_ids })
   end
 
   def my_friends_foods
     Food.joins(restaurants: :recommendations).where(recommendations: {user_id: my_visible_friends_ids}).uniq
+  end
+
+  def user_friends
+    graph = Koala::Facebook::API.new(self.token)
+    friends_uids = graph.get_connections("me", "friends").map { |friend| friend["id"] }
+    User.where(uid: friends_uids)
   end
 
   def self.find_for_facebook_oauth(auth)

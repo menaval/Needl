@@ -4,7 +4,7 @@ class FriendshipsController < ApplicationController
     @users = current_user.user_friends
     @friendship = Friendship.new
     @not_interested_relation = NotInterestedRelation.new
-    @new_potential_friends = @users - current_user.my_friends - current_user.pending_invitations_sent - current_user.pending_invitations_received - current_user.refused_friends - [current_user]
+    @new_potential_friends = @users - User.where(id: current_user.my_friends_ids) - current_user.pending_invitations_sent - current_user.pending_invitations_received - current_user.refused_friends - [current_user]
   end
 
   def create
