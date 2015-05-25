@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
 
   def count_notifs
     if user_signed_in?
-      activities = PublicActivity::Activity.where(owner_id: current_user.my_friends.map(&:id), owner_type: 'User').order('created_at DESC').limit(20)
+      activities = PublicActivity::Activity.where(owner_id: User.where(id: current_user.my_friends_ids).map(&:id), owner_type: 'User').order('created_at DESC').limit(20)
       @notification_count = activities ? activities.where(read: false).count : 0
     end
   end

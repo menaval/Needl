@@ -24,50 +24,14 @@ class User < ActiveRecord::Base
     validates_attachment_content_type :picture,
       content_type: /\Aimage\/.*\z/
 
-
-  def friendships_by_status
-    user_friends = []
-    user_requests = []
-    user_propositions = []
-    my_friendships = Friendship.includes([:sender, :receiver]).where("sender_id = ? or receiver_id = ?",  self.id, self.id)
-    my_friendships.each do |friendship|
-      if friendship.accepted
-        if friendship.receiver_id == self.id
-          user_friends << { friendship_user: friendship.sender, friendship_relation: friendship }
-        else
-          user_friends << { friendship_user: friendship.receiver, friendship_relation: friendship }
-        end
-      else
-        if friendship.receiver_id == self.id
-          user_propositions << { friendship_user: friendship.sender, friendship_relation: friendship }
-        else
-          user_requests << { friendship_user: friendship.receiver, friendship_relation: friendship }
-        end
-      end
-    end
-    {user_friends: user_friends, user_propositions: user_propositions, user_requests: user_requests}
-  end
-
-  def my_friends
+  def my_friends_ids
     user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true }).pluck(:id)
     user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true }).pluck(:id)
-
-    User.where(id: user_ids)
   end
 
-  def my_visible_friends
-    user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
-    user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
-
-    User.where(id: user_ids)
-  end
-
-  def my_visible_friends_and_me
-    user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
-    user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
-    user_ids += [self.id]
-
-    User.where(id: user_ids).order(:name)
+  def my_visible_friends_ids
+    @user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
+    @user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
   end
 
   def pending_invitations_received
@@ -86,15 +50,19 @@ class User < ActiveRecord::Base
     User.where(id: user_ids)
   end
 
+  def my_friends_restaurants
+    user_ids = my_visible_friends_ids + [self.id]
+    Restaurant.joins(:recommendations).where(recommendations: { user_id: user_ids })
+  end
+
+  def my_friends_foods
+    Food.joins(restaurants: :recommendations).where(recommendations: {user_id: my_visible_friends_ids}).uniq
+  end
+
   def user_friends
     graph = Koala::Facebook::API.new(self.token)
     friends_uids = graph.get_connections("me", "friends").map { |friend| friend["id"] }
     User.where(uid: friends_uids)
-  end
-
-  def my_friends_restaurants
-    user_ids = my_visible_friends.map(&:id) + [self.id]
-    Restaurant.includes(:recommendations).where(recommendations: { user_id: user_ids })
   end
 
   def self.find_for_facebook_oauth(auth)

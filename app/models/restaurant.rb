@@ -13,7 +13,7 @@ class Restaurant < ActiveRecord::Base
   def number_from_my_friends(current_user)
     number = 0
     self.recommendations.each do |reco|
-      if current_user.my_friends.include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
+      if User.where(id: current_user.my_friends_ids).include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
         number += 1
       end
     end
@@ -23,7 +23,7 @@ class Restaurant < ActiveRecord::Base
   def ambiences_from_my_friends(current_user)
     hash = {}
     self.recommendations.each do |reco|
-      if current_user.my_friends.include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
+      if User.where(id: current_user.my_friends_ids).include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
         reco.ambiences.each do |number|
           ambiences_list = ["chic", "festif", "typique", "ensoleille", "fast_and_good"]
           ambience = ambiences_list[number.to_i - 1]
@@ -38,7 +38,7 @@ class Restaurant < ActiveRecord::Base
   def strengths_from_my_friends(current_user)
     hash = {}
     self.recommendations.each do |reco|
-      if current_user.my_friends.include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
+      if User.where(id: current_user.my_friends_ids).include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
         reco.strengths.each do |number|
           ambiences_list = ["cuisine", "service", "cadre", "original", "copieux", "vins", "qualite_prix"]
           ambience = ambiences_list[number.to_i - 1]
@@ -53,7 +53,7 @@ class Restaurant < ActiveRecord::Base
   def reviews_from_my_friends(current_user)
     hash = {}
     self.recommendations.each do |reco|
-      if current_user.my_friends.include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
+      if User.where(id: current_user.my_friends_ids).include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
         if reco.review != ""
           hash[reco.user_id] = [reco.review, reco.created_at]
         end

@@ -32,8 +32,8 @@
       <div class="card-white text-center">
         <h2 class= "padded">Mes amis</h2>
         <div class="multiple-carousel">
-          <% if current_user.my_friends.count > 0 %>
-            <% current_user.my_friends.each do |friend| %>
+          <% if User.where(id: current_user.my_friends_ids).count > 0 %>
+            <% User.where(id: current_user.my_friends_ids).each do |friend| %>
               <div class="slick_icon">
                 <%= image_tag(friend.picture, class: "img-circle img_friend ") %>
                 <%= friend.name.split(' ').first %>

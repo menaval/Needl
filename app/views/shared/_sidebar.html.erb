@@ -10,8 +10,8 @@
     <%=simple_form_for :query, { url: restaurants_path, method: :get, class: "sidebar-form sidebar-item", id: "search-form" }  do |f| %>
 
       <%= f.input :price, label: 'Prix du plat', placeholder: "Quel prix max ?", id: "price" %>
-      <%= f.input :food, collection: Food.all, label: 'Style de Cuisine', prompt: "Quel type ?", id: "food" %>
-      <%= f.input :friend, collection: current_user.my_visible_friends_and_me, label: 'Vos amis', prompt: "Avis en particulier ?", id: "friend" %>
+      <%= f.input :food, collection: current_user.my_friends_foods, label: 'Style de Cuisine', prompt: "Quel type ?", id: "food" %>
+      <%= f.input :friend, collection: User.where(id: current_user.my_visible_friends_ids + [current_user.id]), label: 'Vos amis', prompt: "Avis en particulier ?", id: "friend" %>
       <%=f.submit("Chercher", class: "btn btn-danger") %>
     <% end %>
   </nav>

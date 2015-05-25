@@ -1,30 +1,31 @@
 <h1>Mes amis</h1>
 
 <div class="container">
-  <% current_user.friendships_by_status[:user_friends].each do |friendship| %>
+  <% User.where(id: current_user.my_friends_ids).each do |friend| %>
+  <% friendship = Friendship.find_by(sender_id: [current_user.id, friend.id], receiver_id: [current_user.id, friend.id]) %>
+
     <div class="friend card-white">
       <div class="row">
         <div class="col-xs-3">
-          <%= image_tag friendship[:friendship_user].picture, class: "img-circle" %>
+          <%= image_tag friend.picture, class: "img-circle" %>
         </div>
         <div class="col-xs-6 infos">
-          <h2><%= friendship[:friendship_user].name %></h2>
-          <p><%= Recommendation.where(user_id: friendship[:friendship_user]).count %> recos</p>
+          <h2><%= friend.name %></h2>
+          <p><%= Recommendation.where(user_id: friend.id).count %> recos</p>
         </div>
         <div class="col-xs-3">
           <div class="delete">
-            <%= link_to "Retirer", friendship_path(friendship[:friendship_relation].id), method: :delete, class: "btn-xs btn-danger"  %>
+            <%= link_to "Retirer", friendship_path(friendship.id), method: :delete, class: "btn-xs btn-danger"  %>
           </div>
           <div class="visibility">
-            <% current_friendship = Friendship.find(friendship[:friendship_relation].id) %>
-            <% if ( current_friendship.sender_id == current_user.id && current_friendship.receiver_invisible == true ) || ( current_friendship.receiver_id == current_user.id && current_friendship.sender_invisible == true ) %>
+            <% if ( friendship.sender_id == current_user.id && friendship.receiver_invisible == true ) || ( friendship.receiver_id == current_user.id && friendship.sender_invisible == true ) %>
               <%= form_tag visible_friendships_path, method: "post" do %>
-                <%= hidden_field_tag :id, value: friendship[:friendship_relation].id %>
+                <%= hidden_field_tag :id, value: friendship.id %>
                 <%= submit_tag "Voir à Nouveau", class: "btn-xs btn-success" %>
               <% end %>
             <% else %>
               <%= form_tag invisible_friendships_path, method: "post" do %>
-                <%= hidden_field_tag :id, value: friendship[:friendship_relation].id %>
+                <%= hidden_field_tag :id, value: friendship.id %>
                 <%= submit_tag "Ne plus voir", class: "btn-xs btn-danger" %>
               <% end %>
             <% end %>

@@ -4,7 +4,6 @@ class RecommendationsController < ApplicationController
 
   def index
     @recommendations = Recommendation.all
-    @friendships = current_user.friendships_by_status
     read_all_notification
   end
 
@@ -86,7 +85,7 @@ class RecommendationsController < ApplicationController
   end
 
   def load_activities
-    @activities = PublicActivity::Activity.where(owner_id: current_user.my_visible_friends.map(&:id), owner_type: 'User').order('created_at DESC').limit(20)
+    @activities = PublicActivity::Activity.where(owner_id: User.where(id: current_user.my_visible_friends_ids).map(&:id), owner_type: 'User').order('created_at DESC').limit(20)
   end
 
   def update
@@ -98,7 +97,7 @@ class RecommendationsController < ApplicationController
   end
 
   def read_all_notification
-    PublicActivity::Activity.where(owner_id: current_user.my_friends.map(&:id), owner_type: 'User').each do |activity|
+    PublicActivity::Activity.where(owner_id: User.where(id: current_user.my_friends_ids).map(&:id), owner_type: 'User').each do |activity|
       activity.read = true
       activity.save
     end
