@@ -4,7 +4,6 @@ class RecommendationsController < ApplicationController
 
   def index
     @recommendations = Recommendation.all
-    @friendships = current_user.friendships_by_status
     read_all_notification
   end
 

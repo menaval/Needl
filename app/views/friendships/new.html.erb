@@ -2,26 +2,27 @@
 
 <div id="accept_or_refuse_friends">
   <div class="container">
-    <% if @friendships[:user_propositions].count > 0 %>
+    <% if current_user.pending_invitations_received.count > 0 %>
       <h2 class = 'text-center'>Ils t'ont invité</h2>
       <div class="carousel">
-        <% @friendships[:user_propositions].each do |hash| %>
+        <% current_user.pending_invitations_received.each do |friend| %>
+        <% friendship = Friendship.find_by(sender_id: friend.id, receiver_id: current_user.id) %>
             <div>
               <div class="card-white-mini padded">
-                <%= image_tag hash[:friendship_user].picture, class: "img-circle" %>
-                <%= hash[:friendship_user].name %>
+                <%= image_tag friend.picture, class: "img-circle" %>
+                <%= friend.name %>
               <div class="row accept_or_refuse">
                 <div class="col-xs-6 text-right">
                   <%= form_tag answer_request_friendships_path, method: "post" do %>
                     <%= hidden_field_tag :accepted, value: true %>
-                    <%= hidden_field_tag :id, value: hash[:friendship_relation].id %>
+                    <%= hidden_field_tag :id, value: friendship.id %>
                     <%= submit_tag "Accepter", class: "btn-xs btn-success" %>
                   <% end %>
                 </div>
                 <div class="col-xs-6 text-left">
                   <%= form_tag answer_request_friendships_path, method: "post" do %>
                     <%= hidden_field_tag :accepted, value: false %>
-                    <%= hidden_field_tag :id, value: hash[:friendship_relation].id %>
+                    <%= hidden_field_tag :id, value: friendship.id %>
                     <%= submit_tag "Refuser", class: "btn-xs btn-danger" %>
                   <% end %>
                 </div>
@@ -39,7 +40,7 @@
     <h2 class = 'text-center'>Ils sont aussi sur Needl !</h2>
     <% if @new_potential_friends.count > 0 %>
       <div class="carousel">
-        <% for user in @new_potential_friends %>
+        <% @new_potential_friends.each do |user| %>
           <div>
             <div class="card-white-mini padded", id="friends-card">
               <%= image_tag user.picture, class: "img-circle" %>

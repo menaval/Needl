@@ -2,7 +2,7 @@
 
 <div class="container">
   <% current_user.my_friends.each do |friend| %>
-    <% friendship = current_user.senders.find(friend.id) == friend ? Friendship.includes([:sender, :receiver]).where("sender_id = ? AND receiver_id = ?",  friend.id, current_user.id).first : Friendship.includes([:sender, :receiver]).where("sender_id = ? AND receiver_id = ?",  current_user.id, friend.id).first %>
+  <% friendship = Friendship.find_by(sender_id: [current_user.id, friend.id], receiver_id: [current_user.id, friend.id]) %>
 
     <div class="friend card-white">
       <div class="row">

@@ -24,30 +24,6 @@ class User < ActiveRecord::Base
     validates_attachment_content_type :picture,
       content_type: /\Aimage\/.*\z/
 
-
-  def friendships_by_status
-    user_friends = []
-    user_requests = []
-    user_propositions = []
-    my_friendships = Friendship.includes([:sender, :receiver]).where("sender_id = ? or receiver_id = ?",  self.id, self.id)
-    my_friendships.each do |friendship|
-      if friendship.accepted
-        if friendship.receiver_id == self.id
-          user_friends << { friendship_user: friendship.sender, friendship_relation: friendship }
-        else
-          user_friends << { friendship_user: friendship.receiver, friendship_relation: friendship }
-        end
-      else
-        if friendship.receiver_id == self.id
-          user_propositions << { friendship_user: friendship.sender, friendship_relation: friendship }
-        else
-          user_requests << { friendship_user: friendship.receiver, friendship_relation: friendship }
-        end
-      end
-    end
-    {user_friends: user_friends, user_propositions: user_propositions, user_requests: user_requests}
-  end
-
   def my_friends
     user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true }).pluck(:id)
     user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true }).pluck(:id)
