@@ -56,10 +56,13 @@ class User < ActiveRecord::Base
   end
 
   def my_visible_friends
-    user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
-    user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
+    my_visible_friends_ids
+    User.where(id: @user_ids)
+  end
 
-    User.where(id: user_ids)
+  def my_visible_friends_ids
+    @user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
+    @user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
   end
 
   def my_visible_friends_and_me
@@ -94,7 +97,11 @@ class User < ActiveRecord::Base
 
   def my_friends_restaurants
     user_ids = my_visible_friends.map(&:id) + [self.id]
-    Restaurant.includes(:recommendations).where(recommendations: { user_id: user_ids })
+    Restaurant.joins(:recommendations).where(recommendations: { user_id: user_ids })
+  end
+
+  def my_friends_foods
+    Food.joins(restaurants: :recommendations).where(recommendations: {user_id: my_visible_friends_ids}).uniq
   end
 
   def self.find_for_facebook_oauth(auth)
