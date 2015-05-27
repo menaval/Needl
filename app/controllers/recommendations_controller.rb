@@ -1,6 +1,6 @@
 class RecommendationsController < ApplicationController
   include PublicActivity::StoreController
-  before_action :load_activities, only: [:index, :new, :edit]
+  before_action :load_activities, only: [:index]
 
   def index
     @recommendations = Recommendation.all
@@ -19,16 +19,17 @@ class RecommendationsController < ApplicationController
       @recommendation = current_user.recommendations.new(recommendation_params)
       @recommendation.restaurant = @restaurant
       if @recommendation.save
-        @recommendation.restaurant.recompute_price(@recommendation.price)
+        if @recommendation_origin == "foursquare" && @recommendation.price
+          @recommendation.restaurant.create_price(@recommendation.price)
+        end
         @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
-
         redirect_to restaurant_path(@recommendation.restaurant)
       else
-        redirect_to new_recommendation_path, notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"
+        redirect_to new_recommendation_path, notice: "Les ambiances ou points forts n'ont pas été remplis"
       end
 
     else
-      redirect_to new_recommendation_path, notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmis la liste qui vous est proposée"
+      redirect_to new_recommendation_path, notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée"
     end
   end
 
@@ -85,19 +86,17 @@ class RecommendationsController < ApplicationController
   end
 
   def load_activities
-    @activities = PublicActivity::Activity.where(owner_id: User.where(id: current_user.my_visible_friends_ids).map(&:id), owner_type: 'User').order('created_at DESC').limit(20)
+    @activities = PublicActivity::Activity.where(owner_id: current_user.my_friends_ids, owner_type: 'User').order('created_at DESC').limit(20)
   end
 
   def update
     recommendation = Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).first
-    previous_price = recommendation.price
     recommendation.update_attributes(recommendation_params)
-    recommendation.restaurant.recompute_with_previous_price(recommendation.price, previous_price)
     redirect_to restaurant_path(recommendation.restaurant)
   end
 
   def read_all_notification
-    PublicActivity::Activity.where(owner_id: User.where(id: current_user.my_friends_ids).map(&:id), owner_type: 'User').each do |activity|
+    PublicActivity::Activity.where(owner_id: current_user.my_friends_ids, owner_type: 'User').each do |activity|
       activity.read = true
       activity.save
     end

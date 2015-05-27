@@ -63,17 +63,9 @@ class Restaurant < ActiveRecord::Base
   end
 
 
-  def recompute_price(recommendation_price)
-    total = self.price * ( self.recommendation_ids.count - 1 )
-    total += recommendation_price
-    self.price = total / self.recommendation_ids.count
+  def create_price(recommendation_price)
+    self.price = recommendation_price
     self.save!
   end
 
-  def recompute_with_previous_price(new_price, previous_price)
-    total = self.price * self.recommendation_ids.count
-    total = total - previous_price + new_price
-    self.price = total / self.recommendation_ids.count
-    self.save!
-  end
 end

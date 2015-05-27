@@ -9,7 +9,4 @@
 Restaurant.all.each do |r|
   r.recompute_ambiences
   r.recompute_strengths
-  r.recommendations.each do |reco|
-    r.recompute_price(reco)
-  end
 end
