@@ -65,10 +65,18 @@ class Restaurant < ActiveRecord::Base
     hash.sort_by { |_user_id, content_and_date| content_and_date[1] }.reverse.to_h
   end
 
-
   def create_price(recommendation_price)
     self.price = recommendation_price
     self.save!
+  end
+
+  def closest_subway_id
+    hash = {}
+    self.subways.each do |subway|
+      distance = self.bearing_to([subway.latitude, subway.longitude])
+      hash[subway.id] = distance
+    end
+    hash.sort_by {|_key, value| value}.first[0]
   end
 
 end
