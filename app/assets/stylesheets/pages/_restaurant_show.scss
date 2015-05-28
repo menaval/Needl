@@ -49,6 +49,11 @@
       }
     }
   }
+  #basic_infos {
+    h3 {
+      margin-top: 10px;
+    }
+  }
   #ambiences {
     background-color: white;
     position: relative;
@@ -79,7 +84,6 @@
     width: 60px;
     height: 60px;
   }
-
   .bloc_bis
   h3 {
     font-size: 20px;
@@ -91,45 +95,31 @@
     margin-right: auto;
     margin-left: auto;
   }
-
-
-
   wrap {
     margin-bottom: 0px;
   }
   .carousel {
     margin-bottom: 10px;
   }
-  .modal {
-    .slick-slide {
-      display: block;
-      width: 0;
-      overflow: hidden;
-    }
-    .slick-active {
-      width: auto;
-    }
-  }
-
   i {
     padding-top: 10px;
     color: $green;
   }
-
   .friends-show {
     padding-bottom: 10px;
   }
 
   .btn {
-    margin-bottom: 30px;  }
-}
+    margin-bottom: 30px;
+  }
 
-.img-friend-ambiences {
-  transition: opacity 0.3s ease;
-    &.hidden-friend {
-    height: 0;
-    overflow: hidden;
-    opacity: 0;
+  .img-friend-ambiences {
+    transition: opacity 0.3s ease;
+      &.hidden-friend {
+      height: 0;
+      overflow: hidden;
+      opacity: 0;
+    }
   }
 }
 
