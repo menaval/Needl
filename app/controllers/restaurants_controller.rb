@@ -3,6 +3,38 @@ class RestaurantsController < ApplicationController
     @restaurant = Restaurant.find(params[:id])
     @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
     @pictures = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.map {|element| element.picture} : [@restaurant.picture_url]
+
+
+
+    client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
+    search_less_than_500_meters = client.spots(@restaurant.latitude, @restaurant.longitude, :radius => 500, :types => 'subway_station')
+    search_by_closest = client.spots(@restaurant.latitude, @restaurant.longitude, :rankby => 'distance', :types => 'subway_station').first
+    search = search_less_than_500_meters.length > 0 ? search_less_than_500_meters : [search_by_closest]
+
+    search.each do |result|
+      if Subway.find_by(latitude: result.lat) == nil
+        subway = Subway.create(
+          name:      result.name,
+          latitude:  result.lat,
+          longitude: result.lng
+          )
+        result = Geocoder.search("#{result.lat}, #{result.lng}").first.data["address_components"]
+        result.each do |component|
+          if component["types"].include?("locality")
+            city = component["long_name"]
+            subway.city = city
+            subway.save
+          end
+        end
+      else
+        subway = Subway.find_by(latitude: result.lat)
+      end
+      restaurant_subway = RestaurantSubway.create(
+        restaurant_id: @restaurant.id,
+        subway_id:     subway.id
+        )
+    end
+
   end
 
   def index
