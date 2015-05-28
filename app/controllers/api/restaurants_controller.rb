@@ -16,7 +16,7 @@ module Api
     private
 
     def search_via_database
-      restaurants = Restaurant.where("name ilike ?", "%#{@query}%").limit(5)
+      restaurants = Restaurant.where("name ilike ?", "%#{@query}%").limit(4)
 
       restaurants = restaurants.map do |restaurant|
         { origin: 'db', name: restaurant.name, address: restaurant.address, id: restaurant.id, name_and_address: "#{restaurant.name}: #{restaurant.address}" }

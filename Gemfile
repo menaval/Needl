@@ -25,6 +25,7 @@ gem "koala", "~> 2.0"
 gem "mixpanel-ruby"
 gem "browser"
 gem 'newrelic_rpm'
+gem 'google_places'
 
 gem "jquery-rails"
 gem "sass-rails", "~> 5.0"

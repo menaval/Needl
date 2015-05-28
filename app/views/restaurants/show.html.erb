@@ -1,4 +1,5 @@
 <div>
+
   <div id="image_field" style="background: url(<%= image_path(@picture) %>); background-repeat:no-repeat; background-size:cover; background-position:50% 50%" data-toggle="modal" data-target="#photos">
     <div id="text-left">
       <h1><%= @restaurant.name %></h1>
@@ -14,6 +15,10 @@
     </div>
   </div>
   <%= render "modal_photos" %>
+  <div id="basic_infos" class="text-center">
+    <h3><%= @restaurant.address%></h3>
+    <h3>metro</h3>
+  </div>
 
   <div id="ambiences">
     <div class="container">

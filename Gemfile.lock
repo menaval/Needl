@@ -139,11 +139,16 @@ GEM
     globalid (0.3.5)
       activesupport (>= 4.1.0)
     gmaps4rails (2.1.2)
+    google_places (0.32.0)
+      httparty (~> 0.13.1)
     has_scope (0.6.0)
       actionpack (>= 3.2, < 5)
       activesupport (>= 3.2, < 5)
     hashie (3.4.1)
     high_voltage (2.3.0)
+    httparty (0.13.5)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     i18n (0.7.0)
     i18n_data (0.6.3)
     inherited_resources (1.6.0)
@@ -332,6 +337,7 @@ DEPENDENCIES
   foursquare2
   geocoder
   gmaps4rails
+  google_places
   high_voltage
   jbuilder
   jquery-rails
