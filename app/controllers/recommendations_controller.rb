@@ -19,7 +19,7 @@ class RecommendationsController < ApplicationController
       @recommendation = current_user.recommendations.new(recommendation_params)
       @recommendation.restaurant = @restaurant
       if @recommendation.save
-        if @recommendation_origin == "foursquare" && @recommendation.price
+        if @restaurant_origin == "foursquare" && @recommendation.price
           @recommendation.restaurant.create_price(@recommendation.price)
         end
         @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
