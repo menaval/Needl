@@ -2,10 +2,10 @@
 
 <div id="accept_or_refuse_friends">
   <div class="container">
-    <% if current_user.pending_invitations_received.count > 0 %>
+    <% if User.where(id: current_user.my_requests_received_ids).count > 0 %>
       <h2 class = 'text-center'>Ils t'ont invité</h2>
       <div class="carousel">
-        <% current_user.pending_invitations_received.each do |friend| %>
+        <% User.where(id: current_user.my_requests_received_ids).each do |friend| %>
         <% friendship = Friendship.find_by(sender_id: friend.id, receiver_id: current_user.id) %>
             <div>
               <div class="card-white-mini padded">

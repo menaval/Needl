@@ -34,20 +34,17 @@ class User < ActiveRecord::Base
     @user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
   end
 
-  def pending_invitations_received
+  def my_requests_received_ids
     user_ids = self.senders.includes(:friendships).where(friendships: { accepted: false }).pluck(:id)
-    User.where(id: user_ids)
   end
 
-  def pending_invitations_sent
+  def my_requests_sent_ids
     user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: false }).pluck(:id)
-    User.where(id: user_ids)
   end
 
-  def refused_friends
+  def refused_relations_ids
     user_ids = self.member_ones.pluck(:id)
     user_ids += self.member_twos.pluck(:id)
-    User.where(id: user_ids)
   end
 
   def my_friends_restaurants
@@ -57,6 +54,10 @@ class User < ActiveRecord::Base
 
   def my_friends_foods
     Food.joins(restaurants: :recommendations).where(recommendations: {user_id: my_visible_friends_ids}).uniq
+  end
+
+  def my_friends_subways
+    Subway.joins(:restaurant_subways).includes(restaurants: :recommendations).where(recommendations: {user_id: self.my_visible_friends_ids + [self.id]}).uniq
   end
 
   def user_friends
