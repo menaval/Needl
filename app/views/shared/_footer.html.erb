@@ -9,9 +9,9 @@
   </div>
   <div class="div-footer">
     <% if current_user %>
-      <% if current_user.pending_invitations_received.count > 0 %>
+      <% if User.where(id: current_user.my_requests_received_ids).count > 0 %>
         <span class="badge">
-          <%= current_user.pending_invitations_received.count %>
+          <%= User.where(id: current_user.my_requests_received_ids).count %>
         </span>
       <% end %>
     <% end %>

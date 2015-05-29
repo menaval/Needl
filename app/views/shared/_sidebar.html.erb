@@ -12,6 +12,7 @@
       <%= f.input :price, label: 'Prix du plat', placeholder: "Quel prix max ?", id: "price" %>
       <%= f.input :food, collection: current_user.my_friends_foods, label: 'Style de Cuisine', prompt: "Quel type ?", id: "food" %>
       <%= f.input :friend, collection: User.where(id: current_user.my_visible_friends_ids + [current_user.id]).order(:name), label: 'Vos amis', prompt: "Avis en particulier ?", id: "friend" %>
+      <%= f.input :subway, collection: current_user.my_friends_subways.order(:name), label: 'Station métro', prompt: "Un lieu de rdv ?", id: "subway" %>
       <%=f.submit("Chercher", class: "btn btn-danger") %>
     <% end %>
   </nav>
