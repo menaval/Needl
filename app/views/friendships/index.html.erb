@@ -15,16 +15,16 @@
         </div>
         <div class="col-xs-3">
           <div class="delete">
-            <%= link_to "Retirer", friendship_path(friendship.id), method: :delete, class: "btn-xs btn-danger"  %>
+            <%= link_to "Retirer", friendship_path(friendship.id), method: :delete, class: "btn-xs btn-danger" %>
           </div>
           <div class="visibility">
             <% if ( friendship.sender_id == current_user.id && friendship.receiver_invisible == true ) || ( friendship.receiver_id == current_user.id && friendship.sender_invisible == true ) %>
-              <%= form_tag visible_friendships_path, method: "post" do %>
+              <%= form_tag visible_friendships_path, id: 'unhide_friend', method: "post" do %>
                 <%= hidden_field_tag :id, value: friendship.id %>
                 <%= submit_tag "Voir à Nouveau", class: "btn-xs btn-success" %>
               <% end %>
             <% else %>
-              <%= form_tag invisible_friendships_path, method: "post" do %>
+              <%= form_tag invisible_friendships_path, id: 'hide_friend', method: "post" do %>
                 <%= hidden_field_tag :id, value: friendship.id %>
                 <%= submit_tag "Ne plus voir", class: "btn-xs btn-danger" %>
               <% end %>
@@ -34,4 +34,9 @@
       </div>
     </div>
   <% end %>
+  <script>
+    // ajouter tracker pour delete
+    mixpanel.track_forms("#hide_friend", "hide_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
+    mixpanel.track_forms("#unhide_friend", "unhide_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
+  </script>
 </div>
