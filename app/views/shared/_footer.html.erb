@@ -15,7 +15,7 @@
         </span>
       <% end %>
     <% end %>
-    <div class= "nav-icone nav-friend" >
+    <div class= "nav-icone nav-friend" id="friendships" >
       <%= link_to new_friendship_path do %>
         <%= image_tag "new-friend-white.svg" %>
         <p>Amis</p>
@@ -38,7 +38,7 @@
         </span>
       <% end %>
     <% end %>
-    <div class= "nav-icone nav-notif" >
+    <div class= "nav-icone nav-notif" id="notifs">
       <%= link_to recommendations_path do %>
         <%= image_tag "notif-white.svg" %>
         <p>Notif</p>
@@ -46,12 +46,28 @@
     </div>
   </div>
   <div class="div-footer">
-    <div class= "nav-icone nav-profil">
+    <div class= "nav-icone nav-profil" id="home">
       <%= link_to user_path(:id) do %>
         <%= image_tag "account-white.svg" %>
         <p>Profil</p>
       <% end %>
     </div>
   </div>
+  <script>
+    <% if current_user %>
+      mixpanel.track_links("#friendships a, p", "friendships", {
+          "user": "<%= current_user.name %>", "browser": "<%= browser.name %>"
+      });
+      mixpanel.track_links("#reco_page a, p", "reco_view", {
+          "user": "<%= current_user.name %>", "browser": "<%= browser.name %>"
+      });
+      mixpanel.track_links("#notifs a, p", "notif_page", {
+          "user": "<%= current_user.name %>", "browser": "<%= browser.name %>"
+      });
+      mixpanel.track_links("#home a, p", "home", {
+          "user": "<%= current_user.name %>", "browser": "<%= browser.name %>"
+      });
+    <% end %>
+  </script>
 </div>
 

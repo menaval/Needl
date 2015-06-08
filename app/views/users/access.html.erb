@@ -3,7 +3,7 @@
     <h1> Béta restreinte aux utilisateurs tests </h1>
   </div>
   <div class= "form">
-    <%= simple_form_for :verification, {url: verification_code_users_path}  do |f| %>
+    <%= simple_form_for :verification, {url: verification_code_users_path}, html: { id: "form-access"}  do |f| %>
       <%= f.input :code, label: "Code d'accès (for FB testers, please see in Facebook Login Integration" %>
       <%= f.submit "Entrer !", class: "btn btn-primary" %>
     <% end %>
@@ -18,6 +18,7 @@
           "age": "<%= current_user.age_range %>",
           "$email": "<%= current_user.email %>"
         });
+        mixpanel.track_forms("#form-access", "reco_view", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
       <% end %>
     <% end %>
   </script>
