@@ -49,12 +49,12 @@ class FriendshipsController < ApplicationController
       friendship = Friendship.find(eval(params[:id]))
       NotInterestedRelation.create(member_one_id: friendship.sender_id, member_two_id: friendship.receiver_id)
       friendship.destroy
-      redirect_to new_friendship_path
+      redirect_to friendships_path
     else
       friendship = Friendship.find(eval(params[:id])[:value])
       NotInterestedRelation.create(member_one_id: friendship.sender_id, member_two_id: friendship.receiver_id)
       friendship.destroy
-      redirect_to friendships_path
+      redirect_to new_friendship_path
     end
     # comprendre l'histoire de value qui n'y est pas suivant que ce soit un refuse ou un delete
   end
