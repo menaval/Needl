@@ -15,16 +15,16 @@
         </span>
       <% end %>
     <% end %>
-    <div class= "nav-icone nav-friend" id="friendships" >
-      <%= link_to new_friendship_path do %>
+    <div class= "nav-icone nav-friend">
+      <%= link_to(new_friendship_path, id: "friendships") do %>
         <%= image_tag "new-friend-white.svg" %>
         <p>Amis</p>
       <% end %>
     </div>
   </div>
   <div class="div-footer">
-    <div class= "nav-icone nav-reco" id="reco_page">
-      <%= link_to new_recommendation_path do %>
+    <div class= "nav-icone nav-reco">
+      <%= link_to(new_recommendation_path, id: "reco_page") do %>
         <%= image_tag "new-restaurant-white.svg" %>
         <p>Recommande</p>
       <% end %>
@@ -38,16 +38,16 @@
         </span>
       <% end %>
     <% end %>
-    <div class= "nav-icone nav-notif" id="notifs">
-      <%= link_to recommendations_path do %>
+    <div class= "nav-icone nav-notif">
+      <%= link_to(recommendations_path, id: "notifs") do %>
         <%= image_tag "notif-white.svg" %>
         <p>Notif</p>
       <% end %>
     </div>
   </div>
   <div class="div-footer">
-    <div class= "nav-icone nav-profil" id="home">
-      <%= link_to user_path(:id) do %>
+    <div class= "nav-icone nav-profil">
+      <%= link_to(user_path(:id), id: "home") do %>
         <%= image_tag "account-white.svg" %>
         <p>Profil</p>
       <% end %>
@@ -55,16 +55,16 @@
   </div>
   <script>
     <% if current_user %>
-      mixpanel.track_links("#friendships a, p", "friendships", {
+      mixpanel.track_links("#friendships", "friendships", {
           "user": "<%= current_user.name %>", "browser": "<%= browser.name %>"
       });
-      mixpanel.track_links("#reco_page a, p", "reco_view", {
+      mixpanel.track_links("#reco_page", "reco_view", {
           "user": "<%= current_user.name %>", "browser": "<%= browser.name %>"
       });
-      mixpanel.track_links("#notifs a, p", "notif_page", {
+      mixpanel.track_links("#notifs", "notif_page", {
           "user": "<%= current_user.name %>", "browser": "<%= browser.name %>"
       });
-      mixpanel.track_links("#home a, p", "home", {
+      mixpanel.track_links("#home", "home", {
           "user": "<%= current_user.name %>", "browser": "<%= browser.name %>"
       });
     <% end %>
