@@ -1,10 +1,9 @@
 class FriendshipsController < ApplicationController
 
   def new
-    @users = current_user.user_friends
     @friendship = Friendship.new
     @not_interested_relation = NotInterestedRelation.new
-    @new_potential_friends = @users - User.where(id: current_user.my_friends_ids) - User.where(id: current_user.my_requests_sent_ids) - User.where(id: current_user.my_requests_received_ids) - User.where(id: current_user.refused_relations_ids) - [current_user]
+    @new_potential_friends = current_user.user_friends - User.where(id: current_user.my_friends_ids) - User.where(id: current_user.my_requests_sent_ids) - User.where(id: current_user.my_requests_received_ids) - User.where(id: current_user.refused_relations_ids) - [current_user]
   end
 
   def create
