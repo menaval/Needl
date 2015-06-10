@@ -8,22 +8,22 @@
         <% User.where(id: current_user.my_requests_received_ids).each do |friend| %>
         <% friendship = Friendship.find_by(sender_id: friend.id, receiver_id: current_user.id) %>
             <div>
-              <div class="card-white-mini padded">
+              <div class="card-white-mini">
                 <%= image_tag friend.picture, class: "img-circle" %>
-                <%= friend.name %>
+                <p><%= friend.name %><br><span class="new-reco"><%= Recommendation.where(user_id: friend.id).count %> recos</span></p>
               <div class="row accept_or_refuse">
                 <div class="col-xs-6 text-right">
-                  <%= form_tag answer_request_friendships_path, id: 'accept_friend', method: "post" do %>
-                    <%= hidden_field_tag :accepted, value: true %>
-                    <%= hidden_field_tag :id, value: friendship.id %>
-                    <%= submit_tag "Accepter", class: "btn-xs btn-success" %>
-                  <% end %>
-                </div>
-                <div class="col-xs-6 text-left">
                   <%= form_tag answer_request_friendships_path, id: 'refuse_friend', method: "post" do %>
                     <%= hidden_field_tag :accepted, value: false %>
                     <%= hidden_field_tag :id, value: friendship.id %>
-                    <%= submit_tag "Refuser", class: "btn-xs btn-danger" %>
+                    <%= submit_tag "Refuser", class: "button-refuse" %>
+                  <% end %>
+                </div>
+                <div class="col-xs-6 text-left">
+                  <%= form_tag answer_request_friendships_path, id: 'accept_friend', method: "post" do %>
+                    <%= hidden_field_tag :accepted, value: true %>
+                    <%= hidden_field_tag :id, value: friendship.id %>
+                    <%= submit_tag "Accepter", class: "button-accept" %>
                   <% end %>
                 </div>
               </div>

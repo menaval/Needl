@@ -1,8 +1,16 @@
 #friendships_new {
-  img {
-    width: 100px;
-    margin-left: auto;
-    margin-right: auto;
+  .card-white-mini {
+    width:100%;
+    p {
+      margin-bottom: 20px;
+    }
+    img {
+      width: 100px;
+      margin-left: auto;
+      margin-right: auto;
+      margin: 0 auto;
+      padding: 20px 0 10px 0;
+    }
   }
   .add_or_not {
     margin-left: auto;
@@ -11,5 +19,24 @@
   .gif {
     width: 200px;
     height: 200px;
+  }
+  .button-refuse, .button-accept {
+    width: 100%;
+    border: none;
+    color: white;
+    padding: 10px;
+    font-size: 14px;
+  }
+  .button-accept {
+    background-color: #32B796;
+    border-radius: 0 0 4px 0;
+  }
+  .button-refuse {
+    background-color: #c8441e;
+    border-radius: 0 0 0 4px;
+  }
+  .new-reco {
+    font-size:12px;
+    color: #32B796;
   }
 }

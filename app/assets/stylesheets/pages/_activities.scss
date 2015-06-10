@@ -1,14 +1,70 @@
 #recommendations_index {
+  p {
+    margin: 0;
+  }
+  #image_field {
+    height: 150px;
+    top: 0;
+    margin-top: 0;
+    position: relative;
+    opacity: 0.9;
+    &:after {
+      content: "";
+      background: image-url('degrade.png') bottom left repeat-x;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+    #text-left {
+      position: absolute;
+      bottom: 15px;
+      left: 20px;
+      z-index: 9;
+      h1, h2, h3 {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        color: rgb(242, 242, 242);
+        margin-left: 0px;
+        background-color: transparent;
+        padding-left: 0px;
+      }
+    }
+    #text-right {
+      position: absolute;
+      bottom: 35px;
+      right: 20px;
+      z-index: 9;
+      h2 {
+        color: rgb(242, 242, 242);
+      }
+    }
+  }
+  .container {
+    padding: 0;
+  }
   font-size: 14px;
   .list-group-item {
     min-height: 100px;
+    padding : 20px;
+    margin-top: 0;
+    border-radius: 0;
+    border-right: 0;
+    border-left: 0;
+  }
+  .col-fix-left {
+    float:left;
+    width:50px;
+  }
+  .col-fix-right {
+    float:left;
+    width:calc(100% - 50px);
   }
   .profil {
     text-align: center
     img {
-      margin-bottom: 5px;
-      margin-right: auto;
-      margin-left: auto;
+      width: 100%;
     }
     p {
       font-weight: 700;
@@ -16,7 +72,7 @@
   }
 
   .activity-bloc {
-    padding-left: 15px;
+    padding: 6px 20px;
     a {
       text-decoration: none;
       color: $red;
@@ -25,4 +81,68 @@
       }
     }
   }
+  span.quote-start {
+    width: 23px;
+    height: 20px;
+    display: block;
+    float: left;
+    margin-top:20px;
+    background: image-url('quote-start.png') left no-repeat;
+  }
+  span.quote-end {
+    width: 23px;
+    height: 20px;
+    display: block;
+    float: left;
+    margin-top:20px;
+    background: image-url('quote-end.png') right no-repeat;
+  }
+  .quote {
+    float: left;
+    margin-top:20px;
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// #recommendations_index {
+//   font-size: 14px;
+//   .list-group-item {
+//     min-height: 100px;
+//   }
+//   .profil {
+//     text-align: center
+//     img {
+//       margin-bottom: 5px;
+//       margin-right: auto;
+//       margin-left: auto;
+//     }
+//     p {
+//       font-weight: 700;
+//     }
+//   }
+
+//   .activity-bloc {
+//     padding-left: 15px;
+//     a {
+//       text-decoration: none;
+//       color: $red;
+//       &:hover {
+//         color: $gray;
+//       }
+//     }
+//   }
+// }
