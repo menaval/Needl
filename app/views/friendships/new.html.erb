@@ -1,40 +1,5 @@
 <h1>Ajouter des Amis</h1>
 
-<div id="accept_or_refuse_friends">
-  <div class="container">
-    <% if User.where(id: current_user.my_requests_received_ids).count > 0 %>
-      <h2 class = 'text-center'>Ils t'ont invité</h2>
-      <div class="carousel">
-        <% User.where(id: current_user.my_requests_received_ids).each do |friend| %>
-        <% friendship = Friendship.find_by(sender_id: friend.id, receiver_id: current_user.id) %>
-            <div>
-              <div class="card-white-mini">
-                <%= image_tag friend.picture, class: "img-circle" %>
-                <p><%= friend.name %><br><span class="new-reco"><%= Recommendation.where(user_id: friend.id).count %> recos</span></p>
-              <div class="row accept_or_refuse">
-                <div class="col-xs-6 text-right">
-                  <%= form_tag answer_request_friendships_path, id: 'refuse_friend', method: "post" do %>
-                    <%= hidden_field_tag :accepted, value: false %>
-                    <%= hidden_field_tag :id, value: friendship.id %>
-                    <%= submit_tag "Refuser", class: "button-refuse" %>
-                  <% end %>
-                </div>
-                <div class="col-xs-6 text-left">
-                  <%= form_tag answer_request_friendships_path, id: 'accept_friend', method: "post" do %>
-                    <%= hidden_field_tag :accepted, value: true %>
-                    <%= hidden_field_tag :id, value: friendship.id %>
-                    <%= submit_tag "Accepter", class: "button-accept" %>
-                  <% end %>
-                </div>
-              </div>
-            </div>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
-</div>
-
 <div id="ask_for_friends">
   <div class="container">
     <h2 class = 'text-center'>Ils sont aussi sur Needl !</h2>

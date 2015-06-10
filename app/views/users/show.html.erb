@@ -5,43 +5,24 @@
     <div class="col-xs-12">
       <div class="card-white">
         <div class = "text-center" id ="profil">
-          <div><%= image_tag(current_user.picture, class: "img-circle padded", id: "img-profil") %></div>
-          <h2><%= current_user.name %></h2>
-          <p><%= current_user.email %></p>
+          <div><%= image_tag(@user.picture, class: "img-circle padded", id: "img-profil") %></div>
+          <h2><%= @user.name %></h2>
+          <p><%= @user.email %></p>
         </div>
-        <div class="text-center" id="action-btn">
-          <ul class="list-inline">
-            <li>
-              <%= link_to("Modifier", edit_user_registration_path, class: "btn btn-success btn-xs btn-right") %></li>
-            </li>
-            <li>
-              <%= link_to destroy_user_session_path, class: "btn btn-success btn-xs", method: :delete do %>
-              <i class="fa fa-sign-out"></i>  <%= t ".sign_out", default: "Se Déconnecter" %>
-              <% end %>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12">
-      <div class="card-white text-center">
-        <h2 class= "padded">Mes amis</h2>
-        <div class="multiple-carousel">
-          <% if User.where(id: current_user.my_friends_ids).count > 0 %>
-            <% User.where(id: current_user.my_friends_ids).each do |friend| %>
-              <div class="slick_icon">
-                <%= image_tag(friend.picture, class: "img-circle img_friend ") %>
-                <%= friend.name.split(' ').first %>
-              </div>
-            <% end %>
-          <% end %>
-        </div>
-        <%= link_to("Gérer mes amis", friendships_path, class: "btn btn-danger") %>
+        <% if @user == current_user %>
+          <div class="text-center" id="action-btn">
+            <ul class="list-inline">
+              <li>
+                <%= link_to("Modifier", edit_user_registration_path, class: "btn btn-success btn-xs btn-right") %></li>
+              </li>
+              <li>
+                <%= link_to destroy_user_session_path, class: "btn btn-success btn-xs", method: :delete do %>
+                <i class="fa fa-sign-out"></i>  <%= t ".sign_out", default: "Se Déconnecter" %>
+                <% end %>
+              </li>
+            </ul>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>

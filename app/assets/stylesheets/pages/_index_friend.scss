@@ -1,4 +1,46 @@
 #friendships_index {
+  .card-white-mini {
+    width:100%;
+    p {
+      margin-bottom: 20px;
+    }
+    img {
+      width: 100px;
+      margin-left: auto;
+      margin-right: auto;
+      margin: 0 auto;
+      padding: 20px 0 10px 0;
+    }
+  }
+  .button-refuse, .button-accept {
+    width: 100%;
+    border: none;
+    color: white;
+    padding: 10px;
+    font-size: 14px;
+  }
+  .button-accept {
+    background-color: #32B796;
+    border-radius: 0 0 4px 0;
+  }
+  .button-refuse {
+    background-color: #c8441e;
+    border-radius: 0 0 0 4px;
+  }
+  .new-reco {
+    font-size:12px;
+    color: #32B796;
+  }
+  #link_to_add {
+    color: white;
+    background-color: #c8441e;
+    padding: 7px;
+    border-radius: 8%;
+    text-decoration: none;
+    position: absolute;
+    right: 4%;
+    top: 1%;
+  }
   .friend{
     position: relative;
     .delete {
