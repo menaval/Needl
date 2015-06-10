@@ -6,22 +6,40 @@
           <div class="list-group-item border margin row">
             <% if activity.trackable %>
               <% resto = Restaurant.find(activity.trackable.restaurant_id) %>
-              <div class="col-xs-2">
-                <div class="profil">
-                  <%= image_tag activity.owner.picture, class: "img-circle" %>
-                  <p><%= activity.owner ? activity.owner.name.split(" ")[0] : 'Guest' %></p>
+              <div class="row">
+                <div class="col-fix-left">
+                  <div class="profil">
+                    <%= image_tag activity.owner.picture, class: "img-circle" %>
+                  </div>
+                </div>
+                <div class="col-fix-right">
+                  <div class="activity-bloc">
+                    <!-- User info -->
+                    <p>
+                      <%= activity.owner ? activity.owner.name.split(" ")[0] : 'Guest' %> recommande<br>
+                      <small class="text-muted"><%= activity.created_at.strftime('%H:%M:%S %-d %B %Y') %></small>
+
+                    </p>
+                  </div>
                 </div>
               </div>
-              <div class="col-xs-10">
-                <div class="activity-bloc">
-                  <span class="glyphicon glyphicon-plus"></span>
-                  <small class="text-muted"><%= activity.created_at.strftime('%H:%M:%S %-d %B %Y') %></small><br>
-                  Nouvelle recommandation pour le restaurant : <%= link_to resto.name, restaurant_path(resto.id) %> (<%= resto.food.name %>)
-                  <% if activity.trackable.review != "" %>
-                    - Mot de la fin : "<%= activity.trackable.review %>"
-                    <% end %>
+              <!-- restaurant glimpse -->
+              <%= link_to restaurant_path(resto.id) do %>
+                <div id="image_field" style="background: url(<%= image_path(resto.restaurant_pictures.first ? resto.restaurant_pictures.first.picture : resto.picture_url) %>); background-repeat:no-repeat; background-size:cover; background-position:50% 50%">
+                  <div id="text-left">
+                    <h2><%= resto.name %></h2>
+                    <h3><%= resto.food.name %></h3>
+                  </div>
+                  <div id="text-right">
+                   <h2><%= resto.price %> €</h2>
+                  </div>
                 </div>
-              </div>
+              <% end %>
+              <!-- END restaurant glimpse -->
+              <!--
+              <p><span class="quote-start"></span><span class="quote"><%= activity.trackable.review %></span><span class="quote-end"></span></p>
+              -->
+              <p class="quote">"<%= activity.trackable.review %>"</p>
             <% end %>
           </div>
         <% end %>
