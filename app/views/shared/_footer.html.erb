@@ -47,9 +47,11 @@
   </div>
   <div class="div-footer">
     <div class= "nav-icone nav-profil">
-      <%= link_to user_path(current_user.id) do %>
-        <%= image_tag "account-white.svg" %>
-        <p>Profil</p>
+      <% if current_user %>
+        <%= link_to user_path(current_user.id) do %>
+          <%= image_tag "account-white.svg" %>
+          <p>Profil</p>
+        <% end %>
       <% end %>
     </div>
   </div>
