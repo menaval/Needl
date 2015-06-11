@@ -13,6 +13,11 @@ module Api
       @restaurants.take(5)
     end
 
+    def show
+      @restaurant = Restaurant.find(params["id"].to_i)
+      @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
+    end
+
     private
 
     def search_via_database
