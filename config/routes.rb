@@ -29,6 +29,6 @@ Rails.application.routes.draw do
   end
 
   namespace :api, defaults: { format: :json } do
-    resources :restaurants, only: :index
+    resources :restaurants, only: [:show, :index]
   end
 end
