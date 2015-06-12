@@ -1,5 +1,6 @@
 module Api
   class RestaurantsController < ApplicationController
+    acts_as_token_authentication_handler_for User, except: [ :index ]
     skip_before_action :verify_authenticity_token
     skip_before_filter :authenticate_user!
 
