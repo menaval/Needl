@@ -4,7 +4,7 @@ module Api
     skip_before_action :verify_authenticity_token
     skip_before_filter :authenticate_user!
 
-    def index
+    def autocomplete
       @query = params[:query]
 
       @restaurants = search_via_database
@@ -14,14 +14,15 @@ module Api
       @restaurants.take(5)
     end
 
-    def map_index
-
-    end
-
     def show
       @restaurant = Restaurant.find(params["id"].to_i)
       @user = User.find_by(authentication_token: params["user_token"])
       @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
+    end
+
+    def index
+      user = User.find_by(authentication_token: params["user_token"])
+      @restaurants = user.my_friends_restaurants
     end
 
     private

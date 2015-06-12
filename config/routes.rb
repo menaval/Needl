@@ -31,8 +31,9 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     resources :restaurants, only: [:show, :index] do
       collection do
-        get :map_index
+        get :autocomplete
       end
+    end
     resources :users, only: :show
     resources :recommendations, only: :index
   end
