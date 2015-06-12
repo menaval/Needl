@@ -14,6 +14,10 @@ module Api
       @restaurants.take(5)
     end
 
+    def map_index
+
+    end
+
     def show
       @restaurant = Restaurant.find(params["id"].to_i)
       @user = User.find_by(authentication_token: params["user_token"])

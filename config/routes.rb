@@ -29,7 +29,10 @@ Rails.application.routes.draw do
   end
 
   namespace :api, defaults: { format: :json } do
-    resources :restaurants, only: [:show, :index]
+    resources :restaurants, only: [:show, :index] do
+      collection do
+        get :map_index
+      end
     resources :users, only: :show
     resources :recommendations, only: :index
   end
