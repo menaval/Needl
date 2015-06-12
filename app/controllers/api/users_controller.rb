@@ -6,7 +6,6 @@ module Api
     def show
       @user = User.find(params["id"].to_i)
       @restaurants = Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id })
-      @number = @restaurants.length
     end
 
   end
