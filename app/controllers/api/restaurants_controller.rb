@@ -16,6 +16,7 @@ module Api
 
     def show
       @restaurant = Restaurant.find(params["id"].to_i)
+      @user = User.find_by(authentication_token: params["user_token"])
       @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
     end
 
