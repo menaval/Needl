@@ -6,7 +6,7 @@ $(document).ready(function(){
       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
       queryTokenizer: Bloodhound.tokenizers.whitespace,
       remote: {
-        url: $(input).data("url") + '.json?query=%QUERY',
+        url: $(input).data("url") + '/autocomplete.json?query=%QUERY',
         wildcard: '%QUERY'
       }
     });

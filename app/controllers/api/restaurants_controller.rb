@@ -1,10 +1,21 @@
 module Api
   class RestaurantsController < ApplicationController
-    acts_as_token_authentication_handler_for User, except: [ :index ]
+    acts_as_token_authentication_handler_for User
     skip_before_action :verify_authenticity_token
     skip_before_filter :authenticate_user!
 
+    def show
+      @restaurant = Restaurant.find(params["id"].to_i)
+      @user = User.find_by(authentication_token: params["user_token"])
+      @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
+    end
+
     def index
+      user = User.find_by(authentication_token: params["user_token"])
+      @restaurants = user.my_friends_restaurants
+    end
+
+    def autocomplete
       @query = params[:query]
 
       @restaurants = search_via_database
@@ -12,12 +23,6 @@ module Api
 
       @restaurants.uniq! { |restaurant| [ restaurant[:name], restaurant[:address] ] }
       @restaurants.take(5)
-    end
-
-    def show
-      @restaurant = Restaurant.find(params["id"].to_i)
-      @user = User.find_by(authentication_token: params["user_token"])
-      @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
     end
 
     private
