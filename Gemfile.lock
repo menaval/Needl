@@ -294,6 +294,10 @@ GEM
     simple_form (3.1.0)
       actionpack (~> 4.0)
       activemodel (~> 4.0)
+    simple_token_authentication (1.10.0)
+      actionmailer (>= 3.2.6, < 5)
+      actionpack (>= 3.2.6, < 5)
+      devise (~> 3.2)
     slop (3.6.0)
     sort_alphabetical (1.0.1)
       unicode_utils (>= 1.2.2)
@@ -361,5 +365,6 @@ DEPENDENCIES
   rails_12factor
   sass-rails (~> 5.0)
   simple_form
+  simple_token_authentication
   spring
   uglifier
