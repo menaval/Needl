@@ -3,7 +3,7 @@
   <div id="image_field" style="background: url(<%= image_path(@picture) %>); background-repeat:no-repeat; background-size:cover; background-position:50% 50%" data-toggle="modal" data-target="#photos">
     <div id="text-left">
       <h1><%= @restaurant.name %></h1>
-      <h3><%= Food.find(@restaurant.food_id).name %></h3>
+      <h3><%= @restaurant.food.name %></h3>
     </div>
     <div id="text-right">
      <h2><%= @restaurant.price %> €</h2>
