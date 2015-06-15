@@ -66,8 +66,8 @@ class Restaurant < ActiveRecord::Base
     hash.sort_by { |_user_id, content_and_date| content_and_date[1] }.reverse.to_h
   end
 
-  def create_price(recommendation_price)
-    self.price = recommendation_price
+  def update_price_range(recommendation_price_range)
+    self.price_range = recommendation_price_range.to_i
     self.save!
   end
 
