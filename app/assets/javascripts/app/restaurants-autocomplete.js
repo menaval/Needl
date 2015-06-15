@@ -24,11 +24,6 @@ $(document).ready(function(){
       });
       var $checker = $("<span class='check'><i class='fa fa-check'></i></span>");
       $checker.insertAfter("#restaurant_name");
-      if (restaurant.origin === "foursquare") {
-        $('.price').css({
-          "display": "block"
-        });
-      }
     });
   }
 });
