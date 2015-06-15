@@ -20,7 +20,9 @@ class RecommendationsController < ApplicationController
       @recommendation.restaurant = @restaurant
       if @recommendation.save
         if @restaurant_origin == "foursquare" && @recommendation.price
-          @recommendation.restaurant.create_price(@recommendation.price)
+          # @recommendation.restaurant.create_price(@recommendation.price)
+          @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
+
         end
         @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
         redirect_to restaurant_path(@recommendation.restaurant)
@@ -119,7 +121,7 @@ class RecommendationsController < ApplicationController
   end
 
   def recommendation_params
-    params.require(:recommendation).permit(:price, :review, { strengths: [] }, { ambiences: [] })
+    params.require(:recommendation).permit(:price, :review, { strengths: [] }, { ambiences: [] }, { price_ranges: [] })
   end
 
   def load_activities

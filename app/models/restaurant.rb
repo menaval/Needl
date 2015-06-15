@@ -71,6 +71,11 @@ class Restaurant < ActiveRecord::Base
     self.save!
   end
 
+  def update_price_range(recommendation_price_range)
+    self.price_range = recommendation_price_range.to_i
+    self.save!
+  end
+
   def closest_subway_id
     hash = {}
     self.subways.each do |subway|

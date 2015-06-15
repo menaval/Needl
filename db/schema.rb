@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150612102246) do
+ActiveRecord::Schema.define(version: 20150615231050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(version: 20150612102246) do
     t.integer  "restaurant_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.string   "price_ranges",               array: true
   end
 
   add_index "recommendations", ["restaurant_id"], name: "index_recommendations_on_restaurant_id", using: :btree
@@ -119,6 +120,7 @@ ActiveRecord::Schema.define(version: 20150612102246) do
     t.integer  "price",        default: 0
     t.string   "phone_number"
     t.string   "picture_url"
+    t.integer  "price_range"
   end
 
   add_index "restaurants", ["food_id"], name: "index_restaurants_on_food_id", using: :btree
