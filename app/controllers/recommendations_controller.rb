@@ -20,14 +20,12 @@ class RecommendationsController < ApplicationController
       @recommendation.restaurant = @restaurant
       if @recommendation.save
         if @restaurant_origin == "foursquare" && @recommendation.price
-          # @recommendation.restaurant.create_price(@recommendation.price)
           @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
-
         end
         @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
         redirect_to restaurant_path(@recommendation.restaurant)
       else
-        redirect_to new_recommendation_path, notice: "Les ambiances ou points forts n'ont pas été remplis"
+        redirect_to new_recommendation_path, notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"
       end
 
     else
