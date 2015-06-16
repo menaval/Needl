@@ -16,7 +16,8 @@
         },
 
         provider: {
-          styles: mapStyle
+          styles: mapStyle,
+          disableDefaultUI: true
         }
       },
         function(){
@@ -24,6 +25,13 @@
           handler.bounds.extendWith(markers);
           handler.fitMapToBounds();
           handler.getMap().setZoom(14);
+
+          for (var i = 0; i < markers.length; i++) {
+            var marker = markers[i];
+            google.maps.event.addListener(marker.serviceObject, 'click', function () {
+              console.log(marker.strange_attribute);
+            });
+          }
         }
       );
     });

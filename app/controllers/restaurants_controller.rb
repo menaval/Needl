@@ -26,6 +26,8 @@ class RestaurantsController < ApplicationController
     @markers = Gmaps4rails.build_markers(@restaurants) do |restaurant, marker|
       marker.lat restaurant.latitude
       marker.lng restaurant.longitude
+      marker.json({strange_attribute: restaurant.id})
+
       marker.infowindow render_to_string(partial: "map_box", locals: { restaurant: restaurant })
     end
   end
