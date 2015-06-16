@@ -8,7 +8,7 @@ module Api
       # @user = User.find(params["id"].to_i)
       # http://localhost:3000/api/users/40.json?user_email=valentin.menard@essec.edu&user_token=6Y-zoSafp5ynxURyFkMq
       @user = User.find_by(authentication_token: params["user_token"])
-      @restaurants = Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id })
+      @restaurants = @user.my_restaurants
     end
 
   end

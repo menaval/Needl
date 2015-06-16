@@ -9,6 +9,8 @@
           <h2><%= @user.name %></h2>
           <p><%= @user.email %></p>
         </div>
+
+        <!-- modifier si c'est ma page -->
         <% if @user == current_user %>
           <div class="text-center" id="action-btn">
             <ul class="list-inline">
@@ -23,7 +25,27 @@
             </ul>
           </div>
         <% end %>
+        <!-- fin -->
       </div>
     </div>
+  </div>
+  <h2 class = 'text-center'>Recommandations</h2>
+  <div class="carousel">
+    <% @user.my_restaurants.each do |restaurant| %>
+        <%= link_to restaurant_path(restaurant.id) do %>
+          <div>
+            <div id="image_field" style="background: url(<%= image_path(restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url) %>); background-repeat:no-repeat; background-size:cover; background-position:50% 50%">
+              <div id="text-left">
+                <h2><%= restaurant.name %></h2>
+                <h3><%= restaurant.food.name %></h3>
+              </div>
+              <div id="text-right", class="icon-box">
+                <%= render "restaurants/price_ranges/level_#{restaurant.price_range}.svg" %>
+              </div>
+            </div>
+          <p class="quote"><%= Recommendation.where(restaurant_id: restaurant.id, user_id: @user.id).first.review %></p>
+        </div>
+      <% end %>
+    <% end %>
   </div>
 </div>

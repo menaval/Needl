@@ -2,45 +2,7 @@
   p {
     margin: 0;
   }
-  #image_field {
-    height: 150px;
-    top: 0;
-    margin-top: 0;
-    position: relative;
-    opacity: 0.9;
-    &:after {
-      content: "";
-      background: image-url('degrade.png') bottom left repeat-x;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
-    #text-left {
-      position: absolute;
-      bottom: 15px;
-      left: 20px;
-      z-index: 9;
-      h1, h2, h3 {
-        margin-top: 5px;
-        margin-bottom: 5px;
-        color: rgb(242, 242, 242);
-        margin-left: 0px;
-        background-color: transparent;
-        padding-left: 0px;
-      }
-    }
-    #text-right {
-      position: absolute;
-      bottom: 35px;
-      right: 20px;
-      z-index: 9;
-      h2 {
-        color: rgb(242, 242, 242);
-      }
-    }
-  }
+
   .container {
     padding: 0;
   }

@@ -30,8 +30,8 @@
                     <h2><%= resto.name %></h2>
                     <h3><%= resto.food.name %></h3>
                   </div>
-                  <div id="text-right">
-                   <h2><%= resto.price %> €</h2>
+                  <div id="text-right", class="icon-box">
+                    <%= render "restaurants/price_ranges/level_#{resto.price_range}.svg" %>
                   </div>
                 </div>
               <% end %>
