@@ -36,5 +36,6 @@ Rails.application.routes.draw do
     end
     resources :users, only: :show
     resources :recommendations, only: :index
+    resources :friendships, only: [:index, :new, :create]
   end
 end
