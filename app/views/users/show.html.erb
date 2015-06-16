@@ -33,7 +33,7 @@
   <div class="carousel">
     <% @user.my_restaurants.each do |restaurant| %>
         <%= link_to restaurant_path(restaurant.id) do %>
-          <div>
+          <div class="card-white">
             <div id="image_field" style="background: url(<%= image_path(restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url) %>); background-repeat:no-repeat; background-size:cover; background-position:50% 50%">
               <div id="text-left">
                 <h2><%= restaurant.name %></h2>
@@ -48,4 +48,27 @@
       <% end %>
     <% end %>
   </div>
+  <% if @user != current_user %>
+  <% friendship = Friendship.find_by(sender_id: [current_user.id, @user.id], receiver_id: [current_user.id, @user.id]) %>
+      <div class="card-white">
+        <div class="visibility">
+          <% if ( friendship.sender_id == current_user.id && friendship.receiver_invisible == true ) || ( friendship.receiver_id == current_user.id && friendship.sender_invisible == true ) %>
+            <%= form_tag visible_friendships_path, id: 'unhide_friend', method: "post" do %>
+              <%= hidden_field_tag :id, value: friendship.id %>
+              <%= submit_tag "Voir à Nouveau", class: "btn-xs btn-success" %>
+            <% end %>
+          <% else %>
+            <%= form_tag invisible_friendships_path, id: 'hide_friend', method: "post" do %>
+              <%= hidden_field_tag :id, value: friendship.id %>
+              <%= submit_tag "Ne plus voir", class: "btn-xs btn-danger" %>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="delete">
+          <%= link_to "Retirer", friendship_path(friendship.id), method: :delete, class: "btn-xs btn-danger" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
 </div>
+
