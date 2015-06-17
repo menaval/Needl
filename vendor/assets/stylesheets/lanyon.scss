@@ -41,12 +41,12 @@ body {
 }
 
 html {
-  // font-family: "PT Serif", Georgia, "Times New Roman", serif;
+  // font-family: "Quicksand", Georgia, "Times New Roman", serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  // font-family: "PT Sans", Helvetica, Arial, sans-serif;
-  // font-weight: 400;
+  // font-family: "Quicksand", Helvetica, Arial, sans-serif;
+  // font-weight: bold;
   color: #313131;
   letter-spacing: -.025rem;
 }
@@ -148,7 +148,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 14rem;
   visibility: hidden;
   overflow-y: auto;
-  font-family: "Lato", Helvetica, Arial, sans-serif;
+  font-family: "Quicksand", Helvetica, Arial, sans-serif;
   font-size: .875rem; /* 15px */
   color: rgba(255,255,255,.6);
   background-color: #202020;
@@ -212,19 +212,29 @@ a.sidebar-nav-item:focus {
 /* Style the `label` that we use to target the `.sidebar-checkbox` */
 .sidebar-toggle {
   position: absolute;
-  top:  .8rem;
+  top: 1rem;
   left: 1rem;
   display: block;
-  padding: .25rem .75rem;
+  padding: 10px 20px;
   color: #505050;
-  background-color: $red;
-  border-radius: .25rem;
+  background-color: #EF582D;
+  border-radius: 2rem;
   cursor: pointer;
   img {
+    float: left;
+    margin: 0;
     width: 20px;
   }
+  .icon-label {
+    float: left;
+    padding-left: 10px;
+    color: white;
+  }
 }
-
+label {
+  font-family: "Quicksand" !important; /* dirty */
+}
+/*
 .sidebar-toggle:before {
   display: inline-block;
   width: 1rem;
@@ -235,6 +245,8 @@ a.sidebar-nav-item:focus {
   // background-image:     -ms-linear-gradient(to bottom, #555, #555 20%, #fff 20%, #fff 40%, #555 40%, #555 60%, #fff 60%, #fff 80%, #555 80%, #555 100%);
   // background-image:         linear-gradient(to bottom, #555, #555 20%, #fff 20%, #fff 40%, #555 40%, #555 60%, #fff 60%, #fff 80%, #555 80%, #555 100%);
 }
+*/
+
 
 .sidebar-toggle:active,
 #sidebar-checkbox:focus ~ .sidebar-toggle,
@@ -371,7 +383,7 @@ a.sidebar-nav-item:focus {
   overflow: hidden; /* clearfix */
   margin-left: -1rem;
   margin-right: -1rem;
-  font-family: "PT Sans", Helvetica, Arial, sans-serif;
+  font-family: "Quicksand", Helvetica, Arial, sans-serif;
   color: #ccc;
   text-align: center;
 }
@@ -617,7 +629,7 @@ body {
 }
 
 html {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Quicksand', Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.5;
 }
@@ -958,7 +970,7 @@ tbody tr:nth-child(odd) th {
   overflow: hidden; /* clearfix */
   margin-left: -1rem;
   margin-right: -1rem;
-  font-family: "PT Sans", Helvetica, Arial, sans-serif;
+  font-family: "Quicksand", Helvetica, Arial, sans-serif;
   color: #ccc;
   text-align: center;
 }

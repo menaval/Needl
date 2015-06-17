@@ -20,7 +20,7 @@ $(document).ready(function(){
       $(".restaurants-autocomplete--id").val(restaurant.id);
       $(".restaurants-autocomplete--origin").val(restaurant.origin);
       $("#restaurant_name").css({
-        "border": "3px solid #32B796"
+        "border": "3px solid #38E1B2"
       });
       var $checker = $("<span class='check'><i class='fa fa-check'></i></span>");
       $checker.insertAfter("#restaurant_name");

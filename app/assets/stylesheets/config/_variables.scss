@@ -5,10 +5,11 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,300,700|Lato:300,400,700|Raleway:300,400");
 @import url("//cdn.jsdelivr.net/jquery.slick/1.5.2/slick.css");
 @import url("//cdn.jsdelivr.net/jquery.slick/1.5.2/slick-theme.css");
+@import url('http://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css');
 
-$base-font: "Lato", "Helvetica", "sans-serif";
-$header-font: "Lato", "sans-serif";
-$navbar-font: 'Raleway', "sans-serif";
+$base-font:  "Quicksand", "Helvetica", "sans-serif";
+$header-font: "Quicksand", "sans-serif";
+$navbar-font: 'Quicksand', "sans-serif";
 
 // Local fonts (uncomment following lines)
 // @font-face {
@@ -29,11 +30,11 @@ $base-height: 1.4;
  * ------------------------------------- */
 // Scheme
 $red-light: #fcf4f4;
-$red: #E15E38;
+$red: #EF582D;
 $blue: #469AE0;
 $yellow: #FDB631;
 $orange: #E67E22;
-$green: #32B796;
+$green: #38E1B2;
 $purple: #6452BD;
 
 // Gray scale
