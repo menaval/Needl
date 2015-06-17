@@ -1,30 +1,16 @@
-<div class="bloc_bis">
+<div class="bloc-new clearfix">
+
   <% block.each do |name,ids|%>
-    <div class="row friends-show" id="<%= ambience_or_strength %>-<%= name %>">
-      <div class= "col-xs-4">
+      <div class="icon-and-label">
+        <!-- icon -->
         <div class="icon-box">
           <%= render "restaurants/strengths_and_ambiences/#{name}.svg" %>
         </div>
-      </div>
-      <div class= "col-xs-offset-1 col-xs-5">
-        <h3><%= name.capitalize.gsub(/_/," ").gsub(/&/, "and") %></h3>
-      </div>
-      <div class="col-xs-2">
-        <i class="fa fa-sort-desc arrow-desc pulse"></i>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-offset-5 col-xs-7">
-        <div class="img-friend-ambiences hidden-friend" id="<%= ambience_or_strength %>-friends-<%= name %>">
-          <ul class="list-inline">
-           <% ids.each do |id| %>
-            <li>
-              <%= image_tag User.find(id.to_i).picture, class: "avatar img-circle img-responsive" %>
-            </li>
-           <% end %>
-          </ul>
+        <!-- label -->
+        <div class='title-label'>
+          <%= name.capitalize.gsub(/_/," ").gsub(/&/, "and") %></h3>
         </div>
       </div>
-    </div>
+
   <% end %>
 </div>

@@ -30,7 +30,7 @@
     </div>
   </div>
   <h2 class = 'text-center'>Recommandations</h2>
-  <div class="carousel">
+
     <% @user.my_restaurants.each do |restaurant| %>
         <%= link_to restaurant_path(restaurant.id) do %>
           <div class="card-white">
@@ -47,7 +47,7 @@
         </div>
       <% end %>
     <% end %>
-  </div>
+
   <% if @user != current_user %>
   <% friendship = Friendship.find_by(sender_id: [current_user.id, @user.id], receiver_id: [current_user.id, @user.id]) %>
       <div class="card-white">

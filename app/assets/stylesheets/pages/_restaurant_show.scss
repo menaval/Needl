@@ -10,6 +10,66 @@
     margin-top: 10px;
   }
 
+
+  .contact-restaurant {
+    padding: 20px;
+    p {
+      float: left;
+      margin: 0;
+      padding: 10px 0;
+    }
+    .btn {
+      float: right;
+      margin: 0;
+      border-radius: 30px;
+      padding: 10px 20px;
+    }
+  }
+
+  .title {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: $gray-darker;
+    font-size: 20px;
+    font-weight: 400;
+    text-align: center;
+  }
+  .border {
+    border-top: 1px solid #f0efef;
+    padding-top: 30px;
+  }
+
+  .title-label {
+    font-size: 15px;
+    padding-top: 5px;
+    color: #AAA;
+    text-align: center;
+    padding-bottom: 10px;
+  }
+
+  #ambiences {
+    .bloc-new {
+      width: 160px;
+      margin: auto;
+    }
+  }
+
+  #strengths {
+    .bloc-new {
+      width: 160px;
+      margin: auto;
+    }
+  }
+
+
+  .icon-and-label {
+    float: left;
+    width: auto;
+    padding: 0 10px; 
+  }
+
+
+
   #image_field {
     height: 300px;
     top: 0;
@@ -57,7 +117,7 @@
   #ambiences {
     background-color: white;
     position: relative;
-    padding-bottom: 20px;
+    padding: 20px;
   }
   #strengths {
     background-color: #f7f4f4;
@@ -84,18 +144,8 @@
     width: 60px;
     height: 60px;
   }
-  .bloc_bis
-  h3 {
-    font-size: 20px;
-    color: $green;
-    padding-top: 10px;
-    margin: 0px;
-  }
-  img {
-    margin-right: auto;
-    margin-left: auto;
-  }
-  wrap {
+
+  .wrap {
     margin-bottom: 0px;
   }
   .carousel {

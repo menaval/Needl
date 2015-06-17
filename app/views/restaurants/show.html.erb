@@ -1,5 +1,9 @@
 <div>
 
+
+
+  <!-- Restaurant About -->
+
   <div id="image_field" style="background: url(<%= image_path(@picture) %>); background-repeat:no-repeat; background-size:cover; background-position:50% 50%" data-toggle="modal" data-target="#photos">
     <div id="text-left">
       <h1><%= @restaurant.name %></h1>
@@ -9,29 +13,49 @@
       <%= render "restaurants/price_ranges/level_#{@restaurant.price_range}.svg" %>
     </div>
   </div>
-  <%= render "modal_photos" %>
-  <div id="basic_infos" class="text-center">
-    <h3><%= @restaurant.address%></h3>
-    <h3>metro <%= @subway.name %></h3>
+
+  <!-- Reservation -->
+
+  <div class="contact-restaurant clearfix">
+    <p>Réserver une table</p>
+    <%= link_to "Appeler", "tel:#{@restaurant.phone_number}", class: "btn btn-danger", id:"call" %>
   </div>
+  
+
+  <!-- Ambiences -->
 
   <div id="ambiences">
-    <div class="container">
+    <div class="container present">
+      <!--
       <div class="row text-center">
         <h2>Ambiance</h2>
       </div>
-      <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user), ambience_or_strength: "ambience" %>
+    -->
+      <div class= "title">
+        <div class="title-middle">Ambiances</div>
+      </div>
+
+      <!-- icon -->
+          <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user), ambience_or_strength: "ambience" %>
+        </div>
+      
     </div>
   </div>
 
+  <!-- Strenght -->
+
   <div id="strengths">
-    <div class="container">
-      <div class="row text-center">
-        <h2>Points forts</h2>
+    <div class="container present">
+      
+      <div class= "title">
+        <div class="title-middle">Points forts</div>
       </div>
       <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user), ambience_or_strength: "strength" %>
     </div>
   </div>
+
+  <!-- Final word -->
+
   <div id="mots_de_la_fin" class="text-center">
     <div class="container">
       <h2>Mots de la fin</h2>
@@ -43,9 +67,20 @@
           </div>
         <% end %>
       </div>
-      <%= link_to "Contacter #{@restaurant.name}", "tel:#{@restaurant.phone_number}", class: "btn btn-danger", id:"call" %>
     </div>
   </div>
+
+  <!-- Location -->
+
+  <%= render "modal_photos" %>
+  <div id="basic_infos" class="text-center">
+    <h3><%= @restaurant.address%></h3>
+    <h3>metro <%= @subway.name %></h3>
+  </div>
+
+
+
+  <!-- script CALL -->
 
   <script>
     mixpanel.track_links("#call", "call", {
@@ -53,6 +88,7 @@
     });
     mixpanel.track("restaurant_page", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>"});
   </script>
+
 </div>
 
 
