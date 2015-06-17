@@ -49,6 +49,11 @@
     animation: scaleUp 0.5s ease forwards;
   }
 
+  .check_boxes:checked ~ .label-icon {
+    color: $green;
+  }
+
+
   @-webkit-keyframes scaleUp {
     0% {
       -webkit-transform: scale(1);
