@@ -46,8 +46,7 @@
               <%= image_tag friend.picture, class: "img-circle" %>
           </div>
           <div class="col-xs-6 infos">
-            <h2><%= friend.name %></h2>
-            <p><%= Recommendation.where(user_id: friend.id).count %> recos</p>
+            <h2><%= friend.name.split(" ")[0] %><span><%= Recommendation.where(user_id: friend.id).count %> recos</span></h2>
           </div>
         <% end %>
         <div class="col-xs-3">
