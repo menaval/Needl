@@ -3,6 +3,9 @@
   .checkbox {
     text-align: center;
     border-radius: 2px;
+    label {
+      padding: 0 10px;
+    }
   }
 
   .simple_form_inline {
@@ -30,7 +33,7 @@
   }
 
   .icon-box {
-    background: #444444;
+    background: #DDD;
   }
 
   .check_boxes {

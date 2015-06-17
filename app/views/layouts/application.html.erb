@@ -32,7 +32,7 @@
   <%= yield(:after_js) %>
 
   <% if params[:controller] + "_" + params[:action] == "restaurants_index" %>
-  <label for="sidebar-checkbox" class="sidebar-toggle"><%= image_tag "loupe.svg" %></label>
+  <label for="sidebar-checkbox" class="sidebar-toggle"><%= image_tag "icon-filter-w.png" %><div class="icon-label">Filtres</div></label>
 
    <script>
      (function(document) {
