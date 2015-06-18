@@ -63,4 +63,9 @@
     </div>
   <% end %>
 </div>
+<script>
+//  ajouter delete friends
+  mixpanel.track_forms("#hide_friend", "hide_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
+  mixpanel.track_forms("#unhide_friend", "unhide_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
+</script>
 

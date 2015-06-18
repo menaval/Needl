@@ -41,8 +41,6 @@
     </div>
   </div>
   <script>
-    mixpanel.track_forms("#accept_friend", "accept_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
-    mixpanel.track_forms("#refuse_friend", "refuse_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
     mixpanel.track_forms("#new_friendship", "add_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
     mixpanel.track_forms("#new_not_interested_relation", "ignore_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
   </script>
