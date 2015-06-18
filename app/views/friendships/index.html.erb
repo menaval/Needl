@@ -51,7 +51,6 @@
 </div>
 
 <script>
-  // ajouter tracker pour delete
-  mixpanel.track_forms("#hide_friend", "hide_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
-  mixpanel.track_forms("#unhide_friend", "unhide_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
+  mixpanel.track_forms("#accept_friend", "accept_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
+  mixpanel.track_forms("#refuse_friend", "refuse_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
 </script>
