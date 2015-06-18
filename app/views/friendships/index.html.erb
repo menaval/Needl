@@ -53,4 +53,5 @@
 <script>
   mixpanel.track_forms("#accept_friend", "accept_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
   mixpanel.track_forms("#refuse_friend", "refuse_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
+  mixpanel.track_links("#link_to_add", "add_friends_page", { "user": "<%= current_user.name %>", "browser": "<%= browser.name %>"});
 </script>
