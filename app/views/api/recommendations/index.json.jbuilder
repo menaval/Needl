@@ -4,6 +4,7 @@ json.array! @api_activities do |activity|
   json.user_picture        activity.owner.picture
   json.restaurant_name     restaurant.name
   json.restaurant_picture  restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url
+  json.restaurant_id            restaurant.id
   json.restaurant_food     restaurant.food.name
   json.restaurant_price    restaurant.price
   json.review              activity.trackable.review
