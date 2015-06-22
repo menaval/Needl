@@ -10,6 +10,7 @@ class Restaurant < ActiveRecord::Base
   after_validation :geocode, if: :address_changed?
 
   scope :cheaper_than, ->(max_price) { where("restaurants.price <= ?", max_price.to_i) if max_price.present? }
+  scope :by_price_range, ->(price_selected) { where(price_range: price_selected.to_i) if price_selected.present?}
   scope :by_food,      ->(food)      { where("food_id = ?", food.to_i) if food.present? }
   scope :by_friend,    ->(friend)    {includes(:recommendations).where(recommendations: { user_id: friend.to_i }) if friend.present?}
   scope :by_subway,    ->(subway)    {includes(:restaurant_subways).where(restaurant_subways: { subway_id: subway.to_i}) if subway.present?}
