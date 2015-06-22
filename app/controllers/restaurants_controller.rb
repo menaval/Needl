@@ -27,20 +27,18 @@ class RestaurantsController < ApplicationController
       end
     end
 
-
     @markers = Gmaps4rails.build_markers(@restaurants) do |restaurant, marker|
       marker.lat restaurant.latitude
       marker.lng restaurant.longitude
       marker.json(restaurant_id: restaurant.id)
       # marker.picture({
-      #             :url => "quote-end.png",
-      #             :width   => 32,
-      #             :height  => 32,
+      #             :url => ActionController::Base.helpers.asset_path("quote-end.png"),
+      #             :width   => 25,
+      #             :height  => 25,
       #             # :shadow_picture
       #             # :shadow_width
       #             # :shadow_height
       #            })
-      # marker.infowindow render_to_string(template: "restaurants/map_box")
     end
   end
 end
