@@ -21,30 +21,39 @@
         }
       },
         function(){
-          markers_json = <%= raw @markers.to_json %>;
-          console.log(markers_json);
-          markers = [];
+          var markers_json = <%= raw @markers.to_json %>;
+          var markers = [];
           var map = handler.map.getServiceObject();
           var infowindow = new google.maps.InfoWindow({
             content: ''
           });
-          for (var i = 0; i < markers_json.length; i++) {
-            var marker = handler.addMarker(markers_json[i])
-            var index = i;
-            google.maps.event.addListener(marker.serviceObject, 'click', (function (marker, index) {
-              return function() {
-                $.ajax( {
-                  url: '/restaurants/'+ markers_json[index].restaurant_id +'/map_box'
-                }).done (function(data){
 
-                  infowindow.setContent(data);
-                  infowindow.open(map,marker.serviceObject);
-                });
-                mixpanel.track("restaurant_box", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>"});
-              }
-            })(marker, index));
+
+          function addListenerToDisplayInfoWindow (marker, index) {
+             google.maps.event.addListener(marker.serviceObject, 'click', function () {
+                 $.ajax( {
+                   url: '/restaurants/'+ markers_json[index].restaurant_id +'/map_box'
+                 }).done (function(data){
+
+                   infowindow.setContent(data);
+                   infowindow.open(map,marker.serviceObject);
+                 });
+
+                 mixpanel.track("restaurant_box", {
+                   user: "<%= current_user.name %>",
+                   browser: "<%= browser.name %>"
+                 });
+
+               });
+          }
+
+          var marker;
+          for (var i = 0; i < markers_json.length; i++) {
+            marker = handler.addMarker(markers_json[i]);
+            addListenerToDisplayInfoWindow(marker, i);
             markers.push(marker);
           }
+
           handler.bounds.extendWith(markers);
           handler.fitMapToBounds();
           handler.getMap().setZoom(14);
