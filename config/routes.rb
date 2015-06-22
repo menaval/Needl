@@ -19,7 +19,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :restaurants, only: [:show, :index]
+  resources :restaurants, only: [:show, :index] do
+    member do
+      get :map_box
+    end
+  end
   resources :not_interested_relations, only: [:create]
 
   resources :recommendations, only: [:index, :new, :create, :destroy] do

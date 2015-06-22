@@ -6,6 +6,11 @@ class RestaurantsController < ApplicationController
     @subway = Subway.find(@restaurant.closest_subway_id)
   end
 
+  def map_box
+    @restaurant = Restaurant.find(params[:id])
+    render layout: false
+  end
+
   def index
     query         = params[:query]
     @restaurants  = current_user.my_friends_restaurants
@@ -26,9 +31,16 @@ class RestaurantsController < ApplicationController
     @markers = Gmaps4rails.build_markers(@restaurants) do |restaurant, marker|
       marker.lat restaurant.latitude
       marker.lng restaurant.longitude
-      marker.json({strange_attribute: restaurant.id})
-
-      marker.infowindow render_to_string(partial: "map_box", locals: { restaurant: restaurant })
+      marker.json(restaurant_id: restaurant.id)
+      # marker.picture({
+      #             :url => "quote-end.png",
+      #             :width   => 32,
+      #             :height  => 32,
+      #             # :shadow_picture
+      #             # :shadow_width
+      #             # :shadow_height
+      #            })
+      # marker.infowindow render_to_string(template: "restaurants/map_box")
     end
   end
 end

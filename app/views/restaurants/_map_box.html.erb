@@ -1,8 +1,0 @@
-<div id="card-box" class= "text-center">
-  <%= link_to restaurant_path(restaurant.id), class: "link" do %>
-    <h2><%= restaurant.name %></h2>
-    <p><%= restaurant.food.name %></p>
-    <%= restaurant.restaurant_pictures.first ? image_tag(restaurant.restaurant_pictures.first.picture): image_tag(restaurant.picture_url) %>
-  <% end %>
-</div>
-
