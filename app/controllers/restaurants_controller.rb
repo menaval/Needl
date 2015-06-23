@@ -14,6 +14,7 @@ class RestaurantsController < ApplicationController
   def index
     query         = params[:query]
     @restaurants  = current_user.my_friends_restaurants
+    @markers = @restaurants.map {|restaurant| {lat: restaurant.latitude, lng: restaurant.longitude, restaurant_id: restaurant.id}}
 
     if query
       if @restaurants.by_price_range(query[:price_range]).by_food(query[:food]).by_friend(query[:friend]).by_subway(query[:subway]).count > 0
@@ -26,19 +27,6 @@ class RestaurantsController < ApplicationController
         redirect_to new_recommendation_path, notice: "Partages ta première reco avant de découvrir celles de tes amis !"
       end
     end
-
-    @markers = Gmaps4rails.build_markers(@restaurants) do |restaurant, marker|
-      marker.lat restaurant.latitude
-      marker.lng restaurant.longitude
-      marker.json(restaurant_id: restaurant.id)
-      # marker.picture({
-      #             :url => ActionController::Base.helpers.asset_path("quote-end.png"),
-      #             :width   => 25,
-      #             :height  => 25,
-      #             # :shadow_picture
-      #             # :shadow_width
-      #             # :shadow_height
-      #            })
-    end
   end
+
 end
