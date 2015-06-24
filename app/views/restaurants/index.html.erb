@@ -11,16 +11,19 @@
   $(document).on('ready', function() {
     function initialize(){
 
+      var myLatlng = new google.maps.LatLng(48.860907,2.340785);
+
       var mapOptions = {
-        zoom: 14,
+        zoom: 13,
         disableDefaultUI: true,
-        styles: mapStyle
+        styles: mapStyle,
+        center: myLatlng
       };
 
       var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
       var markers_json = <%= raw @markers.to_json %>;
-      var markerBounds = new google.maps.LatLngBounds();
+      // var markerBounds = new google.maps.LatLngBounds();
       var infowindow = new google.maps.InfoWindow({
         content: ''
       });
@@ -58,9 +61,9 @@
           // icon: image
         });
         addListenerToDisplayInfoWindow(marker, i);
-        markerBounds.extend(marker_position);
+        // markerBounds.extend(marker_position);
       }
-      map.fitBounds(markerBounds);
+      // map.fitBounds(markerBounds);
     }
     google.maps.event.addDomListener(window, 'load', initialize);
   });
