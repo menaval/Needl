@@ -6,10 +6,9 @@ class Restaurant < ActiveRecord::Base
   has_many :subways, :through => :restaurant_subways
 
   belongs_to :food
-  geocoded_by :address
+  geocoded_by :full_address
   after_validation :geocode, if: :address_changed?
 
-  scope :cheaper_than, ->(max_price) { where("restaurants.price <= ?", max_price.to_i) if max_price.present? }
   scope :by_price_range, ->(price_selected) { where(price_range: price_selected.to_i) if price_selected.present?}
   scope :by_food,      ->(food)      { where("food_id = ?", food.to_i) if food.present? }
   scope :by_friend,    ->(friend)    {includes(:recommendations).where(recommendations: { user_id: friend.to_i }) if friend.present?}
@@ -23,6 +22,12 @@ class Restaurant < ActiveRecord::Base
       end
     end
     number
+  end
+
+  Restaurant.all.each do |restaurant|
+    restaurant.city = "Paris"
+    restaurant.address = restaurant.address[0..-8]
+    restaurant.save
   end
 
   def ambiences_from_my_friends(current_user)

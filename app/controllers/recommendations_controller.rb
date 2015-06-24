@@ -79,11 +79,14 @@ class RecommendationsController < ApplicationController
     search = client.venue(@restaurant_id)
     restaurant = Restaurant.where(name: @restaurant_name).first_or_initialize(
       name:         search.name,
-      address:      "#{search.location.address}, #{search.location.city}",
+      address:      "#{search.location.address}",
+      city:         "#{search.location.city}",
+      postal_code:  "#{search.location.postalCode}",
+      full_address: "#{search.location.address}, #{search.location.city} #{search.location.postalCode}",
       food:         Food.where(name: search.categories[0].shortName).first_or_create,
       latitude:     search.location.lat,
       longitude:    search.location.lng,
-      picture_url:  search.photos ? "#{search.photos.groups[0].items[0].prefix}1000x1000#{search.photos.groups[0].items[0].suffix}" : "restaurant_default.jpg",
+      picture_url:  search.photos.groups[0] ? "#{search.photos.groups[0].items[0].prefix}1000x1000#{search.photos.groups[0].items[0].suffix}" : "restaurant_default.jpg",
       phone_number: search.contact.phone ? search.contact.phone : nil
     )
 
@@ -117,7 +120,7 @@ class RecommendationsController < ApplicationController
   end
 
   def recommendation_params
-    params.require(:recommendation).permit(:price, :review, { strengths: [] }, { ambiences: [] }, { price_ranges: [] })
+    params.require(:recommendation).permit(:review, { strengths: [] }, { ambiences: [] }, { price_ranges: [] })
   end
 
   def load_activities
