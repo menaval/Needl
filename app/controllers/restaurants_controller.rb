@@ -14,7 +14,6 @@ class RestaurantsController < ApplicationController
   def index
     query         = params[:query]
     @restaurants  = current_user.my_friends_restaurants
-    @markers = @restaurants.map {|restaurant| {lat: restaurant.latitude, lng: restaurant.longitude, restaurant_id: restaurant.id}}
 
     if query
       if @restaurants.by_price_range(query[:price_range]).by_food(query[:food]).by_friend(query[:friend]).by_subway(query[:subway]).count > 0
@@ -27,6 +26,8 @@ class RestaurantsController < ApplicationController
         redirect_to new_recommendation_path, notice: "Partages ta première reco avant de découvrir celles de tes amis !"
       end
     end
+
+    @markers = @restaurants.map {|restaurant| {lat: restaurant.latitude, lng: restaurant.longitude, restaurant_id: restaurant.id}}
   end
 
 end
