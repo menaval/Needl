@@ -31,7 +31,7 @@ module Api
       restaurants = Restaurant.where("name ilike ?", "%#{@query}%").limit(4)
 
       restaurants = restaurants.map do |restaurant|
-        { origin: 'db', name: restaurant.name, address: restaurant.address, id: restaurant.id, name_and_address: "#{restaurant.name}: #{restaurant.address}, #{restaurant.city} #{restaurant.postal_code}" }
+        { origin: 'db', name: restaurant.name, address: restaurant.address, id: restaurant.id, name_and_address: "#{restaurant.name}: #{restaurant.address}, #{restaurant.city} #{customize_postal_code(restaurant.postal_code)}" }
       end
 
       return restaurants
@@ -52,10 +52,21 @@ module Api
       )
 
       restaurants = search['venues'].map do |restaurant|
-        { origin: 'foursquare', name: restaurant['name'], address: "#{restaurant.location.address}", id: restaurant['id'], name_and_address: "#{restaurant['name']}: #{restaurant.location.address}, #{restaurant.location.city} #{restaurant.location.postalCode}" }
+        { origin: 'foursquare', name: restaurant['name'], address: "#{restaurant.location.address}", id: restaurant['id'], name_and_address: "#{restaurant['name']}: #{restaurant.location.address}, #{restaurant.location.city} #{customize_postal_code(restaurant.location.postalCode)}" }
       end
 
       return restaurants
     end
+
+    def customize_postal_code(postal_code)
+      if postal_code
+        if postal_code[3] == "0"
+          return postal_code[4] + "ᵉ"
+        else
+          return postal_code[3] + postal_code[4] + "ᵉ"
+        end
+      end
+    end
+
   end
 end
