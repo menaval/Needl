@@ -138,7 +138,6 @@ GEM
     geocoder (1.2.9)
     globalid (0.3.5)
       activesupport (>= 4.1.0)
-    gmaps4rails (2.1.2)
     google_places (0.32.0)
       httparty (~> 0.13.1)
     has_scope (0.6.0)
@@ -338,7 +337,6 @@ DEPENDENCIES
   font-awesome-sass
   foursquare2
   geocoder
-  gmaps4rails
   google_places
   high_voltage
   jbuilder

@@ -5,7 +5,6 @@
 //= require bloodhound.min
 //= require typeahead.bundle.min
 //= require typeahead.jquery
-//= require gmaps/google
 //= require slick.min
 //= require_tree ./app
 
