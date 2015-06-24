@@ -52,9 +52,31 @@ class RecommendationsController < ApplicationController
 
   def link_to_subways(restaurant)
     client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
+    false_subway_stations_by_name = ["Elysees Metro Hub", "Métro invalides", "Metro Saint-Paul", "Metro Station Anvers"]
+    false_subway_stations_by_coordinates = [{name: "Opéra", lat: 48.870871, lng: 2.332217}, {name: "Trinité - d'Estienne d'Orves", lat: 48.876305, lng: 2.333199}]
+
+
     search_less_than_500_meters = client.spots(restaurant.latitude, restaurant.longitude, :radius => 500, :types => 'subway_station')
-    search_by_closest = client.spots(restaurant.latitude, restaurant.longitude, :rankby => 'distance', :types => 'subway_station').first
+
+    # on enleve toutes les stations erronees
+
+    # search_less_than_500_meters -= search_less_than_500_meters.reject { |result| false_subway_stations_by_name.include?(result.name)}
+    # search_less_than_500_meters.reject! do|result|
+    #     (false_subway_stations_by_coordinates[0][:lat] == result.lat && false_subway_stations_by_coordinates[0][:lng] == result.lng) || (false_subway_stations_by_coordinates[1][:lat] == result.lat && false_subway_stations_by_coordinates[1][:lng] == result.lng)
+    # end
+
+    # recherche du plus près au cas où il n'y en ait pas dans les 500m
+
+    search_by_closest = client.spots(restaurant.latitude, restaurant.longitude, :rankby => 'distance', :types => 'subway_station')
+
+    # on enlève les stations erronées
+    # search_by_closest.reject! { |result| false_subway_stations_by_name.include?(result.name)}.first
+
+    # on récupère le tout
+
     search = search_less_than_500_meters.length > 0 ? search_less_than_500_meters : [search_by_closest]
+
+    # on associe chaque station de metro au restaurant
 
     search.each do |result|
       if Subway.find_by(latitude: result.lat) == nil
