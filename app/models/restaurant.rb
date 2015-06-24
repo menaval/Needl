@@ -24,6 +24,12 @@ class Restaurant < ActiveRecord::Base
     number
   end
 
+  Restaurant.all.each do |restaurant|
+    restaurant.city = "Paris"
+    restaurant.address = restaurant.address[0..-8]
+    restaurant.save
+  end
+
   def ambiences_from_my_friends(current_user)
     hash = {}
     self.recommendations.each do |reco|

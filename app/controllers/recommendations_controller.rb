@@ -86,7 +86,7 @@ class RecommendationsController < ApplicationController
       food:         Food.where(name: search.categories[0].shortName).first_or_create,
       latitude:     search.location.lat,
       longitude:    search.location.lng,
-      picture_url:  search.photos ? "#{search.photos.groups[0].items[0].prefix}1000x1000#{search.photos.groups[0].items[0].suffix}" : "restaurant_default.jpg",
+      picture_url:  search.photos.groups[0] ? "#{search.photos.groups[0].items[0].prefix}1000x1000#{search.photos.groups[0].items[0].suffix}" : "restaurant_default.jpg",
       phone_number: search.contact.phone ? search.contact.phone : nil
     )
 
