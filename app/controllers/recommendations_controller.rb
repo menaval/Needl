@@ -71,11 +71,12 @@ class RecommendationsController < ApplicationController
 
     search_by_closest = client.spots(restaurant.latitude, restaurant.longitude, :rankby => 'distance', :types => 'subway_station')[0..5]
 
-    # on enlève les stations erronées
-    search_by_closest.select! { |result| !false_subway_stations_by_name.include?(result.name)}.first
+    # on enlève toutes les stations erronées
+    search_by_closest.select! { |result| !false_subway_stations_by_name.include?(result.name)}
     search_by_closest.select! do|result|
         ( !(false_subway_stations_by_coordinates[0][:lat] == result.lat) || !(false_subway_stations_by_coordinates[0][:lng] == result.lng) ) && ( !(false_subway_stations_by_coordinates[1][:lat] == result.lat) || !(false_subway_stations_by_coordinates[1][:lng] == result.lng))
     end
+    search_by_closest = search_by_closest.first
     # on récupère le tout
 
     search = search_less_than_500_meters.length > 0 ? search_less_than_500_meters : [search_by_closest]
