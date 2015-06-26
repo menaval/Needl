@@ -7,7 +7,7 @@
         <div class = "text-center" id ="profil">
           <div><%= image_tag(@user.picture, class: "img-circle padded", id: "img-profil") %></div>
           <h2><%= @user.name %></h2>
-          <p><%= Recommendation.where(user_id: @user.id).length %> <%= Recommendation.where(user_id: friend.id).count>1 ? "recos" : "reco" %></p>
+          <p><%= Recommendation.where(user_id: @user.id).length %> <%= Recommendation.where(user_id: @user.id).count>1 ? "recos" : "reco" %></p>
         </div>
 
         <!-- modifier si c'est ma page -->
