@@ -27,12 +27,20 @@
       <%= reco.input :price_ranges, as: :check_boxes, :wrapper_html => { 'data-max' => '1' }, collection: [["<div class='icon-box'>#{render 'restaurants/price_ranges/level_1.svg'}</div><div class='title-label'>- 15 €</div>".html_safe, 1],["<div class='icon-box'>#{render 'restaurants/price_ranges/level_2.svg'}</div><div class='title-label'> 15 à 20 €</div>".html_safe, 2], ["<div class='icon-box'>#{render 'restaurants/price_ranges/level_3.svg'}</div><div class='title-label'> 20 à 30 €</div>".html_safe, 3], ["<div class='icon-box'>#{render 'restaurants/price_ranges/level_4.svg'}</div><div class='title-label'> + 30 €</div>".html_safe, 4]], label: '<div class= "title border"><div class="title-middle">Gamme de prix</div>
         <div class="title-label">Sélectionne le prix moyen <br>du <span id="plat_principal">plat principal</span></div></div>'.html_safe, item_wrapper_class: 'simple_form_inline', :include_hidden => false %>
 
-      <%= reco.input :review, :as => :text, label: '<div class= "title border">Mot de la fin <p>(140 caractères max)</p></div>'.html_safe,  maxlength: 140, placeholder: "Un plat à ne pas louper?" %>
+      <%= reco.input :review, :as => :text, input_html: { id: 'field', onkeyup: 'countChar(this)'}, label: '<div class= "title border">Mot de la fin <p><span id="charNum">140</span> caractères</p></div>'.html_safe,  maxlength: 140, placeholder: "Un plat à ne pas louper?" %>
 
       <%= reco.submit("Recommander !", class: "btn btn-danger") %>
     <% end %>
   </div>
   <script>
+    function countChar(val) {
+      var len = val.value.length;
+      if (len > 140) {
+        val.value = val.value.substring(0, 140);
+      } else {
+        $('#charNum').text(140 - len);
+      }
+    };
     mixpanel.track_forms("#form-reco", "reco_intent", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
   </script>
 </div>
