@@ -23,7 +23,7 @@ class RestaurantsController < ApplicationController
       end
     else
       if current_user.recommendations.count == 0
-        redirect_to new_recommendation_path, notice: "Partages ta première reco avant de découvrir celles de tes amis !"
+        redirect_to new_recommendation_path, notice: "Partage ta première reco avant de découvrir celles de tes amis !"
       end
     end
 
