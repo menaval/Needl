@@ -1,5 +1,11 @@
 class FriendshipsController < ApplicationController
 
+
+  def index
+    @requests_received = User.where(id: current_user.my_requests_received_ids)
+    @friends = User.where(id: current_user.my_friends_ids)
+  end
+
   def new
     @friendship = Friendship.new
     @not_interested_relation = NotInterestedRelation.new

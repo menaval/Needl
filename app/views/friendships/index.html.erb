@@ -5,9 +5,9 @@
 
 <div id="accept_or_refuse_friends">
   <div class="container">
-    <% if User.where(id: current_user.my_requests_received_ids).count > 0 %>
+    <% if @requests_received.count > 0 %>
       <div class="carousel">
-        <% User.where(id: current_user.my_requests_received_ids).each do |friend| %>
+        <% @requests_received.each do |friend| %>
         <% friendship = Friendship.find_by(sender_id: friend.id, receiver_id: current_user.id) %>
             <div>
               <div class="card-white-mini">
@@ -38,7 +38,7 @@
 </div>
 
 <div class="box">
-  <% User.where(id: current_user.my_friends_ids).each do |friend| %>
+  <% @friends.each do |friend| %>
   <% friendship = Friendship.find_by(sender_id: [current_user.id, friend.id], receiver_id: [current_user.id, friend.id]) %>
     <div class="friend card-white">
       <%= link_to user_path(friend.id) do %>
