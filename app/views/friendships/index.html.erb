@@ -12,7 +12,7 @@
             <div>
               <div class="card-white-mini">
                 <%= image_tag friend.picture, class: "img-circle" %>
-                <p><%= friend.name %><br><span class="recos"><%= Recommendation.where(user_id: friend.id).count %> recos</span></p>
+                <p><%= friend.name %><br><span class="recos"><%= Recommendation.where(user_id: friend.id).count %> <%= Recommendation.where(user_id: friend.id).count>1 ? "recos" : "reco" %></span></p>
               <div class="row accept_or_refuse">
                 <div class="col-xs-6 text-right">
                   <%= form_tag answer_request_friendships_path, id: 'refuse_friend', method: "post" do %>
@@ -43,7 +43,7 @@
     <div class="friend card-white">
       <%= link_to user_path(friend.id) do %>
         <%= image_tag friend.picture %>
-        <h2><%= friend.name.split(" ")[0] %><span><%= Recommendation.where(user_id: friend.id).count %> recos</span></h2>
+        <h2><%= friend.name.split(" ")[0] %><span><%= Recommendation.where(user_id: friend.id).count %> <%= Recommendation.where(user_id: friend.id).count>1 ? "recos" : "reco" %></span></h2>
         <p>Voir le profil</p>
       <% end %>
     </div>
