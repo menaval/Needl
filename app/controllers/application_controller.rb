@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!, unless: :pages_controller?
   before_action :count_notifs
   before_action  :tracking
+  before_action :correct_user
 
   # on laisse unless pages_controller au cas ou pour l'instant
   # include Pundit
@@ -28,6 +29,14 @@ class ApplicationController < ActionController::Base
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:account_update) << :name
   end
+
+  def correct_user
+    # exclure charles lucas
+    if current_user && current_user.id == 101
+        redirect_to "http://s3.amazonaws.com/rapgenius/huggy_les_bons_tuyaux.jpg"
+      end
+  end
+
   private
 
   def devise_or_pages_controller?
