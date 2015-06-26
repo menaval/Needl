@@ -212,6 +212,9 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.3)
       mime-types
+    passenger (5.0.10)
+      rack
+      rake (>= 0.8.1)
     pg (0.18.2)
     polyamorous (1.2.0)
       activerecord (>= 3.0)
@@ -229,8 +232,6 @@ GEM
       activerecord (>= 3.0)
       i18n (>= 0.5.0)
       railties (>= 3.0.0)
-    puma (2.11.3)
-      rack (>= 1.1, < 2.0)
     pundit (1.0.1)
       activesupport (>= 3.0.0)
     quiet_assets (1.1.0)
@@ -347,11 +348,11 @@ DEPENDENCIES
   newrelic_rpm
   omniauth-facebook
   paperclip
+  passenger
   pg
   pry-byebug
   pry-rails
   public_activity
-  puma
   pundit
   quiet_assets
   rack-timeout
