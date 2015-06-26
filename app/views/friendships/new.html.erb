@@ -9,7 +9,9 @@
           <div>
             <div class="card-white-mini padded", id="friends-card">
               <%= image_tag user.picture, class: "img-circle" %>
-              <%= user.name %>
+              <p><%= user.name %><br><span class="recos">
+                <% if Recommendation.where(user_id: user.id).count > 0 %><%= Recommendation.where(user_id: user.id).count %> <%= Recommendation.where(user_id: user.id).count>1 ? "recos" : "reco" %></span></p>
+                <%end%>
               <div class="row add_or_not">
                 <div class="col-xs-6 text-right">
                   <%= bootstrap_form_for(@friendship, class: 'form') do |f| %>
