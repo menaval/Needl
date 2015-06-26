@@ -51,5 +51,4 @@ end
 group :production do
   gem "rails_12factor"
   gem "passenger"
-  gem "rack-timeout"
 end
