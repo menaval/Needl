@@ -43,7 +43,7 @@ class FriendshipsController < ApplicationController
     status = eval(params[:accepted])[:value]
     if status == true
       @friendship.update_attribute(:accepted, true)
-      redirect_to new_friendship_path
+      redirect_to friendships_path
     else
       destroy
     end
