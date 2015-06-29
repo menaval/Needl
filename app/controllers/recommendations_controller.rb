@@ -22,6 +22,8 @@ class RecommendationsController < ApplicationController
         @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
         @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
         if current_user.recommendations.count == 1
+          # si première reco, accueil du ceo
+          Friendship.create(sender_id: 125, receiver_id: current_user.id, accepted: true)
           redirect_to welcome_ceo_users_path
         else
           redirect_to restaurant_path(@recommendation.restaurant)
