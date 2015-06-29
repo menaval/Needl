@@ -17,10 +17,16 @@ class RecommendationsController < ApplicationController
     elsif find_restaurant_by_origin != nil
       @recommendation = current_user.recommendations.new(recommendation_params)
       @recommendation.restaurant = @restaurant
+
       if @recommendation.save
         @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
         @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
-        redirect_to restaurant_path(@recommendation.restaurant)
+        if current_user.recommendations.count == 1
+          redirect_to welcome_ceo_users_path
+        else
+          redirect_to restaurant_path(@recommendation.restaurant)
+        end
+
       else
         redirect_to new_recommendation_path, notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"
       end
