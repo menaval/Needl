@@ -28,7 +28,11 @@ module Api
     private
 
     def search_via_database
-      restaurants = Restaurant.where("name ilike ?", "%#{@query}%").limit(4)
+
+      useless_words = ["le", "la", "à", "a", "chez", "du", "restaurant", "cafe", "café", "bar"]
+      query_terms = @query.split.collect { |name| "%#{name}%" }.delete_if{|name| useless_words.include?(name.gsub("%",""))}
+      restaurants_table = Restaurant.arel_table
+      restaurants = Restaurant.where(restaurants_table[:name].matches_any(query_terms))
 
       restaurants = restaurants.map do |restaurant|
         { origin: 'db', name: restaurant.name, address: restaurant.address, id: restaurant.id, name_and_address: "#{restaurant.name}: #{restaurant.address}, #{restaurant.city} #{customize_postal_code(restaurant.postal_code)}" }
