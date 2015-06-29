@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :users, only: [:show, :edit, :update] do
     collection do
       get :access
+      get :welcome_ceo
       post :verification_code
     end
   end
