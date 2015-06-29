@@ -12,7 +12,6 @@ class RecommendationsController < ApplicationController
   end
 
   def create
-
     if Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
       update
     elsif find_restaurant_by_origin != nil
