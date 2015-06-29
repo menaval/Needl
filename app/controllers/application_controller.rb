@@ -40,8 +40,7 @@ class ApplicationController < ActionController::Base
 
   def welcome_by_ceo
     if current_user.sign_in_count == 1
-      # changer le sender_id
-      Friendship.create(sender_id: 41, receiver_id: current_user.id, accepted: true)
+      Friendship.create(sender_id: 125, receiver_id: current_user.id, accepted: true)
     end
   end
 
