@@ -28,17 +28,11 @@ module Api
     private
 
     def search_via_database
-      raise
-      search_length = @query.split.length
-      query_str = @query.split.map.with_index {|name, index| !(index == search_length - 1) ? "%#{name}%," : "%#{name}%" }.join(" ")
 
-    # find(:all, :conditions => ['name ILIKE ? AND name ILIKE ? AND name ILIKE ?',
-    # "%#{@query.split[0]}%", "%#{@query.split[1]}%",
-    # "%#{@query.split[2]}%"])
-    #   Restaurant.where(["name ILIKE ? ", "name ILIKE ? ", "name ILIKE ? "].join(' OR '), "%#{@query.split[0]}%", "%#{@query.split[1]}%", "%#{@query.split[2]}%")
-    #   Restaurant.where([(['name ILIKE ?'] * search_length).join(' OR ')] + @query.split.map { |name| "%#{name}%" }))
-      # restaurants = Restaurant.where("name ilike ?", "%#{@query}%").limit(4)
-
+      useless_words = ["le", "la", "à", "a", "chez", "du", "restaurant", "cafe", "café", "bar"]
+      query_terms = @query.split.collect { |name| "%#{name}%" }.delete_if{|name| useless_words.include?(name.gsub("%",""))}
+      restaurants_table = Restaurant.arel_table
+      restaurants = Restaurant.where(restaurants_table[:name].matches_any(query_terms))
 
       restaurants = restaurants.map do |restaurant|
         { origin: 'db', name: restaurant.name, address: restaurant.address, id: restaurant.id, name_and_address: "#{restaurant.name}: #{restaurant.address}, #{restaurant.city} #{customize_postal_code(restaurant.postal_code)}" }
