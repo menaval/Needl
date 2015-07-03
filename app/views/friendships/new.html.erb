@@ -36,12 +36,38 @@
     <% else %>
     <div class="text-center">
       <h3> Tu n'as pas d'autres amis connectés sur Needl, parles-en autour de toi !</h3>
+<!--       <%= link_to 'Inviter un ami', '#', class: "btn btn-primary", id:'invitation' %> -->
+      <br />
       <br>
       <br>
       <%= image_tag "come_in.gif", class: 'gif img-circle' %>
     <% end %>
     </div>
   </div>
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '1624037477816607',
+        xfbml      : true,
+        version    : 'v2.3'
+      });
+      $("#invitation").on("click", function() {
+        FB.ui({
+          method: 'send',
+          link: 'http://www.needl.fr',
+        });
+      });
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "//connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+
+  </script>
   <script>
     mixpanel.track_forms("#new_friendship", "add_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
     mixpanel.track_forms("#new_not_interested_relation", "ignore_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
