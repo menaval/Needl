@@ -60,18 +60,39 @@ class RecommendationsController < ApplicationController
   def link_to_subways(restaurant)
     client = GooglePlaces::Client.new(ENV['GOOGLE_API_KEY'])
     # stations erronnées reconnaissables à leur nom
-    false_subway_stations_by_name = ["Elysees Metro Hub", "Métro invalides", "Metro Saint-Paul", "Metro Station Anvers", "Métro Saint Germain des Près", "Paris train station", "Station de Métro Les Halles", "Paris Est"]
+    false_subway_stations_by_name = [
+      "Elysees Metro Hub", "Métro invalides",
+      "Metro Saint-Paul",
+      "Metro Station Anvers",
+      "Métro Saint Germain des Près",
+      "Paris train station",
+      "Station de Métro Les Halles",
+      "Paris Est"]
     # stations erronnées reconnaissables à leur coordonées avec le même nom qu'une vraie
-    false_subway_stations_by_coordinates = [{name: "Opéra", lat: 48.870871, lng: 2.332217}, {name: "Trinité - d'Estienne d'Orves", lat: 48.876305, lng: 2.333199}, {name: "Place d'Italie", lat: 48.831483, lng: 2.355692}, {name: "Quatre-Septembre", lat: 48.869644, lng: 2.336445}, {name: "Saint-Michel", lat: 48.853387, lng: 2.343706}, {name: "Tuileries", lat: 48.864318, lng: 2.3302}]
+    # false_subway_stations_by_coordinates = [
+    #   {name: "Opéra", lat: 48.870871, lng: 2.332217},
+    #   {name: "Trinité - d'Estienne d'Orves", lat: 48.876305, lng: 2.333199},
+    #   {name: "Place d'Italie", lat: 48.831483, lng: 2.355692},
+    #   {name: "Quatre-Septembre", lat: 48.869644, lng: 2.336445},
+    #   {name: "Saint-Michel", lat: 48.853387, lng: 2.343706},
+    #   {name: "Tuileries", lat: 48.864318, lng: 2.3302}]
+
+      false_subway_stations_by_coordinates = [
+        [48.870871, 2.332217],
+        [48.876305, 2.333199],
+        [48.831483, 2.355692],
+        [48.869644, 2.336445],
+        [48.853387, 2.343706]]
 
 
     search_less_than_500_meters = client.spots(restaurant.latitude, restaurant.longitude, :radius => 500, :types => 'subway_station')
 
     # on enleve toutes les stations erronees
 
-    search_less_than_500_meters.select! { |result| !false_subway_stations_by_name.include?(result.name)}
-    search_less_than_500_meters.select! do|result|
-        ( !(false_subway_stations_by_coordinates[0][:lat] == result.lat) || !(false_subway_stations_by_coordinates[0][:lng] == result.lng) ) && ( !(false_subway_stations_by_coordinates[1][:lat] == result.lat) || !(false_subway_stations_by_coordinates[1][:lng] == result.lng))
+    search_less_than_500_meters.delete_if { |result| false_subway_stations_by_name.include?(result.name)}
+    search_less_than_500_meters.delete_if do|result|
+      coordinates_result = [result.lat, result.lng]
+      false_subway_stations_by_coordinates.include?(coordinates_result)
     end
 
     # recherche du plus près au cas où il n'y en ait pas dans les 500m
@@ -79,9 +100,10 @@ class RecommendationsController < ApplicationController
     search_by_closest = client.spots(restaurant.latitude, restaurant.longitude, :rankby => 'distance', :types => 'subway_station')[0..5]
 
     # on enlève toutes les stations erronées
-    search_by_closest.select! { |result| !false_subway_stations_by_name.include?(result.name)}
-    search_by_closest.select! do|result|
-        ( !(false_subway_stations_by_coordinates[0][:lat] == result.lat) || !(false_subway_stations_by_coordinates[0][:lng] == result.lng) ) && ( !(false_subway_stations_by_coordinates[1][:lat] == result.lat) || !(false_subway_stations_by_coordinates[1][:lng] == result.lng))
+    search_by_closest.delete_if { |result| !false_subway_stations_by_name.include?(result.name)}
+    search_by_closest.delete_if do|result|
+      coordinates_result = [result.lat, result.lng]
+      false_subway_stations_by_coordinates.include?(coordinates_result)
     end
     search_by_closest = search_by_closest.first
     # on récupère le tout
