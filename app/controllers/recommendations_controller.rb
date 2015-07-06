@@ -82,7 +82,11 @@ class RecommendationsController < ApplicationController
         [48.876305, 2.333199],
         [48.831483, 2.355692],
         [48.869644, 2.336445],
-        [48.853387, 2.343706]]
+        [48.853387, 2.343706],
+        [48.867531, 2.313542],
+        [48.882598, 2.309639],
+        [48.865299, 2.374381]
+        [48.861272, 2.374214]]
 
 
     search_less_than_500_meters = client.spots(restaurant.latitude, restaurant.longitude, :radius => 500, :types => 'subway_station')
