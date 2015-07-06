@@ -9,7 +9,7 @@
   <nav class="sidebar-nav" id="sidebar-text">
     <%=simple_form_for :query, { url: restaurants_path, method: :get, class: "sidebar-form sidebar-item", id: "search-form" }  do |f| %>
 
-      <%= f.input :price_range, collection: [["-15€", 1], ["15 - 20 €", 2], ["20 - 25 €", 3], ["+25 €", 4]], label: 'catégorie de prix', prompt: "toutes", id: "price_range" %>
+      <%= f.input :price_range, collection: [["-15€", 1], ["15 - 20 €", 2], ["20 - 30 €", 3], ["+30 €", 4]], label: 'catégorie de prix', prompt: "toutes", id: "price_range" %>
 
       <%= f.input :food, collection: current_user.my_friends_foods, label: 'Style de Cuisine', prompt: "Je mange de tout", id: "food" %>
       <%= f.input :friend, collection: User.where(id: current_user.my_visible_friends_ids + [current_user.id]).order(:name), label: 'Vos amis', prompt: "Tous mes amis", id: "friend" %>
