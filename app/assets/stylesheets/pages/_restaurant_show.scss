@@ -91,7 +91,7 @@
   .icon-and-label {
     float: left;
     width: auto;
-    padding: 0 10px; 
+    padding: 0 10px;
   }
 
 
@@ -210,19 +210,18 @@
       padding: 10px 0 10px 0;
       width: 250px;
       margin: auto;
-      .end-word-people-left,
-      .end-word-people-right {
-        float: left;
-        padding: 10px 7px;
-        height: 80px;
-        width: 74px;
-      }
-      .end-word-people-middle {
-        float: left;
-        padding: 0 10px;
-        height: 80px;
-        width: 100px;
-      }
+      // .end-word-people-side {
+      //   float: left;
+      //   padding: 10px 7px;
+      //   height: 80px;
+      //   width: 74px;
+      // }
+      // .end-word-people-side {
+      //   float: left;
+      //   padding: 0 10px;
+      //   height: 80px;
+      //   width: 100px;
+      // }
     }
   }
   .end-word-quote {
