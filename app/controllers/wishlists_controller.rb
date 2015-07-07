@@ -5,8 +5,12 @@ class WishlistsController < ApplicationController
   end
 
   def create
-    @wishlist = Wishlist.new(wishlist_params)
-    render :new, notice: "Restaurant ajouté à ta wishlist"
+    if Wishlist.where(restaurant_id:params["wishlist"]["restaurant_id"].to_i, user_id: current_user.id).any?
+    redirect_to restaurants_path, notice: "Restaurant déjà sur ta wishlist"
+    else
+      @wishlist = Wishlist.create(wishlist_params)
+      redirect_to restaurants_path, notice: "Restaurant ajouté à ta wishlist"
+    end
   end
 
   private

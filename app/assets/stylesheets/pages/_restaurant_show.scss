@@ -174,8 +174,8 @@
   }
   .avatar {
     margin: 0;
-    width: 60px;
-    height: 60px;
+    width: 60px !important;
+    height: 60px !important;
   }
 
   .wrap {
@@ -282,12 +282,6 @@
       width:  240px;
       padding: 0 0 15px 0;
       margin: auto;
-      .resto-wishlist-person {
-        height: 60px;
-        width: 60px;
-        padding: 5px;
-        float: left;
-      }
     }
   }
 

@@ -67,6 +67,16 @@ class Restaurant < ActiveRecord::Base
     hash.sort_by { |_user_id, content_and_date| content_and_date[1] }.reverse.to_h
   end
 
+  def friends_wishing_this_restaurant(current_user)
+    array = []
+    self.wishlists.each do |wishlist|
+      if User.where(id: current_user.my_friends_ids).include?(User.find(wishlist.user_id)) || current_user == User.find(wishlist.user_id)
+        array += [wishlist.user_id]
+      end
+    end
+    array
+  end
+
   def update_price_range(recommendation_price_range)
     self.price_range = recommendation_price_range.to_i
     self.save!
