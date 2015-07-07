@@ -33,6 +33,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :wishlists, only: [:index, :new, :create]
+
   namespace :api, defaults: { format: :json } do
     resources :restaurants, only: [:show, :index] do
       collection do

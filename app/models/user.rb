@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
 
   acts_as_token_authenticatable
   has_many :recommendations, dependent: :destroy
+  has_many :wishlists, dependent: :destroy
 
   has_many :friendships, foreign_key: :sender_id, dependent: :destroy
   has_many :received_friendships, foreign_key: :receiver_id, class_name: 'Friendship', dependent: :destroy
