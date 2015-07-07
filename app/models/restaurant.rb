@@ -2,6 +2,7 @@ class Restaurant < ActiveRecord::Base
 
   has_many :restaurant_pictures, dependent: :destroy
   has_many :recommendations, dependent: :destroy
+  has_many :wishlists, dependent: :destroy
   has_many :restaurant_subways, dependent: :destroy
   has_many :subways, :through => :restaurant_subways
 
