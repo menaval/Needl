@@ -54,29 +54,56 @@
     </div>
   </div>
 
-  <!-- Final word -->
-
-  <div id="mots_de_la_fin" class="text-center">
-    <div class="container">
-      <h2>Mots de la fin</h2>
-      <div class="carousel">
-        <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
-          <div class= "padded">
-              <%= image_tag User.find(friend_id).picture, class: "img-circle avatar img-responsive" %>
-              <p>" <%= content_and_date[0] %> "</p>
-          </div>
-        <% end %>
-      </div>
-    </div>
-  </div>
 
   <!-- Location -->
 
   <%= render "modal_photos" %>
   <div id="basic_infos" class="text-center">
-    <h3><%= @restaurant.address%></h3>
-    <h3>metro <%= @subway.name %></h3>
+    <p><%= @restaurant.address%></p>
+    <p class="subway"><span class="subway-icon"></span><%= @subway.name %></p>
   </div>
+
+  <!-- Final word -->
+
+  <div id="mots_de_la_fin" class="text-center">
+    <div class="container">
+      <div class= "title">
+        <div class="title-middle">Ils y sont déjà allés</div>
+      </div>
+
+      <div class="end-word clearfix">
+        <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
+        <div class="end-word-people clearfix">
+          <img class="end-word-people-left img-circle avatar img-responsive" src="http://needl.s3.amazonaws.com/development/users/pictures/000/000/001/original/picture?1434455677" alt="Picture?1434455677">
+          <%= image_tag User.find(friend_id).picture, class: "img-circle end-word-people-middle avatar img-responsive" %>
+          <img class="end-word-people-right img-circle avatar img-responsive" src="http://needl.s3.amazonaws.com/development/users/pictures/000/000/001/original/picture?1434455677" alt="Picture?1434455677">
+        </div>
+
+        <div class="end-word-quote">
+          <span class="end-quote-arrow"></span>
+          <%= content_and_date[0] %>
+          <span class="end-quote-name">Charlotte B.</span>
+        </div>
+        <% end %>
+
+      </div>
+
+      <a href="" class="btn btn-danger end-word-button">Donner mon avis</a>
+
+
+      <!--
+      <div class="carousel">
+        <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
+          <div>
+              <%= image_tag User.find(friend_id).picture, class: "img-circle avatar img-responsive" %>
+              <p>" <%= content_and_date[0] %> "</p>
+          </div>
+        <% end %>
+      </div>
+      -->
+    </div>
+  </div>
+
 
 
 
