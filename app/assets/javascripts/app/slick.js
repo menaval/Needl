@@ -6,7 +6,10 @@ $(document).ready(function(){
     infinite: true,
     slidesToShow: 3,
     slidesToScroll: 3,
-    arrows: true
+    arrows: false,
+    centerPadding: true,
+    mobileFirst: true,
+    centerMode: true
   });
    $('.slider-for').slick({
     slidesToShow: 1,

@@ -65,8 +65,7 @@
           </div>
         <% end %>
       </div>
-
-      <a href="" class="btn btn-danger end-word-button">Donner mon avis</a>
+      <%= link_to 'Donner mon avis', new_recommendation_path, class: 'btn btn-danger end-word-button' %>
 
     </div>
   </div>
@@ -79,14 +78,18 @@
         <div class="title-middle">Ils ont envie d'y aller</div>
       </div>
 
-      <div class="resto-wishlist-people clearfix">
-        <img class="resto-wishlist-person img-circle avatar img-responsive" src="http://needl.s3.amazonaws.com/development/users/pictures/000/000/001/original/picture?1434455677" alt="Picture?1434455677">
-        <img class="resto-wishlist-person img-circle avatar img-responsive" src="http://needl.s3.amazonaws.com/development/users/pictures/000/000/001/original/picture?1434455677" alt="Picture?1434455677">
-        <img class="resto-wishlist-person img-circle avatar img-responsive" src="http://needl.s3.amazonaws.com/development/users/pictures/000/000/001/original/picture?1434455677" alt="Picture?1434455677">
-        <img class="resto-wishlist-person img-circle avatar img-responsive" src="http://needl.s3.amazonaws.com/development/users/pictures/000/000/001/original/picture?1434455677" alt="Picture?1434455677">
+      <div class="resto-wishlist-people multiple-carousel">
+          <% @restaurant.friends_wishing_this_restaurant(current_user).each do |friend_id| %>
+          <div>
+            <%= image_tag User.find(friend_id).picture, class: "img-circle avatar img-responsive" %>
+          </div>
+        <% end %>
       </div>
-
-      <a href="" class="btn btn-danger end-word-button">Moi aussi !</a>
+      <%= form_for(@wishlist, class: 'form') do |f| %>
+        <%= f.hidden_field :user_id, value: current_user.id %>
+        <%= f.hidden_field :restaurant_id, value: @restaurant.id %>
+        <%= f.submit class: "btn btn-danger end-word-button", value: "Moi aussi !" %>
+      <% end %>
     </div>
   </div>
 
