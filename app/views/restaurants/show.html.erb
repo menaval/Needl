@@ -15,11 +15,7 @@
 
   <div id="ambiences">
     <div class="container present">
-      <!--
-      <div class="row text-center">
-        <h2>Ambiance</h2>
-      </div>
-    -->
+
       <div class= "title">
         <div class="title-middle">Ambiances</div>
       </div>
@@ -93,12 +89,27 @@
     </div>
   </div>
 
+   <!-- Map -->
+  <div id="map" style="width: 100%; height: 100px;"></div>
 
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
 
+  <script type="text/javascript">
+    var myLatlng = new google.maps.LatLng(<%= @restaurant.latitude %>, <%= @restaurant.longitude %>);
+    var myOptions = {
+      zoom: 16,
+      disableDefaultUI: true,
+      center: myLatlng,
+      scrollwheel: false,
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      styles: [{"featureType":"landscape.man_made","elementType":"all","stylers":[{"color":"#949191"},{"lightness":83},{"saturation":"7"}]},{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"lightness":77}]},{"featureType":"poi.park","elementType":"geometry.fill","stylers":[{"color":"#34ad6b"},{"lightness":"40"}]},{"featureType":"poi.school","elementType":"geometry.fill","stylers":[{"lightness":"39"},{"gamma":"0.76"},{"hue":"#fff700"},{"saturation":"67"}]},{"featureType":"poi.sports_complex","elementType":"geometry.fill","stylers":[{"color":"#c15e1f"},{"lightness":"12"},{"saturation":"45"},{"gamma":"2.07"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#f1b127"}]},{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#2f78c4"},{"gamma":"1.50"},{"lightness":"12"}]}]
+    };
+    var map = new google.maps.Map(document.getElementById('map'), myOptions);
+    var marker = new google.maps.Marker({
+      position: myLatlng,
+      map: map
+    });
 
-  <!-- script CALL -->
-
-  <script>
     mixpanel.track_links("#call", "call", {
         "user": "<%= current_user.name %>", "restaurant": "<%= @restaurant.name %>", "browser": "<%= browser.name %>"
     });
