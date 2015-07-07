@@ -1,43 +1,102 @@
 <div>
 
+  <!-- Restaurant About -->
+
   <%= render "restaurant_profile", restaurant: @restaurant, picture: @picture %>
 
-  <div id="basic_infos" class="text-center">
-    <h3><%= @restaurant.address%></h3>
-    <h3>metro <%= @subway.name %></h3>
+  <!-- Reservation -->
+
+  <div class="contact-restaurant clearfix">
+    <p>Réserver une table</p>
+    <%= link_to "Appeler", "tel:#{@restaurant.phone_number}", class: "btn btn-danger", id:"call" %>
   </div>
 
+  <!-- Ambiences -->
+
   <div id="ambiences">
-    <div class="container">
+    <div class="container present">
+      <!--
       <div class="row text-center">
         <h2>Ambiance</h2>
       </div>
-      <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user), ambience_or_strength: "ambience" %>
+    -->
+      <div class= "title">
+        <div class="title-middle">Ambiances</div>
+      </div>
+
+      <!-- icon -->
+          <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user), ambience_or_strength: "ambience" %>
+        </div>
+
     </div>
   </div>
 
+  <!-- Strenght -->
+
   <div id="strengths">
-    <div class="container">
-      <div class="row text-center">
-        <h2>Points forts</h2>
+    <div class="container present">
+
+      <div class= "title">
+        <div class="title-middle">Points forts</div>
       </div>
       <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user), ambience_or_strength: "strength" %>
     </div>
   </div>
+
+
+  <!-- Location -->
+
+  <%= render "modal_photos" %>
+  <div id="basic_infos" class="text-center">
+    <p><%= @restaurant.address%></p>
+    <p class="subway"><span class="subway-icon"></span><%= @subway.name %></p>
+  </div>
+
+  <!-- Final word -->
+
   <div id="mots_de_la_fin" class="text-center">
     <div class="container">
-      <h2>Mots de la fin</h2>
+      <div class= "title">
+        <div class="title-middle">Ils y sont déjà allés</div>
+      </div>
+
+      <div class="end-word clearfix">
+        <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
+        <div class="end-word-people clearfix">
+          <img class="end-word-people-left img-circle avatar img-responsive" src="http://needl.s3.amazonaws.com/development/users/pictures/000/000/001/original/picture?1434455677" alt="Picture?1434455677">
+          <%= image_tag User.find(friend_id).picture, class: "img-circle end-word-people-middle avatar img-responsive" %>
+          <img class="end-word-people-right img-circle avatar img-responsive" src="http://needl.s3.amazonaws.com/development/users/pictures/000/000/001/original/picture?1434455677" alt="Picture?1434455677">
+        </div>
+
+        <div class="end-word-quote">
+          <span class="end-quote-arrow"></span>
+          <%= content_and_date[0] %>
+          <span class="end-quote-name">Charlotte B.</span>
+        </div>
+        <% end %>
+
+      </div>
+
+      <a href="" class="btn btn-danger end-word-button">Donner mon avis</a>
+
+
+      <!--
       <div class="carousel">
         <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
-          <div class= "padded">
+          <div>
               <%= image_tag User.find(friend_id).picture, class: "img-circle avatar img-responsive" %>
               <p>" <%= content_and_date[0] %> "</p>
           </div>
         <% end %>
       </div>
-      <%= link_to "Contacter #{@restaurant.name}", "tel:#{@restaurant.phone_number}", class: "btn btn-danger", id:"call" %>
+      -->
     </div>
   </div>
+
+
+
+
+  <!-- script CALL -->
 
   <script>
     mixpanel.track_links("#call", "call", {
@@ -45,6 +104,7 @@
     });
     mixpanel.track("restaurant_page", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>"});
   </script>
+
 </div>
 
 

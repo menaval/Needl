@@ -10,6 +10,92 @@
     margin-top: 10px;
   }
 
+  #basic_infos {
+    padding: 30px 20px;
+    background: #FFF;
+    .subway {
+      color: #14489E;
+      padding-top: 10px;
+      .subway-icon {
+        background: image-url('subway.png') bottom no-repeat;
+        height:16px;
+        width: 16px;
+        display: inline-block;
+        margin-right: 5px;
+      }
+    }
+    p {
+      margin: 0;
+    }
+  }
+
+
+  .contact-restaurant {
+    padding: 20px;
+    background: #F2F2F2;
+    p {
+      float: left;
+      margin: 0;
+      padding: 10px 0;
+    }
+    .btn {
+      float: right;
+      margin: 0;
+      border-radius: 30px;
+      padding: 10px 20px;
+    }
+  }
+
+  .title {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: $gray-darker;
+    font-size: 20px;
+    font-weight: 400;
+    text-align: center;
+  }
+  .border {
+    border-top: 1px solid #f0efef;
+    padding-top: 30px;
+  }
+
+  .title-label {
+    font-size: 15px;
+    padding-top: 5px;
+    color: #AAA;
+    text-align: center;
+    padding-bottom: 10px;
+  }
+
+  #ambiences {
+    background: #FFF;
+    position: relative;
+    padding: 20px;
+    .bloc-new {
+      width: 160px;
+      margin: auto;
+    }
+  }
+
+  #strengths {
+    position: relative;
+    background: #F2F2F2;
+    padding: 20px;
+    .bloc-new {
+      width: 240px;
+      margin: auto;
+    }
+  }
+
+
+  .icon-and-label {
+    float: left;
+    width: auto;
+    padding: 0 10px; 
+  }
+
+
+
   #image_field {
     height: 300px;
     top: 0;
@@ -28,7 +114,7 @@
     #text-left {
       position: absolute;
       bottom: 20px;
-      left: 40px;
+      left: 20px;
       z-index: 9;
       h1, h2, h3 {
         margin-top: 5px;
@@ -41,7 +127,7 @@
     }
     #text-right {
       position: absolute;
-      bottom: 35px;
+      bottom: 25px;
       right: 20px;
       z-index: 9;
       h2 {
@@ -55,21 +141,28 @@
     }
   }
   #ambiences {
-    background-color: white;
+    background-color: #FFF;
     position: relative;
-    padding-bottom: 20px;
+    padding: 20px;
   }
   #strengths {
-    background-color: #f7f4f4;
+    background-color: #F2F2F2;
     position: relative;
     padding-bottom: 20px;
   }
   #mots_de_la_fin {
-    background-color: white;
+    background-color: #F2F2F2;
     padding-bottom: 10px;
+    position: relative;
+    padding: 20px;
     img{
       margin-right: auto;
       margin-left: auto;
+    }
+    .slick-slide {
+      p {
+        margin: 0;
+      }
     }
     p {
       padding-top: 10px;
@@ -84,18 +177,8 @@
     width: 60px;
     height: 60px;
   }
-  .bloc_bis
-  h3 {
-    font-size: 20px;
-    color: $green;
-    padding-top: 10px;
-    margin: 0px;
-  }
-  img {
-    margin-right: auto;
-    margin-left: auto;
-  }
-  wrap {
+
+  .wrap {
     margin-bottom: 0px;
   }
   .carousel {
@@ -120,6 +203,69 @@
       overflow: hidden;
       opacity: 0;
     }
+  }
+
+  .end-word {
+   .end-word-people {
+      padding: 10px 0 10px 0;
+      width: auto;
+      margin: auto;
+      .end-word-people-left,
+      .end-word-people-right {
+        float: left;
+        padding: 10px 7px;
+        height: 80px;
+        width: 74px;
+      }
+      .end-word-people-middle {
+        float: left;
+        padding: 0 10px;
+        height: 80px;
+        width: 100px;
+      }
+    }
+  }
+  .end-word-quote {
+    float: none;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 5px;
+    position: relative;
+    .end-quote-arrow {
+      background-color: #FFF;
+      height: 15px;
+      width: 15px;
+      position: absolute;
+      top: -7.5px;
+      left: calc(50% - 3.5px);
+      transform: rotate(45deg);
+    }
+    .end-quote-name {
+      width: 100%;
+      display: block;
+      font-size: 12px;
+      padding-top: 5px;
+      color: #AAA;
+    }
+  }
+  .end-word-button {
+    margin-bottom: 10px;
+    float: none;
+    width: 100%;
+    margin: 0 auto 10px auto;
+    background-color: #B3B3B3;
+    border-color: #A8A8A8;
+    display: block;
+    margin: 0;
+    border-radius: 30px;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+  }
+  .end-word-button:hover {
+    background-color: #A8A8A8;
   }
 }
 
