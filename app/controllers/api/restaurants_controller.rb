@@ -28,10 +28,18 @@ module Api
     private
 
     def search_via_database
-      restaurants = Restaurant.where("name ilike ?", "%#{@query}%").limit(4)
+
+      useless_words = ["le", "la", "à", "a", "chez", "du", "restaurant", "cafe", "café", "bar"]
+      query_terms = @query.split.collect { |name| "%#{name}%" }.delete_if{|name| useless_words.include?(name.gsub("%","").downcase)}
+      restaurants_table = Restaurant.arel_table
+      restaurants = Restaurant.where(restaurants_table[:name].matches_any(query_terms))
 
       restaurants = restaurants.map do |restaurant|
-        { origin: 'db', name: restaurant.name, address: restaurant.address, id: restaurant.id, name_and_address: "#{restaurant.name}: #{restaurant.address}" }
+        { origin: 'db', name: restaurant.name, address: restaurant.address, id: restaurant.id, name_and_address: "#{restaurant.name}: #{restaurant.address}, #{restaurant.city} #{customize_postal_code(restaurant.postal_code)}" }
+      end
+
+      if restaurants.length >= 4
+        restaurants = restaurants.take(3)
       end
 
       return restaurants
@@ -45,17 +53,28 @@ module Api
       )
 
       search = client.search_venues(
-        categoryId: ENV['FOURSQUARE_FOOD_CATEGORY'],
+        categoryId: "#{ENV['FOURSQUARE_FOOD_CATEGORY']},#{ENV['FOURSQUARE_BAR_CATEGORY']}",
         intent:     'browse',
         near:       'Paris',
         query:      @query
       )
 
       restaurants = search['venues'].map do |restaurant|
-        { origin: 'foursquare', name: restaurant['name'], address: "#{restaurant.location.address}, #{restaurant.location.city}", id: restaurant['id'], name_and_address: "#{restaurant['name']}: #{restaurant.location.address}, #{restaurant.location.city}" }
+        { origin: 'foursquare', name: restaurant['name'], address: "#{restaurant.location.address}", id: restaurant['id'], name_and_address: "#{restaurant['name']}: #{restaurant.location.address}, #{restaurant.location.city} #{customize_postal_code(restaurant.location.postalCode)}" }
       end
 
       return restaurants
     end
+
+    def customize_postal_code(postal_code)
+      if postal_code
+        if postal_code[3] == "0"
+          return postal_code[4] + "ᵉ"
+        else
+          return postal_code[3] + postal_code[4] + "ᵉ"
+        end
+      end
+    end
+
   end
 end

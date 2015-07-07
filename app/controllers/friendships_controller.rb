@@ -1,5 +1,11 @@
 class FriendshipsController < ApplicationController
 
+
+  def index
+    @requests_received = User.where(id: current_user.my_requests_received_ids)
+    @friends = User.where(id: current_user.my_friends_ids)
+  end
+
   def new
     @friendship = Friendship.new
     @not_interested_relation = NotInterestedRelation.new
@@ -9,7 +15,7 @@ class FriendshipsController < ApplicationController
   def create
     @friendship = Friendship.new(friendship_params)
     @friendship.save
-    redirect_to new_friendship_path
+    redirect_to new_friendship_path, notice: "Votre demande a bien été envoyée"
   end
 
   def invisible
@@ -37,7 +43,7 @@ class FriendshipsController < ApplicationController
     status = eval(params[:accepted])[:value]
     if status == true
       @friendship.update_attribute(:accepted, true)
-      redirect_to new_friendship_path
+      redirect_to friendships_path
     else
       destroy
     end

@@ -18,7 +18,6 @@ gem "paperclip"
 gem "aws-sdk", "< 2.0"
 gem 'activeadmin', github: 'activeadmin'
 gem "geocoder"
-gem "gmaps4rails"
 gem "rails-assets-underscore"
 gem "foursquare2"
 gem "koala", "~> 2.0"
@@ -51,6 +50,5 @@ end
 
 group :production do
   gem "rails_12factor"
-  gem "puma"
-  gem "rack-timeout"
+  gem "passenger"
 end

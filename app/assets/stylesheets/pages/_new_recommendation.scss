@@ -16,6 +16,11 @@
   .form-group {
     margin-bottom: 10px;
   }
+  .recommendation_price_ranges .icon-box svg {
+    width: 40px;
+    height: 40px;
+    margin-top: 11px;
+  }
 
   label {
     width: 100%;
@@ -35,7 +40,7 @@
       padding-top: 30px;
     }
   }
-  
+
   .title-label {
     font-size: 15px;
     padding-top: 5px;
@@ -46,10 +51,19 @@
     background: #DDD;
   }
 
+  #plat_principal {
+    font-weight: bold;
+  }
+
   .check_boxes {
     input {
       opacity: 0;
     }
+  }
+  .form-control {
+    height: 105px;
+    box-shadow: none;
+    border-radius: 5px;
   }
 
   .check_boxes:checked ~ .icon-box {
@@ -59,7 +73,7 @@
     animation: scaleUp 0.5s ease forwards;
   }
 
-  .check_boxes:checked ~ .label-icon {
+  .check_boxes:checked ~ .title-label {
     color: $green;
   }
 

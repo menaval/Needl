@@ -19,17 +19,18 @@
     }
     .badge {
       position: absolute;
-      left: 58%;
+      left: 60%;
       font-size: 10px;
       font-weight: 400;
       border-radius: 50%;
       background-color: $gray-lighter;
       color: $red;
       top: 3px;
-      width: 20px;
-      height: 20px;
+      width: 15px;
+      height: 15px;
       text-align: center;
-      padding: 5px 7px;
+      padding: 2px 2px;
+      font-weight: bold !important;
     }
     .nav-icone {
       height: 50px;

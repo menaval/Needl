@@ -1,0 +1,10 @@
+<div class= "text-center">
+  <div class="message">
+    <h1> Bienvenue sur Needl !</h1>
+    <br>
+    <p>Tu peux désormais accéder à ta carte personnalisée de Paris qui comprendra toutes tes recommandations ainsi que celles de tes amis. En attendant qu'ils s'inscrivent, tu peux compter sur ma sélection de burgers! J'en ai testé une bonne dose à Paris, et ceux-là sortent du lot!</p>
+    <p>Valentin, CEO Needl</p>
+    <%= image_tag(User.find(125).picture, class: "img-circle", id: "img-profil") %>
+    <br>
+    <%= link_to 'On y va ?', restaurants_path, class: 'btn btn-danger' %>
+  </div>

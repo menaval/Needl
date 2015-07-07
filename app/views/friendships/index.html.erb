@@ -1,16 +1,18 @@
 <h1>Mes amis</h1>
-<%= link_to 'add a friend', new_friendship_path, id: 'link_to_add' %>
+<div class="button-add">
+  <%= link_to 'add a friend', new_friendship_path, id: 'link_to_add' %>
+</div>
 
 <div id="accept_or_refuse_friends">
   <div class="container">
-    <% if User.where(id: current_user.my_requests_received_ids).count > 0 %>
+    <% if @requests_received.count > 0 %>
       <div class="carousel">
-        <% User.where(id: current_user.my_requests_received_ids).each do |friend| %>
+        <% @requests_received.each do |friend| %>
         <% friendship = Friendship.find_by(sender_id: friend.id, receiver_id: current_user.id) %>
             <div>
               <div class="card-white-mini">
                 <%= image_tag friend.picture, class: "img-circle" %>
-                <p><%= friend.name %><br><span class="new-reco"><%= Recommendation.where(user_id: friend.id).count %> recos</span></p>
+                <p><%= friend.name %><br><span class="recos"><%= Recommendation.where(user_id: friend.id).count %> <%= Recommendation.where(user_id: friend.id).count>1 ? "recos" : "reco" %></span></p>
               <div class="row accept_or_refuse">
                 <div class="col-xs-6 text-right">
                   <%= form_tag answer_request_friendships_path, id: 'refuse_friend', method: "post" do %>
@@ -35,29 +37,21 @@
   </div>
 </div>
 
-<div class="container">
-  <% User.where(id: current_user.my_friends_ids).each do |friend| %>
+<div class="box">
+  <% @friends.each do |friend| %>
   <% friendship = Friendship.find_by(sender_id: [current_user.id, friend.id], receiver_id: [current_user.id, friend.id]) %>
-
     <div class="friend card-white">
-      <div class="row">
-        <%= link_to user_path(friend.id) do %>
-          <div class="col-xs-3">
-              <%= image_tag friend.picture, class: "img-circle" %>
-          </div>
-          <div class="col-xs-6 infos">
-            <h2><%= friend.name.split(" ")[0] %><span><%= Recommendation.where(user_id: friend.id).count %> recos</span></h2>
-          </div>
-        <% end %>
-        <div class="col-xs-3">
-          <%= link_to 'modifier', user_path(friend.id) %>
-        </div>
-      </div>
+      <%= link_to user_path(friend.id) do %>
+        <%= image_tag friend.picture %>
+        <h2><%= friend.name.split(" ")[0] %><span><%= Recommendation.where(user_id: friend.id).count %> <%= Recommendation.where(user_id: friend.id).count>1 ? "recos" : "reco" %></span></h2>
+        <p>Voir le profil</p>
+      <% end %>
     </div>
   <% end %>
-  <script>
-    // ajouter tracker pour delete
-    mixpanel.track_forms("#hide_friend", "hide_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
-    mixpanel.track_forms("#unhide_friend", "unhide_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
-  </script>
 </div>
+
+<script>
+  mixpanel.track_forms("#accept_friend", "accept_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
+  mixpanel.track_forms("#refuse_friend", "refuse_friend", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>" });
+  mixpanel.track_links("#link_to_add", "add_friends_page", { "user": "<%= current_user.name %>", "browser": "<%= browser.name %>"});
+</script>

@@ -25,15 +25,7 @@
               </div>
               <!-- restaurant glimpse -->
               <%= link_to restaurant_path(resto.id) do %>
-                <div id="image_field" style="background: url(<%= image_path(resto.restaurant_pictures.first ? resto.restaurant_pictures.first.picture : resto.picture_url) %>); background-repeat:no-repeat; background-size:cover; background-position:50% 50%">
-                  <div id="text-left">
-                    <h2><%= resto.name %></h2>
-                    <h3><%= resto.food.name %></h3>
-                  </div>
-                  <div id="text-right", class="icon-box">
-                    <%= render "restaurants/price_ranges/level_#{resto.price_range}.svg" %>
-                  </div>
-                </div>
+              <%= render 'restaurants/restaurant_profile', restaurant: resto, picture: resto.restaurant_pictures.first ? resto.restaurant_pictures.first.picture : resto.picture_url %>
               <% end %>
               <!-- END restaurant glimpse -->
               <!--
