@@ -42,7 +42,6 @@
 
   <!-- Location -->
 
-  <%= render "modal_photos" %>
   <div id="basic_infos" class="text-center">
     <p><%= @restaurant.address%></p>
     <p class="subway"><span class="subway-icon"></span><%= @subway.name %></p>
@@ -56,21 +55,22 @@
         <div class="title-middle">Ils y sont déjà allés</div>
       </div>
 
-      <div class="end-word clearfix">
+      <div class="end-word clearfix slider-nav">
         <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
-        <div class="end-word-people clearfix">
-          <img class="end-word-people-left img-circle avatar img-responsive" src="http://needl.s3.amazonaws.com/development/users/pictures/000/000/001/original/picture?1434455677" alt="Picture?1434455677">
-          <%= image_tag User.find(friend_id).picture, class: "img-circle end-word-people-middle avatar img-responsive" %>
-          <img class="end-word-people-right img-circle avatar img-responsive" src="http://needl.s3.amazonaws.com/development/users/pictures/000/000/001/original/picture?1434455677" alt="Picture?1434455677">
-        </div>
+          <div class="end-word-people">
+            <%= image_tag User.find(friend_id).picture, class: "img-circle avatar img-responsive" %>
+          </div>
+        <%end%>
+      </div>
 
-        <div class="end-word-quote">
-          <span class="end-quote-arrow"></span>
-          <%= content_and_date[0] %>
-          <span class="end-quote-name">Charlotte B.</span>
-        </div>
+      <div class="end-word-quote slider-for">
+        <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
+          <div>
+           <!-- <span class="end-quote-arrow"></span> -->
+            <%= content_and_date[0] %>
+           <span class="end-quote-name"><%= User.find(friend_id).name%></span>
+          </div>
         <% end %>
-
       </div>
 
       <a href="" class="btn btn-danger end-word-button">Donner mon avis</a>
