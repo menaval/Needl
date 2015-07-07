@@ -11,7 +11,7 @@
   }
 
   #basic_infos {
-    padding: 30px 20px;
+    padding: 20px 20px 30px 20px;
     background: #FFF;
     .subway {
       color: #14489E;
@@ -151,7 +151,7 @@
     padding-bottom: 20px;
   }
   #mots_de_la_fin {
-    background-color: #F2F2F2;
+    background-color: #FFF;
     padding-bottom: 10px;
     position: relative;
     padding: 20px;
@@ -208,7 +208,7 @@
   .end-word {
    .end-word-people {
       padding: 10px 0 10px 0;
-      width: auto;
+      width: 250px;
       margin: auto;
       // .end-word-people-side {
       //   float: left;
@@ -230,11 +230,11 @@
     margin-top: 10px;
     margin-bottom: 20px;
     padding: 10px;
-    background-color: white;
+    background-color: #F2F2F2;
     border-radius: 5px;
     position: relative;
     .end-quote-arrow {
-      background-color: #FFF;
+      background-color: #F2F2F2;
       height: 15px;
       width: 15px;
       position: absolute;
@@ -266,5 +266,30 @@
   .end-word-button:hover {
     background-color: #A8A8A8;
   }
+
+  #map {
+    height: 150px !important;
+    .gm-style-cc {
+      display: none !important;
+    }
+  }
+
+  #resto-wishlist {
+    padding: 20px 0;
+    width: auto;
+    margin: auto;
+    .resto-wishlist-people {
+      width:  240px;
+      padding: 0 0 15px 0;
+      margin: auto;
+      .resto-wishlist-person {
+        height: 60px;
+        width: 60px;
+        padding: 5px;
+        float: left;
+      }
+    }
+  }
+
 }
 

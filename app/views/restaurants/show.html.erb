@@ -40,13 +40,6 @@
   </div>
 
 
-  <!-- Location -->
-
-  <div id="basic_infos" class="text-center">
-    <p><%= @restaurant.address%></p>
-    <p class="subway"><span class="subway-icon"></span><%= @subway.name %></p>
-  </div>
-
   <!-- Final word -->
 
   <div id="mots_de_la_fin" class="text-center">
@@ -75,22 +68,58 @@
 
       <a href="" class="btn btn-danger end-word-button">Donner mon avis</a>
 
+    </div>
+  </div>
 
-      <!--
-      <div class="carousel">
-        <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
-          <div>
-              <%= image_tag User.find(friend_id).picture, class: "img-circle avatar img-responsive" %>
-              <p>" <%= content_and_date[0] %> "</p>
-          </div>
-        <% end %>
+  <!-- Wishlist -->
+
+  <div id="resto-wishlist" class="text-center">
+    <div class="container">
+      <div class= "title">
+        <div class="title-middle">Ils ont envie d'y aller</div>
       </div>
-      -->
+
+      <div class="resto-wishlist-people clearfix">
+        <img class="resto-wishlist-person img-circle avatar img-responsive" src="http://needl.s3.amazonaws.com/development/users/pictures/000/000/001/original/picture?1434455677" alt="Picture?1434455677">
+        <img class="resto-wishlist-person img-circle avatar img-responsive" src="http://needl.s3.amazonaws.com/development/users/pictures/000/000/001/original/picture?1434455677" alt="Picture?1434455677">
+        <img class="resto-wishlist-person img-circle avatar img-responsive" src="http://needl.s3.amazonaws.com/development/users/pictures/000/000/001/original/picture?1434455677" alt="Picture?1434455677">
+        <img class="resto-wishlist-person img-circle avatar img-responsive" src="http://needl.s3.amazonaws.com/development/users/pictures/000/000/001/original/picture?1434455677" alt="Picture?1434455677">
+      </div>
+
+      <a href="" class="btn btn-danger end-word-button">Moi aussi !</a>
+    </div>
+  </div>
+
+
+  <!-- Location -->
+
+  <div id="basic_infos" class="text-center">
+    <div class="container present">
+
+      <div class= "title">
+        <div class="title-middle">Lieu</div>
+      </div>
+      <p><%= @restaurant.address%></p>
+      <p class="subway"><span class="subway-icon"></span><%= @subway.name %></p>
     </div>
   </div>
 
    <!-- Map -->
-  <div id="map" style="width: 100%; height: 100px;"></div>
+  <div id="map" style="width: 100%; height: 150px;"></div>
+
+
+  <!-- Reservation -->
+
+  <div class="contact-restaurant clearfix">
+    <p>Réserver une table</p>
+    <%= link_to "Appeler", "tel:#{@restaurant.phone_number}", class: "btn btn-danger", id:"call" %>
+  </div>
+
+
+
+
+
+  <!-- script -->
 
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
 
