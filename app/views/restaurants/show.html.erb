@@ -61,7 +61,7 @@
           <div>
            <!-- <span class="end-quote-arrow"></span> -->
             <%= content_and_date[0] %>
-           <span class="end-quote-name"><%= User.find(friend_id).name%></span>
+           <span class="end-quote-name"><%= "#{User.find(friend_id).name.split(" ")[0]} #{User.find(friend_id).name.split(" ")[1].first}."%></span>
           </div>
         <% end %>
       </div>
