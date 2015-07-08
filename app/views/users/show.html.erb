@@ -29,20 +29,30 @@
       </div>
     </div>
   </div>
-  <h2 class = 'text-center'>Recommandations</h2>
+  <h2 class = 'text-center'>Mes Recos</h2>
 
 
-<!--   <div class="carousel"> -->
+  <div class="carousel">
     <% @user.my_restaurants.each do |restaurant| %>
       <%= link_to restaurant_path(restaurant.id) do %>
-        <div class="card-white">
+        <div>
           <%= render 'restaurants/restaurant_profile', restaurant: restaurant, picture: restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url %>
-<!--           <p class="quote"><%= Recommendation.where(restaurant_id: restaurant.id, user_id: @user.id).first.review %></p> -->
+          <p class="quote"><%= Recommendation.where(restaurant_id: restaurant.id, user_id: @user.id).first.review %></p>
         </div>
       <% end %>
     <% end %>
+  </div>
 
-<!--   </div> -->
+  <h2 class = 'text-center'>Mes Envies</h2>
+  <div class="carousel">
+    <% @user.my_wishes.each do |restaurant| %>
+      <%= link_to restaurant_path(restaurant.id) do %>
+        <div>
+          <%= render 'restaurants/restaurant_profile', restaurant: restaurant, picture: restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
 
   <% if @user != current_user %>
   <% friendship = Friendship.find_by(sender_id: [current_user.id, @user.id], receiver_id: [current_user.id, @user.id]) %>
