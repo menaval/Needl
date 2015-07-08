@@ -31,22 +31,35 @@
     font-size:12px;
     color: #38E1B2;
   }
+  h1 {
+    padding: 20px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-align: left;
+  }
   .button-add {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    position: absolute;
+    top: 22px;
+    right: 20px;
+    width: 100%;
+    text-align: right;
   }
   #link_to_add {
     color: white;
-    background-color: $red;
+    background-color: #EF582D;
     padding: 7px;
     border-radius: 8%;
     text-decoration: none;
-    margin-left: 33%;;
+    margin-left: 33%;
+    border-radius: 20px;
+    padding: 10px 19px;
+    width: auto;
   }
   .friend{
-    padding: 25px;
+    padding: 20px;
+    margin-top: 0;
     img {
-      width: 70px;
+      width: 60px;
       float: left;
       border-radius: 100%;
       margin-bottom: 0;
@@ -64,10 +77,10 @@
     h2 {
       font-size: 18px;
       float: left;
-      padding-left: 10px;
+      padding: 8px 20px;
       margin-top: 0;
+      margin-bottom: 0;
       span {
-        padding-left: 10px;
         font-size: 14px;
         color: #AAA;
         font-weight: normal;

@@ -1,6 +1,6 @@
 <h1>Mes amis</h1>
 <div class="button-add">
-  <%= link_to 'Ajouter un ami', new_friendship_path, id: 'link_to_add' %>
+  <%= link_to 'Ajouter un ami', new_friendship_path, class:"btn-special", id: 'link_to_add' %>
 </div>
 
 <div id="accept_or_refuse_friends">
@@ -40,11 +40,10 @@
 <div class="box">
   <% @friends.each do |friend| %>
   <% friendship = Friendship.find_by(sender_id: [current_user.id, friend.id], receiver_id: [current_user.id, friend.id]) %>
-    <div class="friend card-white">
+    <div class="friend card-white clearfix">
       <%= link_to user_path(friend.id) do %>
         <%= image_tag friend.picture %>
-        <h2><%= friend.name.split(" ")[0] %><span><%= Recommendation.where(user_id: friend.id).count %> <%= Recommendation.where(user_id: friend.id).count>1 ? "recos" : "reco" %></span></h2>
-        <p>Voir le profil</p>
+        <h2><%= friend.name.split(" ")[0] %><br><span><%= Recommendation.where(user_id: friend.id).count %> <%= Recommendation.where(user_id: friend.id).count>1 ? "recos" : "reco" %></span></h2>
       <% end %>
     </div>
   <% end %>

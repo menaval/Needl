@@ -1,3 +1,6 @@
+h1.force-padding {
+  padding-bottom: 20px;
+}
 #recommendations_index {
   p {
     margin: 0;
@@ -5,8 +8,8 @@
 
   .container {
     padding: 0;
+    font-size: 14px;
   }
-  font-size: 14px;
   .list-group-item {
     min-height: 100px;
     padding : 20px;
@@ -25,8 +28,9 @@
   }
   .profil {
     text-align: center
-    img {
+    img-circle {
       width: 100%;
+      margin: 0 !important;
     }
     p {
       font-weight: 700;
@@ -34,7 +38,6 @@
   }
 
   .activity-bloc {
-    padding: 6px 20px;
     a {
       text-decoration: none;
       color: $red;
@@ -43,6 +46,11 @@
       }
     }
   }
+
+  .reco-bloc {
+    padding: 0 20px 20px 20px;
+  }
+
   span.quote-start {
     width: 23px;
     height: 20px;
@@ -61,7 +69,27 @@
   }
   .quote {
     float: left;
-    margin-top:20px;
+    padding: 10px;
+    background-color: #F2F2F2;
+    border-radius: 5px;
+    position: relative;
+    text-align: left;
+    margin-left: 15px;
+  }
+  .end-quote-arrow {
+    background-color: #F2F2F2;
+    height: 15px;
+    width: 15px;
+    position: absolute;
+    top: 17px;
+    left: -5px;
+    transform: rotate(45deg);
+  }
+  .quote-name-date {
+    color: #AAA;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
   }
 }
 
