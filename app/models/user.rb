@@ -58,6 +58,10 @@ class User < ActiveRecord::Base
     Restaurant.joins(:recommendations).where(recommendations: { user_id: self.id })
   end
 
+  def my_wishes
+    Restaurant.joins(:wishlists).where(wishlists: {user_id: self.id})
+  end
+
   def my_friends_foods
     Food.joins(restaurants: :recommendations).where(recommendations: {user_id: my_visible_friends_ids}).uniq
   end
