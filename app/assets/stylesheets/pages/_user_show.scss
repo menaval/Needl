@@ -9,21 +9,57 @@
   .card-white {
     margin-left: auto;
     margin-right: auto;
+    margin-top: 0;
     width: 100%;
-    padding: 0 20px;
+    padding: 0;
+    .text-center {
+      margin:0;
+    }
   }
   #profil {
     background-color: white;
     border-radius: 2px;
-    margin-top: 20px;
+    position: relative;
+    img {
+      border-radius: 0;
+      width: 100%;
+    }
+    .profil-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
     h2 {
       margin: 0px;
+      text-align: left;
+      padding: 20px 20px 10px 20px;
+      position: absolute;
+      bottom: 40px;
+      color: #FFF;
+    }
+    p {
+      text-align: left;
+      padding: 0 20px 20px 20px;
+      margin: 0;
+      position: absolute;
+      bottom: 0;
+      color: #FFF;
+    }
+    .action-btn {
+      position: absolute;
+      right: 15px;
+      border: 0;
+      bottom: 15px;
+      text-align: right;
+      .btn-xs.btn-right {
+        margin: 0;
+        padding: 3px 10px !important;
+        border-radius: 15px !important;
+      }
     }
   }
 
-  .btn {
-    margin-bottom: 20px;
-  }
   .slick_icon img {
     margin-left: auto;
     margin-right: auto;
