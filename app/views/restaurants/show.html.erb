@@ -65,7 +65,7 @@
           </div>
         <% end %>
       </div>
-      <%= link_to 'Donner mon avis', new_recommendation_path, class: 'btn btn-danger end-word-button' %>
+      <%= link_to 'Donner mon avis', new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'btn btn-danger end-word-button' %>
 
     </div>
   </div>
