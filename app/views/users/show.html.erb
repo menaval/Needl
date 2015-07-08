@@ -18,10 +18,9 @@
             <% if @user == current_user %>
               <div id="action-btn">
                   <%= link_to("Modifier", edit_user_registration_path, class: "btn btn-danger btn-xs btn-right") %>
-                  <!--
                   <%= link_to destroy_user_session_path, class: "btn btn-success btn-xs", method: :delete do %>
                   <i class="fa fa-sign-out"></i>  <%= t ".sign_out", default: "Se Déconnecter" %>
-                  -->
+                  
                   <% end %>
               </div>
             <% end %>

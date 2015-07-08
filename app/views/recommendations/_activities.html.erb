@@ -1,40 +1,67 @@
 <div class="activities">
   <div class="container">
     <div class="list-group">
+      
       <% @activities.each do |activity| %>
-        <% if activity.owner.name %>
-          <div class="list-group-item border margin row">
-            <% if activity.trackable %>
-              <% resto = Restaurant.find(activity.trackable.restaurant_id) %>
-              <div class="row">
-                <div class="col-fix-left">
-                  <div class="profil">
-                    <%= image_tag activity.owner.picture, class: "img-circle" %>
-                  </div>
-                </div>
-                <div class="col-fix-right">
-                  <div class="activity-bloc">
-                    <!-- User info -->
-                    <p>
-                      <%= activity.owner ? activity.owner.name.split(" ")[0] : 'Guest' %> recommande<br>
-                      <small class="text-muted"><%= activity.created_at.strftime('%H:%M:%S %-d %B %Y') %></small>
 
-                    </p>
+        <!-- start reco-bloc -->
+
+        <div class="reco-bloc">
+
+          <% resto = Restaurant.find(activity.trackable.restaurant_id) %>
+
+          <!-- restaurant glimpse -->
+          <%= link_to restaurant_path(resto.id) do %>
+          <%= render 'restaurants/restaurant_profile', restaurant: resto, picture: resto.restaurant_pictures.first ? resto.restaurant_pictures.first.picture : resto.picture_url %>
+          <% end %>
+          <!-- END restaurant glimpse -->
+
+          <% if activity.owner.name %>
+
+            <div class="list-group-item border margin row">
+
+              <% if activity.trackable %>
+
+                <div class="row">
+
+                  <div class="col-fix-left">
+                    <div class="profil">
+                      <%= image_tag activity.owner.picture, class: "img-circle" %>
+                    </div>
                   </div>
+
+                  <div class="col-fix-right">
+                    <div class="activity-bloc">
+
+                      <!-- Start User info -->
+                      <p class="quote">
+
+                        <span class="end-quote-arrow"></span>
+
+                        <!-- quote -->
+                        <%= activity.trackable.review %>
+                        <br>
+                        <!-- name & date -->
+                        <span class="quote-name-date">
+                        <%= activity.owner ? activity.owner.name.split(" ")[0] : 'Guest' %>, le <%= activity.created_at.strftime('%-d %B %Y') %>
+                        </span>
+
+                      </p>
+                      <!-- End User info -->
+
+                    </div>
+                  </div>
+
                 </div>
-              </div>
-              <!-- restaurant glimpse -->
-              <%= link_to restaurant_path(resto.id) do %>
-              <%= render 'restaurants/restaurant_profile', restaurant: resto, picture: resto.restaurant_pictures.first ? resto.restaurant_pictures.first.picture : resto.picture_url %>
+
               <% end %>
-              <!-- END restaurant glimpse -->
-              <!--
-              <p><span class="quote-start"></span><span class="quote"><%= activity.trackable.review %></span><span class="quote-end"></span></p>
-              -->
-              <p class="quote">"<%= activity.trackable.review %>"</p>
-            <% end %>
-          </div>
-        <% end %>
+            </div>
+          <% end %>
+
+        </div>
+
+        <!-- end reco-bloc -->
+      
       <% end %>
     </div>
   </div>
