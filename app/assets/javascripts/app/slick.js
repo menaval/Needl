@@ -1,6 +1,6 @@
 $(document).ready(function(){
   $('.carousel').slick({
-    arrows: true,
+    arrows: false,
   });
   $('.multiple-carousel').slick({
     infinite: true,
