@@ -1,7 +1,7 @@
 <div class="activities">
   <div class="container">
     <div class="list-group">
-      
+
       <% @activities.each do |activity| %>
 
         <!-- start reco-bloc -->
@@ -39,11 +39,11 @@
                         <span class="end-quote-arrow"></span>
 
                         <!-- quote -->
-                        <%= activity.trackable.review %>
+                        <%= activity.trackable.review == '' ? 'Je recommande !' : activity.trackable.review %>
                         <br>
                         <!-- name & date -->
                         <span class="quote-name-date">
-                        <%= activity.owner ? activity.owner.name.split(" ")[0] : 'Guest' %>, le <%= activity.created_at.strftime('%-d %B %Y') %>
+                        <%= activity.owner ? activity.owner.name.split(" ")[0] : 'Guest' %>, le <%= activity.created_at.strftime('%-d %B') %>
                         </span>
 
                       </p>
@@ -61,7 +61,7 @@
         </div>
 
         <!-- end reco-bloc -->
-      
+
       <% end %>
     </div>
   </div>

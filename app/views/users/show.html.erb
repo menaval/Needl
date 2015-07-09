@@ -20,7 +20,7 @@
                   <%= link_to("Modifier", edit_user_registration_path, class: "btn btn-danger btn-xs btn-right") %>
                   <%= link_to destroy_user_session_path, class: "btn btn-success btn-xs", method: :delete do %>
                   <i class="fa fa-sign-out"></i>  <%= t ".sign_out", default: "Se Déconnecter" %>
-                  
+
                   <% end %>
               </div>
             <% end %>
@@ -28,7 +28,7 @@
 
           </div>
         </div>
-        
+
       </div>
     </div>
   </div>
@@ -42,7 +42,7 @@
       <%= link_to restaurant_path(restaurant.id) do %>
         <div>
           <%= render 'restaurants/restaurant_profile', restaurant: restaurant, picture: restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url %>
-          <p class="quote"><%= Recommendation.where(restaurant_id: restaurant.id, user_id: @user.id).first.review %></p>
+<!--           <p class="quote"><%= Recommendation.where(restaurant_id: restaurant.id, user_id: @user.id).first.review %></p> -->
         </div>
       <% end %>
     <% end %>
