@@ -59,9 +59,10 @@ class Restaurant < ActiveRecord::Base
     hash = {}
     self.recommendations.each do |reco|
       if User.where(id: current_user.my_friends_ids).include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
-        if reco.review != ""
-          hash[reco.user_id] = [reco.review, reco.created_at]
+        if reco.review == ""
+          reco.review = "Je recommande !"
         end
+        hash[reco.user_id] = [reco.review, reco.created_at]
       end
     end
     hash.sort_by { |_user_id, content_and_date| content_and_date[1] }.reverse.to_h
