@@ -3,6 +3,7 @@ module Api
     acts_as_token_authentication_handler_for User
     skip_before_action :verify_authenticity_token
     skip_before_filter :authenticate_user!
+    respond_to :json
 
     def index
       @user = User.find_by(authentication_token: params["user_token"])
@@ -20,16 +21,16 @@ module Api
       @not_interested_relation = NotInterestedRelation.new
       @new_potential_friends = current_user.user_friends - User.where(id: current_user.my_friends_ids) - User.where(id: current_user.my_requests_sent_ids) - User.where(id: current_user.my_requests_received_ids) - User.where(id: current_user.refused_relations_ids) - [current_user]
 
-      if params["receiver_id"] && params["sender_id"] && params["accepted"]
+      if params["friendship"]
         create
       end
     end
 
     def create
-      @friendship = Friendship.new(sender_id: params["sender_id"], receiver_id: params["receiver_id"], accepted: params["accepted"])
-      # pas terrible de creer sans un strong params ..
-      @friendship.save
-      render :new
+      respond_with Friendship.create(friendship_params)
+
+      # ex: http://localhost:3000/api/friendships/new?friendship[sender_id]=40&friendship[receiver_id]=42&friendship[accepted]=false
+
     end
 
     private
