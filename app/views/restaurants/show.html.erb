@@ -65,7 +65,7 @@
           </div>
         <% end %>
       </div>
-      <%= link_to 'Donner mon avis', new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'btn btn-danger end-word-button' %>
+      <%= link_to "#{Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length>0? 'Modifier ma reco' : 'J\'approuve!'}", new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'btn btn-danger end-word-button' %>
 
     </div>
   </div>
