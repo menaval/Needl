@@ -21,7 +21,7 @@ module Api
 
     def create
       respond_with Recommendation.create(recommendation_params)
-      # ne le lit pas au format json mais html ce qui ne marche donc
+      # ne le lit pas au format json mais html ce qui ne marche donc pas
     end
 
     private
