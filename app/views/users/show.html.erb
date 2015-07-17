@@ -49,7 +49,7 @@
     </div>
   <% end %>
 
-  <% if @user.recommendations.length > 0 %>
+  <% if @user.wishlists.length > 0 %>
     <h2 class = 'text-center'><%= @user == current_user ? 'Mes' : 'Ses' %>  Envies</h2>
     <div class="carousel">
       <% @user.my_wishes.each do |restaurant| %>
