@@ -13,6 +13,12 @@ class WishlistsController < ApplicationController
     end
   end
 
+  def destroy
+    wishlist = Wishlist.find(params[:id])
+    wishlist.destroy
+    redirect_to root_path, notice: 'Le restaurant a bien été retiré de la liste de vos envies'
+  end
+
   private
 
   def wishlist_params

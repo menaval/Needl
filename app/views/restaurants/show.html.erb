@@ -45,7 +45,7 @@
   <div id="mots_de_la_fin" class="text-center">
     <div class="container">
       <div class= "title">
-        <div class="title-middle">Ils y sont déjà allés</div>
+        <div class="title-middle">Ils l'ont recommandé</div>
       </div>
 
       <div class="end-word clearfix slider-nav">
@@ -65,7 +65,7 @@
           </div>
         <% end %>
       </div>
-      <%= link_to "#{Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length>0? 'Modifier ma reco' : 'J\'approuve!'}", new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'btn btn-danger end-word-button' %>
+      <%= link_to "#{Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length>0? 'Modifier ma reco' : 'J\'approuve!'}", new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button' %>
 
     </div>
   </div>
@@ -75,20 +75,24 @@
   <div id="resto-wishlist" class="text-center">
     <div class="container">
       <div class= "title">
-        <div class="title-middle">Ils ont envie d'y aller</div>
+        <div class="title-middle"><%= @friends_wishing.length == 0 ? 'Pas encore d\'ami qui veut y aller' : 'Ils ont envie d\'y aller'%></div>
       </div>
 
       <div class="resto-wishlist-people multiple-carousel">
-          <% @restaurant.friends_wishing_this_restaurant(current_user).each do |friend_id| %>
+          <% @friends_wishing.each do |friend_id| %>
           <div>
             <%= image_tag User.find(friend_id).picture, class: "img-circle avatar img-responsive" %>
           </div>
         <% end %>
       </div>
-      <%= form_for(@wishlist, class: 'form') do |f| %>
-        <%= f.hidden_field :user_id, value: current_user.id %>
-        <%= f.hidden_field :restaurant_id, value: @restaurant.id %>
-        <%= f.submit class: "btn btn-danger end-word-button", value: "Moi aussi !" %>
+      <% if Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 %>
+        <%= form_for(@wishlist, class: 'form') do |f| %>
+          <%= f.hidden_field :user_id, value: current_user.id %>
+          <%= f.hidden_field :restaurant_id, value: @restaurant.id %>
+          <%= f.submit class: "end-word-button", value: "#{@friends_wishing.length == 0 ? 'Je veux y aller !' : 'Moi aussi !'}" %>
+        <% end %>
+      <% else %>
+        <%= link_to "Retirer de mes envies", wishlist_path(Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).first.id), method: :delete, class: "end-word-button" %>
       <% end %>
     </div>
   </div>
