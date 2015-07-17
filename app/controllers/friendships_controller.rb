@@ -15,7 +15,7 @@ class FriendshipsController < ApplicationController
   def create
     @friendship = Friendship.new(friendship_params)
     @friendship.save
-    redirect_to new_friendship_path, notice: "Votre demande a bien été envoyée"
+    redirect_to new_friendship_path, notice: "Votre demande d'invitation a bien été envoyée, vous pourrez accéder à ses recommandations dès lors qu'il vous acceptera"
   end
 
   def invisible

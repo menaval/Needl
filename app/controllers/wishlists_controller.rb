@@ -9,14 +9,14 @@ class WishlistsController < ApplicationController
     redirect_to restaurants_path, notice: "Restaurant déjà sur ta wishlist"
     else
       @wishlist = Wishlist.create(wishlist_params)
-      redirect_to restaurants_path, notice: "Restaurant ajouté à ta wishlist"
+      redirect_to :back, notice: "Restaurant ajouté à ta wishlist"
     end
   end
 
   def destroy
     wishlist = Wishlist.find(params[:id])
     wishlist.destroy
-    redirect_to root_path, notice: 'Le restaurant a bien été retiré de la liste de vos envies'
+    redirect_to :back, notice: 'Le restaurant a bien été retiré de la liste de vos envies'
   end
 
   private

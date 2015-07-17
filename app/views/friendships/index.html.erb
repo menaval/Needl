@@ -14,14 +14,14 @@
                 <%= image_tag friend.picture, class: "img-circle" %>
                 <p><%= friend.name %><br><span class="recos"><%= Recommendation.where(user_id: friend.id).count %> <%= Recommendation.where(user_id: friend.id).count>1 ? "recos" : "reco" %></span></p>
               <div class="row accept_or_refuse">
-                <div class="col-xs-6 text-right">
+                <div class="col-xs-6">
                   <%= form_tag answer_request_friendships_path, id: 'refuse_friend', method: "post" do %>
                     <%= hidden_field_tag :accepted, value: false %>
                     <%= hidden_field_tag :id, value: friendship.id %>
                     <%= submit_tag "Refuser", class: "button-refuse" %>
                   <% end %>
                 </div>
-                <div class="col-xs-6 text-left">
+                <div class="col-xs-6">
                   <%= form_tag answer_request_friendships_path, id: 'accept_friend', method: "post" do %>
                     <%= hidden_field_tag :accepted, value: true %>
                     <%= hidden_field_tag :id, value: friendship.id %>
