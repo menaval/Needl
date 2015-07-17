@@ -5,6 +5,7 @@ class RestaurantsController < ApplicationController
     # @pictures = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.map {|element| element.picture} : [@restaurant.picture_url]
     @subway = Subway.find(@restaurant.closest_subway_id)
     @wishlist = Wishlist.new
+    @friends_wishing = @restaurant.friends_wishing_this_restaurant(current_user)
   end
 
   def map_box

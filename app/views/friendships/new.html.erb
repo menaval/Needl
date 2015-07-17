@@ -13,19 +13,19 @@
                 <% if Recommendation.where(user_id: user.id).count > 0 %><%= Recommendation.where(user_id: user.id).count %> <%= Recommendation.where(user_id: user.id).count>1 ? "recos" : "reco" %></span></p>
                 <%end%>
               <div class="row add_or_not">
-                <div class="col-xs-6 text-right">
+                <div class="col-xs-6">
+                  <%= bootstrap_form_for(@not_interested_relation, class: 'form') do |f| %>
+                    <%= f.hidden_field :member_one_id, value: user.id %>
+                    <%= f.hidden_field :member_two_id, value: current_user.id %>
+                    <%= f.submit class: "button-refuse", value: "Ignorer" %>
+                  <% end %>
+                </div>
+                <div class="col-xs-6">
                   <%= bootstrap_form_for(@friendship, class: 'form') do |f| %>
                     <%= f.hidden_field :receiver_id, value: user.id %>
                     <%= f.hidden_field :sender_id, value: current_user.id %>
                     <%= f.hidden_field :accepted, value: false %>
-                    <%= f.submit class: "btn-xs btn-success", value: "Ajouter" %>
-                  <% end %>
-                </div>
-                <div class="col-xs-6 text-left">
-                  <%= bootstrap_form_for(@not_interested_relation, class: 'form') do |f| %>
-                    <%= f.hidden_field :member_one_id, value: user.id %>
-                    <%= f.hidden_field :member_two_id, value: current_user.id %>
-                    <%= f.submit class: "btn-xs btn-danger", value: "Ignorer" %>
+                    <%= f.submit class: "button-accept", value: "Ajouter" %>
                   <% end %>
                 </div>
               </div>
