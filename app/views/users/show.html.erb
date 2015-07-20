@@ -14,29 +14,16 @@
             <h2><%= @user.name %></h2>
             <p><%= Recommendation.where(user_id: @user.id).length %> <%= Recommendation.where(user_id: @user.id).count>1 ? "recos" : "reco" %></p>
 
-            <!-- modifier si c'est ma page -->
-            <% if @user == current_user %>
-              <div id="action-btn">
-                  <%= link_to("Modifier", edit_user_registration_path, class: "btn btn-danger btn-xs btn-right") %>
-                  <%= link_to destroy_user_session_path, class: "btn btn-success btn-xs", method: :delete do %>
-                  <i class="fa fa-sign-out"></i>  <%= t ".sign_out", default: "Se Déconnecter" %>
-
-                  <% end %>
-              </div>
-            <% end %>
-            <!-- fin -->
-
           </div>
-        </div>
 
+        </div>
       </div>
     </div>
   </div>
 
   <% if @user.recommendations.length > 0 %>
-    <h2 class = 'text-center'><%= @user == current_user ? 'Mes' : 'Ses' %> Recos</h2>
-
-
+  <div class="user-reco-carousel">
+    <h2 class='text-center section-title'><%= @user == current_user ? 'Mes' : 'Ses' %> Recos</h2>
     <div class="carousel">
       <% @user.my_restaurants.each do |restaurant| %>
         <%= link_to restaurant_path(restaurant.id) do %>
@@ -47,10 +34,12 @@
         <% end %>
       <% end %>
     </div>
+  </div>
   <% end %>
 
   <% if @user.wishlists.length > 0 %>
-    <h2 class = 'text-center'><%= @user == current_user ? 'Mes' : 'Ses' %>  Envies</h2>
+  <div class="user-reco-carousel strong">
+    <h2 class = 'text-center section-title'><%= @user == current_user ? 'Mes' : 'Ses' %>  Envies</h2>
     <div class="carousel">
       <% @user.my_wishes.each do |restaurant| %>
         <%= link_to restaurant_path(restaurant.id) do %>
@@ -60,30 +49,52 @@
         <% end %>
       <% end %>
     </div>
+  </div>
   <% end %>
 
+  <!-- friend options -->
   <% if @user != current_user %>
   <% friendship = Friendship.find_by(sender_id: [current_user.id, @user.id], receiver_id: [current_user.id, @user.id]) %>
-      <div class="card-white">
+      <div class="card-white new">
         <div class="visibility">
           <% if ( friendship.sender_id == current_user.id && friendship.receiver_invisible == true ) || ( friendship.receiver_id == current_user.id && friendship.sender_invisible == true ) %>
             <%= form_tag visible_friendships_path, id: 'unhide_friend', method: "post" do %>
               <%= hidden_field_tag :id, value: friendship.id %>
-              <%= submit_tag "Voir à Nouveau", class: "btn-xs btn-success" %>
+              <%= submit_tag "Voir à Nouveau", class: "bend-word-button strong" %>
             <% end %>
           <% else %>
             <%= form_tag invisible_friendships_path, id: 'hide_friend', method: "post" do %>
               <%= hidden_field_tag :id, value: friendship.id %>
-              <%= submit_tag "Ne plus voir", class: "btn-xs btn-danger" %>
+              <%= submit_tag "Ne plus voir", class: "end-word-button strong" %>
             <% end %>
           <% end %>
         </div>
         <div class="delete">
-          <%= link_to "Retirer", friendship_path(friendship.id), method: :delete, class: "btn-xs btn-danger" %>
+          <%= link_to "Retirer", friendship_path(friendship.id), method: :delete, class: "end-word-button light" %>
         </div>
+      </div>
+  <% end %>
+  <!-- end friend options -->
+
+  <!-- modifier si c'est ma page -->
+  <% if @user == current_user %>
+    <div class="card-white new dark">
+      <div id="action-btn">
+          <!-- modify -->
+          <%= link_to edit_user_registration_path, class: "end-word-button dark", method: :delete do %>
+          <span class="button-icon icon-modify"></span> 
+          <%= t ".sign_out", default: "Modifier" %>
+          <% end %>
+          <!-- suppress -->
+          <%= link_to destroy_user_session_path, class: "end-word-button dark", method: :delete do %>
+          <span class="button-icon icon-signout"></span> 
+          <%= t ".sign_out", default: "Me déconnecter" %>
+          <% end %>
       </div>
     </div>
   <% end %>
+  <!-- fin -->
+
 </div>
 <script>
 //  ajouter delete friends

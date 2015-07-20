@@ -1,4 +1,14 @@
+html {
+  height: 100%;
+}
 #devise_sessions_new, #registrations_new {
+  margin: 0;
+  height: 100%;
+  display: block;
+  .wrap {
+    background: url(/assets/home-background.png) center center;
+    height: 100% !important;
+  }
   background-color: $red;
   // height: 100%;
   h2 {
@@ -6,12 +16,12 @@
     font-weight: 300;
   }
   .brand-box {
-    margin-left: auto;
-    margin-right: auto;
-    width: 80%;
-    margin-bottom: 100px;
+    padding: 20px;
+    width: 100%;
+    position: absolute;
+    top: calc(50% - 100px);
     img {
-      width: 50%;
+      width: 60%;
       margin-left: auto;
       margin-right: auto;
     }
@@ -24,10 +34,23 @@
   }
 
   img#beta {
-    margin-top: -60px;
-    margin-left: -60px;
-    margin-bottom: 0px;
-    width: 250px;
+    transform: rotate(-40deg);
+    position: fixed;
+    top: 20px;
+    left: -120px;
+  }
+  .sign-box {
+    position: fixed;
+    bottom: -22px;
+    width: 100%;
+    left: 0;
+    a {
+      height: 60px;
+      line-height: 20px;
+      display: block;
+      width: 100%;
+      padding: 20px;
+    }
   }
 }
 

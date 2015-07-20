@@ -25,7 +25,10 @@
       var markers_json = <%= raw @markers.to_json %>;
       // var markerBounds = new google.maps.LatLngBounds();
       var infowindow = new google.maps.InfoWindow({
-        content: ''
+        content: '',
+        minWidth:200,
+        maxWidth:400,
+        borderRadius:0
       });
 
       function addListenerToDisplayInfoWindow (marker, index) {

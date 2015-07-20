@@ -32,6 +32,20 @@
     }
   }
 
+  .restaurant-interactions {
+    background-color: #333;
+    padding: 20px;
+    a {
+      margin: 10px 0;
+      background-color: #555;
+      border-color: #555;
+    }
+    a:hover {
+      background-color: #4F4F4F;
+      border-color: #4F4F4F;
+    }
+  }
+
   .contact-restaurant {
     padding: 20px;
     background: #F2F2F2;
