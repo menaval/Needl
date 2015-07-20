@@ -65,7 +65,7 @@
           </div>
         <% end %>
       </div>
-      <%= link_to "#{Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length>0? 'Modifier ma reco' : 'J\'approuve!'}", new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button' %>
+      <%= link_to "J'approuve", new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button' %>
 
     </div>
   </div>
@@ -85,14 +85,10 @@
           </div>
         <% end %>
       </div>
-      <% if Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 %>
-        <%= form_for(@wishlist, class: 'form') do |f| %>
-          <%= f.hidden_field :user_id, value: current_user.id %>
-          <%= f.hidden_field :restaurant_id, value: @restaurant.id %>
-          <%= f.submit class: "end-word-button", value: "#{@friends_wishing.length == 0 ? 'Je veux y aller !' : 'Moi aussi !'}" %>
-        <% end %>
-      <% else %>
-        <%= link_to "Retirer de mes envies", wishlist_path(Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).first.id), method: :delete, class: "end-word-button" %>
+      <%= form_for(@wishlist, class: 'form') do |f| %>
+        <%= f.hidden_field :user_id, value: current_user.id %>
+        <%= f.hidden_field :restaurant_id, value: @restaurant.id %>
+        <%= f.submit class: "end-word-button", value: "#{@friends_wishing.length == 0 ? 'Je veux y aller !' : 'Moi aussi !'}" %>
       <% end %>
     </div>
   </div>
@@ -120,6 +116,34 @@
   <div class="contact-restaurant clearfix">
     <p>Réserver une table</p>
     <%= link_to "Appeler", "tel:#{@restaurant.phone_number}", class: "btn btn-danger", id:"call" %>
+  </div>
+
+
+  <!-- Modifer / Supprimer / Retirer -->
+
+  <div class="restaurant-interactions clearfix dark">
+    <!-- retirer -->
+    <% if Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 %>
+      <%= link_to wishlist_path(Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).first.id), class: "end-word-button dark", method: :delete do %>
+      <span class="button-icon icon-unlike"></span> 
+      Retirer de mes envies
+      <% end %>
+    <% end %>
+
+    <% if Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 %>
+      <!-- modifier -->
+
+      <%= link_to new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button dark' do %>
+      <span class="button-icon icon-modify"></span> 
+      Modifier ma reco
+      <% end %>
+
+      <!-- suprrimer -->
+      <%= link_to new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button dark' do %>
+      <span class="button-icon icon-trash"></span> 
+      Supprimer ma reco
+      <% end %>
+    <% end %>
   </div>
 
 

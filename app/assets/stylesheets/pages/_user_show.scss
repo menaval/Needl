@@ -1,4 +1,15 @@
 #users_show {
+  a:hover, a:focus {
+    text-decoration: none;
+    color: white;
+  }
+  .user-reco-carousel {
+      padding: 20px;
+      background-color: white;
+  }
+      .user-reco-carousel.strong {
+        background: #F2F2F2;
+      }
   #img-profil {
     margin: auto;
     width: 150px;
@@ -11,10 +22,16 @@
     margin-right: auto;
     margin-top: 0;
     width: 100%;
-    padding: 0;
     .text-center {
       margin:0;
-    }
+    } 
+  }
+  .card-white.new {
+    padding: 20px 20px 10px 20px;
+    background-color: #F2F2F2;
+  }
+  .card-white.dark {
+    background-color: #333;
   }
   #profil {
     background-color: white;
@@ -68,6 +85,18 @@
   .img_friend {
     width: 75px;
     height: 75px;
+  }
+  h2.section-title {
+          padding-top: 10px;
+          padding-bottom: 10px;
+          color: #222222;
+          font-size: 20px;
+          font-weight: 400;
+          text-align: center;
+          margin: 0;
+      }
+  .slick-slider {
+    margin: 10px 0;
   }
 }
 
