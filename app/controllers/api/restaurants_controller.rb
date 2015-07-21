@@ -13,6 +13,9 @@ module Api
     def index
       user = User.find_by(authentication_token: params["user_token"])
       @restaurants = user.my_friends_restaurants
+      # pour le filter
+      # ici 40 c'est mon ID donc on ne voit que mes adresses
+      # http://localhost:3000/restaurants?query[price_range]=&query[food]=&query[friend]=40&query[subway]=&commit=Chercher
     end
 
     def autocomplete

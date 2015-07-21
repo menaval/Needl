@@ -180,6 +180,7 @@ class RecommendationsController < ApplicationController
   end
 
   def recommendation_params
+    puts 'hello'
     params.require(:recommendation).permit(:review, { strengths: [] }, { ambiences: [] }, { price_ranges: [] })
   end
 
