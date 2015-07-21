@@ -14,6 +14,7 @@ class Restaurant < ActiveRecord::Base
   scope :by_food,      ->(food)      { where("food_id = ?", food.to_i) if food.present? }
   scope :by_friend,    ->(friend)    {includes(:recommendations).where(recommendations: { user_id: friend.to_i }) if friend.present?}
   scope :by_subway,    ->(subway)    {includes(:restaurant_subways).where(restaurant_subways: { subway_id: subway.to_i}) if subway.present?}
+  scope :by_ambience,  ->(ambience, user_id)  {includes(:recommendations).where("'#{ambience}' = ANY(recommendations.ambiences)").where(recommendations: {user_id: [User.find(user_id).my_visible_friends_ids_and_me]}).references(:recommendations)if ambience.present?}
 
   def number_from_my_friends(current_user)
     number = 0
@@ -24,6 +25,10 @@ class Restaurant < ActiveRecord::Base
     end
     number
   end
+
+  # def self.find_by_ambience(ambience, user_id)
+  #   includes(:recommendations).where("'#{ambience}' = ANY(recommendations.ambiences)").where(recommendations: {user_id: [User.find(user_id).my_visible_friends_ids_and_me]}).references(:recommendations)if ambience.present?
+  # end
 
   def ambiences_from_my_friends(current_user)
     hash = {}
