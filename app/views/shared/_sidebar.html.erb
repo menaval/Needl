@@ -16,6 +16,8 @@
       <%= f.input :food, collection: current_user.my_friends_foods, label: 'Style de Cuisine', prompt: "Je mange de tout", id: "food" %>
       <%= f.input :friend, collection: User.where(id: current_user.my_visible_friends_ids + [current_user.id]).order(:name), label: 'Vos amis', prompt: "Tous mes amis", id: "friend" %>
       <%= f.input :subway, collection: current_user.my_friends_subways.order(:name), label: 'Station métro', prompt: "N'importe où", id: "subway" %>
+      <%= f.input :ambience, collection: [["chic", 1], ["festif", 2], ["typique", 3], ["ensoleille", 4], ["fast", 5], ["casual", 6]], label: 'ambiance', prompt: 'toute ambiance', id: "ambience" %>
+      <%= f.hidden_field :user_id, value: current_user.id %>
       <%=f.submit("Chercher", class: "btn btn-danger") %>
     <% end %>
   </nav>
