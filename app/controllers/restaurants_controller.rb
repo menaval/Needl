@@ -18,8 +18,8 @@ class RestaurantsController < ApplicationController
     @restaurants  = current_user.my_friends_restaurants
 
     if query
-      if @restaurants.by_price_range(query[:price_range]).by_food(query[:food]).by_friend(query[:friend]).by_subway(query[:subway]).count > 0
-        @restaurants = @restaurants.by_price_range(query[:price_range]).by_food(query[:food]).by_friend(query[:friend]).by_subway(query[:subway])
+      if @restaurants.by_price_range(query[:price_range]).by_food(query[:food]).by_friend(query[:friend]).by_subway(query[:subway]).by_ambience(query[:ambience], query[:user_id]).count > 0
+        @restaurants = @restaurants.by_price_range(query[:price_range]).by_food(query[:food]).by_friend(query[:friend]).by_subway(query[:subway]).by_ambience(query[:ambience], query[:user_id])
       else
         flash[:notice] = "Aucun restaurant pour cette recherche"
       end
