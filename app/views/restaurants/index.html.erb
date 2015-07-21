@@ -51,17 +51,17 @@
 
       var marker;
       var marker_position;
-      // var image = {
-      //   url: "<%=image_path('needl-map.png')%>",
-      //   size: new google.maps.Size(20, 32),
-      //   origin: new google.maps.Point(0,0)
-      // };
+      var image = {
+        url: "<%=image_path('map-pin.svg')%>",
+        // size: new google.maps.Size(20, 32),
+        origin: new google.maps.Point(0,0)
+      };
       for (var i = 0; i < markers_json.length; i++) {
         marker_position = new google.maps.LatLng(markers_json[i].lat,markers_json[i].lng);
         marker = new google.maps.Marker ({
           position: marker_position,
-          map: map
-          // icon: image
+          map: map,
+          icon: image
         });
         addListenerToDisplayInfoWindow(marker, i);
         // markerBounds.extend(marker_position);
