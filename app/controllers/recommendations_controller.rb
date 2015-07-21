@@ -38,6 +38,12 @@ class RecommendationsController < ApplicationController
     end
   end
 
+  def destroy
+    reco = Recommendation.find(params[:id])
+    Recommendation.destroy
+    redirect_to root_path, notice: 'Le restaurant a bien été retiré de vos recommandations'
+  end
+
   private
 
   def create_new_subway(result)
