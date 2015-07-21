@@ -1,8 +1,14 @@
-<div id="card-box" class= "text-center">
-  <%= link_to restaurant_path(@restaurant.id), class: "link" do %>
-    <h2><%= @restaurant.name %></h2>
-    <p><%= @restaurant.food.name %></p>
-    <%= @restaurant.restaurant_pictures.first ? image_tag(@restaurant.restaurant_pictures.first.picture): image_tag(@restaurant.picture_url) %>
-  <% end %>
+<div class="infobox-wrapper">
+	<div id="infobox" class= "text-center">
+	  <%= link_to restaurant_path(@restaurant.id), class: "link" do %>
+	  	<div class="infobox-resto-infos">
+	    	<h2><%= @restaurant.name %></h2>
+	    	<p><%= @restaurant.food.name %></p>
+	  	</div>
+	    <%= @restaurant.restaurant_pictures.first ? image_tag(@restaurant.restaurant_pictures.first.picture): image_tag(@restaurant.picture_url) %>
+	    <div class="infobox-resto-arrow"></div>
+	  <% end %>
+	</div>
 </div>
+
 
