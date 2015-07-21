@@ -40,7 +40,7 @@ class RecommendationsController < ApplicationController
 
   def destroy
     reco = Recommendation.find(params[:id])
-    Recommendation.destroy
+    reco.destroy
     redirect_to root_path, notice: 'Le restaurant a bien été retiré de vos recommandations'
   end
 

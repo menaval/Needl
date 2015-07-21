@@ -125,7 +125,7 @@
     <!-- retirer -->
     <% if Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 %>
       <%= link_to wishlist_path(Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).first.id), class: "end-word-button dark", method: :delete do %>
-      <span class="button-icon icon-unlike"></span> 
+      <span class="button-icon icon-unlike"></span>
       Retirer de mes envies
       <% end %>
     <% end %>
@@ -134,13 +134,13 @@
       <!-- modifier -->
 
       <%= link_to new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button dark' do %>
-      <span class="button-icon icon-modify"></span> 
+      <span class="button-icon icon-modify"></span>
       Modifier ma reco
       <% end %>
 
       <!-- suprrimer -->
-      <%= link_to new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button dark' do %>
-      <span class="button-icon icon-trash"></span> 
+      <%= link_to recommendation_path(Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).first.id), class: "end-word-button dark", method: :delete do %>
+      <span class="button-icon icon-trash"></span>
       Supprimer ma reco
       <% end %>
     <% end %>
