@@ -35,7 +35,7 @@
 
       <%= reco.input :review, :as => :text, input_html: { id: 'field', onkeyup: 'countChar(this)'}, label: '<div class= "title border">Mot de la fin <p><span id="charNum">140</span> caractères</p></div>'.html_safe,  maxlength: 140, placeholder: "Un plat à ne pas louper?" %>
 
-      <%= reco.submit("Recommander !", class: "btn btn-danger") %>
+      <%= reco.submit("Recommander !", class: "end-word-button strong") %>
     <% end %>
   </div>
   <script>

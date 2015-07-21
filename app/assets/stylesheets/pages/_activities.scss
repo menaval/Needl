@@ -36,6 +36,9 @@ h1.force-padding {
       font-weight: 700;
     }
   }
+  #image_field #text-right {
+    bottom: 20px;
+  }
 
   .activity-bloc {
     a {
@@ -75,6 +78,7 @@ h1.force-padding {
     position: relative;
     text-align: left;
     margin-left: 15px;
+    min-width: calc(100% - 20px);
   }
   .end-quote-arrow {
     background-color: #F2F2F2;
