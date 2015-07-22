@@ -66,7 +66,10 @@
         <% end %>
       </div>
       <% if Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 %>
-        <%= link_to "J'approuve", new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button' %>
+        <%= link_to new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button' do %>
+          <span class="button-icon icon-reco-recommend"></span>
+          J'approuve !
+        <% end %>
       <% end %>
     </div>
   </div>
@@ -90,7 +93,9 @@
         <%= form_for(@wishlist, class: 'form', html: { id: 'new-wishlist'}) do |f| %>
           <%= f.hidden_field :user_id, value: current_user.id %>
           <%= f.hidden_field :restaurant_id, value: @restaurant.id %>
-          <%= f.submit class: "end-word-button", value: "#{@friends_wishing.length == 0 ? 'Je veux y aller !' : 'Moi aussi !'}" %>
+          <button type = "submit", class = "end-word-button" %>
+            <span class="button-icon icon-reco-wishlist"></span><%="#{@friends_wishing.length == 0 ? 'Je veux y aller !' : 'Moi aussi !'}" %>
+          </button>
         <% end %>
       <% end %>
     </div>

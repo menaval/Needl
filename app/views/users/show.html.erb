@@ -68,7 +68,7 @@
             <%= form_tag invisible_friendships_path, id: 'hide_friend', method: "post" do %>
               <%= hidden_field_tag :id, value: friendship.id %>
               <button type = "submit", class = "end-word-button dark" %>
-              <span class="button-icon icon-unsee"></span>Masquer ses recos
+                <span class="button-icon icon-unsee"></span>Masquer ses recos
               </button>
             <% end %>
           <% end %>
@@ -76,7 +76,7 @@
         <!-- retirer -->
         <div class="delete">
           <%= link_to friendship_path(friendship.id), method: :delete, class: "dark end-word-button " do %>
-          <span class="button-icon icon-unfriend"></span> 
+          <span class="button-icon icon-unfriend"></span>
           Retirer de mes amis
           <% end %>
         </div>
@@ -90,12 +90,12 @@
       <div id="action-btn">
           <!-- modify -->
           <%= link_to edit_user_registration_path, class: "end-word-button dark", method: :delete do %>
-          <span class="button-icon icon-modify"></span> 
+          <span class="button-icon icon-modify"></span>
           <%= t ".sign_out", default: "Modifier" %>
           <% end %>
           <!-- suppress -->
           <%= link_to destroy_user_session_path, class: "end-word-button dark", method: :delete do %>
-          <span class="button-icon icon-signout"></span> 
+          <span class="button-icon icon-signout"></span>
           <%= t ".sign_out", default: "Me déconnecter" %>
           <% end %>
       </div>
