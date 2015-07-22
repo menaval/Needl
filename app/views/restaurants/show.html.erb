@@ -18,9 +18,7 @@
 
   <div id="mots_de_la_fin" class="text-center">
     <div class="container">
-      <div class= "title">
-        <div class="title-middle">Ils l'ont recommandé</div>
-      </div>
+      <div class="title">Ils l'ont recommandé</div>
 
       <div class="end-word clearfix slider-nav">
         <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
@@ -51,11 +49,8 @@
   <!-- Ambiences -->
 
   <div id="ambiences">
-    <div class="container present">
-
-      <div class= "title">
-        <div class="title-middle">Ambiances</div>
-      </div>
+    <div class="container">
+      <div class="title">Ambiances</div>
 
       <!-- icon -->
           <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user), ambience_or_strength: "ambience" %>
@@ -67,11 +62,9 @@
   <!-- Strenght -->
 
   <div id="strengths">
-    <div class="container present">
+    <div class="container">
 
-      <div class= "title">
-        <div class="title-middle">Points forts</div>
-      </div>
+      <div class="title">Points forts</div>
       <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user), ambience_or_strength: "strength" %>
     </div>
   </div>
@@ -80,9 +73,7 @@
 
   <div id="resto-wishlist" class="text-center">
     <div class="container">
-      <div class= "title">
-        <div class="title-middle"><%= @friends_wishing.length == 0 ? 'Pas encore d\'ami qui veut y aller' : 'Ils ont envie d\'y aller'%></div>
-      </div>
+      <div class="title"><%= @friends_wishing.length == 0 ? 'Pas encore d\'ami qui veut y aller' : 'Ils ont envie d\'y aller'%></div>
 
       <div class="resto-wishlist-people multiple-carousel">
           <% @friends_wishing.each do |friend_id| %>
@@ -103,15 +94,32 @@
     </div>
   </div>
 
+  <!-- Menu -->
+  <!-- c'est l'inverse donc mettre un point d'exclamation -->
+  <% if !@restaurant.starter1.nil? %>
+    <div id="menu" class="text-center">
+      <div class="container">
+        <div class="title">Sélection du chef</div>
+        <h3>Entrees</h3>
+        <p><%= @restaurant.starter1 %> <%= @restaurant.price_starter1 %>€</p>
+        <p><%= @restaurant.starter2 %> <%= @restaurant.price_starter2 %>€</p>
+        <h3>Plats</h3>
+        <p><%= @restaurant.main_course1 %> <%= @restaurant.price_main_course1 %>€</p>
+        <p><%= @restaurant.main_course2 %> <%= @restaurant.price_main_course2 %>€</p>
+        <p><%= @restaurant.main_course3 %> <%= @restaurant.price_main_course3 %>€</p>
+        <h3>Desserts</h3>
+        <p><%= @restaurant.dessert1 %> <%= @restaurant.price_dessert1 %>€</p>
+        <p><%= @restaurant.dessert2 %> <%= @restaurant.price_dessert2 %>€</p>
+      </div>
+    <div>
+  <% end %>
+
 
   <!-- Location -->
+  <div id="basic_infos" class="text-center <%= @restaurant.starter1 == nil ? 'white-background' : 'grey-background'%>">
+    <div class="container">
 
-  <div id="basic_infos" class="text-center">
-    <div class="container present">
-
-      <div class= "title">
-        <div class="title-middle">Lieu</div>
-      </div>
+      <div class="title">Lieu</div>
       <p><%= @restaurant.address%></p>
       <p class="subway"><span class="subway-icon"></span><%= @subway.name %></p>
     </div>
@@ -130,31 +138,32 @@
 
 
   <!-- Modifer / Supprimer / Retirer -->
-
-  <div class="restaurant-interactions clearfix dark">
-    <!-- retirer -->
-    <% if Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 %>
-      <%= link_to wishlist_path(Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).first.id), class: "end-word-button dark", method: :delete do %>
-      <span class="button-icon icon-unlike"></span>
-      Retirer de mes envies
-      <% end %>
-    <% end %>
-
-    <% if Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 %>
-      <!-- modifier -->
-
-      <%= link_to new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button dark' do %>
-      <span class="button-icon icon-modify"></span>
-      Modifier ma reco
+  <% if Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 || Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 %>
+    <div class="restaurant-interactions clearfix dark">
+      <!-- retirer -->
+      <% if Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 %>
+        <%= link_to wishlist_path(Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).first.id), class: "end-word-button dark", method: :delete do %>
+        <span class="button-icon icon-unlike"></span>
+        Retirer de mes envies
+        <% end %>
       <% end %>
 
-      <!-- suprrimer -->
-      <%= link_to recommendation_path(Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).first.id), class: "end-word-button dark", method: :delete do %>
-      <span class="button-icon icon-trash"></span>
-      Supprimer ma reco
+      <% if Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 %>
+        <!-- modifier -->
+
+        <%= link_to new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button dark' do %>
+        <span class="button-icon icon-modify"></span>
+        Modifier ma reco
+        <% end %>
+
+        <!-- suprrimer -->
+        <%= link_to recommendation_path(Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).first.id), class: "end-word-button dark", method: :delete do %>
+        <span class="button-icon icon-trash"></span>
+        Supprimer ma reco
+        <% end %>
       <% end %>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 
 
 

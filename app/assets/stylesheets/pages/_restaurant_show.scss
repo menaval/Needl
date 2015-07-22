@@ -12,7 +12,6 @@
 
   #basic_infos {
     padding: 20px 20px 30px 20px;
-    background: #FFF;
     h3 {
       margin-top: 10px;
     }
@@ -82,6 +81,12 @@
     text-align: center;
     padding-bottom: 10px;
   }
+  .white-background {
+    background: #FFF;
+  }
+  .grey-background {
+    background: #F2F2F2;
+  }
 
   .block-new-1 {
     width: 90px;
@@ -135,6 +140,13 @@
     position: relative;
     padding-bottom: 20px;
   }
+  #menu {
+      background-color: #FFF;
+      p {
+        font-size: 15px;
+        color: #AAA;
+      }
+    }
   #mots_de_la_fin {
     background-color: #FFF;
     padding-bottom: 10px;
@@ -261,6 +273,7 @@
 
   #resto-wishlist {
     padding: 20px 0;
+    background: #F2F2F2;
     width: auto;
     margin: auto;
     .resto-wishlist-people {
