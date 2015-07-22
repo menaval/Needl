@@ -24,7 +24,7 @@
     width: 100%;
     .text-center {
       margin:0;
-    } 
+    }
   }
   .card-white.new {
     padding: 20px 20px 10px 20px;
@@ -75,6 +75,10 @@
         border-radius: 15px !important;
       }
     }
+  }
+
+  #text-right {
+    bottom: 20px;
   }
 
   .slick_icon img {
