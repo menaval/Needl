@@ -6,7 +6,7 @@ html {
   height: 100%;
   display: block;
   .wrap {
-    background: url(/assets/home-background.png) center center;
+    background: image-url('home-background.png') center center;
     height: 100% !important;
   }
   background-color: $red;
