@@ -23,17 +23,7 @@
       var map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
       var markers_json = <%= raw @markers.to_json %>;
-      // // var markerBounds = new google.maps.LatLngBounds();
-      // var infowindow = new google.maps.InfoWindow({
-      //   content: '',
-      //    boxStyle: {
-      //       background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/examples/tipbox.gif') no-repeat",
-      //       opacity: 0.75,
-      //       width: "280px",
-      //       height: "100px",
-      //       padding: "0"
-      //   },
-      // });
+
       infobox = new InfoBox({
          content: document.getElementById("infobox"),
          disableAutoPan: false,

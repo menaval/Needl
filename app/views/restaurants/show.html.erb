@@ -118,7 +118,7 @@
   </div>
 
    <!-- Map -->
-  <div id="map" style="width: 100%; height: 150px;"></div>
+  <div id="map"></div>
 
 
   <!-- Reservation -->
@@ -165,6 +165,9 @@
   <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
 
   <script type="text/javascript">
+
+  // map
+
     var myLatlng = new google.maps.LatLng(<%= @restaurant.latitude %>, <%= @restaurant.longitude %>);
     var myOptions = {
       zoom: 16,
@@ -172,13 +175,20 @@
       center: myLatlng,
       scrollwheel: false,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
-      styles: [{"featureType":"landscape.man_made","elementType":"all","stylers":[{"color":"#949191"},{"lightness":83},{"saturation":"7"}]},{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"lightness":77}]},{"featureType":"poi.park","elementType":"geometry.fill","stylers":[{"color":"#34ad6b"},{"lightness":"40"}]},{"featureType":"poi.school","elementType":"geometry.fill","stylers":[{"lightness":"39"},{"gamma":"0.76"},{"hue":"#fff700"},{"saturation":"67"}]},{"featureType":"poi.sports_complex","elementType":"geometry.fill","stylers":[{"color":"#c15e1f"},{"lightness":"12"},{"saturation":"45"},{"gamma":"2.07"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#f1b127"}]},{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#2f78c4"},{"gamma":"1.50"},{"lightness":"12"}]}]
+      styles: [ { "featureType": "administrative.country", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "administrative.province", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "administrative.locality", "elementType": "all", "stylers": [ { "visibility": "simplified" } ] }, { "featureType": "administrative.neighborhood", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "administrative.land_parcel", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "landscape.man_made", "elementType": "all", "stylers": [ { "visibility": "on" } ] }, { "featureType": "landscape.man_made", "elementType": "geometry", "stylers": [ { "color": "#f7f1df" } ] }, { "featureType": "landscape.natural", "elementType": "geometry", "stylers": [ { "color": "#d0e3b4" } ] }, { "featureType": "landscape.natural.terrain", "elementType": "geometry", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi", "elementType": "labels", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.attraction", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.business", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.government", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.medical", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.medical", "elementType": "geometry", "stylers": [ { "color": "#fbd3da" } ] }, { "featureType": "poi.park", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.park", "elementType": "geometry", "stylers": [ { "color": "#bde6ab" } ] }, { "featureType": "poi.place_of_worship", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.school", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "poi.sports_complex", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "road", "elementType": "geometry.stroke", "stylers": [ { "visibility": "off" } ] }, { "featureType": "road", "elementType": "labels", "stylers": [ { "visibility": "off" } ] }, { "featureType": "road.highway", "elementType": "all", "stylers": [ { "visibility": "simplified" } ] }, { "featureType": "road.highway", "elementType": "geometry.fill", "stylers": [ { "color": "#ffe15f" } ] }, { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [ { "color": "#efd151" } ] }, { "featureType": "road.highway.controlled_access", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "road.arterial", "elementType": "all", "stylers": [ { "visibility": "simplified" } ] }, { "featureType": "road.arterial", "elementType": "geometry.fill", "stylers": [ { "color": "#ffffff" } ] }, { "featureType": "road.local", "elementType": "all", "stylers": [ { "visibility": "simplified" } ] }, { "featureType": "road.local", "elementType": "geometry.fill", "stylers": [ { "color": "black" } ] }, { "featureType": "transit.line", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "transit.station.airport", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "transit.station.airport", "elementType": "geometry.fill", "stylers": [ { "color": "#cfb2db" } ] }, { "featureType": "transit.station.bus", "elementType": "all", "stylers": [ { "visibility": "off" } ] }, { "featureType": "water", "elementType": "geometry", "stylers": [ { "color": "#a2daf2" } ] } ]
     };
     var map = new google.maps.Map(document.getElementById('map'), myOptions);
+    var image = {
+      url: "<%=image_path('map-pin-new.svg')%>",
+      origin: new google.maps.Point(0,0)
+    };
     var marker = new google.maps.Marker({
       position: myLatlng,
-      map: map
+      map: map,
+      icon: image
     });
+
+    // trackers
 
     mixpanel.track_links("#call", "call", {
         "user": "<%= current_user.name %>", "restaurant": "<%= @restaurant.name %>", "browser": "<%= browser.name %>"});
