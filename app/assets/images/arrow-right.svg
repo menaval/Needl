@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="25px" height="25px" viewBox="0 0 200 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.1.1 (8761) - http://www.bohemiancoding.com/sketch -->
+    <title>arrow right</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="arrow-right" sketch:type="MSLayerGroup">
+            <circle id="Oval-1" fill="#2A2730" sketch:type="MSShapeGroup" cx="100" cy="100" r="100"></circle>
+            <path d="M79.0015282,164.5 C77.7061684,164.5 76.4108086,164.068213 75.5472353,163.060711 C73.67616,161.189636 73.67616,158.023201 75.5472353,156.008197 L131.823423,99.7320089 L75.4033065,43.4558211 C73.5322312,41.5847458 73.5322312,38.4183106 75.4033065,36.4033065 C77.2743818,34.5322312 80.4408169,34.5322312 82.4558211,36.4033065 L145.784523,99.7320089 L82.4558211,163.060711 C81.5922478,164.068213 80.296888,164.5 79.0015282,164.5 L79.0015282,164.5 Z" id="Shape" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+        </g>
+    </g>
+</svg>

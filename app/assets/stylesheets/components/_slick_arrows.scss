@@ -1,12 +1,12 @@
 .slick-next, .slick-prev {
-  top: 40%;
+  top: 35%;
+  width: 25px;
+  height: 25px;
 }
+.slick-next:before{
+  content: image-url('arrow-right.svg');
+};
 
-// .slick-next {
-//   /*my style*/
-//   background: image-url('quote-start.png');
-// };
-// .slick-prev {
-//   /*my style*/
-//   background: image-url('quote-end.png');
-// }
+.slick-prev:before {
+  content: image-url('arrow-left.svg');
+};
