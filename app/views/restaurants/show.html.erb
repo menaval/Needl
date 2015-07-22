@@ -65,8 +65,12 @@
           </div>
         <% end %>
       </div>
-      <%= link_to "J'approuve", new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button' %>
-
+      <% if Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 %>
+        <%= link_to new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button' do %>
+          <span class="button-icon icon-reco-recommend"></span>
+          J'approuve !
+        <% end %>
+      <% end %>
     </div>
   </div>
 
@@ -85,10 +89,14 @@
           </div>
         <% end %>
       </div>
-      <%= form_for(@wishlist, class: 'form') do |f| %>
-        <%= f.hidden_field :user_id, value: current_user.id %>
-        <%= f.hidden_field :restaurant_id, value: @restaurant.id %>
-        <%= f.submit class: "end-word-button", value: "#{@friends_wishing.length == 0 ? 'Je veux y aller !' : 'Moi aussi !'}" %>
+      <% if Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 %>
+        <%= form_for(@wishlist, class: 'form', html: { id: 'new-wishlist'}) do |f| %>
+          <%= f.hidden_field :user_id, value: current_user.id %>
+          <%= f.hidden_field :restaurant_id, value: @restaurant.id %>
+          <button type = "submit", class = "end-word-button" %>
+            <span class="button-icon icon-reco-wishlist"></span><%="#{@friends_wishing.length == 0 ? 'Je veux y aller !' : 'Moi aussi !'}" %>
+          </button>
+        <% end %>
       <% end %>
     </div>
   </div>
@@ -171,8 +179,8 @@
     });
 
     mixpanel.track_links("#call", "call", {
-        "user": "<%= current_user.name %>", "restaurant": "<%= @restaurant.name %>", "browser": "<%= browser.name %>"
-    });
+        "user": "<%= current_user.name %>", "restaurant": "<%= @restaurant.name %>", "browser": "<%= browser.name %>"});
+    mixpanel.track_forms("#new-wishlist", "New Wishlist", {"user": "<%= current_user.name %>", "restaurant": "<%= @restaurant.name %>" });
     mixpanel.track("restaurant_page", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>"});
   </script>
 
