@@ -1,9 +1,11 @@
 <div>
 
   <!-- Restaurant About -->
-
-  <%= render "restaurant_profile", restaurant: @restaurant, picture: @picture %>
-
+  <div class="carousel">
+    <% @pictures.each do |picture| %>
+      <%= render "restaurant_profile", restaurant: @restaurant, picture: picture %>
+    <% end %>
+  </div>
   <!-- Reservation -->
 
   <div class="contact-restaurant clearfix">
