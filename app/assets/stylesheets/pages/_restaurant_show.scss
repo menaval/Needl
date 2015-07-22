@@ -12,7 +12,7 @@
 
   #basic_infos {
     padding: 20px 20px 30px 20px;
-    background: #FFF;
+    background: #F2F2F2;
     h3 {
       margin-top: 10px;
     }
@@ -135,6 +135,13 @@
     position: relative;
     padding-bottom: 20px;
   }
+  #menu {
+      background-color: #FFF;
+      p {
+        font-size: 15px;
+        color: #AAA;
+      }
+    }
   #mots_de_la_fin {
     background-color: #FFF;
     padding-bottom: 10px;

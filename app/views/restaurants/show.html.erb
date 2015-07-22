@@ -18,9 +18,7 @@
 
   <div id="mots_de_la_fin" class="text-center">
     <div class="container">
-      <div class= "title">
-        <div class="title-middle">Ils l'ont recommandé</div>
-      </div>
+      <div class="title">Ils l'ont recommandé</div>
 
       <div class="end-word clearfix slider-nav">
         <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
@@ -51,11 +49,8 @@
   <!-- Ambiences -->
 
   <div id="ambiences">
-    <div class="container present">
-
-      <div class= "title">
-        <div class="title-middle">Ambiances</div>
-      </div>
+    <div class="container">
+      <div class="title">Ambiances</div>
 
       <!-- icon -->
           <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user), ambience_or_strength: "ambience" %>
@@ -67,11 +62,9 @@
   <!-- Strenght -->
 
   <div id="strengths">
-    <div class="container present">
+    <div class="container">
 
-      <div class= "title">
-        <div class="title-middle">Points forts</div>
-      </div>
+      <div class="title">Points forts</div>
       <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user), ambience_or_strength: "strength" %>
     </div>
   </div>
@@ -80,9 +73,7 @@
 
   <div id="resto-wishlist" class="text-center">
     <div class="container">
-      <div class= "title">
-        <div class="title-middle"><%= @friends_wishing.length == 0 ? 'Pas encore d\'ami qui veut y aller' : 'Ils ont envie d\'y aller'%></div>
-      </div>
+      <div class="title"><%= @friends_wishing.length == 0 ? 'Pas encore d\'ami qui veut y aller' : 'Ils ont envie d\'y aller'%></div>
 
       <div class="resto-wishlist-people multiple-carousel">
           <% @friends_wishing.each do |friend_id| %>
@@ -103,15 +94,32 @@
     </div>
   </div>
 
+  <!-- Menu -->
+
+  <div id="menu" class="text-center">
+    <div class="container">
+      <div class="title">Sélection du chef</div>
+      <h3>Entrees</h3>
+      <p>Anguille de porc 8€</p>
+      <p>oeuf mimolette 7€</p>
+      <h3>Plats</h3>
+      <p>Boeuf bourguignon 15€</p>
+      <p>Dorade grillée à la plancha avec une sauce aux olives 14 €</p>
+      <p>Marinade de thon 12€</p>
+      <h3>Desserts</h3>
+      <p>Fondant au chocolat 7€</p>
+      <p>Clafouti de pommes et d'abricot 6€</p>
+    </div>
+  <div>
+
+
 
   <!-- Location -->
 
   <div id="basic_infos" class="text-center">
-    <div class="container present">
+    <div class="container">
 
-      <div class= "title">
-        <div class="title-middle">Lieu</div>
-      </div>
+      <div class="title">Lieu</div>
       <p><%= @restaurant.address%></p>
       <p class="subway"><span class="subway-icon"></span><%= @subway.name %></p>
     </div>
