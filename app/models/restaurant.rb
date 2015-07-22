@@ -50,7 +50,7 @@ class Restaurant < ActiveRecord::Base
     self.recommendations.each do |reco|
       if User.where(id: current_user.my_friends_ids).include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
         reco.strengths.each do |number|
-          strengths_list = ["cuisine", "service", "cadre", "original", "copieux", "vins", "qualite_prix"]
+          strengths_list = ["cuisine", "service", "cadre", "original", "copieux", "vins", "qte_prix"]
           ambience = strengths_list[number.to_i - 1]
           hash[ambience] ||= []
           hash[ambience] << reco.user_id
