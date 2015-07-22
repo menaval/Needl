@@ -24,7 +24,7 @@
 
       var markers_json = <%= raw @markers.to_json %>;
       // // var markerBounds = new google.maps.LatLngBounds();
-      // var infobox = new google.maps.InfoWindow({
+      // var infowindow = new google.maps.InfoWindow({
       //   content: '',
       //    boxStyle: {
       //       background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/examples/tipbox.gif') no-repeat",
@@ -43,7 +43,8 @@
          boxStyle: {
             background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/examples/tipbox.gif') no-repeat",
             opacity: 1,
-            width: "280px"
+            width: "280px",
+            height: '280px',
         },
         closeBoxMargin: "12px 4px 2px 2px",
         closeBoxURL: "<%=image_path('icon-close.png')%>",

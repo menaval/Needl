@@ -35,11 +35,11 @@
   margin-right: 5px;
 }
 
-.button-icon.icon-modify { background: url(/assets/icon-modify.png) left no-repeat; }
-.icon-trash { background: url(/assets/icon-trash.png) left no-repeat; }
-.icon-unlike { background: url(/assets/icon-unlike.png) left no-repeat; }
-.icon-signout { background: url(/assets/icon-signout.png) left no-repeat; }
-.icon-unsee { background: url(/assets/icon-unsee.png) left no-repeat; }
-.icon-see { background: url(/assets/icon-see.png) left no-repeat; }
-.icon-unfriend { background: url(/assets/icon-unfriend.png) left no-repeat; }
-.icon-return { background: url(/assets/icon-return.png) left no-repeat; }
+.button-icon.icon-modify { background: image-url('icon-modify.png') left no-repeat; }
+.icon-trash { background: image-url('icon-trash.png') left no-repeat; }
+.icon-unlike { background: image-url('icon-unlike.png') left no-repeat; }
+.icon-signout { background: image-url('icon-signout.png') left no-repeat; }
+.icon-unsee { background: image-url('icon-unsee.png') left no-repeat; }
+.icon-see { background: image-url('icon-see.png') left no-repeat; }
+.icon-unfriend { background: image-url('icon-unfriend.png') left no-repeat; }
+.icon-return { background: image-url('icon-return.png') left no-repeat; }
