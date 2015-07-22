@@ -13,34 +13,6 @@
     <%= link_to "Appeler", "tel:#{@restaurant.phone_number}", class: "btn btn-danger", id:"call" %>
   </div>
 
-  <!-- Ambiences -->
-
-  <div id="ambiences">
-    <div class="container present">
-
-      <div class= "title">
-        <div class="title-middle">Ambiances</div>
-      </div>
-
-      <!-- icon -->
-          <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user), ambience_or_strength: "ambience" %>
-        </div>
-
-    </div>
-  </div>
-
-  <!-- Strenght -->
-
-  <div id="strengths">
-    <div class="container present">
-
-      <div class= "title">
-        <div class="title-middle">Points forts</div>
-      </div>
-      <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user), ambience_or_strength: "strength" %>
-    </div>
-  </div>
-
 
   <!-- Final word -->
 
@@ -73,6 +45,34 @@
           J'approuve !
         <% end %>
       <% end %>
+    </div>
+  </div>
+
+  <!-- Ambiences -->
+
+  <div id="ambiences">
+    <div class="container present">
+
+      <div class= "title">
+        <div class="title-middle">Ambiances</div>
+      </div>
+
+      <!-- icon -->
+          <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user), ambience_or_strength: "ambience" %>
+        </div>
+
+    </div>
+  </div>
+
+  <!-- Strenght -->
+
+  <div id="strengths">
+    <div class="container present">
+
+      <div class= "title">
+        <div class="title-middle">Points forts</div>
+      </div>
+      <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user), ambience_or_strength: "strength" %>
     </div>
   </div>
 
