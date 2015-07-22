@@ -186,6 +186,18 @@
     padding-top: 10px;
     color: $green;
   }
+  .slick-next, .slick-prev {
+    top: 50%;
+    width: 40px;
+    height: 40px;
+  }
+  .slick-next:before{
+    content: image-url('arrow-right-big.svg');
+  };
+
+  .slick-prev:before {
+    content: image-url('arrow-left-big.svg');
+  };
   .friends-show {
     padding-bottom: 10px;
   }
