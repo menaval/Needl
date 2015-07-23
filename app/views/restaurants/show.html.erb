@@ -12,61 +12,62 @@
     <%= link_to "Appeler", "tel:#{@restaurant.phone_number}", class: "btn btn-danger", id:"call" %>
   </div>
 
-
+  <% if Recommendation.where(user_id: current_user.my_visible_friends_ids_and_me, restaurant_id: @restaurant.id).length > 0 %>
   <!-- Final word -->
 
-  <div id="mots_de_la_fin" class="text-center">
-    <div class="container">
-      <div class="title">Ils l'ont recommandé</div>
+    <div id="mots_de_la_fin" class="text-center">
+      <div class="container">
+        <div class="title">Ils l'ont recommandé</div>
 
-      <div class="end-word clearfix slider-nav">
-        <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
-          <div class="end-word-people">
-            <%= image_tag User.find(friend_id).picture, class: "img-circle avatar img-responsive" %>
-          </div>
-        <%end%>
-      </div>
+        <div class="end-word clearfix slider-nav">
+          <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
+            <div class="end-word-people">
+              <%= image_tag User.find(friend_id).picture, class: "img-circle avatar img-responsive" %>
+            </div>
+          <%end%>
+        </div>
 
-      <div class="end-word-quote slider-for">
-        <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
-          <div>
-           <!-- <span class="end-quote-arrow"></span> -->
-            <%= content_and_date[0] %>
-           <span class="end-quote-name"><%= "#{User.find(friend_id).name.split(" ")[0]} #{User.find(friend_id).name.split(" ")[1].first}."%></span>
-          </div>
+        <div class="end-word-quote slider-for">
+          <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
+            <div>
+             <!-- <span class="end-quote-arrow"></span> -->
+              <%= content_and_date[0] %>
+             <span class="end-quote-name"><%= "#{User.find(friend_id).name.split(" ")[0]} #{User.find(friend_id).name.split(" ")[1].first}."%></span>
+            </div>
+          <% end %>
+        </div>
+        <% if Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 %>
+          <%= link_to new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button' do %>
+            <span class="button-icon icon-reco-recommend"></span>
+            J'approuve !
+          <% end %>
         <% end %>
       </div>
-      <% if Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 %>
-        <%= link_to new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button' do %>
-          <span class="button-icon icon-reco-recommend"></span>
-          J'approuve !
-        <% end %>
-      <% end %>
     </div>
-  </div>
 
   <!-- Ambiences -->
 
-  <div id="ambiences">
-    <div class="container">
-      <div class="title">Ambiances</div>
+    <div id="ambiences">
+      <div class="container">
+        <div class="title">Ambiances</div>
 
-      <!-- icon -->
-          <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user), ambience_or_strength: "ambience" %>
-        </div>
+        <!-- icon -->
+            <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user), ambience_or_strength: "ambience" %>
+          </div>
 
+      </div>
     </div>
-  </div>
 
-  <!-- Strenght -->
+    <!-- Strengths -->
 
-  <div id="strengths">
-    <div class="container">
+    <div id="strengths">
+      <div class="container">
 
-      <div class="title">Points forts</div>
-      <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user), ambience_or_strength: "strength" %>
+        <div class="title">Points forts</div>
+        <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user), ambience_or_strength: "strength" %>
+      </div>
     </div>
-  </div>
+  <% end %>
 
   <!-- Wishlist -->
 
