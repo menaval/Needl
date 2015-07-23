@@ -12,7 +12,7 @@ module Api
     def create
       if Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
         update
-      elsif find_restaurant_by_origin != nil
+      elsif identify_or_create_restaurant != nil
         @recommendation = current_user.recommendations.new(recommendation_params)
         @recommendation.restaurant = @restaurant
 
@@ -157,7 +157,7 @@ module Api
       end
     end
 
-    def find_restaurant_by_origin
+    def identify_or_create_restaurant
 
       if  params[:restaurant_origin] == "db" || params[:restaurant_origin] == "foursquare"
 
