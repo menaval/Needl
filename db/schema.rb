@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150724094807) do
+ActiveRecord::Schema.define(version: 20150722160215) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,7 +81,6 @@ ActiveRecord::Schema.define(version: 20150724094807) do
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.string   "price_ranges",               array: true
-    t.boolean  "wishlist"
   end
 
   add_index "recommendations", ["restaurant_id"], name: "index_recommendations_on_restaurant_id", using: :btree
