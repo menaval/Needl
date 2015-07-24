@@ -34,6 +34,11 @@ class RecommendationsController < ApplicationController
           @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
           @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
 
+          # si c'était sur ma wishlist ça l'enlève
+          if Wishlist.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
+            Wishlist.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).first.destroy
+          end
+
           # si première recommandation ou wishlist, alors page d'accueil du profil ceo
           if current_user.recommendations.count == 1 && current_user.wishlists.count == 0
             Friendship.create(sender_id: 125, receiver_id: current_user.id, accepted: true)
@@ -122,20 +127,25 @@ class RecommendationsController < ApplicationController
     # Si c'est une nouvelle whishlist on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
     elsif identify_or_create_restaurant != nil
 
-      # On crée la recommandation à partir des infos récupérées et on track
-      @wishlist = Wishlist.create(user_id: current_user.id, restaurant_id: @restaurant.id)
-      # @wishlist.restaurant = @restaurant
-
-      @tracker.track(current_user.id, 'New Wishlist', { "restaurant" => @restaurant.name, "user" => current_user.name })
-
-      # si première wishlist ou reco, alors page d'accueil du profil ceo
-      if current_user.wishlists.count == 1 && current_user.recommendations.count == 0
-        Friendship.create(sender_id: 125, receiver_id: current_user.id, accepted: true)
-        redirect_to welcome_ceo_users_path
-
-      #sinon on renvoie à la page du resto
+      # On vérifie qu'il n'a pas déjà recommandé l'endroit, sinon pas de raison de le mettre dans les restos à tester
+      if Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).length > 0
+        redirect_to restaurants_path, notice: "Cette adresse fait déjà partie des restaurants que vous recommandez"
       else
-        redirect_to restaurant_path(@wishlist.restaurant)
+        # On crée la recommandation à partir des infos récupérées et on track
+        @wishlist = Wishlist.create(user_id: current_user.id, restaurant_id: @restaurant.id)
+        # @wishlist.restaurant = @restaurant
+
+        @tracker.track(current_user.id, 'New Wishlist', { "restaurant" => @restaurant.name, "user" => current_user.name })
+
+        # si première wishlist ou reco, alors page d'accueil du profil ceo
+        if current_user.wishlists.count == 1 && current_user.recommendations.count == 0
+          Friendship.create(sender_id: 125, receiver_id: current_user.id, accepted: true)
+          redirect_to welcome_ceo_users_path
+
+        #sinon on renvoie à la page du resto
+        else
+          redirect_to restaurant_path(@wishlist.restaurant)
+        end
       end
 
     # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page

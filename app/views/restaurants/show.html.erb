@@ -82,7 +82,7 @@
           </div>
         <% end %>
       </div>
-      <% if Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 %>
+      <% if Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 && Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 %>
         <%= form_for(@wishlist, class: 'form', html: { id: 'new-wishlist'}) do |f| %>
           <%= f.hidden_field :user_id, value: current_user.id %>
           <%= f.hidden_field :restaurant_id, value: @restaurant.id %>

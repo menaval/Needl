@@ -64,6 +64,10 @@ class User < ActiveRecord::Base
     Restaurant.joins(:recommendations).where(recommendations: { user_id: self.id })
   end
 
+  def my_recos
+    Restaurant.joins(:recommendations).where(recommendations: { user_id: self.id })
+  end
+
   def my_wishes
     Restaurant.joins(:wishlists).where(wishlists: {user_id: self.id})
   end
@@ -75,6 +79,7 @@ class User < ActiveRecord::Base
   def my_friends_subways
     Subway.joins(:restaurant_subways).includes(restaurants: :recommendations).where(recommendations: {user_id: self.my_visible_friends_ids + [self.id]}).uniq
   end
+
 
   def user_friends
     graph = Koala::Facebook::API.new(self.token)
