@@ -57,12 +57,19 @@ class User < ActiveRecord::Base
 
   def my_friends_restaurants
     user_ids = my_visible_friends_ids + [self.id]
+    restos_ids = Restaurant.joins(:recommendations).where(recommendations: { user_id: user_ids }).pluck(:id)
+    restos_ids += Restaurant.joins(:wishes).where(wishes: {user_id: user_ids})
+    Restaurant.where(id: restos_ids)
     # Restaurant.joins(:recommendations, :wishes).where("recommendations.user_id = ? OR wishes.user_id = ?", user_ids, user_ids)
-    Restaurant.joins(:recommendations).where(recommendations: { user_id: user_ids })
+    # pas performant
   end
 
   def my_restaurants
-    Restaurant.joins(:recommendations, :wishes).where("recommendations.user_id = ? OR wishes.user_id = ?", self.id)
+    restos_ids = Restaurant.joins(:recommendations).where(recommendations: { user_id: self.id }).pluck(:id)
+    restos_ids += Restaurant.joins(:wishes).where(wishes: {user_id: self.id})
+    Restaurant.where(id: restos_ids)
+    # Restaurant.joins(:recommendations, :wishes).where("recommendations.user_id = ? OR wishes.user_id = ?", self.id, self.id)
+    # pas performant comme code, 3 appels
   end
 
   def my_recos
