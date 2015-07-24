@@ -3,7 +3,7 @@
   .end-word-button {
     margin: 20px 0 0 0 ;
   }
-  .checkbox {
+  .checkbox, .radio {
     text-align: center;
     border-radius: 2px;
     label {
@@ -58,7 +58,7 @@
     font-weight: bold;
   }
 
-  .check_boxes {
+  .check_boxes, .radio_buttons {
     input {
       opacity: 0;
     }
@@ -69,14 +69,14 @@
     border-radius: 5px;
   }
 
-  .check_boxes:checked ~ .icon-box {
+  .check_boxes:checked ~ .icon-box, .radio_buttons:checked ~ .icon-box {
     background: $green;
     -webkit-animation: scaleUp 0.5s ease forwards;
     -moz-animation: scaleUp 0.5s ease forwards;
     animation: scaleUp 0.5s ease forwards;
   }
 
-  .check_boxes:checked ~ .title-label {
+  .check_boxes:checked ~ .title-label, .radio_buttons:checked ~ .title-label {
     color: $green;
   }
 

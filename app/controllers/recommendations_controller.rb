@@ -12,41 +12,47 @@ class RecommendationsController < ApplicationController
   end
 
   def create
-    # si l'utilisateur a déà recommandé cet endroit alors on actualise sa reco
-    if Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
-      update
 
-    # Si c'est une nouvelle recommandation on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
-    elsif identify_or_create_restaurant != nil
+    is_a_wishlist = params[:recommendation][:wishlist]
+    if is_a_wishlist == "true"
+      create_a_wishlist
+    else
+      # si l'utilisateur a déà recommandé cet endroit alors on actualise sa reco
+      if Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
+        update
 
-      # On crée la recommandation à partir des infos récupérées
-      @recommendation = current_user.recommendations.new(recommendation_params)
-      @recommendation.restaurant = @restaurant
+      # Si c'est une nouvelle recommandation on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
+      elsif identify_or_create_restaurant != nil
 
-      #  si les informations récupérées ont bien toutes été remplies on enregistre la reco, update le prix du resto et on le track
-      if @recommendation.save
+        # On crée la recommandation à partir des infos récupérées
+        @recommendation = current_user.recommendations.new(recommendation_params)
+        @recommendation.restaurant = @restaurant
 
-        @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
-        @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
+        #  si les informations récupérées ont bien toutes été remplies on enregistre la reco, update le prix du resto et on le track
+        if @recommendation.save
 
-        # si première recommandation ou wishlist, alors page d'accueil du profil ceo
-        if current_user.recommendations.count == 1 && current_user.wishlists.count == 0
-          Friendship.create(sender_id: 125, receiver_id: current_user.id, accepted: true)
-          redirect_to welcome_ceo_users_path
+          @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
+          @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
 
-        #sinon on renvoie à la page du resto
+          # si première recommandation ou wishlist, alors page d'accueil du profil ceo
+          if current_user.recommendations.count == 1 && current_user.wishlists.count == 0
+            Friendship.create(sender_id: 125, receiver_id: current_user.id, accepted: true)
+            redirect_to welcome_ceo_users_path
+
+          #sinon on renvoie à la page du resto
+          else
+            redirect_to restaurant_path(@recommendation.restaurant)
+          end
+
+        # si certaines infos nécessaires n'ont pas été remplies
         else
-          redirect_to restaurant_path(@recommendation.restaurant)
+          redirect_to new_recommendation_path, notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"
         end
 
-      # si certaines infos nécessaires n'ont pas été remplies
+      # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page
       else
-        redirect_to new_recommendation_path, notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"
+        redirect_to new_recommendation_path, notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée"
       end
-
-    # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page
-    else
-      redirect_to new_recommendation_path, notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée"
     end
   end
 
@@ -105,6 +111,36 @@ class RecommendationsController < ApplicationController
     else
       flash[:alert] = "Nous ne parvenons pas à trouver ce restaurant"
       return redirect_to new_recommendation_path(query: @query)
+    end
+  end
+
+  def create_a_wishlist
+    # si l'utilisateur a déjà mis sur sa liste de souhaits cet endroit (sachant que ça peut être fait depuis 2 endroits) alors on le lui dit
+    if Wishlist.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
+      redirect_to restaurants_path, notice: "Restaurant déjà sur ta wishlist"
+
+    # Si c'est une nouvelle whishlist on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
+    elsif identify_or_create_restaurant != nil
+
+      # On crée la recommandation à partir des infos récupérées et on track
+      @wishlist = Wishlist.create(user_id: current_user.id, restaurant_id: @restaurant.id)
+      # @wishlist.restaurant = @restaurant
+
+      @tracker.track(current_user.id, 'New Wishlist', { "restaurant" => @restaurant.name, "user" => current_user.name })
+
+      # si première wishlist ou reco, alors page d'accueil du profil ceo
+      if current_user.wishlists.count == 1 && current_user.recommendations.count == 0
+        Friendship.create(sender_id: 125, receiver_id: current_user.id, accepted: true)
+        redirect_to welcome_ceo_users_path
+
+      #sinon on renvoie à la page du resto
+      else
+        redirect_to restaurant_path(@wishlist.restaurant)
+      end
+
+    # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page
+    else
+      redirect_to new_recommendation_path, notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée"
     end
   end
 
@@ -191,7 +227,7 @@ class RecommendationsController < ApplicationController
   end
 
   def recommendation_params
-    params.require(:recommendation).permit(:review, { strengths: [] }, { ambiences: [] }, { price_ranges: [] })
+    params.require(:recommendation).permit(:review, :wishlist, { strengths: [] }, { ambiences: [] }, { price_ranges: [] })
   end
 
   def load_activities

@@ -7,7 +7,7 @@
   </div>
   <!-- Reservation -->
 
-  <div class="contact-restaurant clearfix">
+  <div class="contact-restaurant clearfix <%= Recommendation.where(user_id: current_user.my_visible_friends_ids_and_me, restaurant_id: @restaurant.id).length == 0 ? 'white-background' : 'grey-background'%>">
     <p>Réserver une table</p>
     <%= link_to "Appeler", "tel:#{@restaurant.phone_number}", class: "btn btn-danger", id:"call" %>
   </div>
