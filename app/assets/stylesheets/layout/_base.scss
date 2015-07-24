@@ -6,12 +6,13 @@
  * ------------------------------------- */
 
 body {
-  margin-bottom: 60px;
   margin-top: 0px;
   background-color: $gray-lighter;
 }
-
- h1 {
+.wrap {
+  margin-bottom: 60px;
+}
+h1 {
   color: $red;
   font-size: 22px;
   font-weight: bold;
