@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
 
   acts_as_token_authenticatable
   has_many :recommendations, dependent: :destroy
-  has_many :wishlists, dependent: :destroy
+  has_many :wishes, dependent: :destroy
 
   has_many :friendships, foreign_key: :sender_id, dependent: :destroy
   has_many :received_friendships, foreign_key: :receiver_id, class_name: 'Friendship', dependent: :destroy
@@ -57,11 +57,12 @@ class User < ActiveRecord::Base
 
   def my_friends_restaurants
     user_ids = my_visible_friends_ids + [self.id]
+    # Restaurant.joins(:recommendations, :wishes).where("recommendations.user_id = ? OR wishes.user_id = ?", user_ids, user_ids)
     Restaurant.joins(:recommendations).where(recommendations: { user_id: user_ids })
   end
 
   def my_restaurants
-    Restaurant.joins(:recommendations).where(recommendations: { user_id: self.id })
+    Restaurant.joins(:recommendations, :wishes).where("recommendations.user_id = ? OR wishes.user_id = ?", self.id)
   end
 
   def my_recos
@@ -69,7 +70,7 @@ class User < ActiveRecord::Base
   end
 
   def my_wishes
-    Restaurant.joins(:wishlists).where(wishlists: {user_id: self.id})
+    Restaurant.joins(:wishes).where(wishes: {user_id: self.id})
   end
 
   def my_friends_foods

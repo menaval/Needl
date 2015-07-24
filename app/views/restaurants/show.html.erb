@@ -69,25 +69,25 @@
     </div>
   <% end %>
 
-  <!-- Wishlist -->
+  <!-- Wish -->
 
-  <div id="resto-wishlist" class="text-center">
+  <div id="resto-wish" class="text-center">
     <div class="container">
       <div class="title"><%= @friends_wishing.length == 0 ? 'Pas encore d\'ami qui veut y aller' : 'Ils ont envie d\'y aller'%></div>
 
-      <div class="resto-wishlist-people multiple-carousel">
+      <div class="resto-wish-people multiple-carousel">
           <% @friends_wishing.each do |friend_id| %>
           <div>
             <%= image_tag User.find(friend_id).picture, class: "img-circle avatar img-responsive" %>
           </div>
         <% end %>
       </div>
-      <% if Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 && Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 %>
-        <%= form_for(@wishlist, class: 'form', html: { id: 'new-wishlist'}) do |f| %>
+      <% if Wish.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 && Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 %>
+        <%= form_for(@wish, class: 'form', html: { id: 'new-wish'}) do |f| %>
           <%= f.hidden_field :user_id, value: current_user.id %>
           <%= f.hidden_field :restaurant_id, value: @restaurant.id %>
           <button type = "submit", class = "end-word-button" %>
-            <span class="button-icon icon-reco-wishlist"></span><%="#{@friends_wishing.length == 0 ? 'Je veux y aller !' : 'Moi aussi !'}" %>
+            <span class="button-icon icon-reco-wish"></span><%="#{@friends_wishing.length == 0 ? 'Je veux y aller !' : 'Moi aussi !'}" %>
           </button>
         <% end %>
       <% end %>
@@ -138,11 +138,11 @@
 
 
   <!-- Modifer / Supprimer / Retirer -->
-  <% if Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 || Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 %>
+  <% if Wish.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 || Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 %>
     <div class="restaurant-interactions clearfix dark">
       <!-- retirer -->
-      <% if Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 %>
-        <%= link_to wishlist_path(Wishlist.where(user_id: current_user.id, restaurant_id: @restaurant.id).first.id), class: "end-word-button dark", method: :delete do %>
+      <% if Wish.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 %>
+        <%= link_to wish_path(Wish.where(user_id: current_user.id, restaurant_id: @restaurant.id).first.id), class: "end-word-button dark", method: :delete do %>
         <span class="button-icon icon-unlike"></span>
         Retirer de mes envies
         <% end %>
@@ -201,7 +201,7 @@
 
     mixpanel.track_links("#call", "call", {
         "user": "<%= current_user.name %>", "restaurant": "<%= @restaurant.name %>", "browser": "<%= browser.name %>"});
-    mixpanel.track_forms("#new-wishlist", "New Wishlist", {"user": "<%= current_user.name %>", "restaurant": "<%= @restaurant.name %>" });
+    mixpanel.track_forms("#new-wish", "New Wish", {"user": "<%= current_user.name %>", "restaurant": "<%= @restaurant.name %>" });
     mixpanel.track("restaurant_page", {"user": "<%= current_user.name %>", "browser": "<%= browser.name %>"});
   </script>
 

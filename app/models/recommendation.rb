@@ -5,7 +5,7 @@ class Recommendation < ActiveRecord::Base
   validates :strengths, presence: true
   validates :ambiences, presence: true
   validates :price_ranges, presence: true
-  attr_accessor :wishlist
+  attr_accessor :wish
   has_many :activities, as: :trackable, class_name: 'PublicActivity::Activity', dependent: :destroy
   tracked owner: Proc.new { |controller, _model| controller.current_user }, only: [:create]
 end

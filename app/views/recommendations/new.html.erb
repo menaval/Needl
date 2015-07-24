@@ -26,7 +26,7 @@
 
       <!-- statut: testé ou pas ? -->
 
-      <%= reco.input :wishlist, as: :radio_buttons, :wrapper_html => { 'data-max' => '1' }, collection:[["<div class='icon-box' id='reco'>#{render 'restaurants/status/recommend.svg'}</div><div class='title-label'>J'approuve</div>".html_safe, false], ["<div class='icon-box' id='wishlist'>#{render 'restaurants/status/wishlist.svg'}</div><div class='title-label'>A essayer</div>".html_safe, true]], label:
+      <%= reco.input :wish, as: :radio_buttons, :wrapper_html => { 'data-max' => '1' }, collection:[["<div class='icon-box' id='reco'>#{render 'restaurants/status/recommend.svg'}</div><div class='title-label'>J'approuve</div>".html_safe, false], ["<div class='icon-box' id='wish'>#{render 'restaurants/status/wish.svg'}</div><div class='title-label'>A essayer</div>".html_safe, true]], label:
           '<div class= "title border">
             <div class="title-middle">Statut</div>
             <div class="title-label">As-tu déjà testé le restaurant ?</div>

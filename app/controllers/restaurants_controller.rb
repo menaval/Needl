@@ -4,7 +4,7 @@ class RestaurantsController < ApplicationController
     @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
     @pictures = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.map {|element| element.picture} : [@restaurant.picture_url]
     @subway = Subway.find(@restaurant.closest_subway_id)
-    @wishlist = Wishlist.new
+    @wish = Wish.new
     @friends_wishing = @restaurant.friends_wishing_this_restaurant(current_user)
   end
 

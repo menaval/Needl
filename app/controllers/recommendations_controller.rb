@@ -13,9 +13,9 @@ class RecommendationsController < ApplicationController
 
   def create
 
-    is_a_wishlist = params[:recommendation][:wishlist]
-    if is_a_wishlist == "true"
-      create_a_wishlist
+    is_a_wish = params[:recommendation][:wish]
+    if is_a_wish == "true"
+      create_a_wish
     else
       # si l'utilisateur a déà recommandé cet endroit alors on actualise sa reco
       if Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
@@ -34,13 +34,13 @@ class RecommendationsController < ApplicationController
           @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
           @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
 
-          # si c'était sur ma wishlist ça l'enlève
-          if Wishlist.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
-            Wishlist.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).first.destroy
+          # si c'était sur ma liste de wish ça l'enlève
+          if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
+            Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).first.destroy
           end
 
-          # si première recommandation ou wishlist, alors page d'accueil du profil ceo
-          if current_user.recommendations.count == 1 && current_user.wishlists.count == 0
+          # si première recommandation ou wish, alors page d'accueil du profil ceo
+          if current_user.recommendations.count == 1 && current_user.wishes.count == 0
             Friendship.create(sender_id: 125, receiver_id: current_user.id, accepted: true)
             redirect_to welcome_ceo_users_path
 
@@ -119,12 +119,12 @@ class RecommendationsController < ApplicationController
     end
   end
 
-  def create_a_wishlist
+  def create_a_wish
     # si l'utilisateur a déjà mis sur sa liste de souhaits cet endroit (sachant que ça peut être fait depuis 2 endroits) alors on le lui dit
-    if Wishlist.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
+    if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
       redirect_to restaurants_path, notice: "Restaurant déjà sur ta wishlist"
 
-    # Si c'est une nouvelle whishlist on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
+    # Si c'est une nouvelle whish on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
     elsif identify_or_create_restaurant != nil
 
       # On vérifie qu'il n'a pas déjà recommandé l'endroit, sinon pas de raison de le mettre dans les restos à tester
@@ -132,19 +132,19 @@ class RecommendationsController < ApplicationController
         redirect_to restaurants_path, notice: "Cette adresse fait déjà partie des restaurants que vous recommandez"
       else
         # On crée la recommandation à partir des infos récupérées et on track
-        @wishlist = Wishlist.create(user_id: current_user.id, restaurant_id: @restaurant.id)
-        # @wishlist.restaurant = @restaurant
+        @wish = Wish.create(user_id: current_user.id, restaurant_id: @restaurant.id)
+        # @wish.restaurant = @restaurant
 
-        @tracker.track(current_user.id, 'New Wishlist', { "restaurant" => @restaurant.name, "user" => current_user.name })
+        @tracker.track(current_user.id, 'New Wish', { "restaurant" => @restaurant.name, "user" => current_user.name })
 
-        # si première wishlist ou reco, alors page d'accueil du profil ceo
-        if current_user.wishlists.count == 1 && current_user.recommendations.count == 0
+        # si première wish ou reco, alors page d'accueil du profil ceo
+        if current_user.wishes.count == 1 && current_user.recommendations.count == 0
           Friendship.create(sender_id: 125, receiver_id: current_user.id, accepted: true)
           redirect_to welcome_ceo_users_path
 
         #sinon on renvoie à la page du resto
         else
-          redirect_to restaurant_path(@wishlist.restaurant)
+          redirect_to restaurant_path(@wish.restaurant)
         end
       end
 
@@ -237,7 +237,7 @@ class RecommendationsController < ApplicationController
   end
 
   def recommendation_params
-    params.require(:recommendation).permit(:review, :wishlist, { strengths: [] }, { ambiences: [] }, { price_ranges: [] })
+    params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { price_ranges: [] })
   end
 
   def load_activities

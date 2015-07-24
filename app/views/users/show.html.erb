@@ -25,7 +25,7 @@
   <div class="user-reco-carousel">
     <h2 class='text-center section-title'><%= @user == current_user ? 'Mes' : 'Ses' %> Recos</h2>
     <div class="carousel">
-      <% @user.my_restaurants.each do |restaurant| %>
+      <% @user.my_recos.each do |restaurant| %>
         <%= link_to restaurant_path(restaurant.id) do %>
           <div>
             <%= render 'restaurants/restaurant_profile', restaurant: restaurant, picture: restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url %>
@@ -37,7 +37,7 @@
   </div>
   <% end %>
 
-  <% if @user.wishlists.length > 0 %>
+  <% if @user.wishes.length > 0 %>
   <div class="user-reco-carousel strong">
     <h2 class = 'text-center section-title'><%= @user == current_user ? 'Mes' : 'Ses' %>  Envies</h2>
     <div class="carousel">

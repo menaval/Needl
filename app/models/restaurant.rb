@@ -2,7 +2,7 @@ class Restaurant < ActiveRecord::Base
 
   has_many :restaurant_pictures, dependent: :destroy
   has_many :recommendations, dependent: :destroy
-  has_many :wishlists, dependent: :destroy
+  has_many :wishes, dependent: :destroy
   has_many :restaurant_subways, dependent: :destroy
   has_many :subways, :through => :restaurant_subways
 
@@ -75,9 +75,9 @@ class Restaurant < ActiveRecord::Base
 
   def friends_wishing_this_restaurant(current_user)
     array = []
-    self.wishlists.each do |wishlist|
-      if User.where(id: current_user.my_friends_ids).include?(User.find(wishlist.user_id)) || current_user == User.find(wishlist.user_id)
-        array += [wishlist.user_id]
+    self.wishes.each do |wish|
+      if User.where(id: current_user.my_friends_ids).include?(User.find(wish.user_id)) || current_user == User.find(wish.user_id)
+        array += [wish.user_id]
       end
     end
     array

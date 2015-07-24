@@ -3,7 +3,7 @@
     <h1><%= restaurant.name %></h1>
     <h3><%= restaurant.food.name %></h3>
   </div>
-  <!-- au cas ou il y ait une wishlist sur un resto sur lequel pas encore de reco -->
+  <!-- au cas ou il y ait un wish sur un resto sur lequel pas encore de reco -->
   <% if restaurant.price_range %>
     <div id="text-right", class="icon-box">
       <%= render "restaurants/price_ranges/level_#{restaurant.price_range}.svg" %>
