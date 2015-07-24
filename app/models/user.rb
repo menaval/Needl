@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
 
   acts_as_token_authenticatable
   has_many :recommendations, dependent: :destroy
-  has_many :wishlists, dependent: :destroy
+  has_many :wishes, dependent: :destroy
 
   has_many :friendships, foreign_key: :sender_id, dependent: :destroy
   has_many :received_friendships, foreign_key: :receiver_id, class_name: 'Friendship', dependent: :destroy
@@ -57,15 +57,27 @@ class User < ActiveRecord::Base
 
   def my_friends_restaurants
     user_ids = my_visible_friends_ids + [self.id]
-    Restaurant.joins(:recommendations).where(recommendations: { user_id: user_ids })
+    restos_ids = Restaurant.joins(:recommendations).where(recommendations: { user_id: user_ids }).pluck(:id)
+    restos_ids += Restaurant.joins(:wishes).where(wishes: {user_id: user_ids})
+    Restaurant.where(id: restos_ids)
+    # Restaurant.joins(:recommendations, :wishes).where("recommendations.user_id = ? OR wishes.user_id = ?", user_ids, user_ids)
+    # pas performant
   end
 
   def my_restaurants
+    restos_ids = Restaurant.joins(:recommendations).where(recommendations: { user_id: self.id }).pluck(:id)
+    restos_ids += Restaurant.joins(:wishes).where(wishes: {user_id: self.id})
+    Restaurant.where(id: restos_ids)
+    # Restaurant.joins(:recommendations, :wishes).where("recommendations.user_id = ? OR wishes.user_id = ?", self.id, self.id)
+    # pas performant comme code, 3 appels
+  end
+
+  def my_recos
     Restaurant.joins(:recommendations).where(recommendations: { user_id: self.id })
   end
 
   def my_wishes
-    Restaurant.joins(:wishlists).where(wishlists: {user_id: self.id})
+    Restaurant.joins(:wishes).where(wishes: {user_id: self.id})
   end
 
   def my_friends_foods
@@ -75,6 +87,7 @@ class User < ActiveRecord::Base
   def my_friends_subways
     Subway.joins(:restaurant_subways).includes(restaurants: :recommendations).where(recommendations: {user_id: self.my_visible_friends_ids + [self.id]}).uniq
   end
+
 
   def user_friends
     graph = Koala::Facebook::API.new(self.token)

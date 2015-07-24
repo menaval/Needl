@@ -1,4 +1,4 @@
-ActiveAdmin.register Wishlist do
+ActiveAdmin.register Wish do
 
   permit_params :restaurant_id, :user_id
 
