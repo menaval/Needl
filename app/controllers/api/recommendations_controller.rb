@@ -7,52 +7,147 @@ module Api
     def index
       user = User.find_by(authentication_token: params["user_token"])
       @api_activities = PublicActivity::Activity.where(owner_id: user.my_friends_ids, owner_type: 'User').order('created_at DESC').limit(20)
+      if params['recommendation']
+        create
+      end
     end
 
     def create
-      if Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
-        update
-      elsif identify_or_create_restaurant != nil
-        @recommendation = current_user.recommendations.new(recommendation_params)
-        @recommendation.restaurant = @restaurant
 
-        if @recommendation.save
-          @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
-          @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
-          if current_user.recommendations.count == 1
-            # si première reco, accueil du ceo
-            Friendship.create(sender_id: 125, receiver_id: current_user.id, accepted: true)
-            redirect_to welcome_ceo_users_path
+      @user = User.find_by(authentication_token: params["user_token"])
+      is_a_wish = params[:recommendation][:wish]
+      if is_a_wish == "true"
+        create_a_wish
+      else
+        # si l'utilisateur a déà recommandé cet endroit alors on actualise sa reco
+        if Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
+          update
+
+        # Si c'est une nouvelle recommandation on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
+        elsif identify_or_create_restaurant != nil
+
+          # On crée la recommandation à partir des infos récupérées
+          @recommendation = @user.recommendations.new(recommendation_params)
+          @recommendation.restaurant = @restaurant
+
+          #  si les informations récupérées ont bien toutes été remplies on enregistre la reco, update le prix du resto et on le track
+          if @recommendation.save
+
+            @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
+            @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
+
+            # si c'était sur ma liste de wish ça l'enlève
+            if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
+              Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).first.destroy
+            end
+
+            # si première recommandation ou wish, alors page d'accueil du profil ceo
+            if @user.recommendations.count == 1 && @user.wishes.count == 0
+              Friendship.create(sender_id: 125, receiver_id: @user.id, accepted: true)
+              redirect_to welcome_ceo_users_path
+
+            #sinon on renvoie à la page du resto
+            else
+              redirect_to restaurant_path(@recommendation.restaurant)
+            end
+
+          # si certaines infos nécessaires n'ont pas été remplies
           else
-            redirect_to restaurant_path(@recommendation.restaurant)
+            redirect_to new_recommendation_path, notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"
           end
 
+        # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page
         else
-          redirect_to new_recommendation_path, notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"
+          redirect_to new_recommendation_path, notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée"
         end
-
-      else
-        redirect_to new_recommendation_path, notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée"
       end
     end
 
     private
 
-    def create_new_subway(result)
-      subway = Subway.create(
-        name:      result.name,
-        latitude:  result.lat,
-        longitude: result.lng
-        )
-      result = Geocoder.search("#{result.lat}, #{result.lng}").first.data["address_components"]
-      result.each do |component|
-        if component["types"].include?("locality")
-          city = component["long_name"]
-          subway.city = city
-          subway.save
+    def identify_or_create_restaurant
+
+      if  params[:restaurant_origin] == "db" || params[:restaurant_origin] == "foursquare"
+
+        @restaurant_id      = params[:restaurant_id]
+        @restaurant_name    = params[:restaurant_name]
+        @restaurant_origin  = params[:restaurant_origin]
+
+        if @restaurant_origin == "foursquare"
+          @restaurant = create_restaurant_from_foursquare
+        else
+          @restaurant = Restaurant.find(@restaurant_id)
         end
+
+      else
+        nil
       end
-      return subway
+
+    end
+
+    def create_restaurant_from_foursquare
+      client = Foursquare2::Client.new(
+        api_version:    ENV['FOURSQUARE_API_VERSION'],
+        client_id:      ENV['FOURSQUARE_CLIENT_ID'],
+        client_secret:  ENV['FOURSQUARE_CLIENT_SECRET']
+      )
+
+      search = client.venue(@restaurant_id)
+      restaurant = Restaurant.where(name: @restaurant_name).first_or_initialize(
+        name:         search.name,
+        address:      "#{search.location.address}",
+        city:         "#{search.location.city}",
+        postal_code:  "#{search.location.postalCode}",
+        full_address: "#{search.location.address}, #{search.location.city} #{search.location.postalCode}",
+        food:         Food.where(name: search.categories[0].shortName).first_or_create,
+        latitude:     search.location.lat,
+        longitude:    search.location.lng,
+        picture_url:  search.photos.groups[0] ? "#{search.photos.groups[0].items[0].prefix}1000x1000#{search.photos.groups[0].items[0].suffix}" : "restaurant_default.jpg",
+        phone_number: search.contact.phone ? search.contact.phone : nil
+      )
+
+      if restaurant.save
+        link_to_subways(restaurant)
+        return restaurant
+      else
+        flash[:alert] = "Nous ne parvenons pas à trouver ce restaurant"
+        return redirect_to new_recommendation_path(query: @query)
+      end
+    end
+
+    def create_a_wish
+      # si l'utilisateur a déjà mis sur sa liste de souhaits cet endroit (sachant que ça peut être fait depuis 2 endroits) alors on le lui dit
+      if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
+        redirect_to restaurants_path, notice: "Restaurant déjà sur ta wishlist"
+
+      # Si c'est une nouvelle whish on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
+      elsif identify_or_create_restaurant != nil
+
+        # On vérifie qu'il n'a pas déjà recommandé l'endroit, sinon pas de raison de le mettre dans les restos à tester
+        if Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).length > 0
+          redirect_to restaurants_path, notice: "Cette adresse fait déjà partie des restaurants que vous recommandez"
+        else
+
+          # On crée la recommandation à partir des infos récupérées et on track
+          @wish = Wish.create(user_id: @user.id, restaurant_id: @restaurant.id)
+          # @wish.restaurant = @restaurant
+          @tracker.track(@user.id, 'New Wish', { "restaurant" => @restaurant.name, "user" => @user.name })
+
+          # si première wish ou reco, alors page d'accueil du profil ceo
+          if @user.wishes.count == 1 && @user.recommendations.count == 0
+            Friendship.create(sender_id: 125, receiver_id: @user.id, accepted: true)
+            redirect_to welcome_ceo_users_path
+
+          #sinon on renvoie à la page du resto
+          else
+            redirect_to restaurant_path(@wish.restaurant)
+          end
+        end
+
+      # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page
+      else
+        redirect_to new_recommendation_path, notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée"
+      end
     end
 
     def link_to_subways(restaurant)
@@ -66,14 +161,6 @@ module Api
         "Paris train station",
         "Station de Métro Les Halles",
         "Paris Est"]
-      # stations erronnées reconnaissables à leur coordonées avec le même nom qu'une vraie
-      # false_subway_stations_by_coordinates = [
-      #   {name: "Opéra", lat: 48.870871, lng: 2.332217},
-      #   {name: "Trinité - d'Estienne d'Orves", lat: 48.876305, lng: 2.333199},
-      #   {name: "Place d'Italie", lat: 48.831483, lng: 2.355692},
-      #   {name: "Quatre-Septembre", lat: 48.869644, lng: 2.336445},
-      #   {name: "Saint-Michel", lat: 48.853387, lng: 2.343706},
-      #   {name: "Tuileries", lat: 48.864318, lng: 2.3302}]
 
         false_subway_stations_by_coordinates = [
           [48.870871, 2.332217],
@@ -127,76 +214,43 @@ module Api
       end
     end
 
-    def create_restaurant_from_foursquare
-      client = Foursquare2::Client.new(
-        api_version:    ENV['FOURSQUARE_API_VERSION'],
-        client_id:      ENV['FOURSQUARE_CLIENT_ID'],
-        client_secret:  ENV['FOURSQUARE_CLIENT_SECRET']
-      )
 
-      search = client.venue(@restaurant_id)
-      restaurant = Restaurant.where(name: @restaurant_name).first_or_initialize(
-        name:         search.name,
-        address:      "#{search.location.address}",
-        city:         "#{search.location.city}",
-        postal_code:  "#{search.location.postalCode}",
-        full_address: "#{search.location.address}, #{search.location.city} #{search.location.postalCode}",
-        food:         Food.where(name: search.categories[0].shortName).first_or_create,
-        latitude:     search.location.lat,
-        longitude:    search.location.lng,
-        picture_url:  search.photos.groups[0] ? "#{search.photos.groups[0].items[0].prefix}1000x1000#{search.photos.groups[0].items[0].suffix}" : "restaurant_default.jpg",
-        phone_number: search.contact.phone ? search.contact.phone : nil
-      )
-
-      if restaurant.save
-        link_to_subways(restaurant)
-        return restaurant
-      else
-        flash[:alert] = "Nous ne parvenons pas à trouver ce restaurant"
-        return redirect_to new_recommendation_path(query: @query)
-      end
-    end
-
-    def identify_or_create_restaurant
-
-      if  params[:restaurant_origin] == "db" || params[:restaurant_origin] == "foursquare"
-
-        @restaurant_id      = params[:restaurant_id]
-        @restaurant_name    = params[:restaurant_name]
-        @restaurant_origin  = params[:restaurant_origin]
-
-        if @restaurant_origin == "foursquare"
-          @restaurant = create_restaurant_from_foursquare
-        else
-          @restaurant = Restaurant.find(@restaurant_id)
+    def create_new_subway(result)
+      subway = Subway.create(
+        name:      result.name,
+        latitude:  result.lat,
+        longitude: result.lng
+        )
+      result = Geocoder.search("#{result.lat}, #{result.lng}").first.data["address_components"]
+      result.each do |component|
+        if component["types"].include?("locality")
+          city = component["long_name"]
+          subway.city = city
+          subway.save
         end
-
-      else
-        nil
       end
-
+      return subway
     end
 
     def recommendation_params
-      params.require(:recommendation).permit(:review, { strengths: [] }, { ambiences: [] }, { price_ranges: [] })
+      params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { price_ranges: [] })
     end
 
     def load_activities
-      @activities = PublicActivity::Activity.where(owner_id: current_user.my_friends_ids, owner_type: 'User').order('created_at DESC').limit(20)
+      @activities = PublicActivity::Activity.where(owner_id: @user.my_friends_ids, owner_type: 'User').order('created_at DESC').limit(20)
     end
 
     def update
-      recommendation = Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).first
+      recommendation = Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).first
       recommendation.update_attributes(recommendation_params)
       redirect_to restaurant_path(recommendation.restaurant)
     end
 
     def read_all_notification
-      PublicActivity::Activity.where(owner_id: current_user.my_friends_ids, owner_type: 'User').each do |activity|
+      PublicActivity::Activity.where(owner_id: @user.my_friends_ids, owner_type: 'User').each do |activity|
         activity.read = true
         activity.save
       end
     end
-
   end
 end

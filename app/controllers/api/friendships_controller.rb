@@ -8,7 +8,7 @@ module Api
     def index
       @user = User.find_by(authentication_token: params["user_token"])
       @friends = User.where(id: @user.my_friends_ids)
-      @requests = User.where(id: current_user.my_requests_received_ids)
+      @requests = User.where(id: @user.my_requests_received_ids)
       # chercher une méthode 'automatique'
       if params["receiver_id"] && params["sender_id"] && params["accepted"]
         create
@@ -19,7 +19,7 @@ module Api
       @user = User.find_by(authentication_token: params["user_token"])
       @friendship = Friendship.new
       @not_interested_relation = NotInterestedRelation.new
-      @new_potential_friends = current_user.user_friends - User.where(id: current_user.my_friends_ids) - User.where(id: current_user.my_requests_sent_ids) - User.where(id: current_user.my_requests_received_ids) - User.where(id: current_user.refused_relations_ids) - [current_user]
+      @new_potential_friends = @user.user_friends - User.where(id: @user.my_friends_ids) - User.where(id: @user.my_requests_sent_ids) - User.where(id: @user.my_requests_received_ids) - User.where(id: @user.refused_relations_ids) - [@user]
 
       if params["friendship"]
         create
@@ -27,8 +27,9 @@ module Api
     end
 
     def create
-      respond_with Friendship.create(friendship_params)
-
+      @friendship = Friendship.new(friendship_params)
+      @friendship.save
+      redirect_to new_friendship_path, notice: "Votre demande d'invitation a bien été envoyée, vous pourrez accéder à ses recommandations dès lors qu'il vous acceptera"
       # ex: http://localhost:3000/api/friendships/new?friendship[sender_id]=40&friendship[receiver_id]=42&friendship[accepted]=false
 
     end
