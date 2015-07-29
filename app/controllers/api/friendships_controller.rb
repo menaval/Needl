@@ -10,13 +10,13 @@ module Api
       @friends = User.where(id: @user.my_friends_ids)
       @requests = User.where(id: @user.my_requests_received_ids)
       # chercher une méthode 'automatique'
-      if params["friendship"]["accepted"] == "false"
+      if params["accepted"] == "false"
         create
-      elsif params["friendship"]["accepted"] == "true"
+      elsif params["accepted"] == "true"
         answer_yes
       elsif params["destroy"]
         destroy
-      elsif params["friendship"]["invisible"]
+      elsif params["invisible"]
         invisible
       elsif params["not_interested"]
         not_interested
@@ -33,7 +33,7 @@ module Api
     private
 
     def create
-      @friendship = Friendship.new(friendship_params)
+      @friendship = Friendship.new(sender_id: @user.id, receiver_id: params["friend_id"].to_i, accepted: false)
       @friendship.save
       redirect_to new_friendship_path, notice: "Votre demande d'invitation a bien été envoyée, vous pourrez accéder à ses recommandations dès lors qu'il vous acceptera"
       # ex: http://localhost:3000/api/friendships/new?friendship[sender_id]=40&friendship[receiver_id]=42&friendship[accepted]=false
@@ -41,19 +41,19 @@ module Api
     end
 
     def answer_yes
-      friendship = Friendship.where(sender_id: params["friendship"]["friend_id"].to_i, receiver_id: @user.id).first
+      friendship = Friendship.where(sender_id: params["friend_id"].to_i, receiver_id: @user.id).first
       friendship.update_attribute(:accepted, true)
       redirect_to friendships_path
     end
 
     def destroy
       # pour voir dans quelle sens s'est faite la relation sans avoir à le préciser dans l'url
-      if Friendship.where(sender_id: params["friendship"]["friend_id"].to_i, receiver_id: @user.id).first
-      friendship = Friendship.where(sender_id: params["friendship"]["friend_id"].to_i, receiver_id: @user.id).first
-      NotInterestedRelation.create(member_one_id: params["friendship"]["friend_id"].to_i, member_two_id: @user.id)
+      if Friendship.where(sender_id: params["friend_id"].to_i, receiver_id: @user.id).first
+      friendship = Friendship.where(sender_id: params["friend_id"].to_i, receiver_id: @user.id).first
+      NotInterestedRelation.create(member_one_id: params["friend_id"].to_i, member_two_id: @user.id)
     else
-      friendship = Friendship.where(sender_id: @user.id, receiver_id: params["friendship"]["friend_id"].to_i).first
-      NotInterestedRelation.create(member_one_id: @user.id, member_two_id: params["friendship"]["friend_id"].to_i)
+      friendship = Friendship.where(sender_id: @user.id, receiver_id: params["friend_id"].to_i).first
+      NotInterestedRelation.create(member_one_id: @user.id, member_two_id: params["friend_id"].to_i)
     end
       friendship.destroy
       redirect_to friendships_path
@@ -61,25 +61,27 @@ module Api
     end
 
     def invisible
-      invisible = params["friendship"]["invisible"]
-      if Friendship.where(sender_id: params["friendship"]["friend_id"].to_i, receiver_id: @user.id).first
-        friendship = Friendship.where(sender_id: params["friendship"]["friend_id"].to_i, receiver_id: @user.id).first
+      invisible = params["invisible"]
+      if Friendship.where(sender_id: params["friend_id"].to_i, receiver_id: @user.id).first
+        friendship = Friendship.where(sender_id: params["friend_id"].to_i, receiver_id: @user.id).first
         friendship.update_attribute(:sender_invisible, invisible)
       else
-        friendship = Friendship.where(sender_id: @user.id, receiver_id: params["friendship"]["friend_id"].to_i).first
+        friendship = Friendship.where(sender_id: @user.id, receiver_id: params["friend_id"].to_i).first
         friendship.update_attribute(:receiver_invisible, invisible)
       end
       redirect_to friendships_path
     end
 
     def not_interested
-      NotInterestedRelation.create(member_one_id: @user.id, member_two_id: params["friendship"]["friend_id"])
+      NotInterestedRelation.create(member_one_id: @user.id, member_two_id: params["friend_id"])
       redirect_to new_friendship_path
     end
 
-    def friendship_params
-      params.require(:friendship).permit(:sender_id, :receiver_id, :accepted)
-    end
+    # def friendship_params
+    #   params.require(:friendship).permit(:sender_id, :receiver_id, :accepted)
+    # end
+
+    # je ne passe pas par les strong params à voir
 
   end
 end
