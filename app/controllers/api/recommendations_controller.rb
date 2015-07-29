@@ -5,16 +5,20 @@ module Api
     skip_before_filter :authenticate_user!
 
     def index
-      user = User.find_by(authentication_token: params["user_token"])
-      @api_activities = PublicActivity::Activity.where(owner_id: user.my_friends_ids, owner_type: 'User').order('created_at DESC').limit(20)
+      @user = User.find_by(authentication_token: params["user_token"])
+      @api_activities = PublicActivity::Activity.where(owner_id: @user.my_friends_ids, owner_type: 'User').order('created_at DESC').limit(20)
       if params['recommendation']
         create
+      elsif params['destroy']
+        destroy
       end
+
     end
+
+    private
 
     def create
 
-      @user = User.find_by(authentication_token: params["user_token"])
       is_a_wish = params[:recommendation][:wish]
       if is_a_wish == "true"
         create_a_wish
@@ -63,7 +67,12 @@ module Api
       end
     end
 
-    private
+    def destroy
+      reco = Recommendation.where(user_id: @user.id, restaurant_id: params['restaurant_id'].to_i).first
+      reco.destroy
+      redirect_to root_path, notice: 'Le restaurant a bien été retiré de vos recommandations'
+    end
+
 
     def identify_or_create_restaurant
 
