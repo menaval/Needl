@@ -16,7 +16,7 @@ class WishesController < ApplicationController
   def destroy
     wish = Wish.find(params[:id])
     wish.destroy
-    redirect_to :back, notice: 'Le restaurant a bien été retiré de la liste de vos envies'
+    redirect_to :back, notice: 'Le restaurant a bien été retirée de la liste de vos envies'
   end
 
   private
