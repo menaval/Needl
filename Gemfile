@@ -12,6 +12,7 @@ gem "country_select"
 gem "high_voltage"
 gem "devise"
 gem 'omniauth-facebook'
+gem 'omniauth-facebook-access-token'
 gem 'public_activity'
 gem "pundit"
 gem "paperclip"

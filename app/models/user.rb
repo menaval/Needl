@@ -19,7 +19,7 @@ class User < ActiveRecord::Base
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :omniauthable, :omniauth_providers => [ :facebook ]
+         :omniauthable, :omniauth_providers => [ :facebook, :facebook_access_token ]
 
   has_attached_file :picture,
       styles: { large: "800x800", medium: "300x300>", thumb: "50x50#" }
@@ -110,7 +110,9 @@ class User < ActiveRecord::Base
       user.name = auth.info.name
       user.picture = auth.info.image.gsub('http://','https://') + "?width=1000&height=1000"
       user.token = auth.credentials.token
-      user.token_expiry = Time.at(auth.credentials.expires_at)
+      if auth.credentials.expires_at
+        user.token_expiry = Time.at(auth.credentials.expires_at)
+      end
     end
   end
 end
