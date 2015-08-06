@@ -8,11 +8,13 @@ module Api
       @restaurant = Restaurant.find(params["id"].to_i)
       @user = User.find_by(authentication_token: params["user_token"])
       @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
+      @pictures = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.map {|element| element.picture} : [@restaurant.picture_url]
     end
 
     def index
-      user = User.find_by(authentication_token: params["user_token"])
+      @user = User.find_by(authentication_token: params["user_token"])
       @restaurants = user.my_friends_restaurants
+
       # pour le filter
       # ici 40 c'est mon ID donc on ne voit que mes adresses
       # http://localhost:3000/restaurants?query[price_range]=&query[food]=&query[friend]=40&query[subway]=&commit=Chercher
