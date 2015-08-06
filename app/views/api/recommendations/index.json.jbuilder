@@ -8,5 +8,6 @@ json.array! @api_activities do |activity|
   json.restaurant_food           restaurant.food.name
   json.restaurant_price_range    restaurant.price_range
   json.review                    activity.trackable.review
+  json.date                      activity.created_at.strftime('%-d %B')
 
 end
