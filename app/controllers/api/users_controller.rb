@@ -5,8 +5,7 @@ module Api
     skip_before_filter :authenticate_user!
 
     def show
-      # @user = User.find(params["id"].to_i)
-      @user = User.find_by(authentication_token: params["user_token"])
+      @user = User.find(params["id"].to_i)
       @recos = @user.my_recos
       @wishes = @user.my_wishes
     end

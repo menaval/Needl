@@ -12,8 +12,21 @@ module Api
     end
 
     def index
-      @user = User.find_by(authentication_token: params["user_token"])
-      @restaurants = user.my_friends_restaurants
+      @user         = User.find_by(authentication_token: params["user_token"])
+      @restaurants  = @user.my_friends_restaurants
+      query         = params[:query]
+
+      if query
+        if @restaurants.by_price_range(query[:price_range]).by_food(query[:food]).by_friend(query[:friend]).by_subway(query[:subway]).by_ambience(query[:ambience], query[:user_id]).count > 0
+          @restaurants = @restaurants.by_price_range(query[:price_range]).by_food(query[:food]).by_friend(query[:friend]).by_subway(query[:subway]).by_ambience(query[:ambience], query[:user_id])
+        else
+          flash[:notice] = "Aucun restaurant pour cette recherche"
+        end
+      else
+        if current_user.recommendations.count == 0
+          redirect_to new_recommendation_path, notice: "Partage ta première reco avant de découvrir celles de tes amis !"
+        end
+      end
 
       # pour le filter
       # ici 40 c'est mon ID donc on ne voit que mes adresses
