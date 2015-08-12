@@ -8,7 +8,7 @@ json.array!                    @restaurants do |restaurant|
   json.food                 @all_foods[restaurant.id]
   json.price_range          restaurant.price_range
   if @all_ambiences[restaurant.id]
-    json.ambiences            @all_ambiences[restaurant.id].group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
+    json.ambiences            @all_ambiences[restaurant.id].flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
   end
   json.starter1             restaurant.starter1
   json.price_starter1       restaurant.price_starter1
