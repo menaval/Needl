@@ -149,7 +149,7 @@ module Api
 
           #sinon on renvoie à la page du resto
           else
-            redirect_to restaurant_path(@wish.restaurant)
+            redirect_to api_restaurant_path(@wish.restaurant_id)
           end
         end
 
