@@ -17,8 +17,9 @@ module Api
       @user         = User.find_by(authentication_token: params["user_token"])
       @restaurants  = @user.my_friends_restaurants
       query         = params[:query]
-      @recommendations = Recommendation.where(user_id: @user.my_visible_friends_ids_and_me)
-      @wishes = Wish.where(user_id: @user.my_visible_friends_ids_and_me)
+      my_visible_friends_and_me = @user.my_visible_friends_ids_and_me
+      @recommendations = Recommendation.where(user_id: my_visible_friends_and_me)
+      @wishes = Wish.where(user_id: my_visible_friends_and_me)
 
       # associer les ambiances et amis recommandant aux restaurants avec une seule requête
       @all_ambiences = {}
@@ -36,22 +37,22 @@ module Api
         @all_friends_wishing[wish.restaurant_id] << wish.user_id
       end
       # associer les nourritures aux restaurants avec une seule requête
-      @foods = Food.all
-      @all_foods = {}
-      @foods.each do |food|
-        food.restaurants.where(id: @restaurants.pluck(:id)).each do |restaurant|
-          @all_foods[restaurant.id] = food.id
-        end
-      end
+      # @foods = Food.all
+      # @all_foods = {}
+      # @foods.each do |food|
+      #   food.restaurants.where(id: @restaurants.pluck(:id)).each do |restaurant|
+      #     @all_foods[restaurant.id] = food.id
+      #   end
+      # end
 
-      @subways = Subway.all
-      @all_subways = {}
-      @subways.each do |subway|
-        subway.restaurants.where(id: @restaurants.pluck(:id)).each do |restaurant|
-          @all_subways[restaurant.id] ||= []
-          @all_subways[restaurant.id] << subway.id
-        end
-      end
+      # @subways = Subway.all
+      # @all_subways = {}
+      # @subways.each do |subway|
+      #   subway.restaurants.where(id: @restaurants.pluck(:id)).each do |restaurant|
+      #     @all_subways[restaurant.id] ||= []
+      #     @all_subways[restaurant.id] << subway.id
+      #   end
+      # end
 
       # problème de cette méthode, il leur faut tous des restaurantpictures, ce qui n'est pas faisable immédiatement
       # @all_pictures = {}

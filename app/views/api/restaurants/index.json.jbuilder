@@ -5,12 +5,12 @@ json.array!                    @restaurants do |restaurant|
   json.latitude             restaurant.latitude
   json.longitude            restaurant.longitude
   json.pictures             restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.map {|element| element.picture} : [restaurant.picture_url]
-  json.food                 @all_foods[restaurant.id]
+  json.food                 restaurant.food.id
   json.price_range          restaurant.price_range
   if @all_ambiences[restaurant.id]
     json.ambiences           @all_ambiences[restaurant.id].flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
   end
-  json.subways                @all_subways[restaurant.id]
+  json.subways              restaurant.subways.pluck(:id)
   json.friends_recommending   @all_friends_recommending[restaurant.id]
   json.friends_wishing        @all_friends_wishing[restaurant.id]
   json.starter1             restaurant.starter1
