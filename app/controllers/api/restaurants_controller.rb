@@ -19,19 +19,27 @@ module Api
       query         = params[:query]
       @recommendations = Recommendation.where(user_id: @user.my_visible_friends_ids_and_me)
 
+      # associer les ambiances aux restaurants avec une seule requête
       @all_ambiences = {}
       @recommendations.each do |recommendation|
         @all_ambiences[recommendation.restaurant_id] ||= []
         @all_ambiences[recommendation.restaurant_id] << recommendation.ambiences
       end
 
+      # associer les nourritures aux restaurants avec une seule requête
       @foods = Food.all
       @all_foods = {}
       @foods.each do |food|
         food.restaurants.where(id: @restaurants.pluck(:id)).each do |restaurant|
-          @all_foods[restaurant] = food
+          @all_foods[restaurant.id] = food.name
         end
       end
+
+      # problème de cette méthode, il leur faut tous des restaurantpictures, ce qui n'est pas faisable immédiatement
+      # @all_pictures = {}
+      # RestaurantPicture.where(restaurant_id: @restaurants.pluck(:id)).each do |picture|
+      #   @all_pictures[picture.restaurant_id] = picture
+      # end
 
       if query
         if @restaurants.by_price_range(query[:price_range]).by_food(query[:food]).by_friend(query[:friend]).by_subway(query[:subway]).by_ambience(query[:ambience], query[:user_id]).count > 0

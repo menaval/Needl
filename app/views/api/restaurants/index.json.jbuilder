@@ -4,7 +4,7 @@ json.array!                    @restaurants do |restaurant|
   json.address              restaurant.address
   json.latitude             restaurant.latitude
   json.longitude            restaurant.longitude
-  json.pictures             restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.map {|element| element.picture} : [restaurant.picture_url]
+  json.picture              restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url
   json.food                 @all_foods[restaurant.id]
   json.price_range          restaurant.price_range
   if @all_ambiences[restaurant.id]
