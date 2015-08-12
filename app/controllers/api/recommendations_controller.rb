@@ -52,17 +52,17 @@ module Api
 
             #sinon on renvoie à la page du resto
             else
-              redirect_to restaurant_path(@recommendation.restaurant)
+              redirect_to api_restaurant_path(@recommendation.restaurant)
             end
 
           # si certaines infos nécessaires n'ont pas été remplies
           else
-            redirect_to new_recommendation_path, notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"
+            redirect_to new_api_recommendation_path, notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"
           end
 
         # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page
         else
-          redirect_to new_recommendation_path, notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée"
+          redirect_to new_api_recommendation_path, notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée"
         end
       end
     end
@@ -70,7 +70,7 @@ module Api
     def destroy
       reco = Recommendation.where(user_id: @user.id, restaurant_id: params['restaurant_id'].to_i).first
       reco.destroy
-      redirect_to root_path, notice: 'Le restaurant a bien été retiré de vos recommandations'
+      redirect_to api_restaurants, notice: 'Le restaurant a bien été retiré de vos recommandations'
     end
 
 
