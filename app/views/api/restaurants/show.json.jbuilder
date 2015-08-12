@@ -1,12 +1,12 @@
 json.id                   @restaurant.id
 json.name                 @restaurant.name
-json.food                 @restaurant.food.name
+json.food                 @restaurant.food.id
 json.price_range          @restaurant.price_range
 json.address              @restaurant.address
 json.pictures             @pictures
 json.latitude             @restaurant.latitude
 json.longitude            @restaurant.longitude
-json.subway               @subway.name
+json.subway               @subway.id
 json.ambiences            @restaurant.ambiences_from_my_friends(@user)
 json.strengths            @restaurant.strengths_from_my_friends(@user)
 json.reviews              @restaurant.reviews_from_my_friends(@user)

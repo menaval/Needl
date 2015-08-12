@@ -31,7 +31,16 @@ module Api
       @all_foods = {}
       @foods.each do |food|
         food.restaurants.where(id: @restaurants.pluck(:id)).each do |restaurant|
-          @all_foods[restaurant.id] = food.name
+          @all_foods[restaurant.id] = food.id
+        end
+      end
+
+      @subways = Subway.all
+      @all_subways = {}
+      @subways.each do |subway|
+        subway.restaurants.where(id: @restaurants.pluck(:id)).each do |restaurant|
+          @all_subways[restaurant.id] ||= []
+          @all_subways[restaurant.id] << subway.id
         end
       end
 
