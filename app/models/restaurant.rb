@@ -32,14 +32,12 @@ class Restaurant < ActiveRecord::Base
 
   def ambiences_from_my_friends(current_user)
     hash = {}
-    self.recommendations.each do |reco|
-      if User.where(id: current_user.my_friends_ids).include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
-        reco.ambiences.each do |number|
-          ambiences_list = ["chic", "festif", "typique", "ensoleille", "fast", "casual"]
-          ambience = ambiences_list[number.to_i - 1]
-          hash[ambience] ||= []
-          hash[ambience] << reco.user_id
-        end
+    ambiences_list = ["chic", "festif", "typique", "ensoleille", "fast", "casual"]
+    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
+      reco.ambiences.each do |number|
+        ambience = ambiences_list[number.to_i - 1]
+        hash[ambience] ||= []
+        hash[ambience] << reco.user_id
       end
     end
     hash.sort_by { |_name, ids| -ids.length }.first(2).to_h
@@ -47,14 +45,12 @@ class Restaurant < ActiveRecord::Base
 
   def strengths_from_my_friends(current_user)
     hash = {}
-    self.recommendations.each do |reco|
-      if User.where(id: current_user.my_friends_ids).include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
-        reco.strengths.each do |number|
-          strengths_list = ["cuisine", "service", "cadre", "original", "copieux", "vins", "qte_prix"]
-          ambience = strengths_list[number.to_i - 1]
-          hash[ambience] ||= []
-          hash[ambience] << reco.user_id
-        end
+    strengths_list = ["cuisine", "service", "cadre", "original", "copieux", "vins", "qte_prix"]
+    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
+      reco.strengths.each do |number|
+        ambience = strengths_list[number.to_i - 1]
+        hash[ambience] ||= []
+        hash[ambience] << reco.user_id
       end
     end
     hash.sort_by { |_name, ids| -ids.length }.first(3).to_h
@@ -62,23 +58,19 @@ class Restaurant < ActiveRecord::Base
 
   def reviews_from_my_friends(current_user)
     hash = {}
-    self.recommendations.each do |reco|
-      if User.where(id: current_user.my_friends_ids).include?(User.find(reco.user_id)) || current_user == User.find(reco.user_id)
-        if reco.review == ""
-          reco.review = "Je recommande !"
-        end
-        hash[reco.user_id] = [reco.review, reco.created_at]
+    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
+      if reco.review == ""
+        reco.review = "Je recommande !"
       end
+      hash[reco.user_id] = [reco.review, reco.created_at]
     end
     hash.sort_by { |_user_id, content_and_date| content_and_date[1] }.reverse.to_h
   end
 
   def friends_wishing_this_restaurant(current_user)
     array = []
-    self.wishes.each do |wish|
-      if User.where(id: current_user.my_friends_ids).include?(User.find(wish.user_id)) || current_user == User.find(wish.user_id)
-        array += [wish.user_id]
-      end
+    self.wishes.where(user_id: current_user.my_visible_friends_ids_and_me).each do |wish|
+      array += [wish.user_id]
     end
     array
   end
