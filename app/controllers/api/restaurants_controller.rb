@@ -18,10 +18,19 @@ module Api
       @restaurants  = @user.my_friends_restaurants
       query         = params[:query]
       @recommendations = Recommendation.where(user_id: @user.my_visible_friends_ids_and_me)
+
       @all_ambiences = {}
       @recommendations.each do |recommendation|
         @all_ambiences[recommendation.restaurant_id] ||= []
         @all_ambiences[recommendation.restaurant_id] << recommendation.ambiences
+      end
+
+      @foods = Food.all
+      @all_foods = {}
+      @foods.each do |food|
+        food.restaurants.where(id: @restaurants.pluck(:id)).each do |restaurant|
+          @all_foods[restaurant] = food
+        end
       end
 
       if query
