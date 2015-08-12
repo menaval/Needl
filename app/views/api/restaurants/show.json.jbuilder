@@ -7,8 +7,8 @@ json.pictures             @pictures
 json.latitude             @restaurant.latitude
 json.longitude            @restaurant.longitude
 json.subway               @subway.id
-json.ambiences            @restaurant.ambiences_from_my_friends(@user)
-json.strengths            @restaurant.strengths_from_my_friends(@user)
+json.ambiences            @restaurant.ambiences_from_my_friends_api(@user)
+json.strengths            @restaurant.strengths_from_my_friends_api(@user)
 json.reviews              @restaurant.reviews_from_my_friends(@user)
 json.starter1             @restaurant.starter1
 json.price_starter1       @restaurant.price_starter1

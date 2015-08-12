@@ -28,8 +28,31 @@ class Restaurant < ActiveRecord::Base
   #   includes(:recommendations).where("'#{ambience}' = ANY(recommendations.ambiences)").where(recommendations: {user_id: [User.find(user_id).my_visible_friends_ids_and_me]}).references(:recommendations)if ambience.present?
   # end
 
-
   def ambiences_from_my_friends(current_user)
+    array = []
+    ambiences_list = ["chic", "festif", "typique", "ensoleille", "fast", "casual"]
+    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
+      reco.ambiences.each do |number|
+        ambience = ambiences_list[number.to_i - 1]
+        array << ambience
+      end
+    end
+    array.flatten.group_by(&:itself).sort_by { |_name, votes| -votes.length }.first(2).to_h.keys.first(2)
+  end
+
+  def strengths_from_my_friends(current_user)
+    array = []
+    strengths_list = ["cuisine", "service", "cadre", "original", "copieux", "vins", "qte_prix"]
+    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
+      reco.strengths.each do |number|
+        strength = strengths_list[number.to_i - 1]
+        array << strength
+      end
+    end
+    array.flatten.group_by(&:itself).sort_by { |_name, votes| -votes.length }.first(2).to_h.keys.first(3)
+  end
+
+  def ambiences_from_my_friends_api(current_user)
     array = []
     self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
       array += reco.ambiences
@@ -37,7 +60,7 @@ class Restaurant < ActiveRecord::Base
     array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
   end
 
-  def strengths_from_my_friends(current_user)
+  def strengths_from_my_friends_api(current_user)
     array = []
     self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
       array += reco.strengths
@@ -78,19 +101,7 @@ class Restaurant < ActiveRecord::Base
     hash.sort_by {|_key, value| value}.first[0]
   end
 
- # Idem avec les forces
-   # def strengths_from_my_friends(current_user)
-   #   hash = {}
-   #   strengths_list = ["cuisine", "service", "cadre", "original", "copieux", "vins", "qte_prix"]
-   #   self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
-   #     reco.strengths.each do |number|
-   #       ambience = strengths_list[number.to_i - 1]
-   #       hash[ambience] ||= []
-   #       hash[ambience] << reco.user_id
-   #     end
-   #   end
-   #   hash.sort_by { |_name, ids| -ids.length }.first(3).to_h
-   # end
+
 
    # Methode a garder si un jour je veux ajouter qui a recommandé avec quelle ambience
      # def ambiences_from_my_friends(current_user)
@@ -105,5 +116,19 @@ class Restaurant < ActiveRecord::Base
      #   end
      #   hash.sort_by { |_name, ids| -ids.length }.first(2).to_h
      # end
+
+     # Idem avec les forces
+       # def strengths_from_my_friends(current_user)
+       #   hash = {}
+       #   strengths_list = ["cuisine", "service", "cadre", "original", "copieux", "vins", "qte_prix"]
+       #   self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
+       #     reco.strengths.each do |number|
+       #       ambience = strengths_list[number.to_i - 1]
+       #       hash[ambience] ||= []
+       #       hash[ambience] << reco.user_id
+       #     end
+       #   end
+       #   hash.sort_by { |_name, ids| -ids.length }.first(3).to_h
+       # end
 
 end
