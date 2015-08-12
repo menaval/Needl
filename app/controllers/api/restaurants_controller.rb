@@ -18,10 +18,10 @@ module Api
       @restaurants  = @user.my_friends_restaurants
       query         = params[:query]
       @recommendations = Recommendation.where(user_id: @user.my_visible_friends_ids_and_me)
-      @hash = {}
+      @all_ambiences = {}
       @recommendations.each do |recommendation|
-        @hash[recommendation.restaurant_id] ||= []
-        @hash[recommendation.restaurant_id] << recommendation.ambiences
+        @all_ambiences[recommendation.restaurant_id] ||= []
+        @all_ambiences[recommendation.restaurant_id] << recommendation.ambiences
       end
 
       if query
