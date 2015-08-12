@@ -18,14 +18,23 @@ module Api
       @restaurants  = @user.my_friends_restaurants
       query         = params[:query]
       @recommendations = Recommendation.where(user_id: @user.my_visible_friends_ids_and_me)
+      @wishes = Wish.where(user_id: @user.my_visible_friends_ids_and_me)
 
-      # associer les ambiances aux restaurants avec une seule requête
+      # associer les ambiances et amis recommandant aux restaurants avec une seule requête
       @all_ambiences = {}
+      @all_friends_recommending = {}
       @recommendations.each do |recommendation|
         @all_ambiences[recommendation.restaurant_id] ||= []
         @all_ambiences[recommendation.restaurant_id] << recommendation.ambiences
+        @all_friends_recommending[recommendation.restaurant_id] ||= []
+        @all_friends_recommending[recommendation.restaurant_id] << recommendation.user_id
       end
 
+      @all_friends_wishing = {}
+      @wishes.each do |wish|
+        @all_friends_wishing[wish.restaurant_id] ||= []
+        @all_friends_wishing[wish.restaurant_id] << wish.user_id
+      end
       # associer les nourritures aux restaurants avec une seule requête
       @foods = Food.all
       @all_foods = {}

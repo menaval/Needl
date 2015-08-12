@@ -10,9 +10,9 @@ json.array!                    @restaurants do |restaurant|
   if @all_ambiences[restaurant.id]
     json.ambiences           @all_ambiences[restaurant.id].flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
   end
-  json.subways              @all_subways[restaurant.id]
-  json.friends_recommending User.joins(:recommendations).where(recommendations: { restaurant_id: restaurant.id }).pluck(:id)
-  json.friends_wishing      User.joins(:wishes).where(wishes: { restaurant_id: restaurant.id }).pluck(:id)
+  json.subways                @all_subways[restaurant.id]
+  json.friends_recommending   @all_friends_recommending[restaurant.id]
+  json.friends_wishing        @all_friends_wishing[restaurant.id]
   json.starter1             restaurant.starter1
   json.price_starter1       restaurant.price_starter1
   json.starter2             restaurant.starter2
