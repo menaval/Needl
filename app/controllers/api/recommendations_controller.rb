@@ -37,6 +37,7 @@ module Api
           #  si les informations récupérées ont bien toutes été remplies on enregistre la reco, update le prix du resto et on le track
           if @recommendation.save
 
+
             @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
             @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
 
@@ -44,7 +45,6 @@ module Api
             if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
               Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).first.destroy
             end
-
             # si première recommandation ou wish, alors page d'accueil du profil ceo
             if @user.recommendations.count == 1 && @user.wishes.count == 0
               Friendship.create(sender_id: 125, receiver_id: @user.id, accepted: true)
@@ -52,7 +52,7 @@ module Api
 
             #sinon on renvoie à la page du resto
             else
-              redirect_to api_restaurant_path(@recommendation.restaurant)
+              redirect_to api_restaurant_path(@recommendation.restaurant_id)
             end
 
           # si certaines infos nécessaires n'ont pas été remplies
