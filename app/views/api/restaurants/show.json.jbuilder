@@ -4,6 +4,9 @@ json.food                 @restaurant.food.name
 json.price_range          @restaurant.price_range
 json.address              @restaurant.address
 json.pictures             @pictures
+json.latitude             @restaurant.latitude
+json.longitude            @restaurant.longitude
+json.subway               @subway.name
 json.ambiences            @restaurant.ambiences_from_my_friends(@user)
 json.strengths            @restaurant.strengths_from_my_friends(@user)
 json.reviews              @restaurant.reviews_from_my_friends(@user)
@@ -21,5 +24,6 @@ json.dessert1             @restaurant.dessert1
 json.price_dessert1       @restaurant.price_dessert1
 json.dessert2             @restaurant.dessert2
 json.price_dessert2       @restaurant.price_dessert2
+json.friends_wishing      @friends_wishing
 
 
