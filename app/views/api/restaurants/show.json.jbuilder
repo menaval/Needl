@@ -1,6 +1,6 @@
 json.id                   @restaurant.id
 json.name                 @restaurant.name
-json.food                 @restaurant.food.id
+json.food                 [@restaurant.food.id, @restaurant.food.name]
 json.price_range          @restaurant.price_range
 json.address              @restaurant.address
 json.pictures             @pictures

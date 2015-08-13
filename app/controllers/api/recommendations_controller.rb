@@ -70,7 +70,7 @@ module Api
     def destroy
       reco = Recommendation.where(user_id: @user.id, restaurant_id: params['restaurant_id'].to_i).first
       reco.destroy
-      redirect_to api_restaurants(:user_email => params["user_email"], :user_token => params["user_token"])
+      redirect_to api_restaurants_path(:user_email => params["user_email"], :user_token => params["user_token"])
     end
 
 
