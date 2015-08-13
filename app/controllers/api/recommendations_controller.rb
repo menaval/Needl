@@ -6,7 +6,7 @@ module Api
 
     def index
       @user = User.find_by(authentication_token: params["user_token"])
-      @api_activities = PublicActivity::Activity.where(owner_id: @user.my_friends_ids, owner_type: 'User').order('created_at DESC').limit(20)
+      load_activities
       if params['recommendation']
         create
       elsif params['destroy']
@@ -120,21 +120,21 @@ module Api
         return restaurant
       else
         flash[:alert] = "Nous ne parvenons pas à trouver ce restaurant"
-        return redirect_to new_recommendation_path(query: @query)
+        return redirect_to new_api_recommendation_path(query: @query)
       end
     end
 
     def create_a_wish
       # si l'utilisateur a déjà mis sur sa liste de souhaits cet endroit (sachant que ça peut être fait depuis 2 endroits) alors on le lui dit
       if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
-        redirect_to restaurants_path, notice: "Restaurant déjà sur ta wishlist"
+        redirect_to api_restaurants_path, notice: "Restaurant déjà sur ta wishlist"
 
       # Si c'est une nouvelle whish on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
       elsif identify_or_create_restaurant != nil
 
         # On vérifie qu'il n'a pas déjà recommandé l'endroit, sinon pas de raison de le mettre dans les restos à tester
         if Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).length > 0
-          redirect_to restaurants_path, notice: "Cette adresse fait déjà partie des restaurants que vous recommandez"
+          redirect_to api_restaurants_path, notice: "Cette adresse fait déjà partie des restaurants que vous recommandez"
         else
 
           # On crée la recommandation à partir des infos récupérées et on track
@@ -155,7 +155,7 @@ module Api
 
       # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page
       else
-        redirect_to new_recommendation_path, notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée"
+        redirect_to api_new_recommendation_path, notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée"
       end
     end
 
@@ -246,13 +246,13 @@ module Api
     end
 
     def load_activities
-      @activities = PublicActivity::Activity.where(owner_id: @user.my_friends_ids, owner_type: 'User').order('created_at DESC').limit(20)
+      @api_activities = PublicActivity::Activity.where(owner_id: @user.my_visible_friends_ids, owner_type: 'User').order('created_at DESC')
     end
 
     def update
       recommendation = Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).first
       recommendation.update_attributes(recommendation_params)
-      redirect_to restaurant_path(recommendation.restaurant)
+      redirect_to api_restaurant_path(recommendation.restaurant_id)
     end
 
     def read_all_notification
