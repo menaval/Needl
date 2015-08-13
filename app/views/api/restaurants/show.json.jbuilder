@@ -6,7 +6,9 @@ json.address              @restaurant.address
 json.pictures             @pictures
 json.latitude             @restaurant.latitude
 json.longitude            @restaurant.longitude
-json.subway               @subway.id
+json.subways              [restaurant.subways.pluck(:id), restaurant.subways.pluck(:name)]
+json.closest_subway       @restaurant.closest_subway_id
+json.phone_number         @restaurant.phone_number
 json.ambiences            @restaurant.ambiences_from_my_friends_api(@user)
 json.strengths            @restaurant.strengths_from_my_friends_api(@user)
 json.reviews              @restaurant.reviews_from_my_friends(@user)

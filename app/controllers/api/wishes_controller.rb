@@ -16,17 +16,17 @@ module Api
 
     def create
       if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
-        redirect_to restaurants_path, notice: "Restaurant déjà sur ta wishlist"
+        redirect_to api_restaurants_path, notice: "Restaurant déjà sur ta wishlist"
       else
         @wish = Wish.create(user_id: @user.id, restaurant_id: params["restaurant_id"].to_i)
-        redirect_to restaurant_path(params["restaurant_id"].to_i), notice: "Restaurant ajouté à ta wishlist"
+        redirect_to api_restaurant_path(params["restaurant_id"].to_i), notice: "Restaurant ajouté à ta wishlist"
       end
     end
 
     def destroy
       wish = Wish.where(user_id: @user.id, restaurant_id: params["restaurant_id"].to_i).first
       wish.destroy
-      redirect_to restaurant_path(params["restaurant_id"].to_i), notice: 'Le restaurant a bien été retirée de la liste de vos envies'
+      redirect_to api_restaurant_path(params["restaurant_id"].to_i), notice: 'Le restaurant a bien été retirée de la liste de vos envies'
     end
 
     private
