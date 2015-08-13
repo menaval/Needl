@@ -41,7 +41,9 @@ Rails.application.routes.draw do
         get :autocomplete
       end
     end
-    resources :users, only: :show
+    resources :users, only: :show do
+      get :welcome_ceo
+    end
     resources :recommendations, only: [:index, :new]
     resources :friendships, only: [:index, :new]
     resources :wishes, only: [:index, :create]
