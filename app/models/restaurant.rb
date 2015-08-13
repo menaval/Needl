@@ -101,34 +101,4 @@ class Restaurant < ActiveRecord::Base
     hash.sort_by {|_key, value| value}.first[0]
   end
 
-
-
-   # Methode a garder si un jour je veux ajouter qui a recommandé avec quelle ambience
-     # def ambiences_from_my_friends(current_user)
-     #   hash = {}
-     #   ambiences_list = ["chic", "festif", "typique", "ensoleille", "fast", "casual"]
-     #   self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
-     #     reco.ambiences.each do |number|
-     #       ambience = ambiences_list[number.to_i - 1]
-     #       hash[ambience] ||= []
-     #       hash[ambience] << reco.user_id
-     #     end
-     #   end
-     #   hash.sort_by { |_name, ids| -ids.length }.first(2).to_h
-     # end
-
-     # Idem avec les forces
-       # def strengths_from_my_friends(current_user)
-       #   hash = {}
-       #   strengths_list = ["cuisine", "service", "cadre", "original", "copieux", "vins", "qte_prix"]
-       #   self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
-       #     reco.strengths.each do |number|
-       #       ambience = strengths_list[number.to_i - 1]
-       #       hash[ambience] ||= []
-       #       hash[ambience] << reco.user_id
-       #     end
-       #   end
-       #   hash.sort_by { |_name, ids| -ids.length }.first(3).to_h
-       # end
-
 end
