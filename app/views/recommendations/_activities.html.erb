@@ -39,9 +39,11 @@
                         <span class="end-quote-arrow"></span>
 
                         <!-- quote -->
-
+                        <% if activity.trackable.is_a? Recommendation %>
                           <%= activity.trackable.review == '' ? 'Je recommande !' : activity.trackable.review %>
-
+                        <% else%>
+                          Sur ma Wishlist !
+                        <% end %>
                         <br>
                         <!-- name & date -->
                         <span class="quote-name-date">
