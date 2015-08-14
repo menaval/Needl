@@ -5,8 +5,7 @@ json.authentication_token  @user.authentication_token
 json.number_of_recos       @recos.length
 json.picture               @user.picture
 if @user.id != @myself.id
-  json.invisible               @visible
-  json.friendship_id         @friendship.id
+  json.invisible               @invisible
 end
 json.recommendations       @recos do |restaurant|
   json.id               restaurant.id
