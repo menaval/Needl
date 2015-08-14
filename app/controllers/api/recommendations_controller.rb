@@ -45,15 +45,11 @@ module Api
             if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
               Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).first.destroy
             end
-            # si première recommandation ou wish, alors page d'accueil du profil ceo
+            # si première recommandation ou wish, alors devient pote avec ceo
             if @user.recommendations.count == 1 && @user.wishes.count == 0
               Friendship.create(sender_id: 125, receiver_id: @user.id, accepted: true)
-              redirect_to api_welcome_ceo_users_path(:user_email => params["user_email"], :user_token => params["user_token"])
-
-            #sinon on renvoie à la page du resto
-            else
-              redirect_to api_restaurant_path(@recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
             end
+            redirect_to api_restaurant_path(@recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
 
           # si certaines infos nécessaires n'ont pas été remplies
           else
@@ -142,15 +138,12 @@ module Api
           # @wish.restaurant = @restaurant
           @tracker.track(@user.id, 'New Wish', { "restaurant" => @restaurant.name, "user" => @user.name })
 
-          # si première wish ou reco, alors page d'accueil du profil ceo
+          # si première wish ou reco, devient pote avec le ceo
           if @user.wishes.count == 1 && @user.recommendations.count == 0
             Friendship.create(sender_id: 125, receiver_id: @user.id, accepted: true)
-            redirect_to api_welcome_ceo_users_path(:user_email => params["user_email"], :user_token => params["user_token"])
-
-          #sinon on renvoie à la page du resto
-          else
-            redirect_to api_restaurant_path(@wish.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
           end
+
+          redirect_to api_restaurant_path(@wish.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
         end
 
       # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page
