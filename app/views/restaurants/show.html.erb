@@ -32,7 +32,7 @@
             <div>
              <!-- <span class="end-quote-arrow"></span> -->
               <%= content_and_date[0] %>
-             <span class="end-quote-name"><%= "#{User.find(friend_id).name.split(" ")[0]} #{User.find(friend_id).name.split(" ")[1].first}."%></span>
+             <span class="end-quote-name"><%= "#{User.find(friend_id).name.split(" ")[0]} #{User.find(friend_id).name.split(" ")[1]? User.find(friend_id).name.split(" ")[1].first : ''}."%></span>
             </div>
           <% end %>
         </div>
@@ -96,20 +96,24 @@
 
   <!-- Menu -->
   <!-- c'est l'inverse donc mettre un point d'exclamation -->
-  <% if !@restaurant.starter1.nil? %>
+  <% if @restaurant.main_course1 != "" %>
     <div id="menu" class="text-center">
       <div class="container">
         <div class="title">Sélection du chef</div>
-        <h3>Entrees</h3>
-        <p><%= @restaurant.starter1 %> <%= @restaurant.price_starter1 %>€</p>
-        <p><%= @restaurant.starter2 %> <%= @restaurant.price_starter2 %>€</p>
+        <% if @restaurant.starter1 != "" %>
+          <h3>Entrees</h3>
+          <p><%= @restaurant.starter1 %> <%= @restaurant.price_starter1 %>€</p>
+          <p><%= @restaurant.starter2 %> <%= @restaurant.price_starter2 %>€</p>
+        <% end %>
         <h3>Plats</h3>
         <p><%= @restaurant.main_course1 %> <%= @restaurant.price_main_course1 %>€</p>
         <p><%= @restaurant.main_course2 %> <%= @restaurant.price_main_course2 %>€</p>
         <p><%= @restaurant.main_course3 %> <%= @restaurant.price_main_course3 %>€</p>
-        <h3>Desserts</h3>
-        <p><%= @restaurant.dessert1 %> <%= @restaurant.price_dessert1 %>€</p>
-        <p><%= @restaurant.dessert2 %> <%= @restaurant.price_dessert2 %>€</p>
+        <% if @restaurant.dessert1 != "" %>
+          <h3>Desserts</h3>
+          <p><%= @restaurant.dessert1 %> <%= @restaurant.price_dessert1 %>€</p>
+          <p><%= @restaurant.dessert2 %> <%= @restaurant.price_dessert2 %>€</p>
+        <% end %>
       </div>
     <div>
   <% end %>
