@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150724132524) do
+ActiveRecord::Schema.define(version: 20150815104929) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -124,18 +124,18 @@ ActiveRecord::Schema.define(version: 20150724132524) do
     t.string   "full_address"
     t.string   "starter1"
     t.string   "starter2"
-    t.integer  "price_starter1"
-    t.integer  "price_starter2"
+    t.float    "price_starter1"
+    t.float    "price_starter2"
     t.string   "main_course1"
     t.string   "main_course2"
     t.string   "main_course3"
-    t.integer  "price_main_course1"
-    t.integer  "price_main_course2"
-    t.integer  "price_main_course3"
+    t.float    "price_main_course1"
+    t.float    "price_main_course2"
+    t.float    "price_main_course3"
     t.string   "dessert1"
     t.string   "dessert2"
-    t.integer  "price_dessert1"
-    t.integer  "price_dessert2"
+    t.float    "price_dessert1"
+    t.float    "price_dessert2"
   end
 
   add_index "restaurants", ["food_id"], name: "index_restaurants_on_food_id", using: :btree
