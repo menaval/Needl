@@ -7,8 +7,11 @@ json.array! @api_activities do |activity|
   json.restaurant_picture        restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url
   json.restaurant_id             restaurant.id
   json.restaurant_food           restaurant.food.name
-  json.restaurant_price_range    restaurant.price_range
-  json.review                    activity.trackable.review
+  if restaurant.price_range
+    json.restaurant_price_range    restaurant.price_range
+  end
+  if activity.trackable.is_a? Recommendation
+    json.review                    activity.trackable.review
+  end
   json.date                      activity.created_at.strftime('%-d %B')
-
 end
