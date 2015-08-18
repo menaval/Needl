@@ -29,7 +29,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @tracker.track(current_user.id, 'signin', {"user" => user.name, "browser" => browser.name} )
       end
 
-      render json: user
+      render json: {user: user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: user.id}).count}
     end
   end
 end
