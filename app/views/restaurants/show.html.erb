@@ -102,17 +102,17 @@
         <div class="title">Sélection du chef</div>
         <% if @restaurant.starter1 != "" %>
           <h3>Entrees</h3>
-          <p><%= @restaurant.starter1 %> <br><%= @restaurant.price_starter1 %>€</p>
-          <p><%= @restaurant.starter2 %> <br><%= @restaurant.price_starter2 %>€</p>
+          <p><%= @restaurant.starter1 %><%= @restaurant.description_starter1 == "" ? "" : "<br><em>#{@restaurant.description_starter1}</em>".html_safe %><br><%= @restaurant.price_starter1 %>€</p>
+          <p><%= @restaurant.starter2 %><%= @restaurant.description_starter2 == "" ? "" : "<br><em>#{@restaurant.description_starter2}</em>".html_safe %><br><%= @restaurant.price_starter2 %>€</p>
         <% end %>
         <h3>Plats</h3>
-        <p><%= @restaurant.main_course1 %> <br><%= @restaurant.price_main_course1 %>€</p>
-        <p><%= @restaurant.main_course2 %> <br><%= @restaurant.price_main_course2 %>€</p>
-        <p><%= @restaurant.main_course3 %> <br><%= @restaurant.price_main_course3 %>€</p>
+        <p><%= @restaurant.main_course1 %><%= @restaurant.description_main_course1 == "" ? "" : "<br><em>#{@restaurant.description_main_course1}</em>".html_safe %><br><%= @restaurant.price_main_course1 %>€</p>
+        <p><%= @restaurant.main_course2 %><%= @restaurant.description_main_course2 == "" ? "" : "<br><em>#{@restaurant.description_main_course2}</em>".html_safe %><br><%= @restaurant.price_main_course2 %>€</p>
+        <p><%= @restaurant.main_course3 %><%= @restaurant.description_main_course3 == "" ? "" : "<br><em>#{@restaurant.description_main_course3}</em>".html_safe %><br><%= @restaurant.price_main_course3 %>€</p>
         <% if @restaurant.dessert1 != "" %>
           <h3>Desserts</h3>
-          <p><%= @restaurant.dessert1 %> <br><%= @restaurant.price_dessert1 %>€</p>
-          <p><%= @restaurant.dessert2 %> <br><%= @restaurant.price_dessert2 %>€</p>
+          <p><%= @restaurant.dessert1 %><%= @restaurant.description_dessert1 == "" ? "" : "<br><em>#{@restaurant.description_dessert1}</em>".html_safe %><br><%= @restaurant.price_dessert1 %>€</p>
+          <p><%= @restaurant.dessert2 %><%= @restaurant.description_dessert2 == "" ? "" : "<br><em>#{@restaurant.description_dessert2}</em>".html_safe %><br><%= @restaurant.price_dessert2 %>€</p>
         <% end %>
       </div>
     <div>
