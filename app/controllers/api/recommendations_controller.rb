@@ -53,12 +53,12 @@ module Api
 
           # si certaines infos nécessaires n'ont pas été remplies
           else
-            redirect_to new_api_recommendation_path(:user_email => params["user_email"], :user_token => params["user_token"])
+            redirect_to new_api_recommendation_path(:user_email => params["user_email"], :user_token => params["user_token"], :notice =>"Les ambiances, points forts ou le prix n'ont pas été remplis")
           end
 
         # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page
         else
-          redirect_to new_api_recommendation_path(:user_email => params["user_email"], :user_token => params["user_token"])
+          redirect_to new_api_recommendation_path(:user_email => params["user_email"], :user_token => params["user_token"], :notice => "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée")
         end
       end
     end
@@ -66,7 +66,7 @@ module Api
     def destroy
       reco = Recommendation.where(user_id: @user.id, restaurant_id: params['restaurant_id'].to_i).first
       reco.destroy
-      redirect_to api_restaurants_path(:user_email => params["user_email"], :user_token => params["user_token"])
+      redirect_to api_restaurants_path(:user_email => params["user_email"], :user_token => params["user_token"], :notice => "Le restaurant a bien été retiré de vos recommandations")
     end
 
 
@@ -123,14 +123,14 @@ module Api
     def create_a_wish
       # si l'utilisateur a déjà mis sur sa liste de souhaits cet endroit (sachant que ça peut être fait depuis 2 endroits) alors on le lui dit
       if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
-        redirect_to api_restaurants_path(:user_email => params["user_email"], :user_token => params["user_token"])
+        redirect_to api_restaurants_path(:user_email => params["user_email"], :user_token => params["user_token"], :notice => "Restaurant déjà sur ta wishlist")
 
       # Si c'est une nouvelle whish on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
       elsif identify_or_create_restaurant != nil
 
         # On vérifie qu'il n'a pas déjà recommandé l'endroit, sinon pas de raison de le mettre dans les restos à tester
         if Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).length > 0
-          redirect_to api_restaurants_path(:user_email => params["user_email"], :user_token => params["user_token"])
+          redirect_to api_restaurants_path(:user_email => params["user_email"], :user_token => params["user_token"], :notice => "Cette adresse fait déjà partie des restaurants que vous recommandez")
         else
 
           # On crée la recommandation à partir des infos récupérées et on track
@@ -148,7 +148,7 @@ module Api
 
       # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page
       else
-        redirect_to api_new_recommendation_path(:user_email => params["user_email"], :user_token => params["user_token"])
+        redirect_to api_new_recommendation_path(:user_email => params["user_email"], :user_token => params["user_token"], :notice => "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée")
       end
     end
 
