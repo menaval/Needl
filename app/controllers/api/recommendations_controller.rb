@@ -53,12 +53,12 @@ module Api
 
           # si certaines infos nécessaires n'ont pas été remplies
           else
-            render(:json => {notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"}, :status => 409, :layout => false)
+            redirect_to new_api_recommendation_path(:user_email => params["user_email"], :user_token => params["user_token"], :notice =>"Les ambiances, points forts ou le prix n'ont pas été remplis")
           end
 
         # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page
         else
-          render(:json => {notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée"}, :status => 409, :layout => false)
+          redirect_to new_api_recommendation_path(:user_email => params["user_email"], :user_token => params["user_token"], :notice => "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée")
         end
       end
     end
@@ -66,7 +66,7 @@ module Api
     def destroy
       reco = Recommendation.where(user_id: @user.id, restaurant_id: params['restaurant_id'].to_i).first
       reco.destroy
-      render(:json => {notice: "Le restaurant a bien été retiré de vos recommandations"}, :status => 409, :layout => false)
+      redirect_to api_restaurants_path(:user_email => params["user_email"], :user_token => params["user_token"], :notice => "Le restaurant a bien été retiré de vos recommandations")
     end
 
 
@@ -148,7 +148,7 @@ module Api
 
       # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page
       else
-        render(:json => {notice: "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée"}, :status => 409, :layout => false)
+        redirect_to api_new_recommendation_path(:user_email => params["user_email"], :user_token => params["user_token"], :notice => "Nous n'avons pas retrouvé votre restaurant, choisissez parmi la liste qui vous est proposée")
       end
     end
 
