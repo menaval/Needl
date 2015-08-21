@@ -7,7 +7,7 @@ module Api
 
     def index
       @user = User.find_by(authentication_token: params["user_token"])
-      @friends = User.where(id: @user.my_friends_ids)
+      @friends = User.where(id: @user.my_friends_ids).order(:name)
       @requests = User.where(id: @user.my_requests_received_ids)
       # chercher une méthode 'automatique'
       if params["accepted"] == "false"

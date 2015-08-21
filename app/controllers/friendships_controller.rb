@@ -3,7 +3,7 @@ class FriendshipsController < ApplicationController
 
   def index
     @requests_received = User.where(id: current_user.my_requests_received_ids)
-    @friends = User.where(id: current_user.my_friends_ids)
+    @friends = User.where(id: current_user.my_friends_ids).order(:name)
   end
 
   def new
