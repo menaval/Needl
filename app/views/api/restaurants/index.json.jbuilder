@@ -4,15 +4,18 @@ json.array!                    @restaurants do |restaurant|
   json.address              restaurant.address
   json.latitude             restaurant.latitude
   json.longitude            restaurant.longitude
-  json.pictures             restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.map {|element| element.picture} : [restaurant.picture_url]
+  if @all_pictures[restaurant.id]
+    json.pictures           @all_pictures[restaurant.id]
+  else
+    json.pictures           restaurant.picture_url
+  end
   json.food                 [restaurant.food.id, restaurant.food.name]
   json.price_range          restaurant.price_range
   json.phone_number         restaurant.phone_number
   if @all_ambiences[restaurant.id]
     json.ambiences           @all_ambiences[restaurant.id].flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
   end
-  json.subways              [restaurant.subways.pluck(:id), restaurant.subways.pluck(:name)]
-  json.closest_subway        restaurant.closest_subway_id
+  json.subways          @all_subways[restaurant.id]
   json.friends_recommending   @all_friends_recommending[restaurant.id]
   json.friends_wishing        @all_friends_wishing[restaurant.id]
   json.starter1             restaurant.starter1

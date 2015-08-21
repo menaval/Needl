@@ -14,13 +14,15 @@ module Api
     end
 
     def index
-      @user         = User.find_by(authentication_token: params["user_token"])
-      restaurants_ids  = @user.my_friends_restaurants_ids + @user.my_restaurants_ids
-      @restaurants = Restaurant.where(id: restaurants_ids)
-      query         = params[:query]
-      my_visible_friends_and_me = @user.my_visible_friends_ids_and_me
-      @recommendations = Recommendation.where(user_id: my_visible_friends_and_me)
-      @wishes = Wish.where(user_id: my_visible_friends_and_me)
+
+      @user                        = User.find_by(authentication_token: params["user_token"])
+      my_visible_friends_and_me    = @user.my_visible_friends_ids_and_me
+      restaurants_ids              = @user.my_friends_restaurants_ids + @user.my_restaurants_ids
+      @restaurants                 = Restaurant.where(id: restaurants_ids)
+      @recommendations             = Recommendation.where(user_id: my_visible_friends_and_me)
+      @wishes                      = Wish.where(user_id: my_visible_friends_and_me)
+      restaurant_pictures          = RestaurantPicture.where(restaurant_id: restaurants_ids)
+      restaurant_subways           = RestaurantSubway.where(restaurant_id: restaurants_ids)
 
       # associer les ambiances et amis recommandant aux restaurants avec une seule requête
       @all_ambiences = {}
@@ -36,6 +38,18 @@ module Api
       @wishes.each do |wish|
         @all_friends_wishing[wish.restaurant_id] ||= []
         @all_friends_wishing[wish.restaurant_id] << wish.user_id
+      end
+
+      @all_pictures = {}
+      restaurant_pictures.each do |restaurant_picture|
+        @all_pictures[restaurant_picture.restaurant_id] ||= []
+        @all_pictures[restaurant_picture.restaurant_id] << restaurant_picture.picture
+      end
+
+      @all_subways = {}
+      restaurant_subways.each do |restaurant_subway|
+        @all_subways[restaurant_subway.restaurant_id] ||= []
+        @all_subways[restaurant_subway.restaurant_id] << restaurant_subway.subway_id
       end
 
     end
