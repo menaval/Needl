@@ -111,6 +111,9 @@ module Api
         phone_number: search.contact.phone ? search.contact.phone : nil
       )
 
+      # pour rendre plus vite dans l'api
+      restaurant.food_name = Food.find(restaurant.food_id).name
+
       if restaurant.save
         link_to_subways(restaurant)
         return restaurant
@@ -213,6 +216,17 @@ module Api
           restaurant_id: restaurant.id,
           subway_id:     subway.id
           )
+
+        # enregistrer les subways dans la base de données restos pour rendre plus rapidement l'api
+        restaurant.subway_id = restaurant.closest_subway_id
+        restaurant.subway_name = Subway.find(restaurant.subway_id).name
+        array = []
+        restaurant.subways.each do |subway|
+          array << {subway.id => subway.name}
+        end
+        restaurant.subways_near = array
+
+        restaurant.save
       end
     end
 
