@@ -1,13 +1,13 @@
 json.id                         @restaurant.id
 json.name                       @restaurant.name
-json.food                      [@restaurant.food.id, @restaurant.food.name]
+json.food                      [@restaurant.food_id, @restaurant.food_name]
 json.price_range                @restaurant.price_range
 json.address                    @restaurant.address
 json.pictures                   @pictures
 json.latitude                   @restaurant.latitude
 json.longitude                  @restaurant.longitude
 json.subways                   [@restaurant.subways.pluck(:id), @restaurant.subways.pluck(:name)]
-json.closest_subway             @restaurant.closest_subway_id
+json.closest_subway             @restaurant.subway_id
 json.phone_number               @restaurant.phone_number
 json.ambiences                  @restaurant.ambiences_from_my_friends_api(@user)
 json.strengths                  @restaurant.strengths_from_my_friends_api(@user)
