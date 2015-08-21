@@ -55,19 +55,14 @@ class User < ActiveRecord::Base
     user_ids += self.member_twos.pluck(:id)
   end
 
-  def my_friends_restaurants
-    user_ids = my_visible_friends_ids + [self.id]
+  def my_friends_restaurants_ids
+    user_ids = my_visible_friends_ids
     restos_ids = Restaurant.joins(:recommendations).where(recommendations: { user_id: user_ids }).pluck(:id)
-    restos_ids += Restaurant.joins(:wishes).where(wishes: {user_id: user_ids})
-    Restaurant.where(id: restos_ids)
-    # Restaurant.joins(:recommendations, :wishes).where("recommendations.user_id = ? OR wishes.user_id = ?", user_ids, user_ids)
-    # pas performant
   end
 
-  def my_restaurants
+  def my_restaurants_ids
     restos_ids = Restaurant.joins(:recommendations).where(recommendations: { user_id: self.id }).pluck(:id)
-    restos_ids += Restaurant.joins(:wishes).where(wishes: {user_id: self.id})
-    Restaurant.where(id: restos_ids)
+    restos_ids += Restaurant.joins(:wishes).where(wishes: {user_id: self.id}).pluck(:id)
     # Restaurant.joins(:recommendations, :wishes).where("recommendations.user_id = ? OR wishes.user_id = ?", self.id, self.id)
     # pas performant comme code, 3 appels
   end
@@ -106,6 +101,7 @@ class User < ActiveRecord::Base
       else
         user.email = auth.info.email
       end
+      user.code = SecureRandom.hex(3)
       user.password = Devise.friendly_token[0,20]
       user.name = auth.info.name
       user.picture = auth.info.image.gsub('http://','https://') + "?width=1000&height=1000"

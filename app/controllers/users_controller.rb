@@ -9,6 +9,9 @@ class UsersController < ApplicationController
     code = params[:verification][:code]
     if code == "friend" || code == "guest" || code == "hec_2015"
       redirect_to new_recommendation_path, notice: "Partage ta première reco avant de découvrir celles de tes amis !"
+    elsif User.find_by(code: code)
+      Friendship.create(sender_id: User.find_by(code: code).id, receiver_id: current_user.id, accepted: false)
+      redirect_to new_recommendation_path, notice: "Partage ta première reco avant de découvrir celles de tes amis !"
     else
       redirect_to access_users_path, notice: "Le code n'est pas valide"
     end
