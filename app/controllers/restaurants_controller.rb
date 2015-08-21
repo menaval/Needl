@@ -15,7 +15,8 @@ class RestaurantsController < ApplicationController
 
   def index
     query         = params[:query]
-    @restaurants  = current_user.my_friends_restaurants
+    restaurants_ids  = current_user.my_friends_restaurants_ids + current_user.my_restaurants_ids
+    @restaurants = Restaurant.where(id: restaurants_ids)
 
     if query
       if @restaurants.by_price_range(query[:price_range]).by_food(query[:food]).by_friend(query[:friend]).by_subway(query[:subway]).by_ambience(query[:ambience], query[:user_id]).count > 0

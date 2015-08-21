@@ -15,7 +15,8 @@ module Api
 
     def index
       @user         = User.find_by(authentication_token: params["user_token"])
-      @restaurants  = @user.my_friends_restaurants
+      restaurants_ids  = @user.my_friends_restaurants_ids + @user.my_restaurants_ids
+      @restaurants = Restaurant.where(id: restaurants_ids)
       query         = params[:query]
       my_visible_friends_and_me = @user.my_visible_friends_ids_and_me
       @recommendations = Recommendation.where(user_id: my_visible_friends_and_me)
