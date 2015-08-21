@@ -37,45 +37,7 @@ module Api
         @all_friends_wishing[wish.restaurant_id] ||= []
         @all_friends_wishing[wish.restaurant_id] << wish.user_id
       end
-      # associer les nourritures aux restaurants avec une seule requête
-      # @foods = Food.all
-      # @all_foods = {}
-      # @foods.each do |food|
-      #   food.restaurants.where(id: @restaurants.pluck(:id)).each do |restaurant|
-      #     @all_foods[restaurant.id] = food.id
-      #   end
-      # end
 
-      # @subways = Subway.all
-      # @all_subways = {}
-      # @subways.each do |subway|
-      #   subway.restaurants.where(id: @restaurants.pluck(:id)).each do |restaurant|
-      #     @all_subways[restaurant.id] ||= []
-      #     @all_subways[restaurant.id] << subway.id
-      #   end
-      # end
-
-      # problème de cette méthode, il leur faut tous des restaurantpictures, ce qui n'est pas faisable immédiatement
-      # @all_pictures = {}
-      # RestaurantPicture.where(restaurant_id: @restaurants.pluck(:id)).each do |picture|
-      #   @all_pictures[picture.restaurant_id] = picture
-      # end
-
-      if query
-        if @restaurants.by_price_range(query[:price_range]).by_food(query[:food]).by_friend(query[:friend]).by_subway(query[:subway]).by_ambience(query[:ambience], query[:user_id]).count > 0
-          @restaurants = @restaurants.by_price_range(query[:price_range]).by_food(query[:food]).by_friend(query[:friend]).by_subway(query[:subway]).by_ambience(query[:ambience], query[:user_id])
-        else
-          flash[:notice] = "Aucun restaurant pour cette recherche"
-        end
-      else
-        if current_user.recommendations.count == 0
-          redirect_to new_recommendation_path, notice: "Partage ta première reco avant de découvrir celles de tes amis !"
-        end
-      end
-
-      # pour le filter
-      # ici 40 c'est mon ID donc on ne voit que mes adresses
-      # http://localhost:3000/restaurants?query[price_range]=&query[food]=&query[friend]=40&query[subway]=&commit=Chercher
     end
 
     def autocomplete
