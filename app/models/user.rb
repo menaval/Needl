@@ -101,6 +101,7 @@ class User < ActiveRecord::Base
       else
         user.email = auth.info.email
       end
+      user.code = SecureRandom.hex(3)
       user.password = Devise.friendly_token[0,20]
       user.name = auth.info.name
       user.picture = auth.info.image.gsub('http://','https://') + "?width=1000&height=1000"
