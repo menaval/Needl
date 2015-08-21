@@ -110,6 +110,9 @@ class RecommendationsController < ApplicationController
       phone_number: search.contact.phone ? search.contact.phone : nil
     )
 
+    # pour rendre plus vite dans l'api
+    restaurant.food_name = Food.find(restaurant.food_id).name
+
     if restaurant.save
       link_to_subways(restaurant)
       return restaurant
@@ -215,6 +218,11 @@ class RecommendationsController < ApplicationController
         restaurant_id: restaurant.id,
         subway_id:     subway.id
         )
+
+      # enregistrer le subway dans la base de données restos pour rendre plus rapidement l'api
+      restaurant.subway_id = restaurant.closest_subway_id
+      restaurant.subway_name = Subway.find(restaurant.subway_id).name
+      restaurant.save
     end
   end
 
