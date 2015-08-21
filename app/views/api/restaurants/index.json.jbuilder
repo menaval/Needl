@@ -9,13 +9,14 @@ json.array!                    @restaurants do |restaurant|
   else
     json.pictures           restaurant.picture_url
   end
-  json.food                 [restaurant.food.id, restaurant.food.name]
+  json.food                 [restaurant.food_id, restaurant.food_name]
   json.price_range          restaurant.price_range
   json.phone_number         restaurant.phone_number
   if @all_ambiences[restaurant.id]
     json.ambiences           @all_ambiences[restaurant.id].flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
   end
-  json.subways          @all_subways[restaurant.id]
+  json.subways                @all_subways[restaurant.id]
+  json.subway                 restaurant.subway_id
   json.friends_recommending   @all_friends_recommending[restaurant.id]
   json.friends_wishing        @all_friends_wishing[restaurant.id]
   json.starter1             restaurant.starter1
