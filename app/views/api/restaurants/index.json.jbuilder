@@ -34,3 +34,4 @@ json.array!                    @restaurants do |restaurant|
   json.dessert2             restaurant.dessert2
   json.price_dessert2       restaurant.price_dessert2
 end
+
