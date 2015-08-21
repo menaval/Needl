@@ -21,6 +21,7 @@ module Api
       my_visible_friends_and_me = @user.my_visible_friends_ids_and_me
       @recommendations = Recommendation.where(user_id: my_visible_friends_and_me)
       @wishes = Wish.where(user_id: my_visible_friends_and_me)
+      restaurant_pictures = RestaurantPicture.where(restaurant_id: restaurants_ids)
 
       # associer les ambiances et amis recommandant aux restaurants avec une seule requête
       @all_ambiences = {}
@@ -30,6 +31,11 @@ module Api
         @all_ambiences[recommendation.restaurant_id] << recommendation.ambiences
         @all_friends_recommending[recommendation.restaurant_id] ||= []
         @all_friends_recommending[recommendation.restaurant_id] << recommendation.user_id
+      end
+      @all_pictures = {}
+      restaurant_pictures.each do |restaurant_picture|
+        @all_pictures[restaurant_picture.restaurant_id] ||= []
+        @all_pictures[restaurant_picture.restaurant_id] << restaurant_picture.picture
       end
 
       @all_friends_wishing = {}
