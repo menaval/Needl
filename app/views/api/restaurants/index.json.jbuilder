@@ -7,7 +7,7 @@ json.array!                    @restaurants do |restaurant|
   if @all_pictures[restaurant.id]
     json.pictures           @all_pictures[restaurant.id]
   else
-    json.pictures           restaurant.picture_url
+    json.pictures           [restaurant.picture_url]
   end
   json.food                 [restaurant.food_id, restaurant.food_name]
   json.price_range          restaurant.price_range
