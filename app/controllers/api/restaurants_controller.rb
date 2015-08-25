@@ -46,17 +46,6 @@ module Api
         @all_pictures[restaurant_picture.restaurant_id] << restaurant_picture.picture
       end
 
-      @all_subways = {}
-      restaurant_subways.each do |restaurant_subway|
-        @all_subways[restaurant_subway.restaurant_id] ||= []
-        @all_subways[restaurant_subway.restaurant_id] << restaurant_subway.subway_id
-      end
-
-      @list_of_subways = {}
-      Subway.all.each do |subway|
-        @list_of_subways[subway.id] ||= []
-        @list_of_subways[subway.id] << subway.name
-      end
     end
 
     def autocomplete
