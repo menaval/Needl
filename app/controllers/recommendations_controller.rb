@@ -123,15 +123,15 @@ class RecommendationsController < ApplicationController
   end
 
   def create_a_wish
-    # si l'utilisateur a déjà mis sur sa liste de souhaits cet endroit (sachant que ça peut être fait depuis 2 endroits) alors on le lui dit
-    if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
+    # si l'utilisateur a déjà mis sur sa liste de souhaits cet endroit (sachant que ça peut être fait depuis 2 endroits) alors on le lui dit (on vérifie qu'on ne choppe pas un id de foursquare non transformable en integer)
+    if params["restaurant_id"].length <= 9 && Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
       redirect_to restaurants_path, notice: "Restaurant déjà sur ta wishlist"
 
     # Si c'est une nouvelle whish on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
     elsif identify_or_create_restaurant != nil
 
       # On vérifie qu'il n'a pas déjà recommandé l'endroit, sinon pas de raison de le mettre dans les restos à tester
-      if Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).length > 0
+      if params["restaurant_id"].length <= 9 && Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).length > 0
         redirect_to restaurants_path, notice: "Cette adresse fait déjà partie des restaurants que vous recommandez"
       else
         # On crée la recommandation à partir des infos récupérées et on track
