@@ -12,12 +12,13 @@
     <%= link_to "Appeler", "tel:#{@restaurant.phone_number}", class: "btn btn-danger", id:"call" %>
   </div>
 
-  <% if Recommendation.where(user_id: current_user.my_visible_friends_ids_and_me, restaurant_id: @restaurant.id).length > 0 %>
   <!-- Final word -->
 
     <div id="mots_de_la_fin" class="text-center">
       <div class="container">
-        <div class="title">Ils l'ont recommandé</div>
+        <div class="title"><%=@number_of_friends_recommending > 0 ? "Ils l'ont recommandé" : "Aucun de tes amis ne l'a encore recommandé" %></div>
+
+        <% if @number_of_friends_recommending > 0 %>
 
         <div class="end-word clearfix slider-nav">
           <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
@@ -36,6 +37,9 @@
             </div>
           <% end %>
         </div>
+
+        <% end %>
+
         <% if Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 %>
           <%= link_to new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button' do %>
             <span class="button-icon icon-reco-recommend"></span>
@@ -44,6 +48,8 @@
         <% end %>
       </div>
     </div>
+
+  <% if @number_of_friends_recommending > 0 %>
 
   <!-- Ambiences -->
 
@@ -67,6 +73,7 @@
         <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user), ambience_or_strength: "strength" %>
       </div>
     </div>
+
   <% end %>
 
   <!-- Wish -->
@@ -96,7 +103,7 @@
 
   <!-- Menu -->
   <!-- c'est l'inverse donc mettre un point d'exclamation -->
-  <% if @restaurant.main_course1 != "" %>
+  <% if @restaurant.main_course1 != "" && @restaurant.main_course1 != nil %>
     <div id="menu" class="text-center">
       <div class="container">
         <div class="title">Sélection du chef</div>

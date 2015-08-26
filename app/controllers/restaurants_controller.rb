@@ -6,6 +6,7 @@ class RestaurantsController < ApplicationController
     @subway = Subway.find(@restaurant.closest_subway_id)
     @wish = Wish.new
     @friends_wishing = @restaurant.friends_wishing_this_restaurant(current_user)
+    @number_of_friends_recommending = Recommendation.where(user_id: current_user.my_visible_friends_ids_and_me, restaurant_id: @restaurant.id).length
   end
 
   def map_box
