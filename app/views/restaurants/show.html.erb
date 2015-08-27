@@ -7,7 +7,7 @@
   </div>
   <!-- Reservation -->
 
-  <div class="contact-restaurant clearfix <%= Recommendation.where(user_id: current_user.my_visible_friends_ids_and_me, restaurant_id: @restaurant.id).length == 0 ? 'white-background' : 'grey-background'%>">
+  <div class="contact-restaurant clearfix grey-background%>">
     <p>Réserver une table</p>
     <%= link_to "Appeler", "tel:#{@restaurant.phone_number}", class: "btn btn-danger", id:"call" %>
   </div>
@@ -40,7 +40,7 @@
 
         <% end %>
 
-        <% if Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 %>
+        <% if @did_i_recommend == false %>
           <%= link_to new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button' do %>
             <span class="button-icon icon-reco-recommend"></span>
             J'approuve !
@@ -89,7 +89,7 @@
           </div>
         <% end %>
       </div>
-      <% if Wish.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 && Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length == 0 %>
+      <% if @did_i_wish == false && @did_i_recommend == false %>
         <%= form_for(@wish, class: 'form', html: { id: 'new-wish'}) do |f| %>
           <%= f.hidden_field :user_id, value: current_user.id %>
           <%= f.hidden_field :restaurant_id, value: @restaurant.id %>
@@ -132,7 +132,7 @@
 
       <div class="title">Lieu</div>
       <p><%= @restaurant.address%></p>
-      <p class="subway"><span class="subway-icon"></span><%= @subway.name %></p>
+      <p class="subway"><span class="subway-icon"></span><%= @restaurant.subway_name %></p>
     </div>
   </div>
 
@@ -149,17 +149,17 @@
 
 
   <!-- Modifer / Supprimer / Retirer -->
-  <% if Wish.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 || Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 %>
+  <% if @did_i_wish == true || @did_i_recommend == true %>
     <div class="restaurant-interactions clearfix dark">
       <!-- retirer -->
-      <% if Wish.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 %>
+      <% if @did_i_wish == true %>
         <%= link_to wish_path(Wish.where(user_id: current_user.id, restaurant_id: @restaurant.id).first.id), class: "end-word-button dark", method: :delete do %>
         <span class="button-icon icon-unlike"></span>
         Retirer de mes envies
         <% end %>
       <% end %>
 
-      <% if Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0 %>
+      <% if @did_i_recommend == true %>
         <!-- modifier -->
 
         <%= link_to new_recommendation_path(restaurant_id: @restaurant.id, restaurant_origin: 'db', restaurant_name: @restaurant.name), class: 'end-word-button dark' do %>

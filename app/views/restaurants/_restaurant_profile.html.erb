@@ -1,7 +1,7 @@
 <div id="image_field" style="background: url(<%= image_path(picture) %>); background-repeat:no-repeat; background-size:cover; background-position:50% 50%">
   <div id="text-left">
     <h1><%= restaurant.name %></h1>
-    <h3><%= restaurant.food.name %></h3>
+    <h3><%= restaurant.food_name %></h3>
   </div>
   <!-- au cas ou il y ait un wish sur un resto sur lequel pas encore de reco -->
   <% if restaurant.price_range %>

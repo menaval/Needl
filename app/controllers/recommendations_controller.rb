@@ -12,7 +12,6 @@ class RecommendationsController < ApplicationController
   end
 
   def create
-
     is_a_wish = params[:recommendation][:wish]
     if is_a_wish == "true"
       create_a_wish
