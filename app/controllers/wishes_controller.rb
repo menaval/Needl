@@ -1,9 +1,5 @@
 class WishesController < ApplicationController
 
-  def index
-    @wish = Wish.all
-  end
-
   def create
     if Wish.where(restaurant_id:params["wish"]["restaurant_id"].to_i, user_id: current_user.id).any?
     redirect_to restaurants_path, notice: "Restaurant déjà sur ta wishlist"

@@ -1,12 +1,12 @@
 class RestaurantsController < ApplicationController
   def show
     @restaurant = Restaurant.find(params[:id])
-    @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
     @pictures = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.map {|element| element.picture} : [@restaurant.picture_url]
-    @subway = Subway.find(@restaurant.closest_subway_id)
     @wish = Wish.new
     @friends_wishing = @restaurant.friends_wishing_this_restaurant(current_user)
     @number_of_friends_recommending = Recommendation.where(user_id: current_user.my_visible_friends_ids_and_me, restaurant_id: @restaurant.id).length
+    @did_i_recommend = Recommendation.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0
+    @did_i_wish = Wish.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0
   end
 
   def map_box
