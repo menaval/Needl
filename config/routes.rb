@@ -55,5 +55,6 @@ Rails.application.routes.draw do
     resources :friendships, only: [:index, :new]
     resources :wishes, only: [:index, :create]
     resources :registrations, only: [:edit, :update]
+    resources :user_wishlist_pictures, only: [:new, :create]
   end
 end
