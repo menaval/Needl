@@ -42,9 +42,16 @@ Rails.application.routes.draw do
       end
     end
     resources :users, only: :show do
-      get :welcome_ceo
+      collection do
+        get :welcome_ceo
+      end
     end
-    resources :recommendations, only: [:index, :new]
+    resources :recommendations, only: [:index, :new] do
+      collection do
+        get :modify
+      end
+    end
+
     resources :friendships, only: [:index, :new]
     resources :wishes, only: [:index, :create]
     resources :registrations, only: [:edit, :update]
