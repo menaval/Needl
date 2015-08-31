@@ -15,6 +15,12 @@ module Api
 
     end
 
+    def modify
+      @user = User.find_by(authentication_token: params["user_token"])
+      @restaurant = Restaurant.find(params["restaurant_id"])
+      @recommendation = Recommendation.where(restaurant_id: @restaurant.id, user_id: @user.id).first
+    end
+
     private
 
     def create
