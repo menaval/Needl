@@ -1,11 +1,11 @@
 module Api
-  class UserWishlistPictureController < ApplicationController
+  class UserWishlistPicturesController < ApplicationController
     acts_as_token_authentication_handler_for User
     skip_before_action :verify_authenticity_token
     skip_before_filter :authenticate_user!
 
 
-    def new
+    def create
       @user = User.find_by(authentication_token: params["user_token"])
       @user_wishlist = UserWishlistPicture.new
       @user_wishlist.user_id = @user.id
