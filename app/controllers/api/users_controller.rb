@@ -15,5 +15,22 @@ module Api
       end
     end
 
+    def new_parse_installation
+      # client = Parse::Client.new(:application_id => ENV['PARSE_APPLICATION_ID'], :api_key => ENV['PARSE_API_KEY'])
+      Parse.init :application_id => ENV['PARSE_APPLICATION_ID'],
+                 :api_key        => ENV['PARSE_API_KEY']
+      @user = User.find(params["id"].to_i)
+      @device_token = params["device_token"]
+      @device_type = params["device_type"]
+
+      # créer l'installation
+
+    end
+
+    def parse_initialization
+      client = Parse.init :application_id => ENV['PARSE_APPLICATION_ID'],
+                 :api_key => ENV['PARSE_API_KEY']
+    end
+
   end
 end

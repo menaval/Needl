@@ -21,6 +21,25 @@ module Api
       @recommendation = Recommendation.where(restaurant_id: @restaurant.id, user_id: @user.id).first
     end
 
+    def notif_reco
+
+      client = Parse::Client.new(:application_id => ENV['PARSE_APPLICATION_ID'], :api_key => ENV['PARSE_API_KEY'])
+      @user = User.find_by(authentication_token: params["user_token"])
+      @status = params["status"]
+      @restaurant = Restaurant.find(params["restaurant_id"])
+      if status == "recommendation"
+        @user.user_friends.each do |friend|
+         # envoyer à chaque friend que @user a fait une nouvelle reco du resto @restaurant
+        end
+
+      else
+        @user.user_friends.each do |friend|
+          # envoyer à chaque friend que @user a fait un nouveau wish du resto @restaurant
+        end
+      end
+
+    end
+
     private
 
     def create

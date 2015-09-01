@@ -215,6 +215,9 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.3)
       mime-types
+    parse-ruby-client (0.3.0)
+      faraday
+      faraday_middleware
     passenger (5.0.10)
       rack
       rake (>= 0.8.1)
@@ -351,6 +354,7 @@ DEPENDENCIES
   omniauth-facebook
   omniauth-facebook-access-token
   paperclip
+  parse-ruby-client
   passenger
   pg
   pry-byebug

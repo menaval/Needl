@@ -30,6 +30,21 @@ module Api
       @new_potential_friends = @user.user_friends - User.where(id: @user.my_friends_ids) - User.where(id: @user.my_requests_sent_ids) - User.where(id: @user.my_requests_received_ids) - User.where(id: @user.refused_relations_ids) - [@user]
     end
 
+    def notif_friendship
+
+      client = Parse::Client.new(:application_id => ENV['PARSE_APPLICATION_ID'], :api_key => ENV['PARSE_API_KEY'])
+      @user = User.find_by(authentication_token: params["user_token"])
+      @friend = User.find(params["friend_id"])
+      # status: nouvelle demande ou accepté ?
+      @status = params["status"]
+      if status == "accepted"
+        # envoyer à @friend qu'il a été accepté
+      else
+        # envoyer à @friend qu'on l'a invité
+      end
+
+    end
+
     private
 
     def create
