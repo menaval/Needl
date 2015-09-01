@@ -222,18 +222,18 @@ module Api
           restaurant_id: restaurant.id,
           subway_id:     subway.id
           )
-
-        # enregistrer les subways dans la base de données restos pour rendre plus rapidement l'api
-        restaurant.subway_id = restaurant.closest_subway_id
-        restaurant.subway_name = Subway.find(restaurant.subway_id).name
-        array = []
-        restaurant.subways.each do |subway|
-          array << {subway.id => subway.name}
-        end
-        restaurant.subways_near = array
-
-        restaurant.save
       end
+      # enregistrer les subways dans la base de données restos pour rendre plus rapidement l'api
+      restaurant.subway_id = restaurant.closest_subway_id
+      restaurant.subway_name = Subway.find(restaurant.subway_id).name
+      array = []
+      restaurant.subways.each do |subway|
+        array << {subway.id => subway.name}
+      end
+      restaurant.subways_near = array
+
+      restaurant.save
+
     end
 
 

@@ -206,7 +206,6 @@ class RecommendationsController < ApplicationController
     search = search_less_than_500_meters.length > 0 ? search_less_than_500_meters : [search_by_closest]
 
     # on associe chaque station de metro au restaurant
-
     search.each do |result|
       if Subway.find_by(latitude: result.lat) == nil
         subway = create_new_subway(result)
@@ -217,6 +216,7 @@ class RecommendationsController < ApplicationController
         restaurant_id: restaurant.id,
         subway_id:     subway.id
         )
+    end
 
       # enregistrer les subways dans la base de données restos pour rendre plus rapidement l'api
       restaurant.subway_id = restaurant.closest_subway_id
@@ -226,9 +226,7 @@ class RecommendationsController < ApplicationController
         array << {subway.id => subway.name}
       end
       restaurant.subways_near = array
-
       restaurant.save
-    end
   end
 
 
