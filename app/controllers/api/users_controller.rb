@@ -26,7 +26,7 @@ module Api
       installation = client.installation.tap do |i|
         i.device_token = @device_token
         i.device_type = @device_type
-        i.badge = @user.id
+        i['user_id'] = @user.id
       end
       installation.save
 
