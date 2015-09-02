@@ -30,46 +30,23 @@ module Api
       @new_potential_friends = @user.user_friends - User.where(id: @user.my_friends_ids) - User.where(id: @user.my_requests_sent_ids) - User.where(id: @user.my_requests_received_ids) - User.where(id: @user.refused_relations_ids) - [@user]
     end
 
-    def notif_friendship
-
-      client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
-      @user = User.find_by(authentication_token: params["user_token"])
-      @friend = User.find(params["friend_id"])
-      # status: nouvelle demande ou accepté ?
-      @status = params["status"]
-      if status == "accepted"
-        # envoyer à @friend qu'il a été accepté
-        data = { :alert => "#{@user} a accepte votre invitation" }
-        push = client.push(data)
-        push.type = "ios"
-        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend.id)
-        push.where = query.where
-        push.save
-      else
-        # envoyer à @friend qu'on l'a invité
-        data = { :alert => "#{@user} vous a invite a decouvrir ses restaurants" }
-        push = client.push(data)
-        push.type = "ios"
-        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend.id)
-        push.where = query.where
-        push.save
-      end
-
-    end
-
     private
 
     def create
-      @friendship = Friendship.new(sender_id: @user.id, receiver_id: params["friend_id"].to_i, accepted: false)
+      @friend_id = params["friend_id"].to_i
+      @friendship = Friendship.new(sender_id: @user.id, receiver_id: @friend_id, accepted: false)
       @friendship.save
+      notif_friendship("invited")
       redirect_to new_friendship_path, notice: "Votre demande d'invitation a bien été envoyée, vous pourrez accéder à ses recommandations dès lors qu'il vous acceptera"
       # ex: http://localhost:3000/api/friendships/new?friendship[sender_id]=40&friendship[receiver_id]=42&friendship[accepted]=false
 
     end
 
     def answer_yes
-      friendship = Friendship.where(sender_id: params["friend_id"].to_i, receiver_id: @user.id).first
+      @friend_id = params["friend_id"].to_i
+      friendship = Friendship.where(sender_id: @friend_id, receiver_id: @user.id).first
       friendship.update_attribute(:accepted, true)
+      notif_friendship("accepted")
       redirect_to friendships_path
     end
 
@@ -97,6 +74,30 @@ module Api
         friendship.update_attribute(:receiver_invisible, invisible)
       end
       redirect_to friendships_path
+    end
+
+    def notif_friendship(status)
+
+      client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
+      # status: nouvelle demande ou accepté ?
+      if status == "accepted"
+        # envoyer à @friend qu'il a été accepté
+        data = { :alert => "#{@user.name} a accepte votre invitation" }
+        push = client.push(data)
+        push.type = "ios"
+        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend_id)
+        push.where = query.where
+        push.save
+      else
+        # envoyer à @friend qu'on l'a invité
+        data = { :alert => "#{@user.name} vous a invite a decouvrir ses restaurants" }
+        push = client.push(data)
+        push.type = "ios"
+        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend_id)
+        push.where = query.where
+        push.save
+      end
+
     end
 
     def not_interested

@@ -21,37 +21,6 @@ module Api
       @recommendation = Recommendation.where(restaurant_id: @restaurant.id, user_id: @user.id).first
     end
 
-    def notif_reco
-
-      client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
-      @user = User.find_by(authentication_token: params["user_token"])
-      @status = params["status"]
-      @restaurant = Restaurant.find(params["restaurant_id"])
-      if status == "recommendation"
-        @user.user_friends.each do |friend|
-         # envoyer à chaque friend que @user a fait une nouvelle reco du resto @restaurant
-         data = { :alert => "#{@user} a recommande #{@restaurant.name}" }
-         push = client.push(data)
-         push.type = "ios"
-         query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend.id)
-         push.where = query.where
-         push.save
-        end
-
-      else
-        @user.user_friends.each do |friend|
-          # envoyer à chaque friend que @user a fait un nouveau wish du resto @restaurant
-          data = { :alert => "#{@user} a ajoute #{@restaurant.name} sur sa wishlist" }
-          push = client.push(data)
-          push.type = "ios"
-          query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend.id)
-          push.where = query.where
-          push.save
-        end
-      end
-
-    end
-
     private
 
     def create
@@ -61,7 +30,7 @@ module Api
         create_a_wish
       else
         # si l'utilisateur a déà recommandé cet endroit alors on actualise sa reco
-        if Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
+        if Recommendation.where(restaurant_id:params["restaurant_id"].first(4).to_i, user_id: @user.id).any?
           update
 
         # Si c'est une nouvelle recommandation on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
@@ -77,6 +46,7 @@ module Api
 
             @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
             @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
+            notif_reco("recommendation")
 
             # si c'était sur ma liste de wish ça l'enlève
             if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
@@ -177,6 +147,7 @@ module Api
           @wish = Wish.create(user_id: @user.id, restaurant_id: @restaurant.id)
           # @wish.restaurant = @restaurant
           @tracker.track(@user.id, 'New Wish', { "restaurant" => @restaurant.name, "user" => @user.name })
+          notif_reco("wish")
 
           # si première wish ou reco, devient pote avec le ceo
           if @user.wishes.count == 1 && @user.recommendations.count == 0
@@ -297,6 +268,34 @@ module Api
       recommendation = Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).first
       recommendation.update_attributes(recommendation_params)
       redirect_to api_restaurant_path(recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
+    end
+
+    def notif_reco(status)
+
+      client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
+      if status == "recommendation"
+        @user.user_my_friends_ids.each do |friend_id|
+         # envoyer à chaque friend que @user a fait une nouvelle reco du resto @restaurant
+         data = { :alert => "#{@user.name} a recommande #{@restaurant.name}" }
+         push = client.push(data)
+         push.type = "ios"
+         query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id)
+         push.where = query.where
+         push.save
+        end
+
+      else
+        @user.my_friends_ids.each do |friend_id|
+          # envoyer à chaque friend que @user a fait un nouveau wish du resto @restaurant
+          data = { :alert => "#{@user.name} a ajoute #{@restaurant.name} sur sa wishlist" }
+          push = client.push(data)
+          push.type = "ios"
+          query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id)
+          push.where = query.where
+          push.save
+        end
+      end
+
     end
 
     def read_all_notification

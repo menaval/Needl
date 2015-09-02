@@ -15,6 +15,8 @@ class FriendshipsController < ApplicationController
   def create
     @friendship = Friendship.new(friendship_params)
     @friendship.save
+    @friend_id = @friendship.receiver_id
+    notif_friendship("invited")
     redirect_to new_friendship_path, notice: "Votre demande d'invitation a bien été envoyée, vous pourrez accéder à ses recommandations dès lors qu'il vous acceptera"
   end
 
@@ -43,6 +45,8 @@ class FriendshipsController < ApplicationController
     status = eval(params[:accepted])[:value]
     if status == true
       @friendship.update_attribute(:accepted, true)
+      @friend_id = @friendship.sender_id == current_user.id ? @friendship.receiver_id : @friendship.sender_id
+      notif_friendship("accepted")
       redirect_to friendships_path
     else
       destroy
@@ -68,6 +72,30 @@ class FriendshipsController < ApplicationController
 
     def friendship_params
       params.require(:friendship).permit(:sender_id, :receiver_id, :accepted)
+    end
+
+    def notif_friendship(status)
+
+      client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
+      # status: nouvelle demande ou accepté ?
+      if status == "accepted"
+        # envoyer à @friend qu'il a été accepté
+        data = { :alert => "#{current_user.name} a accepte votre invitation" }
+        push = client.push(data)
+        push.type = "ios"
+        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend_id)
+        push.where = query.where
+        push.save
+      else
+        # envoyer à @friend qu'on l'a invité
+        data = { :alert => "#{current_user.name} vous a invite a decouvrir ses restaurants" }
+        push = client.push(data)
+        push.type = "ios"
+        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend_id)
+        push.where = query.where
+        push.save
+      end
+
     end
 
 end
