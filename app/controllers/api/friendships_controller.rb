@@ -42,7 +42,7 @@ module Api
         data = { :alert => "#{@user} a accepté votre invitation" }
         push = client.push(data)
         push.type = "ios"
-        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend.id)
+        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('badge', @friend.id)
         push.where = query.where
         push.save
       else
@@ -50,7 +50,7 @@ module Api
         data = { :alert => "#{@user} vous a invité à découvrir ses restaurants" }
         push = client.push(data)
         push.type = "ios"
-        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend.id)
+        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('badge', @friend.id)
         push.where = query.where
         push.save
       end

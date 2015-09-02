@@ -16,9 +16,9 @@ module Api
     end
 
     def new_parse_installation
-      # client = Parse::Client.new(:application_id => ENV['PARSE_APPLICATION_ID'], :api_key => ENV['PARSE_API_KEY'])
+
       client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
-      @user = User.find(params["id"].to_i)
+      @user = User.find_by(authentication_token: params["user_token"])
       @device_token = params["device_token"]
       @device_type = params["device_type"]
 
@@ -26,7 +26,7 @@ module Api
       installation = client.installation.tap do |i|
         i.device_token = @device_token
         i.device_type = @device_type
-        i.user_id = @user.id
+        i.badge = @user.id
       end
       installation.save
 
