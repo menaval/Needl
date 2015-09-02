@@ -269,7 +269,7 @@ class RecommendationsController < ApplicationController
     if status == "recommendation"
       current_user.my_friends_ids.each do |friend_id|
         # envoyer à chaque friend que @user a fait une nouvelle reco du resto @restaurant
-        data = { :alert => "#{current_user.name} a recommande #{@restaurant.name}" }
+        data = { :alert => "#{current_user.name} a recommande #{@restaurant.name}", :badge => 'Increment'  }
         push = client.push(data)
         push.type = "ios"
         query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id)
@@ -280,7 +280,7 @@ class RecommendationsController < ApplicationController
     else
       current_user.my_friends_ids.each do |friend_id|
         # envoyer à chaque friend que @user a fait un nouveau wish du resto @restaurant
-        data = { :alert => "#{current_user.name} a ajoute #{@restaurant.name} sur sa wishlist" }
+        data = { :alert => "#{current_user.name} a ajoute #{@restaurant.name} sur sa wishlist", :badge => 'Increment'  }
         push = client.push(data)
         push.type = "ios"
         query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id)
