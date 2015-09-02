@@ -21,6 +21,37 @@ module Api
       @recommendation = Recommendation.where(restaurant_id: @restaurant.id, user_id: @user.id).first
     end
 
+    def notif_reco
+
+      client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
+      @user = User.find_by(authentication_token: params["user_token"])
+      @status = params["status"]
+      @restaurant = Restaurant.find(params["restaurant_id"])
+      if status == "recommendation"
+        @user.user_friends.each do |friend|
+         # envoyer à chaque friend que @user a fait une nouvelle reco du resto @restaurant
+         data = { :alert => "#{@user} a recommandé #{@restaurant.name}" }
+         push = client.push(data)
+         push.type = "ios"
+         query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('badge', friend.id)
+         push.where = query.where
+         push.save
+        end
+
+      else
+        @user.user_friends.each do |friend|
+          # envoyer à chaque friend que @user a fait un nouveau wish du resto @restaurant
+          data = { :alert => "#{@user} a ajouté #{@restaurant.name} sur sa wishlist" }
+          push = client.push(data)
+          push.type = "ios"
+          query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('badge', friend.id)
+          push.where = query.where
+          push.save
+        end
+      end
+
+    end
+
     private
 
     def create
