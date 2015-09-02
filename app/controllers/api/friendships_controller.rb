@@ -39,7 +39,7 @@ module Api
       @status = params["status"]
       if status == "accepted"
         # envoyer à @friend qu'il a été accepté
-        data = { :alert => "#{@user} a accepté votre invitation" }
+        data = { :alert => "#{@user} a accepte votre invitation" }
         push = client.push(data)
         push.type = "ios"
         query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend.id)
@@ -47,7 +47,7 @@ module Api
         push.save
       else
         # envoyer à @friend qu'on l'a invité
-        data = { :alert => "#{@user} vous a invité à découvrir ses restaurants" }
+        data = { :alert => "#{@user} vous a invite a decouvrir ses restaurants" }
         push = client.push(data)
         push.type = "ios"
         query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend.id)

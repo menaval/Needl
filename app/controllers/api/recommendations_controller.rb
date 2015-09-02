@@ -30,7 +30,7 @@ module Api
       if status == "recommendation"
         @user.user_friends.each do |friend|
          # envoyer à chaque friend que @user a fait une nouvelle reco du resto @restaurant
-         data = { :alert => "#{@user} a recommandé #{@restaurant.name}" }
+         data = { :alert => "#{@user} a recommande #{@restaurant.name}" }
          push = client.push(data)
          push.type = "ios"
          query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend.id)
@@ -41,7 +41,7 @@ module Api
       else
         @user.user_friends.each do |friend|
           # envoyer à chaque friend que @user a fait un nouveau wish du resto @restaurant
-          data = { :alert => "#{@user} a ajouté #{@restaurant.name} sur sa wishlist" }
+          data = { :alert => "#{@user} a ajoute #{@restaurant.name} sur sa wishlist" }
           push = client.push(data)
           push.type = "ios"
           query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend.id)
