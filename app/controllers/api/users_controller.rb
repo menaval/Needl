@@ -32,6 +32,16 @@ module Api
 
     end
 
+    def reset_badge_to_zero
+      client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
+      @user = User.find_by(authentication_token: params["user_token"])
+      # installations = client.query("Installation").tap do |q|
+      #   q.eq("user_id", 30)
+      # end.get
+      installation.badge = 0
+      installation.save
+    end
+
     def parse_initialization
       client = Parse.init :application_id => ENV['PARSE_APPLICATION_ID'],
                  :api_key => ENV['PARSE_API_KEY']
