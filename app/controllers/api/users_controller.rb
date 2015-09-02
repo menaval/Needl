@@ -17,13 +17,18 @@ module Api
 
     def new_parse_installation
       # client = Parse::Client.new(:application_id => ENV['PARSE_APPLICATION_ID'], :api_key => ENV['PARSE_API_KEY'])
-      Parse.init :application_id => ENV['PARSE_APPLICATION_ID'],
-                 :api_key        => ENV['PARSE_API_KEY']
+      client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
       @user = User.find(params["id"].to_i)
       @device_token = params["device_token"]
       @device_type = params["device_type"]
 
       # créer l'installation
+      installation = client.installation.tap do |i|
+        i.device_token = @device_token
+        i.device_type = @device_type
+        i.user_id = @user.id
+      end
+      installation.save
 
     end
 

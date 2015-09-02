@@ -32,15 +32,27 @@ module Api
 
     def notif_friendship
 
-      client = Parse::Client.new(:application_id => ENV['PARSE_APPLICATION_ID'], :api_key => ENV['PARSE_API_KEY'])
+      client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
       @user = User.find_by(authentication_token: params["user_token"])
       @friend = User.find(params["friend_id"])
       # status: nouvelle demande ou accepté ?
       @status = params["status"]
       if status == "accepted"
         # envoyer à @friend qu'il a été accepté
+        data = { :alert => "#{@user} a accepté votre invitation" }
+        push = client.push(data)
+        push.type = "ios"
+        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend.id)
+        push.where = query.where
+        push.save
       else
         # envoyer à @friend qu'on l'a invité
+        data = { :alert => "#{@user} vous a invité à découvrir ses restaurants" }
+        push = client.push(data)
+        push.type = "ios"
+        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend.id)
+        push.where = query.where
+        push.save
       end
 
     end
