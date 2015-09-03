@@ -50,15 +50,10 @@ Rails.application.routes.draw do
     resources :recommendations, only: [:index, :new] do
       collection do
         get :modify
-        post :notif_reco
       end
     end
 
-    resources :friendships, only: [:index, :new] do
-      collection do
-        post :notif_friendship
-      end
-    end
+    resources :friendships, only: [:index, :new]
     resources :wishes, only: [:index, :create]
     resources :registrations, only: [:edit, :update]
     resources :user_wishlist_pictures, only: [:new, :create]
