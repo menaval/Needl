@@ -29,7 +29,7 @@ module Api
         i['user_id'] = @user.id
       end
       installation.save
-
+      redirect_to user_path(@user.id)
     end
 
     def reset_badge_to_zero
