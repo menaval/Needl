@@ -82,17 +82,17 @@ module Api
       # status: nouvelle demande ou accepté ?
       if status == "accepted"
         # envoyer à @friend qu'il a été accepté
-        data = { :alert => "#{@user.name} a accepte votre invitation", :badge => 'Increment' }
+        data = { :alert => "#{@user.name} a accepte votre invitation", :badge => 'Increment', :type => 'friend' }
         push = client.push(data)
-        push.type = "ios"
+        # push.type = "ios"
         query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend_id)
         push.where = query.where
         push.save
       else
         # envoyer à @friend qu'on l'a invité
-        data = { :alert => "#{@user.name} vous a invite a decouvrir ses restaurants", :badge => 'Increment' }
+        data = { :alert => "#{@user.name} vous a invite a decouvrir ses restaurants", :badge => 'Increment', :type => 'friend' }
         push = client.push(data)
-        push.type = "ios"
+        # push.type = "ios"
         query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend_id)
         push.where = query.where
         push.save
