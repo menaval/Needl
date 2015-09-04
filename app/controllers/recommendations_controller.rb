@@ -267,28 +267,24 @@ class RecommendationsController < ApplicationController
 
   def notif_reco(status)
 
-    client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
+    client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'], master_key:ENV['PARSE_MASTER_KEY'])
     if status == "recommendation"
-      current_user.my_friends_ids.each do |friend_id|
-        # envoyer à chaque friend que @user a fait une nouvelle reco du resto @restaurant
-        data = { :alert => "#{current_user.name} a recommande #{@restaurant.name}", :badge => 'Increment', :type => 'reco'  }
-        push = client.push(data)
-        # push.type = "ios"
-        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id)
-        push.where = query.where
-        push.save
-      end
+      # envoyer à tous les friends que @user a fait une nouvelle reco du resto @restaurant
+      data = { :alert => "#{current_user.name} a recommande #{@restaurant.name}", :badge => 'Increment', :type => 'reco'  }
+      push = client.push(data)
+      # push.type = "ios"
+      query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', current_user.my_friends_ids)
+      push.where = query.where
+      push.save
 
     else
-      current_user.my_friends_ids.each do |friend_id|
-        # envoyer à chaque friend que @user a fait un nouveau wish du resto @restaurant
-        data = { :alert => "#{current_user.name} a ajoute #{@restaurant.name} sur sa wishlist", :badge => 'Increment', :type => 'reco'  }
-        push = client.push(data)
-        # push.type = "ios"
-        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id)
-        push.where = query.where
-        push.save
-      end
+      # envoyer à tous les friends que @user a fait un nouveau wish du resto @restaurant
+      data = { :alert => "#{current_user.name} a ajoute #{@restaurant.name} sur sa wishlist", :badge => 'Increment', :type => 'reco'  }
+      push = client.push(data)
+      # push.type = "ios"
+      query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', current_user.my_friends_ids)
+      push.where = query.where
+      push.save
     end
 
   end

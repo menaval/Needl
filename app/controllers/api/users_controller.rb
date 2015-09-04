@@ -18,7 +18,6 @@ module Api
     def new_parse_installation
 
       client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
-      client.master
       @user = User.find_by(authentication_token: params["user_token"])
       @device_token = params["device_token"]
       @device_type = params["device_type"]
