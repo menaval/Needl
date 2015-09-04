@@ -42,6 +42,7 @@ module Api
         installation['badge'] = 0
         installation.save
       end
+      redirect_to user_path(@user.id)
     end
 
     def parse_initialization
