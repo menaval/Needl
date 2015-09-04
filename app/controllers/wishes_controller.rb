@@ -11,6 +11,8 @@ class WishesController < ApplicationController
 
   def destroy
     wish = Wish.find(params[:id])
+    activity = PublicActivity::Activity.where(trackable_type: "Wish").find_by(trackable_id: wish.id)
+    activity.destroy
     wish.destroy
     redirect_to :back, notice: 'Le restaurant a bien été retirée de la liste de vos envies'
   end

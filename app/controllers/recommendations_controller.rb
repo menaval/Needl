@@ -63,6 +63,8 @@ class RecommendationsController < ApplicationController
 
   def destroy
     reco = Recommendation.find(params[:id])
+    activity = PublicActivity::Activity.where(trackable_type: "Recommendation").find_by(trackable_id: reco.id)
+    activity.destroy
     reco.destroy
     redirect_to root_path, notice: 'Le restaurant a bien été retiré de vos recommandations'
   end
