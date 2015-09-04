@@ -45,7 +45,7 @@ Rails.application.routes.draw do
       collection do
         get :welcome_ceo
         post :new_parse_installation
-        get  :reset_badge_to_zero
+        post  :reset_badge_to_zero
       end
     end
     resources :recommendations, only: [:index, :new] do
