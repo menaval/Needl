@@ -281,9 +281,11 @@ module Api
        data = { :alert => "#{@user.name} a recommande #{@restaurant.name}", :badge => 'Increment', :type => 'reco' }
        push = client.push(data)
        # push.type = "ios"
-       query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @user.my_friends_ids)
+       query = client.query(Parse::Protocol::CLASS_INSTALLATION).value_in('user_id', @user.my_friends_ids)
        push.where = query.where
        push.save
+
+       # attention si remet en wish, a adapter au code ci-dessus
 
       # else
       #   # envoyer à chaque friend que @user a fait un nouveau wish du resto @restaurant

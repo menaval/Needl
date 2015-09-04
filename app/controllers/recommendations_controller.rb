@@ -273,7 +273,7 @@ class RecommendationsController < ApplicationController
       data = { :alert => "#{current_user.name} a recommande #{@restaurant.name}", :badge => 'Increment', :type => 'reco'  }
       push = client.push(data)
       # push.type = "ios"
-      query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', current_user.my_friends_ids)
+      query = client.query(Parse::Protocol::CLASS_INSTALLATION).value_in('user_id', current_user.my_friends_ids)
       push.where = query.where
       push.save
 
