@@ -72,8 +72,10 @@ module Api
 
     def destroy
       reco = Recommendation.where(user_id: @user.id, restaurant_id: params['restaurant_id'].to_i).first
-      activity = PublicActivity::Activity.where(trackable_type: "Recommendation").find_by(trackable_id: reco.id)
-      activity.destroy
+      if PublicActivity::Activity.where(trackable_type: "Recommendation").find_by(trackable_id: reco.id).length > 0
+        activity = PublicActivity::Activity.where(trackable_type: "Recommendation").find_by(trackable_id: reco.id)
+        activity.destroy
+      end
       reco.destroy
       redirect_to api_restaurants_path(:user_email => params["user_email"], :user_token => params["user_token"], :notice => "Le restaurant a bien été retiré de vos recommandations")
     end

@@ -25,8 +25,10 @@ module Api
 
     def destroy
       wish = Wish.where(user_id: @user.id, restaurant_id: params["restaurant_id"].to_i).first
-      activity = PublicActivity::Activity.where(trackable_type: "Wish").find_by(trackable_id: wish.id)
-      activity.destroy
+      if PublicActivity::Activity.where(trackable_type: "Wish").find_by(trackable_id: wish.id).length > 0
+        activity = PublicActivity::Activity.where(trackable_type: "Wish").find_by(trackable_id: wish.id)
+        activity.destroy
+      end
       wish.destroy
       redirect_to api_restaurant_path(params["restaurant_id"].to_i, :user_email => params["user_email"], :user_token => params["user_token"], :notice => "Le restaurant a bien été retiré de la liste de vos envies")
     end
