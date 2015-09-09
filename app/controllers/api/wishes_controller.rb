@@ -25,8 +25,8 @@ module Api
 
     def destroy
       wish = Wish.where(user_id: @user.id, restaurant_id: params["restaurant_id"].to_i).first
-      if PublicActivity::Activity.where(trackable_type: "Wish").find_by(trackable_id: wish.id).length > 0
-        activity = PublicActivity::Activity.where(trackable_type: "Wish").find_by(trackable_id: wish.id)
+      if PublicActivity::Activity.where(trackable_type: "Wish", trackable_id: wish.id).length > 0
+        activity = PublicActivity::Activity.where(trackable_type: "Wish", trackable_id: wish.id).first
         activity.destroy
       end
       wish.destroy

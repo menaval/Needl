@@ -72,8 +72,8 @@ module Api
 
     def destroy
       reco = Recommendation.where(user_id: @user.id, restaurant_id: params['restaurant_id'].to_i).first
-      if PublicActivity::Activity.where(trackable_type: "Recommendation").find_by(trackable_id: reco.id).length > 0
-        activity = PublicActivity::Activity.where(trackable_type: "Recommendation").find_by(trackable_id: reco.id)
+      if PublicActivity::Activity.where(trackable_type: "Recommendation", trackable_id: reco.id).length > 0
+        activity = PublicActivity::Activity.where(trackable_type: "Recommendation", trackable_id: reco.id).first
         activity.destroy
       end
       reco.destroy

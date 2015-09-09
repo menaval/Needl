@@ -12,8 +12,8 @@ class WishesController < ApplicationController
   def destroy
     wish = Wish.find(params[:id])
     # certains wish ont été crée avant qu'il n'y ait eu de publicActivity s'appliquant à eux
-    if PublicActivity::Activity.where(trackable_type: "Wish").find_by(trackable_id: wish.id).length > 0
-      activity = PublicActivity::Activity.where(trackable_type: "Wish").find_by(trackable_id: wish.id)
+    if PublicActivity::Activity.where(trackable_type: "Wish", trackable_id: wish.id).length > 0
+      activity = PublicActivity::Activity.where(trackable_type: "Wish", trackable_id: wish.id).first
       activity.destroy
     end
     wish.destroy

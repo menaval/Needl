@@ -63,8 +63,8 @@ class RecommendationsController < ApplicationController
 
   def destroy
     reco = Recommendation.find(params[:id])
-    if PublicActivity::Activity.where(trackable_type: "Recommendation").find_by(trackable_id: reco.id).length > 0
-    activity = PublicActivity::Activity.where(trackable_type: "Recommendation").find_by(trackable_id: reco.id)
+    if PublicActivity::Activity.where(trackable_type: "Recommendation", trackable_id: reco.id).length > 0
+    activity = PublicActivity::Activity.where(trackable_type: "Recommendation", trackable_id: reco.id).first
     activity.destroy
     end
     reco.destroy
