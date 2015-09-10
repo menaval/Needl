@@ -11,7 +11,7 @@ json.array! @api_activities do |activity|
     json.restaurant_price_range    restaurant.price_range
   end
   if activity.trackable.is_a? Recommendation
-    json.review                    activity.trackable.review
+    json.review                    activity.trackable.review == "" ? "Je recommande !" : activity.trackable.review
   end
   json.date                      activity.created_at.strftime('%-d %B')
 end
