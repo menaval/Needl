@@ -36,6 +36,7 @@ class RecommendationsController < ApplicationController
 
           # si c'était sur ma liste de wish ça l'enlève
           if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
+            @tracker.track(current_user.id, 'Wish to Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
             Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).first.destroy
           end
 

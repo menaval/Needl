@@ -50,6 +50,7 @@ module Api
 
             # si c'était sur ma liste de wish ça l'enlève
             if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
+              @tracker.track(@user.id, 'Wish to Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
               Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).first.destroy
             end
             # si première recommandation ou wish, alors devient pote avec ceo
