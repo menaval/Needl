@@ -29,6 +29,9 @@ module Api
       @wish_coefficient            = 3
       @me_recommending_coefficient = 10
       @me_wishing_coefficient      = 20
+      # récupérer la géoloc pour calculer le trajet en transports
+
+
 
       # associer les ambiances et amis recommandant aux restaurants avec une seule requête
       @all_ambiences = {}

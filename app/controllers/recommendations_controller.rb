@@ -270,12 +270,12 @@ class RecommendationsController < ApplicationController
   def notif_reco(status)
 
     client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'], master_key:ENV['PARSE_MASTER_KEY'])
-    if status == "recommendation" && current_user.my_friends_ids != []
+    if status == "recommendation" && current_user.my_friends_seing_me_ids != []
       # envoyer à tous les friends que @user a fait une nouvelle reco du resto @restaurant
       data = { :alert => "#{current_user.name} a recommande #{@restaurant.name}", :badge => 'Increment', :type => 'reco'  }
       push = client.push(data)
       # push.type = "ios"
-      query = client.query(Parse::Protocol::CLASS_INSTALLATION).value_in('user_id', current_user.my_friends_ids)
+      query = client.query(Parse::Protocol::CLASS_INSTALLATION).value_in('user_id', current_user.my_friends_seing_me_ids)
       push.where = query.where
       push.save
 
@@ -284,7 +284,7 @@ class RecommendationsController < ApplicationController
     #   data = { :alert => "#{current_user.name} a ajoute #{@restaurant.name} sur sa wishlist", :badge => 'Increment', :type => 'reco'  }
     #   push = client.push(data)
     #   # push.type = "ios"
-    #   query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', current_user.my_friends_ids)
+    #   query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', current_user.my_friends_seing_me_ids)
     #   push.where = query.where
     #   push.save
     end
@@ -292,7 +292,7 @@ class RecommendationsController < ApplicationController
   end
 
   def read_all_notification
-    PublicActivity::Activity.where(owner_id: current_user.my_friends_ids, owner_type: 'User').each do |activity|
+    PublicActivity::Activity.where(owner_id: current_user.my_visible_friends_ids, owner_type: 'User').each do |activity|
       activity.read = true
       activity.save
     end
