@@ -19,29 +19,6 @@ json.array!                    @restaurants do |restaurant|
   json.closest_subway         restaurant.subway_id
   json.friends_recommending   @all_friends_recommending[restaurant.id]
   json.friends_wishing        @all_friends_wishing[restaurant.id]
-
-  if @all_friends_recommending[restaurant.id] != nil && @all_friends_wishing[restaurant.id] != nil
-    if @all_friends_recommending[restaurant.id].include?(40)
-      json.score               @starting_score + @me_recommending_coefficient + @recommendation_coefficient*(@all_friends_recommending[restaurant.id].length - 1) + @wish_coefficient *(@all_friends_wishing[restaurant.id].length)
-    elsif @all_friends_wishing[restaurant.id].include?(40)
-      json.score               @starting_score + @me_wishing_coefficient + @recommendation_coefficient*(@all_friends_recommending[restaurant.id].length) + @wish_coefficient *(@all_friends_wishing[restaurant.id].length -1)
-    else
-      json.score               @starting_score + @recommendation_coefficient*(@all_friends_recommending[restaurant.id].length) + @wish_coefficient *(@all_friends_wishing[restaurant.id].length)
-    end
-  elsif @all_friends_recommending[restaurant.id] != nil
-    if @all_friends_recommending[restaurant.id].include?(40)
-      json.score               @starting_score + @me_recommending_coefficient + @recommendation_coefficient*(@all_friends_recommending[restaurant.id].length - 1)
-    else
-      json.score              @starting_score + @recommendation_coefficient*(@all_friends_recommending[restaurant.id].length)
-    end
-  else
-    if @all_friends_wishing[restaurant.id].include?(40)
-      json.score              @starting_score + @me_wishing_coefficient + @wish_coefficient *(@all_friends_wishing[restaurant.id].length - 1)
-    else
-      json.score              @starting_score + @wish_coefficient *(@all_friends_wishing[restaurant.id].length)
-    end
-  end
-
   json.starter1             restaurant.starter1
   json.price_starter1       restaurant.price_starter1
   json.starter2             restaurant.starter2
