@@ -74,11 +74,11 @@ module Api
       useless_words = ["le", "la", "à", "a", "chez", "du", "restaurant", "cafe", "café", "bar"]
       query_terms = @query.split.collect { |name| "%#{name}%" }.delete_if{|name| useless_words.include?(name.gsub("%","").downcase)}
       restaurants_table = Restaurant.arel_table
-      if Restaurant.where(restaurants_table[:name].matches_all(query_terms))[0]  == nil
-        restaurants = Restaurant.where(restaurants_table[:name].matches_any(query_terms))
-      else
-        restaurants = Restaurant.where(restaurants_table[:name].matches_all(query_terms))
-      end
+      restaurant_ids = Restaurant.where(restaurants_table[:name].matches_all(query_terms)).pluck(:id)
+      restaurant_ids += Restaurant.where(restaurants_table[:name].matches_any(query_terms)).pluck(:id)
+      restaurant_ids.uniq!
+      order = "position(id::text in '#{restaurant_ids.join(',')}')"
+      restaurants = Restaurant.where(id: restaurant_ids).order(order)
 
       restaurants = restaurants.map do |restaurant|
         { origin: 'db', name: restaurant.name, address: restaurant.address, id: restaurant.id, name_and_address: "#{restaurant.name}: #{restaurant.address}, #{restaurant.city} #{customize_postal_code(restaurant.postal_code)}" }
