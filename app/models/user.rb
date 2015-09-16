@@ -41,6 +41,18 @@ class User < ActiveRecord::Base
     @user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
   end
 
+#  parce que sinon dans leurs notifs ils ont tous les wish que je fais en ajoutant les wishlists des gens
+
+  def my_visible_friends_ids_except_valentin
+    @user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
+    @user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
+    if @user_ids.include?(40)
+      @user_ids -= [40]
+    else
+      @user_ids
+    end
+  end
+
   def my_visible_friends_ids_and_me
     @user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
     @user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
