@@ -64,7 +64,7 @@ module Api
       @restaurants += search_via_foursquare
 
       @restaurants.uniq! { |restaurant| [ restaurant[:name], restaurant[:address] ] }
-      @restaurants.take(5)
+      @restaurants.take(7)
     end
 
     private
@@ -74,14 +74,18 @@ module Api
       useless_words = ["le", "la", "à", "a", "chez", "du", "restaurant", "cafe", "café", "bar"]
       query_terms = @query.split.collect { |name| "%#{name}%" }.delete_if{|name| useless_words.include?(name.gsub("%","").downcase)}
       restaurants_table = Restaurant.arel_table
-      restaurants = Restaurant.where(restaurants_table[:name].matches_any(query_terms))
+      if Restaurant.where(restaurants_table[:name].matches_all(query_terms))[0]  == nil
+        restaurants = Restaurant.where(restaurants_table[:name].matches_any(query_terms))
+      else
+        restaurants = Restaurant.where(restaurants_table[:name].matches_all(query_terms))
+      end
 
       restaurants = restaurants.map do |restaurant|
         { origin: 'db', name: restaurant.name, address: restaurant.address, id: restaurant.id, name_and_address: "#{restaurant.name}: #{restaurant.address}, #{restaurant.city} #{customize_postal_code(restaurant.postal_code)}" }
       end
 
-      if restaurants.length >= 4
-        restaurants = restaurants.take(3)
+      if restaurants.length >= 6
+        restaurants = restaurants.take(5)
       end
 
       return restaurants
@@ -109,12 +113,14 @@ module Api
     end
 
     def customize_postal_code(postal_code)
-      if postal_code
+      if postal_code != "" && postal_code != nil
         if postal_code[3] == "0"
           return postal_code[4] + "ᵉ"
         else
           return postal_code[3] + postal_code[4] + "ᵉ"
         end
+      else
+        return ""
       end
     end
 
