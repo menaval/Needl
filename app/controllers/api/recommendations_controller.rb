@@ -207,7 +207,7 @@ module Api
       search_by_closest = client.spots(restaurant.latitude, restaurant.longitude, :rankby => 'distance', :types => 'subway_station')[0..5]
 
       # on enlève toutes les stations erronées
-      search_by_closest.delete_if { |result| !false_subway_stations_by_name.include?(result.name)}
+      search_by_closest.delete_if { |result| false_subway_stations_by_name.include?(result.name)}
       search_by_closest.delete_if do|result|
         coordinates_result = [result.lat, result.lng]
         false_subway_stations_by_coordinates.include?(coordinates_result)
