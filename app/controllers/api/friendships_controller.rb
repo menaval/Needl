@@ -15,10 +15,12 @@ module Api
       elsif params["accepted"] == "true"
         answer_yes
       elsif params["destroy"]
+        @tracker.track(@user.id, 'refuse_or_delete_friend', { "user" => @user.name })
         destroy
       elsif params["invisible"]
         invisible
       elsif params["not_interested"]
+        @tracker.track(@user.id, 'ignore_friend', { "user" => @user.name })
         not_interested
       end
     end
@@ -36,6 +38,7 @@ module Api
       @friend_id = params["friend_id"].to_i
       @friendship = Friendship.new(sender_id: @user.id, receiver_id: @friend_id, accepted: false)
       @friendship.save
+      @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
       notif_friendship("invited")
       redirect_to new_friendship_path, notice: "Votre demande d'invitation a bien été envoyée, vous pourrez accéder à ses recommandations dès lors qu'il vous acceptera"
       # ex: http://localhost:3000/api/friendships/new?friendship[sender_id]=40&friendship[receiver_id]=42&friendship[accepted]=false
@@ -46,6 +49,7 @@ module Api
       @friend_id = params["friend_id"].to_i
       friendship = Friendship.where(sender_id: @friend_id, receiver_id: @user.id).first
       friendship.update_attribute(:accepted, true)
+      @tracker.track(@user.id, 'accept_friend', { "user" => @user.name })
       notif_friendship("accepted")
       redirect_to friendships_path
     end
@@ -73,6 +77,7 @@ module Api
         friendship = Friendship.where(sender_id: @user.id, receiver_id: params["friend_id"].to_i).first
         friendship.update_attribute(:receiver_invisible, invisible)
       end
+      @tracker.track(@user.id, 'hide_friend', { "user" => @user.name })
       redirect_to friendships_path
     end
 
