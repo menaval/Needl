@@ -77,7 +77,11 @@ module Api
         friendship = Friendship.where(sender_id: @user.id, receiver_id: params["friend_id"].to_i).first
         friendship.update_attribute(:receiver_invisible, invisible)
       end
-      @tracker.track(@user.id, 'hide_friend', { "user" => @user.name })
+      if invisible == true
+        @tracker.track(@user.id, 'hide_friend', { "user" => @user.name })
+      else
+        @tracker.track(@user.id, 'unhide_friend', { "user" => @user.name })
+      end
       redirect_to friendships_path
     end
 
