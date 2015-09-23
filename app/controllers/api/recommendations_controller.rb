@@ -11,6 +11,8 @@ module Api
         create
       elsif params['destroy']
         destroy
+      else
+        @tracker.track(@user.id, 'notif_page', { "user" => @user.name })
       end
 
     end
@@ -50,8 +52,8 @@ module Api
 
             # si c'était sur ma liste de wish ça l'enlève
             if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
-              @tracker.track(@user.id, 'Wish to Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
               Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).first.destroy
+              @tracker.track(@user.id, 'Wish to Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
             end
             # si première recommandation ou wish, alors devient pote avec ceo
             if @user.recommendations.count == 1 && @user.wishes.count == 0

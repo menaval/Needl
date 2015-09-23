@@ -11,6 +11,7 @@ module Api
       @user_wishlist.user_id = @user.id
       @user_wishlist.picture = params["file"]
       @user_wishlist.save
+      @tracker.track(@user.id, 'New Wishlist Picture', { "user" => @user.name })
       redirect_to user_path(@user.id)
     end
 
