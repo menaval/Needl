@@ -26,7 +26,7 @@ class RecommendationsController < ApplicationController
         # On crée la recommandation à partir des infos récupérées
         @recommendation = current_user.recommendations.new(recommendation_params)
         @recommendation.restaurant = @restaurant
-
+        @recommendation.review = recommendation_params["review"] != "" ? recommendation_params["review"] : "Je recommande !"
         #  si les informations récupérées ont bien toutes été remplies on enregistre la reco, update le prix du resto et on le track
         if @recommendation.save
 

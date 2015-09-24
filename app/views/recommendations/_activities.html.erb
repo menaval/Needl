@@ -40,7 +40,7 @@
 
                         <!-- quote -->
                         <% if activity.trackable.is_a? Recommendation %>
-                          <%= activity.trackable.review == '' ? 'Je recommande !' : activity.trackable.review %>
+                          <%= activity.trackable.review  %>
                         <% else%>
                           Sur ma Wishlist !
                         <% end %>
