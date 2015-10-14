@@ -29,12 +29,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if user.persisted?
       sign_in user#, event: :authentication
       if user.sign_in_count == 1
-        # @tracker.people.set(user.id, {
-        #   "gender" => user.gender,
-        #   "name" => user.name,
-        #   "age" => user.age_range,
-        #   "$email": user.email
-        # })
+        @tracker.people.set(user.id, {
+          "gender" => user.gender,
+          "name" => user.name,
+          "age" => user.age_range,
+          "$email": user.email
+        })
         @tracker.track(user.id, 'signup', {"user" => user.name, "browser" => browser.name} )
       else
         @tracker.track(user.id, 'signin', {"user" => user.name, "browser" => browser.name} )
