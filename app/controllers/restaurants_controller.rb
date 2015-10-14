@@ -15,6 +15,15 @@ class RestaurantsController < ApplicationController
   end
 
   def index
+
+  User.all.each do |user|
+    @tracker.people.set(user.id, {
+      "gender" => user.gender,
+      "name" => user.name,
+      "age" => user.age_range,
+      "$email": user.email
+    })
+  end
     query         = params[:query]
     restaurants_ids  = current_user.my_friends_restaurants_ids + current_user.my_restaurants_ids
     @restaurants = Restaurant.where(id: restaurants_ids)
