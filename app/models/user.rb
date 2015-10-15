@@ -29,19 +29,19 @@ class User < ActiveRecord::Base
   def my_friends_ids
     user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true }).pluck(:id)
     user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true }).pluck(:id)
-    user_ids.uniq!
+    user_ids.uniq
   end
 
   def my_friends_seing_me_ids
     @user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
     @user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
-    @user_ids.uniq!
+    @user_ids.uniq
   end
 
   def my_visible_friends_ids
     @user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
     @user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
-    @user_ids.uniq!
+    @user_ids.uniq
   end
 
 #  parce que sinon dans leurs notifs ils ont tous les wish que je fais en ajoutant les wishlists des gens
@@ -49,19 +49,19 @@ class User < ActiveRecord::Base
   def my_visible_friends_ids_except_valentin
     @user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
     @user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
-    @user_ids.uniq!
     if @user_ids.include?(40)
       @user_ids -= [40]
     else
       @user_ids
     end
+    @user_ids.uniq
   end
 
   def my_visible_friends_ids_and_me
     @user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
     @user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
     @user_ids += [self.id]
-    @user_ids.include!
+    @user_ids.uniq
   end
 
   def my_requests_received_ids
@@ -70,7 +70,6 @@ class User < ActiveRecord::Base
 
   def my_requests_sent_ids
     user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: false }).pluck(:id)
-    user_ids.uniq!
   end
 
   def refused_relations_ids
@@ -86,7 +85,6 @@ class User < ActiveRecord::Base
   def my_restaurants_ids
     restos_ids = Restaurant.joins(:recommendations).where(recommendations: { user_id: self.id }).pluck(:id)
     restos_ids += Restaurant.joins(:wishes).where(wishes: {user_id: self.id}).pluck(:id)
-    restos_ids.uniq!
     # Restaurant.joins(:recommendations, :wishes).where("recommendations.user_id = ? OR wishes.user_id = ?", self.id, self.id)
     # pas performant comme code, 3 appels
   end
