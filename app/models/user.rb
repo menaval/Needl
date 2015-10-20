@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   has_many :recommendations, dependent: :destroy
   has_many :wishes, dependent: :destroy
   has_many :followerships, dependent: :destroy
+  has_many :followings, :through => :followerships, :source => :expert, dependent: :destroy
 
   has_many :friendships, foreign_key: :sender_id, dependent: :destroy
   has_many :received_friendships, foreign_key: :receiver_id, class_name: 'Friendship', dependent: :destroy

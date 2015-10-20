@@ -7,7 +7,6 @@ module Api
     def show
       @expert = Expert.find(params["id"].to_i)
       @recos = @expert.restaurants_recommended
-
     end
 
   end
