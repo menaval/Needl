@@ -7,4 +7,8 @@ class Expert < ActiveRecord::Base
   validates_attachment_content_type :picture,
     content_type: /\Aimage\/.*\z/
 
+  def restaurants_recommended
+      Restaurant.joins(:recommendations).where(recommendations: { expert: self.id })
+  end
+
 end

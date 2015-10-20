@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151020100521) do
+ActiveRecord::Schema.define(version: 20151020103025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,8 +101,10 @@ ActiveRecord::Schema.define(version: 20151020100521) do
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.string   "price_ranges",               array: true
+    t.integer  "expert_id"
   end
 
+  add_index "recommendations", ["expert_id"], name: "index_recommendations_on_expert_id", using: :btree
   add_index "recommendations", ["restaurant_id"], name: "index_recommendations_on_restaurant_id", using: :btree
   add_index "recommendations", ["user_id"], name: "index_recommendations_on_user_id", using: :btree
 
