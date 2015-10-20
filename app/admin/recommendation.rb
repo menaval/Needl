@@ -22,6 +22,8 @@ ActiveAdmin.register Recommendation do
       push.where = query.where
       push.save
 
+    end
+
   redirect_to admin_recommendations_path, alert: "Expertise tamponnée !"
   end
 
