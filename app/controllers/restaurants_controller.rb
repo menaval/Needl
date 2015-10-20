@@ -15,7 +15,6 @@ class RestaurantsController < ApplicationController
   end
 
   def index
-    raise
     query         = params[:query]
     restaurants_ids  = current_user.my_friends_restaurants_ids + current_user.my_restaurants_ids
     @restaurants = Restaurant.where(id: restaurants_ids)
