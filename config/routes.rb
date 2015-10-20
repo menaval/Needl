@@ -59,6 +59,6 @@ Rails.application.routes.draw do
     resources :registrations, only: [:edit, :update]
     resources :user_wishlist_pictures, only: [:new, :create]
     resources :experts, only: [:show]
-    resources :followerships, only: [:new, :create]
+    resources :followerships, only: [:index, :new, :create, :destroy]
   end
 end
