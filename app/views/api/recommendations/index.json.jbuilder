@@ -1,6 +1,10 @@
 json.array! @api_activities do |activity|
   restaurant = Restaurant.find(activity.trackable.restaurant_id)
-  json.user                      activity.owner.name.split(" ")[0]
+  if activity.owner_type == 'User'
+    json.user                      activity.owner.name.split(" ")[0]
+  else
+    json.user                      activity.owner.name
+  end
   json.user_type                 activity.owner_type
   json.user_picture              activity.owner.picture
   json.user_id                   activity.owner.id
