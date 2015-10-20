@@ -18,6 +18,7 @@ json.array!                    @restaurants do |restaurant|
   json.subways                restaurant.subways_near
   json.closest_subway         restaurant.subway_id
   json.friends_recommending   @all_friends_recommending[restaurant.id]
+  json.experts_recommending   @all_experts_recommending[restaurant.id]
   json.friends_wishing        @all_friends_wishing[restaurant.id]
   json.starter1             restaurant.starter1
   json.price_starter1       restaurant.price_starter1

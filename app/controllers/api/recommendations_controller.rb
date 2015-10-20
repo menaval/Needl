@@ -268,7 +268,10 @@ module Api
     end
 
     def load_activities
-      @api_activities = PublicActivity::Activity.where(owner_id: @user.my_visible_friends_ids_except_valentin, owner_type: 'User').order('created_at DESC')
+      # @api_activities = PublicActivity::Activity.where(owner_id: @user.my_visible_friends_ids, owner_type: 'User').order('created_at DESC')
+
+      @api_activities = PublicActivity::Activity.where("(owner_id in (?) and owner_type = ?) or (owner_id in (?) and owner_type = ?)", @user.my_visible_friends_ids, 'User', @user.followings.pluck(:id), 'Expert').order('created_at DESC')
+
     end
 
     def update
@@ -305,7 +308,8 @@ module Api
     end
 
     def read_all_notification
-      PublicActivity::Activity.where(owner_id: @user.my_visible_friends_ids, owner_type: 'User').each do |activity|
+      load_activities
+      @activities.each do |activity|
         activity.read = true
         activity.save
       end

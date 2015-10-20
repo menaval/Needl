@@ -3,6 +3,8 @@ class User < ActiveRecord::Base
   acts_as_token_authenticatable
   has_many :recommendations, dependent: :destroy
   has_many :wishes, dependent: :destroy
+  has_many :followerships, dependent: :destroy
+  has_many :followings, :through => :followerships, :source => :expert, dependent: :destroy
 
   has_many :friendships, foreign_key: :sender_id, dependent: :destroy
   has_many :received_friendships, foreign_key: :receiver_id, class_name: 'Friendship', dependent: :destroy
@@ -44,19 +46,6 @@ class User < ActiveRecord::Base
     @user_ids.uniq
   end
 
-#  parce que sinon dans leurs notifs ils ont tous les wish que je fais en ajoutant les wishlists des gens
-
-  def my_visible_friends_ids_except_valentin
-    @user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
-    @user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
-    if @user_ids.include?(40)
-      @user_ids -= [40]
-    else
-      @user_ids
-    end
-    @user_ids.uniq
-  end
-
   def my_visible_friends_ids_and_me
     @user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: true, receiver_invisible: false }).pluck(:id)
     @user_ids += self.senders.includes(:friendships).where(friendships: { accepted: true, sender_invisible: false }).pluck(:id)
@@ -87,6 +76,11 @@ class User < ActiveRecord::Base
     restos_ids += Restaurant.joins(:wishes).where(wishes: {user_id: self.id}).pluck(:id)
     # Restaurant.joins(:recommendations, :wishes).where("recommendations.user_id = ? OR wishes.user_id = ?", self.id, self.id)
     # pas performant comme code, 3 appels
+  end
+
+  def my_experts_restaurants_ids
+    expert_ids = self.followings.pluck(:id)
+    restos_ids = Restaurant.joins(:recommendations).where(recommendations: { expert: expert_ids }).pluck(:id).uniq
   end
 
   def my_recos

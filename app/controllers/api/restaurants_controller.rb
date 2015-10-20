@@ -16,14 +16,15 @@ module Api
 
     def index
 
-      @user                        = User.find_by(authentication_token: params["user_token"])
-      my_visible_friends_and_me    = @user.my_visible_friends_ids_and_me
-      restaurants_ids              = @user.my_friends_restaurants_ids + @user.my_restaurants_ids
-      @restaurants                 = Restaurant.where(id: restaurants_ids)
-      @recommendations             = Recommendation.where(user_id: my_visible_friends_and_me)
-      @wishes                      = Wish.where(user_id: my_visible_friends_and_me)
-      restaurant_pictures          = RestaurantPicture.where(restaurant_id: restaurants_ids)
-      restaurant_subways           = RestaurantSubway.where(restaurant_id: restaurants_ids)
+      @user                          = User.find_by(authentication_token: params["user_token"])
+      my_visible_friends_and_me      = @user.my_visible_friends_ids_and_me
+      restaurants_ids                = @user.my_friends_restaurants_ids + @user.my_restaurants_ids + @user.my_experts_restaurants_ids
+      @restaurants                   = Restaurant.where(id: restaurants_ids)
+      @recommendations_from_friends  = Recommendation.where(user_id: my_visible_friends_and_me)
+      @recommendations_from_experts  = Recommendation.where(expert_id: @user.followings.pluck(:id))
+      @wishes                        = Wish.where(user_id: my_visible_friends_and_me)
+      restaurant_pictures            = RestaurantPicture.where(restaurant_id: restaurants_ids)
+      restaurant_subways             = RestaurantSubway.where(restaurant_id: restaurants_ids)
       # elements de l'algorithme du score
       # @starting_score              = 55
       # @recommendation_coefficient  = 5
@@ -36,11 +37,19 @@ module Api
       # associer les ambiances et amis recommandant aux restaurants avec une seule requête
       @all_ambiences = {}
       @all_friends_recommending = {}
-      @recommendations.each do |recommendation|
+      @recommendations_from_friends.each do |recommendation|
         @all_ambiences[recommendation.restaurant_id] ||= []
         @all_ambiences[recommendation.restaurant_id] << recommendation.ambiences
         @all_friends_recommending[recommendation.restaurant_id] ||= []
         @all_friends_recommending[recommendation.restaurant_id] << recommendation.user_id
+      end
+
+      @all_experts_recommending = {}
+      @recommendations_from_experts.each do |recommendation|
+        @all_ambiences[recommendation.restaurant_id] ||= []
+        @all_ambiences[recommendation.restaurant_id] << recommendation.ambiences
+        @all_experts_recommending[recommendation.restaurant_id] ||= []
+        @all_experts_recommending[recommendation.restaurant_id] << recommendation.expert_id
       end
 
       @all_friends_wishing = {}
