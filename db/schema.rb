@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150831173904) do
+ActiveRecord::Schema.define(version: 20151020100521) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,26 @@ ActiveRecord::Schema.define(version: 20150831173904) do
   add_index "activities", ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type", using: :btree
   add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
   add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
+
+  create_table "experts", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.string   "picture_file_name"
+    t.string   "picture_content_type"
+    t.integer  "picture_file_size"
+    t.datetime "picture_updated_at"
+  end
+
+  create_table "followerships", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "expert_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "followerships", ["expert_id"], name: "index_followerships_on_expert_id", using: :btree
+  add_index "followerships", ["user_id"], name: "index_followerships_on_user_id", using: :btree
 
   create_table "foods", force: :cascade do |t|
     t.string   "name"
@@ -216,6 +236,8 @@ ActiveRecord::Schema.define(version: 20150831173904) do
   add_index "wishes", ["restaurant_id"], name: "index_wishes_on_restaurant_id", using: :btree
   add_index "wishes", ["user_id"], name: "index_wishes_on_user_id", using: :btree
 
+  add_foreign_key "followerships", "experts"
+  add_foreign_key "followerships", "users"
   add_foreign_key "recommendations", "restaurants"
   add_foreign_key "recommendations", "users"
   add_foreign_key "restaurant_pictures", "restaurants"
