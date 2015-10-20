@@ -28,6 +28,7 @@ class Restaurant < ActiveRecord::Base
   #   includes(:recommendations).where("'#{ambience}' = ANY(recommendations.ambiences)").where(recommendations: {user_id: [User.find(user_id).my_visible_friends_ids_and_me]}).references(:recommendations)if ambience.present?
   # end
 
+# inutilisé car pour le site
   def ambiences_from_my_friends(current_user)
     array = []
     ambiences_list = ["chic", "festif", "typique", "ensoleille", "fast", "casual"]
@@ -40,6 +41,7 @@ class Restaurant < ActiveRecord::Base
     array.flatten.group_by(&:itself).sort_by { |_name, votes| -votes.length }.first(2).to_h.keys.first(2)
   end
 
+# inutilisé car pour le site
   def strengths_from_my_friends(current_user)
     array = []
     strengths_list = ["cuisine", "service", "cadre", "original", "copieux", "vins", "qte_prix"]
@@ -52,22 +54,23 @@ class Restaurant < ActiveRecord::Base
     array.flatten.group_by(&:itself).sort_by { |_name, votes| -votes.length }.first(2).to_h.keys.first(3)
   end
 
-  def ambiences_from_my_friends_api(current_user)
+  def ambiences_from_my_friends_and_experts_api(current_user)
     array = []
-    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
+    self.recommendations.where("user_id in (?) or expert_id in (?)", current_user.my_visible_friends_ids_and_me, current_user.followings.pluck(:id)).each do |reco|
       array += reco.ambiences
     end
     array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
   end
 
-  def strengths_from_my_friends_api(current_user)
+  def strengths_from_my_friends_and_experts_api(current_user)
     array = []
-    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
+    self.recommendations.where("user_id in (?) or expert_id in (?)", current_user.my_visible_friends_ids_and_me, current_user.followings.pluck(:id)).each do |reco|
       array += reco.strengths
     end
     array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(3)
   end
 
+# attention ici on ne renvoie pas les infos mais que l'id donc pb à gérer pour afficher les infos de l'expert (sinon montre les infos d'un user qui a son id)
   def reviews_from_my_friends(current_user)
     hash = {}
     self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|

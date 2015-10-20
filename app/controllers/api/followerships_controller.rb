@@ -4,7 +4,6 @@ module Api
     skip_before_action :verify_authenticity_token
     skip_before_filter :authenticate_user!
 
-#  quel endpoint ?
     def create
       @expert_id = params["expert_id"].to_i
       @user = User.find_by(authentication_token: params["user_token"])
@@ -14,7 +13,7 @@ module Api
       # notif_friendship("invited")
       # redirect_to new_friendship_path, notice: "Votre demande d'invitation a bien été envoyée, vous pourrez accéder à ses recommandations dès lors qu'il vous acceptera"
       # ex: http://localhost:3000/api/friendships/new?friendship[sender_id]=40&friendship[receiver_id]=42&friendship[accepted]=false
-
+      redirect_to friendships_path
     end
 
   end
