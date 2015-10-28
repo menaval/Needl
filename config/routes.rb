@@ -3,7 +3,11 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
 
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks", registrations: 'registrations'}
-  root to: 'restaurants#index'
+  # root to: 'restaurants#index'
+
+  devise_scope :user do
+    root :to => 'devise/sessions#new'
+  end
 
   resources :users, only: [:show, :edit, :update] do
     collection do
