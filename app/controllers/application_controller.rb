@@ -37,6 +37,14 @@ class ApplicationController < ActionController::Base
       end
   end
 
+  def after_sign_in_path_for(resource_or_scope)
+    restaurants_path
+  end
+
+  def after_sign_out_path_for(resource_or_scope)
+    restaurants_path
+  end
+
   private
 
   def devise_or_pages_controller?
