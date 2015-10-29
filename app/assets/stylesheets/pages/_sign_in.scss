@@ -5,51 +5,110 @@ html {
   margin: 0;
   height: 100%;
   display: block;
+  position: relative;
+
   .wrap {
-    background: image-url('home-background.png') center center;
+    background: image-url('mangerie.jpg') center center;
     height: 100% !important;
+    margin-bottom: 0;
   }
-  background-color: $red;
-  // height: 100%;
-  h2 {
-    color: white;
-    font-weight: 300;
-    font-size: 45px;
-  }
+
   .facebook-connect {
     opacity: 0;
     position: absolute;
     right: -20%;
   }
-  .brand-box {
-    padding: 20px;
-    width: 100%;
-    position: absolute;
-    top: calc(50% - 200px);
-    img {
-      width: 60%;
-      margin-left: auto;
-      margin-right: auto;
-    }
-  }
+
   .footer {
     display: none;
   }
+
   .flash-box {
     display: none;
   }
 
-  img#beta {
-    transform: rotate(-40deg);
-    position: fixed;
-    top: 20px;
-    left: -120px;
-  }
-  .sign-box {
-    position: fixed;
-    bottom: 50px;
+  .logo {
     width: 100%;
-    left: calc(50% - 100px);
+    float: left;
+
+    img {
+      width: 150px;
+      margin: 15px calc(50% - 75px);
+    }
+  }
+
+  .title {
+    float: left;
+    width: 70%;
+    margin: 100px 15%;
+    text-align: center;
+    h2 {
+      color: white;
+      font-weight: 300;
+      font-size: 45px;
+    }
+  }
+
+  .socialDiv {
+    float: left;
+    width: 70%;
+    margin: 10px 15%;
+    text-align: center;
+
+    .left, .right {
+      width: 50%;
+      float: left;
+
+      p {
+        color: white;
+        margin-top: 10px;
+        font-weight: 100;
+        font-size: 15px;
+      }
+
+      img {
+        width: 44px;
+        margin: 0 calc(50% - 22px);
+        }
+
+      a {
+        float: left;
+        width: 100%;
+      }
+      .apple-button {
+        background-color: #575756;
+        border: none;
+        border-radius: 10px;
+        color: white;
+        box-shadow: none;
+        width: 150px;
+        margin-top: 15px;
+        height: 36px;
+      }
+      form {
+        margin-top: 15px;
+        .form-control {
+          border-radius: 10px;
+        }
+        .android-button {
+          background-color: #575756;
+          border: none;
+          border-radius: 10px;
+          color: white;
+          box-shadow: none;
+          height: 36px;
+          width: 100px;
+        }
+      }
+    }
   }
 }
+
+
+
+
+
+
+
+
 
