@@ -15,14 +15,24 @@
   </div>
   <div class="right">
     <%= image_tag "android_logo.png" %>
-    <form action='/' class="form-inline">
-      <input type="email" class="form-control" placeholder="votre email">
+
+    <div class= "form">
+    <form action='/subscribers' class="form-inline" method="post">
+      <input name="email" type="text" class="form-control" placeholder="votre email">
       <input type="submit" value="A venir !" class="android-button">
     </form>
-    <p>Pour être averti du lancement sur Androïd</p>
+    <p id="message">Etre averti du lancement sur Androïd</p>
   </div>
 </div>
 
 <div class="facebook-connect">
   <%= render "devise/shared/links" %>
 </div>
+
+<script>
+  $(document).ready(function() {
+    if (window.location.search.indexOf('subscribed=true') > -1) {
+      $('#message').html('Nous faisons au plus vite !');
+    }
+  });
+</script>

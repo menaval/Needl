@@ -4,7 +4,6 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
-
   def verification_code
     code = params[:verification][:code]
     if code == "friend" || code == "guest"
