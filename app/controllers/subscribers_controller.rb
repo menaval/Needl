@@ -5,12 +5,20 @@ class SubscribersController < ApplicationController
     @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
     @list_id = ENV['MAILCHIMP_LIST_ID']
 
-    @gibbon.lists(@list_id).members.create(
-      body: {
-        email_address: params["email"],
-        status: "subscribed"
-      }
-    )
+    @array = []
+    @gibbon.lists(@list_id).members.retrieve["members"].each do |user|
+      @array << user["email_address"]
+    end
+
+    if @array.include?(params["email"]) == false
+      @gibbon.lists(@list_id).members.create(
+        body: {
+          email_address: params["email"],
+          status: "subscribed"
+        }
+      )
+
+    end
     redirect_to root_path(:subscribed => true)
   end
 
