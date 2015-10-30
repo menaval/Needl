@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     root :to => 'devise/sessions#new'
   end
 
-  resources :users, only: [:show, :edit, :update] do
+  resources :users, only: [:show] do
     collection do
       get :access
       get :welcome_ceo
@@ -30,6 +30,8 @@ Rails.application.routes.draw do
     end
   end
   resources :not_interested_relations, only: [:create]
+
+  resources :subscribers, only: [:create]
 
   resources :recommendations, only: [:index, :new, :create, :destroy] do
     collection do

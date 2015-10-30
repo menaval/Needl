@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   include PublicActivity::StoreController
-  before_action :authenticate_user!, unless: :pages_controller?
+  before_action :authenticate_user!, unless: :pages_or_subscribers_controller?
   before_action :count_notifs
   before_action :tracking
   before_action :correct_user
@@ -51,8 +51,8 @@ class ApplicationController < ActionController::Base
     devise_controller? || pages_controller?
   end
 
-  def pages_controller?
-    controller_name == "pages"  # Brought by the `high_voltage` gem
+  def pages_or_subscribers_controller?
+    controller_name == "pages" || controller_name == "subscribers"  # Brought by the `high_voltage` gem
   end
 
   def user_not_authorized

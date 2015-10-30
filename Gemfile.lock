@@ -144,6 +144,9 @@ GEM
       faraday_middleware (>= 0.8)
       hashie (>= 1.0, < 4.0.0)
     geocoder (1.2.9)
+    gibbon (2.1.0)
+      faraday (>= 0.9.1)
+      multi_json (>= 1.11.0)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     google_places (0.32.0)
@@ -350,6 +353,7 @@ DEPENDENCIES
   font-awesome-sass
   foursquare2
   geocoder
+  gibbon
   google_places
   high_voltage
   jbuilder
