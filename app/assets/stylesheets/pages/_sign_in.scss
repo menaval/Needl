@@ -12,6 +12,10 @@ html {
     background: image-url('mangerie.jpg') center center;
     height: 100% !important;
     margin-bottom: 0;
+		
+		@media (max-width: 350px) and (max-height: 500px) {
+			height: 110% !important;
+		}
   }
 
 	.facebook-connect {
@@ -58,7 +62,7 @@ html {
       font-size: 45px;
 
       @media (min-width: 350px) and (max-width: 750px) {
-        font-size: 27px;
+        font-size: 25px;
 				margin: 10px 15%;
       }
 
@@ -272,4 +276,36 @@ html {
       }
     }
   }
+	
+	.social {
+		width: 200px;
+		position: absolute;
+		bottom: 0;
+		left: calc(50% - 100px);
+		
+		a {
+			width: 40px;
+			float: left;
+			
+			&.left {
+				margin: 0 10px 0 calc(50% - 50px);
+				
+				img {
+					width: 45px;
+					max-width: 100px;
+					margin: 0 0 5px 0;
+				}
+			}
+			
+			&.right {
+				margin: 0 calc(50% - 50px) 0 10px;
+				
+				img {
+					margin: 7px 0 0 0;
+					width: 31px;
+				}
+			}
+		}
+		
+	}
 }
