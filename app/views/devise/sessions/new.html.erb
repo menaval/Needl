@@ -45,5 +45,6 @@
     if (window.location.search.indexOf('subscribed=true') > -1) {
       $('#message').html('Nous faisons au plus vite !');
     }
+    mixpanel.track("landing page viewed");
   });
 </script>
