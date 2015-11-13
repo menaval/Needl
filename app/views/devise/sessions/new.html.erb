@@ -8,21 +8,16 @@
 
 <div class="socialDiv">
   <div class="left">
-    <%= link_to "https://itunes.apple.com/fr/app/id1027312535", id: 'appstore_redirection' do %>
+    <%= link_to "https://itunes.apple.com/fr/app/id1027312535", class: "left", id: 'appstore_redirection' do %>
       <%= image_tag "apple_logo.png" %>
       <button type="button" class="apple-button">Par ici !</button>
     <% end %>
-
-<!--     <a href="https://itunes.apple.com/fr/app/id1027312535">
-      <%= image_tag "apple_logo.png" %>
-      <button type="button" class="apple-button">Par ici !</button>
-    </a> -->
   </div>
   <div class="right">
     <%= image_tag "android_logo.png" %>
 
     <div class= "form">
-    	<form action='/subscribers' class="form-inline" method="post">
+    	<form action='/subscribers' class="form-inline" id="mailing_android" method="post">
       	<input name="email" type="text" class="form-input" placeholder="votre email">
       	<input type="submit" value="A venir !" class="android-button">
     	</form>
@@ -32,13 +27,14 @@
 </div>
 
 <div class="social">
-	<a class="left" href="https://www.facebook.com/getneedl">
-		<%= image_tag "facebook_white.png" %>
-	</a>
+  <%= link_to "https://www.facebook.com/getneedl", class: "left", id: 'facebook_redirection' do %>
+    <%= image_tag "facebook_white.png" %>
+  <% end %>
 
-	<a class="right" href="https://instagram.com/needlapp/">
-		<%= image_tag "instagram_white.png" %>
-	</a>
+  <%= link_to "https://instagram.com/needlapp/", class: "right", id: 'instagram_redirection' do %>
+    <%= image_tag "instagram_white.png" %>
+  <% end %>
+
 </div>
 
 <div class="facebook-connect">
@@ -53,7 +49,7 @@
     mixpanel.track("landing page viewed");
     mixpanel.track_forms("#mailing_android", "Submitted mail Android");
     mixpanel.track_links("#appstore_redirection", "Redirection AppStore");
-    mixpanel.track_links("#appstore_redirection", "Redirection AppStore");
+    mixpanel.track_links("#facebook_redirection", "Redirection Facebook");
     mixpanel.track_links("#instagram_redirection", "Redirection Instagram");
   });
 </script>
