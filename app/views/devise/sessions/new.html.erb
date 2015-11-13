@@ -10,13 +10,13 @@
   <div class="left">
     <a href="https://itunes.apple.com/fr/app/id1027312535">
       <%= image_tag "apple_logo.png" %>
-      <button type="button" class="apple-button">Par ici !</button>
+      <button type="button" class="apple-button" id="appstore_redirection">Par ici !</button>
     </a>
   </div>
   <div class="right">
     <%= image_tag "android_logo.png" %>
 
-    <div class= "form">
+    <div class= "form" id= "mailing_android">
     	<form action='/subscribers' class="form-inline" method="post">
       	<input name="email" type="text" class="form-input" placeholder="votre email">
       	<input type="submit" value="A venir !" class="android-button">
@@ -27,11 +27,11 @@
 </div>
 
 <div class="social">
-	<a class="left" href="https://www.facebook.com/getneedl">
+	<a class="left" id= "facebook_redirection" href="https://www.facebook.com/getneedl">
 		<%= image_tag "facebook_white.png" %>
 	</a>
 
-	<a class="right" href="https://instagram.com/needlapp/">
+	<a class="right" id= "instagram_redirection" href="https://instagram.com/needlapp/">
 		<%= image_tag "instagram_white.png" %>
 	</a>
 </div>
@@ -46,5 +46,9 @@
       $('#message').html('Nous faisons au plus vite !');
     }
     mixpanel.track("landing page viewed");
+    mixpanel.track_forms("#mailing_android", "Submitted mail Android");
+    mixpanel.track_links("#appstore_redirection", "Redirection AppStore");
+    mixpanel.track_links("#facebook_redirection", "Redirection Facebook");
+    mixpanel.track_links("#instagram_redirection", "Redirection Instagram");
   });
 </script>
