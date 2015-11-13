@@ -14,6 +14,25 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         redirect_to access_users_path
       else
         @tracker.track(current_user.id, 'signin', {"user" => user.name, "browser" => browser.name} )
+
+        #  test a retirer
+        @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
+        @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
+        User.all.each do |user|
+          @gibbon.lists(@list_id).members.create(
+            body: {
+              email_address: user.email,
+              status: "subscribed",
+              merge_fields: {
+                FNAME: user.name.partition(" ").first,
+                LNAME: user.name.partition(" ").last
+              }
+            }
+          )
+        end
+
+        # fin du test
+
         redirect_to root_path
       end
 
@@ -29,6 +48,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if user.persisted?
       sign_in user#, event: :authentication
       if user.sign_in_count == 1
+
+        # On track l'arrivée sur Mixpanel
+
         @tracker.people.set(user.id, {
           "gender" => user.gender,
           "name" => user.name,
@@ -36,6 +58,23 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           "$email": user.email
         })
         @tracker.track(user.id, 'signup', {"user" => user.name, "browser" => browser.name} )
+
+        # On ajoute le nouveau membre sur la mailing liste de mailchimp
+
+        @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
+        @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
+
+        @gibbon.lists(@list_id).members.create(
+          body: {
+            email_address: user.email,
+            status: "subscribed",
+            merge_fields: {
+              FNAME: user.name.partition(" ").first,
+              LNAME: user.name.partition(" ").last
+            }
+          }
+        )
+
       else
         @tracker.track(user.id, 'signin', {"user" => user.name, "browser" => browser.name} )
       end

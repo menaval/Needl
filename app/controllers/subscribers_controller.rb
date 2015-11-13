@@ -3,7 +3,7 @@ class SubscribersController < ApplicationController
 
   def create
     @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
-    @list_id = ENV['MAILCHIMP_LIST_ID']
+    @list_id = ENV['MAILCHIMP_LIST_ID_WAITING_ANDROID']
 
     @array = []
     @gibbon.lists(@list_id).members.retrieve["members"].each do |user|
