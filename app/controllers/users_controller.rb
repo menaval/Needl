@@ -2,23 +2,6 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-
-    @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
-    @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
-
-    User.all.each do |user|
-      @gibbon.lists(@list_id).members.create(
-        body: {
-          email_address: user.email,
-          status: "subscribed",
-          merge_fields: {
-            FNAME: user.name.partition(" ").first,
-            LNAME: user.name.partition(" ").last
-          }
-        }
-      )
-    end
-
   end
 
   def verification_code
