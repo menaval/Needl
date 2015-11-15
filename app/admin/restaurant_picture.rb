@@ -3,7 +3,7 @@ ActiveAdmin.register RestaurantPicture do
 
   form do |f|
     f.inputs "Picture" do
-      f.input :restaurant, collection: proc { Restaurant.order(:name) }
+      f.input :restaurant, collection: Restaurant.all.order(:name)
       f.file_field :picture
     end
     f.actions
