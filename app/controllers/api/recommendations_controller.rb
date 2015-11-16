@@ -268,10 +268,7 @@ module Api
     end
 
     def load_activities
-      # @api_activities = PublicActivity::Activity.where(owner_id: @user.my_visible_friends_ids, owner_type: 'User').order('created_at DESC')
-
-      @api_activities = PublicActivity::Activity.where("(owner_id in (?) and owner_type = ?) or (owner_id in (?) and owner_type = ?)", @user.my_visible_friends_ids, 'User', @user.followings.pluck(:id), 'Expert').order('created_at DESC')
-
+      @api_activities = PublicActivity::Activity.where(owner_id: @user.my_visible_friends_ids, owner_type: 'User').order('created_at DESC')
     end
 
     def update
