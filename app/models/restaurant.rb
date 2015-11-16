@@ -5,6 +5,8 @@ class Restaurant < ActiveRecord::Base
   has_many :wishes, dependent: :destroy
   has_many :restaurant_subways, dependent: :destroy
   has_many :subways, :through => :restaurant_subways
+  has_many :restaurant_types, dependent: :destroy
+  has_many :types, :through => :restaurant_types
 
   belongs_to :food
   geocoded_by :full_address
