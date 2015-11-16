@@ -54,6 +54,22 @@ class Restaurant < ActiveRecord::Base
     array.flatten.group_by(&:itself).sort_by { |_name, votes| -votes.length }.first(2).to_h.keys.first(3)
   end
 
+  def ambiences_from_my_friends_api(current_user)
+    array = []
+    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
+      array += reco.ambiences
+    end
+    array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
+  end
+
+  def strengths_from_my_friends_api(current_user)
+    array = []
+    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
+      array += reco.strengths
+    end
+    array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(3)
+  end
+
   def reviews_from_my_friends(current_user)
     hash = {}
     self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
