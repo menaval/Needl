@@ -3,8 +3,6 @@ class User < ActiveRecord::Base
   acts_as_token_authenticatable
   has_many :recommendations, dependent: :destroy
   has_many :wishes, dependent: :destroy
-  has_many :followerships, dependent: :destroy
-  has_many :followings, :through => :followerships, :source => :expert, dependent: :destroy
 
   has_many :friendships, foreign_key: :sender_id, dependent: :destroy
   has_many :received_friendships, foreign_key: :receiver_id, class_name: 'Friendship', dependent: :destroy
@@ -76,11 +74,6 @@ class User < ActiveRecord::Base
     restos_ids += Restaurant.joins(:wishes).where(wishes: {user_id: self.id}).pluck(:id)
     # Restaurant.joins(:recommendations, :wishes).where("recommendations.user_id = ? OR wishes.user_id = ?", self.id, self.id)
     # pas performant comme code, 3 appels
-  end
-
-  def my_experts_restaurants_ids
-    expert_ids = self.followings.pluck(:id)
-    restos_ids = Restaurant.joins(:recommendations).where(recommendations: { expert: expert_ids }).pluck(:id).uniq
   end
 
   def my_recos
