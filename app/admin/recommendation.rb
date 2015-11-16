@@ -1,6 +1,6 @@
 ActiveAdmin.register Recommendation do
 
-  permit_params :ambiences, :strengths, :review, :restaurant_id, :user_id, :price_ranges, :expert_id
+  permit_params :ambiences, :strengths, :review, :restaurant_id, :user_id, :price_ranges
 
   batch_action :reco_from_expert do |ids|
     Recommendation.find(ids).each do |recommendation|
