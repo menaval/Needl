@@ -1,7 +1,6 @@
 class Recommendation < ActiveRecord::Base
   include PublicActivity::Model
   belongs_to :user
-  belongs_to :expert
   belongs_to :restaurant
   validates :strengths, presence: true
   validates :ambiences, presence: true
