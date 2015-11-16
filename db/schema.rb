@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151116114906) do
+ActiveRecord::Schema.define(version: 20151116135137) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,6 +108,16 @@ ActiveRecord::Schema.define(version: 20151116114906) do
   add_index "restaurant_subways", ["restaurant_id"], name: "index_restaurant_subways_on_restaurant_id", using: :btree
   add_index "restaurant_subways", ["subway_id"], name: "index_restaurant_subways_on_subway_id", using: :btree
 
+  create_table "restaurant_types", force: :cascade do |t|
+    t.integer  "restaurant_id"
+    t.integer  "type_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "restaurant_types", ["restaurant_id"], name: "index_restaurant_types_on_restaurant_id", using: :btree
+  add_index "restaurant_types", ["type_id"], name: "index_restaurant_types_on_type_id", using: :btree
+
   create_table "restaurants", force: :cascade do |t|
     t.string   "name"
     t.string   "address"
@@ -158,6 +168,16 @@ ActiveRecord::Schema.define(version: 20151116114906) do
     t.float    "longitude"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "types", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.string   "picture_file_name"
+    t.string   "picture_content_type"
+    t.integer  "picture_file_size"
+    t.datetime "picture_updated_at"
   end
 
   create_table "user_wishlist_pictures", force: :cascade do |t|
@@ -219,6 +239,8 @@ ActiveRecord::Schema.define(version: 20151116114906) do
   add_foreign_key "recommendations", "restaurants"
   add_foreign_key "recommendations", "users"
   add_foreign_key "restaurant_pictures", "restaurants"
+  add_foreign_key "restaurant_types", "restaurants"
+  add_foreign_key "restaurant_types", "types"
   add_foreign_key "restaurants", "foods"
   add_foreign_key "user_wishlist_pictures", "users"
   add_foreign_key "wishes", "restaurants"
