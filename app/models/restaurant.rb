@@ -102,4 +102,43 @@ class Restaurant < ActiveRecord::Base
     hash.sort_by {|_key, value| value}.first[0]
   end
 
+  def attribute_category_from_food
+
+    food = self.food.name
+    coreen = ["Korean"]
+    thai = ["Thai"]
+    chinois = ["Chinese", "Anhui", "Beijing", "Cantonese", "Aristocrat", "Chinese Breakfast", "Dim Sum", "Dongbei", "Fujian", "Guizhou", "Hainan", "Hakka", "Henan", "Hong Kong", "Huaiyang", "Hubei", "Hunan", "Imperial", "Jiangsu", "Jiangxi", "Macanese", "Manchu", "Peking Duck", "Shaanxi", "Shandong", "Shanghai", "Shanxi", "Szechuan", "Taiwanese", "Tianjin", "Xinjiang", "Yunnan", "Zhejiang"]
+    indien = ["Indian", "Andhra", "Awadhi", "Bengali", "Chaat", "Chettinad", "Dhaba", "Dosa", "Goan", "Gujarati", "Hyderabadi", "Indian Chinese", "Indian Sweets", "Irani", "Jain", "Karnataka", "Kerala", "Maharashtrian", "Mughlai", "Multicuisine Indian", "North Indian", "Northeast Indian", "Parsi", "Punjabi", "Rajasthani", "South Indian", "Udupi"]
+    japonais = ["Japanese", "Donburi", "Japanese Curry", "Kaiseki", "Kushikatsu", "Monjayaki", "Nabe", "Okonomiyaki", "Ramen", "Shabu-Shabu", "Soba", "Sukiyaki", "Takoyaki", "Tempura", "Tonkatsu", "Udon", "Unagi", "Wagashi", "Yakitori", "Yoshoku"]
+    sushi = ["Sushi"]
+    autres_asie = ["Asian", "Cambodian","Malaysian", "Mongolian", "Noodles", "Tibetan", "Vietnamese", "Dumplings", "Indonesian", "Acehnese", "Balinese", "Betawinese", "Indonesian Meatball Place", "Javanese", "Manadonese", "Padangnese", "Sundanese", "Pakistani", "Sri Lankan", "Filipino", "Himalayan", "Hotpot"]
+    francais = ["Bistro", "Fondue", "French", "Gastropub"]
+    italien = ["Italian", "Abruzzo", "Agriturismo", "Aosta", "Basilicata", "Calabria", "Campanian", "Emilia", "Friuli", "Ligurian", "Lombard", "Malga", "Marche", "Molise", "Piadineria", "Piedmontese", "Puglia", "Rifugio di Montagna", "Romagna", "Roman", "Sardinian", "Sicilian", "South Tyrolean", "Trattoria/Osteria", "Trentino", "Tuscan", "Umbrian", "Veneto"]
+    pizza = ["Pizza"]
+    burger = ["Burgers"]
+    street_food = ["Bagels", "Falafel", "Fast Food", "Fish & Chips", "Food Court", "Food Truck", "Fried Chicken", "Friterie", "Hot Dogs", "Sandwiches", "Snacks", "Doner", "Kebab", "Kofte", "Wings"]
+    autres_europe = ["Austrian", "Belgian", "Czech", "Eastern European", "Belarusian", "Romanian", "Tatar", "English", "German", "Greek", "Bougatsa Shops", "Cretan Restaurants", "Fish Tavernas", "Grilled Meat Restaurants", "Kafenia", "Magirio", "Meze Restaurants", "Modern Greek Restaurants", "Ouzeries", "Patsa Restaurants", "Souvlaki", "Tavernas", "Tsipouro Restaurants", "Hungarian", "Mediterranean", "Modern European", "Polish", "Portuguese", "Russian", "Blini", "Pelmeni", "Scandinavian", "Spanish", "Paella", "Swiss", "Ukrainian", "Varenyky", "West-Ukrainian"]
+    viandes_et_grillades = ["American", "New American", "Australian", "BBQ", "Steakhouse"]
+    oriental = ["Afghan", "Caucasian", "Moroccan", "Middle Eastern", "Persian", "Pakistani", "Turkish", "Borek", "Cigkofte", "Gozleme", "Kokore", "Manti", "Meyhane", "Pide", "Turkish Home Cooking"]
+    mexicain = ["Mexican", "Burritos", "Tacos"]
+    autres_latino = ["South American", "Argentinian", "Peruvian", "Brazilian", "Acai", "Baiano", "Central Brazilian", "Churrascaria", "Empadas", "Goiano", "Mineiro", "Northeastern Brazilian", "Northern Brazilian", "Pastelaria", "Southeastern Brazilian", "Southern Brazilian", "Tapiocaria", "Latin American", "Arepas", "Cuban", "Empanada"]
+    fruits_de_mer = ["Seafood"]
+    africain = ["African", "Ethiopian"]
+    creole = ["Cajun / Creole", "Caribbean"]
+    crepes = ["Creperie"]
+    tapas = ["Tapas"]
+    vegetarien = ["Vegetarian / Vegan"]
+
+    categories = [coreen, thai, chinois, indien, japonais, sushi, autres_asie, francais, italien, pizza, burger, street_food, autres_europe, viandes_et_grillades, oriental, mexicain, autres_latino, fruits_de_mer, africain, creole, crepes, tapas, vegetarien]
+
+    # attention, si on change l'ordre des types ou l'ordre des catégories dans le tableau ci dessus, tout devient faux
+
+    categories.each_with_index do |category, index|
+      if category.include?(food)
+        RestaurantType.create(restaurant_id: self.id, type_id: index + 1 )
+      end
+    end
+
+  end
+
 end
