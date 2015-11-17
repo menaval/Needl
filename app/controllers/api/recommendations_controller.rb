@@ -128,6 +128,9 @@ module Api
       # pour rendre plus vite dans l'api
       restaurant.food_name = Food.find(restaurant.food_id).name
 
+      # pour créer le RestaurantType correspondant
+      restaurant.attribute_category_from_food
+
       if restaurant.save
         link_to_subways(restaurant)
         return restaurant
