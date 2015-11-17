@@ -104,7 +104,20 @@ class Restaurant < ActiveRecord::Base
 
   def attribute_category_from_food
 
+    variables_for_type_transfer
     food = self.food.name
+
+    # attention, si on change l'ordre des types ou l'ordre des catégories dans le tableau ci dessus, tout devient faux
+    @categories.each_with_index do |category, index|
+      if category.include?(food)
+        RestaurantType.create(restaurant_id: self.id, type_id: index + 1 )
+      end
+    end
+
+  end
+
+  def variables_for_type_transfer
+
     coreen = ["Korean"]
     thai = ["Thai"]
     chinois = ["Chinese", "Anhui", "Beijing", "Cantonese", "Aristocrat", "Chinese Breakfast", "Dim Sum", "Dongbei", "Fujian", "Guizhou", "Hainan", "Hakka", "Henan", "Hong Kong", "Huaiyang", "Hubei", "Hunan", "Imperial", "Jiangsu", "Jiangxi", "Macanese", "Manchu", "Peking Duck", "Shaanxi", "Shandong", "Shanghai", "Shanxi", "Szechuan", "Taiwanese", "Tianjin", "Xinjiang", "Yunnan", "Zhejiang"]
@@ -129,15 +142,7 @@ class Restaurant < ActiveRecord::Base
     tapas = ["Tapas"]
     vegetarien = ["Vegetarian / Vegan"]
 
-    categories = [coreen, thai, chinois, indien, japonais, sushi, autres_asie, francais, italien, pizza, burger, street_food, autres_europe, viandes_et_grillades, oriental, mexicain, autres_latino, fruits_de_mer, africain, creole, crepes, tapas, vegetarien]
-
-    # attention, si on change l'ordre des types ou l'ordre des catégories dans le tableau ci dessus, tout devient faux
-
-    categories.each_with_index do |category, index|
-      if category.include?(food)
-        RestaurantType.create(restaurant_id: self.id, type_id: index + 1 )
-      end
-    end
+    @categories = [coreen, thai, chinois, indien, japonais, sushi, autres_asie, francais, italien, pizza, burger, street_food, autres_europe, viandes_et_grillades, oriental, mexicain, autres_latino, fruits_de_mer, africain, creole, crepes, tapas, vegetarien]
 
   end
 
