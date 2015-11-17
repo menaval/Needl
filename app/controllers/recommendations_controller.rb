@@ -119,6 +119,7 @@ class RecommendationsController < ApplicationController
     restaurant.food_name = Food.find(restaurant.food_id).name
 
     if restaurant.save
+      restaurant.attribute_category_from_food
       link_to_subways(restaurant)
       return restaurant
     else
