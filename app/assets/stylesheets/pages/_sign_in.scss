@@ -74,8 +74,8 @@ html {
       font-size: 45px;
 
       @media (min-width: 350px) and (max-width: 750px) {
-        font-size: 25px;
-				margin: 10px 15%;
+        font-size: 22px;
+				margin: 5px 15%;
       }
 
 			@media (max-width: 350px) {
@@ -99,6 +99,11 @@ html {
     width: 70%;
     margin: 10px 15% 0 15%;
     text-align: center;
+
+    @media (max-width: 750px) {
+      width: 90%;
+	    margin: 10px 5% 0 5%;
+    }
 
     .left {
       width: 50%;
@@ -130,7 +135,7 @@ html {
 				}
 
 				@media (min-width: 350px) and (max-width: 750px) {
-					width: 36px;
+					width: 32px;
 					margin: 0;
 				}
       }
@@ -212,8 +217,8 @@ html {
 				}
 
 				@media (min-width: 350px) and (max-width: 750px) {
-					width: 36px;
-					margin: 0 calc(50% - 18px);
+					width: 32px;
+					margin: 0 calc(50% - 16px);
 				}
       }
 
