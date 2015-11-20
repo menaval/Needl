@@ -5,6 +5,6 @@ class UserMailer < ApplicationMailer
     @user = user
 
     #  a changer la subject line
-    mail(to: @user.email, subject: 'Très bonne idée')
+    mail(to: @user.email, subject: 'Très bonne idée', from: 'Valentin Menard')
   end
 end
