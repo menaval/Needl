@@ -34,6 +34,8 @@ module Api
 
     private
 
+    # A supprimer
+
     def create
       @friend_id = params["friend_id"].to_i
       @friendship = Friendship.new(sender_id: @user.id, receiver_id: @friend_id, accepted: false)
@@ -44,6 +46,8 @@ module Api
       # ex: http://localhost:3000/api/friendships/new?friendship[sender_id]=40&friendship[receiver_id]=42&friendship[accepted]=false
 
     end
+
+    # A supprimer
 
     def answer_yes
       @friend_id = params["friend_id"].to_i
@@ -84,6 +88,8 @@ module Api
       end
       redirect_to friendships_path
     end
+
+    #  A supprimer
 
     def notif_friendship(status)
 

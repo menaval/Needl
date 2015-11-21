@@ -128,4 +128,8 @@ class User < ActiveRecord::Base
     UserMailer.welcome(self).deliver
   end
 
+  def send_new_friend_email(friend)
+    UserMailer.new_friend(self, friend).deliver
+  end
+
 end
