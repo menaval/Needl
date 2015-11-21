@@ -17,9 +17,6 @@ Bundler.require(*Rails.groups)
 module Needl
   class Application < Rails::Application
 
-    MANDRILL_USERNAME = ENV["MANDRILL_USERNAME"]
-    MANDRILL_APIKEY = ENV["MANDRILL_APIKEY"]
-
     config.i18n.enforce_available_locales = true
     config.embed_authenticity_token_in_remote_forms = true
 
