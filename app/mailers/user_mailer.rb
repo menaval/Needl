@@ -1,5 +1,4 @@
 class UserMailer < ApplicationMailer
-  default from: 'valentin.menard@needlapp.com'
 
   def welcome(user)
     @user = user
