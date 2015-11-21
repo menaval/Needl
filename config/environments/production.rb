@@ -1,9 +1,6 @@
 require Rails.root.join("config/smtp")
 Rails.application.configure do
 
-  MANDRILL_USERNAME = ENV["MANDRILL_USERNAME"]
-  MANDRILL_APIKEY = ENV["MANDRILL_APIKEY"]
-
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
@@ -75,8 +72,8 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     :port =>           '587',
     :address =>        'smtp.mandrillapp.com',
-    :user_name =>      MANDRILL_USERNAME,
-    :password =>       MANDRILL_APIKEY,
+    :user_name =>      'valentin.menard@needlapp.com',
+    :password =>       'kK9M7dVDFAmJUjrqltbwHA',
     :domain =>         'needl.fr',
     :authentication => :plain
   }
