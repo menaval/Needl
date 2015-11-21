@@ -71,8 +71,8 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     :port =>           '587',
     :address =>        'smtp.mandrillapp.com',
-    :user_name =>      MANDRILL_USERNAME,
-    :password =>       MANDRILL_APIKEY,
+    :user_name =>      Needl::Application::MANDRILL_USERNAME,
+    :password =>       Needl::Application::MANDRILL_APIKEY,
     :domain =>         'needl.fr',
     :authentication => :plain
   }
