@@ -1,4 +1,7 @@
 class RecommendationsController < ApplicationController
+  acts_as_token_authentication_handler_for User
+  skip_before_action :verify_authenticity_token
+  skip_before_filter :authenticate_user!
   include PublicActivity::StoreController
   before_action :load_activities, only: [:index]
 
@@ -26,33 +29,52 @@ class RecommendationsController < ApplicationController
         # On crée la recommandation à partir des infos récupérées
         @recommendation = current_user.recommendations.new(recommendation_params)
         @recommendation.restaurant = @restaurant
-        @recommendation.review = recommendation_params["review"] != "" ? recommendation_params["review"] : "Je recommande !"
+        @recommendation.review = ( recommendation_params["review"] != "" && recommendation_params["review"] != nil ) ? recommendation_params["review"] : "Je recommande !"
         #  si les informations récupérées ont bien toutes été remplies on enregistre la reco, update le prix du resto et on le track
         if @recommendation.save
 
           @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
           @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
-          notif_reco("recommendation")
+          notif_reco
 
           # si c'était sur ma liste de wish ça l'enlève
           if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
-            @tracker.track(current_user.id, 'Wish to Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
             Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).first.destroy
+            @tracker.track(current_user.id, 'Wish to Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
           end
 
-          # si première recommandation ou wish, alors page d'accueil du profil ceo
-          if current_user.recommendations.count == 1 && current_user.wishes.count == 0
+          # si première recommandation, alors page d'accueil du profil ceo ou message mail
+          if current_user.recommendations.count == 1
             Friendship.create(sender_id: 125, receiver_id: current_user.id, accepted: true)
-            redirect_to welcome_ceo_users_path
+            if params["origin"] == "mail"
+              accept_all_friends
+              @tracker.track(current_user.id, 'New Reco from Mail', { "restaurant" => @restaurant.name, "user" => current_user.name })
+              sign_out
+              render(:json => {notice: "Tu as recommandé ton premier restaurant ! L'app t'ouvre désormais ses portes ! Connecte toi sur l'app pour voir ce que tes amis t'ont recommandé !"}, :status => 409, :layout => false)
+            else
+              # ici on ne met pas accept_all_friends parce que pour l'instant cette partie n'est utile qu'au dev interne
+             redirect_to welcome_ceo_users_path
+            end
 
-          #sinon on renvoie à la page du resto
+          #sinon on renvoie à la page du resto ou le message mail diffère
           else
-            redirect_to restaurant_path(@recommendation.restaurant)
+            if params["origin"] == "mail"
+              @tracker.track(current_user.id, 'New Reco from Mail', { "restaurant" => @restaurant.name, "user" => current_user.name })
+              sign_out
+              render(:json => {notice: "Le restaurant a bien été recommandé à tes amis ! Tu peux le retrouver en te connectant sur l'app !"}, :status => 409, :layout => false)
+            else
+              redirect_to restaurant_path(@recommendation.restaurant)
+            end
           end
 
         # si certaines infos nécessaires n'ont pas été remplies
         else
-          redirect_to new_recommendation_path, notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"
+          if params["origin"] == "mail"
+            sign_out
+            render(:json => {notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"}, :status => 409, :layout => false)
+          else
+            redirect_to new_recommendation_path, notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"
+          end
         end
 
       # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page
@@ -119,8 +141,9 @@ class RecommendationsController < ApplicationController
     restaurant.food_name = Food.find(restaurant.food_id).name
 
     if restaurant.save
-      restaurant.attribute_category_from_food
       link_to_subways(restaurant)
+      # pour créer le RestaurantType correspondant
+      restaurant.attribute_category_from_food
       return restaurant
     else
       flash[:alert] = "Nous ne parvenons pas à trouver ce restaurant"
@@ -128,8 +151,10 @@ class RecommendationsController < ApplicationController
     end
   end
 
+
+
   def create_a_wish
-    # si l'utilisateur a déjà mis sur sa liste de souhaits cet endroit (sachant que ça peut être fait depuis 2 endroits) alors on le lui dit (on vérifie qu'on ne choppe pas un id de foursquare non transformable en integer)
+    # si l'utilisateur a déjà mis sur sa liste de souhaits cet endroit alors on le lui dit. Et on vérifie qu'on ne choppe pas un id de foursquare non transformable en integer.
     if params["restaurant_id"].length <= 9 && Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).any?
       redirect_to restaurants_path, notice: "Restaurant déjà sur ta wishlist"
 
@@ -145,17 +170,7 @@ class RecommendationsController < ApplicationController
         # @wish.restaurant = @restaurant
 
         @tracker.track(current_user.id, 'New Wish', { "restaurant" => @restaurant.name, "user" => current_user.name })
-        notif_reco("wish")
-
-        # si première wish ou reco, alors page d'accueil du profil ceo
-        if current_user.wishes.count == 1 && current_user.recommendations.count == 0
-          Friendship.create(sender_id: 125, receiver_id: current_user.id, accepted: true)
-          redirect_to welcome_ceo_users_path
-
-        #sinon on renvoie à la page du resto
-        else
-          redirect_to restaurant_path(@wish.restaurant)
-        end
+        redirect_to restaurant_path(@wish.restaurant)
       end
 
     # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page
@@ -214,6 +229,7 @@ class RecommendationsController < ApplicationController
     search = search_less_than_500_meters.length > 0 ? search_less_than_500_meters : [search_by_closest]
 
     # on associe chaque station de metro au restaurant
+
     search.each do |result|
       if Subway.find_by(latitude: result.lat) == nil
         subway = create_new_subway(result)
@@ -225,16 +241,17 @@ class RecommendationsController < ApplicationController
         subway_id:     subway.id
         )
     end
+    # enregistrer les subways dans la base de données restos pour rendre plus rapidement l'api
+    restaurant.subway_id = restaurant.closest_subway_id
+    restaurant.subway_name = Subway.find(restaurant.subway_id).name
+    array = []
+    restaurant.subways.each do |subway|
+      array << {subway.id => subway.name}
+    end
+    restaurant.subways_near = array
 
-      # enregistrer les subways dans la base de données restos pour rendre plus rapidement l'api
-      restaurant.subway_id = restaurant.closest_subway_id
-      restaurant.subway_name = Subway.find(restaurant.subway_id).name
-      array = []
-      restaurant.subways.each do |subway|
-        array << {subway.id => subway.name}
-      end
-      restaurant.subways_near = array
-      restaurant.save
+    restaurant.save
+
   end
 
 
@@ -268,32 +285,56 @@ class RecommendationsController < ApplicationController
   def update
     recommendation = Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: current_user.id).first
     recommendation.update_attributes(recommendation_params)
-    redirect_to restaurant_path(recommendation.restaurant)
+    if params["origin"] == "mail"
+      sign_out
+      render(:json => {notice: "Tu avais déjà recommandé ce restaurant, nous avons mis à jour ta recommandation ! Tu peux le retrouver en te connectant sur l'app!"}, :status => 409, :layout => false)
+    else
+      redirect_to restaurant_path(recommendation.restaurant)
+    end
   end
 
-  def notif_reco(status)
-
-    client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'], master_key:ENV['PARSE_MASTER_KEY'])
-    if status == "recommendation" && current_user.my_friends_seing_me_ids != []
-      # envoyer à tous les friends que @user a fait une nouvelle reco du resto @restaurant
-      data = { :alert => "#{current_user.name} a recommande #{@restaurant.name}", :badge => 'Increment', :type => 'reco'  }
-      push = client.push(data)
-      # push.type = "ios"
-      query = client.query(Parse::Protocol::CLASS_INSTALLATION).value_in('user_id', current_user.my_friends_seing_me_ids)
-      push.where = query.where
-      push.save
-
-    # else
-    #   # envoyer à tous les friends que @user a fait un nouveau wish du resto @restaurant
-    #   data = { :alert => "#{current_user.name} a ajoute #{@restaurant.name} sur sa wishlist", :badge => 'Increment', :type => 'reco'  }
-    #   push = client.push(data)
-    #   # push.type = "ios"
-    #   query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', current_user.my_friends_seing_me_ids)
-    #   push.where = query.where
-    #   push.save
+  def accept_all_friends
+    friends = current_user.user_friends
+    if friends.length > 0
+      friends.each do |friend|
+        @friend = friend
+        friendship = Friendship.create(sender_id: current_user.id, receiver_id: @friend.id, accepted: true)
+        @tracker.track(current_user.id, 'add_friend', { "user" => current_user.name })
+        notif_friendship
+        @friend.send_new_friend_email(current_user)
+      end
     end
 
   end
+
+  def notif_friendship
+
+    client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
+      # envoyer à @friend qu'il a été accepté
+      data = { :alert => "#{current_user.name} te fait découvrir ses restos!", :badge => 'Increment', :type => 'friend' }
+      push = client.push(data)
+      # push.type = "ios"
+      query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend.id)
+      push.where = query.where
+      push.save
+
+  end
+
+    def notif_reco
+
+      client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
+
+      if current_user.my_friends_seing_me_ids != []
+       # envoyer à chaque friend que current_user a fait une nouvelle reco du resto @restaurant
+       data = { :alert => "#{current_user.name} a recommande #{@restaurant.name}", :badge => 'Increment', :type => 'reco' }
+       push = client.push(data)
+       # push.type = "ios"
+       query = client.query(Parse::Protocol::CLASS_INSTALLATION).value_in('user_id', current_user.my_friends_seing_me_ids)
+       push.where = query.where
+       push.save
+      end
+
+    end
 
   def read_all_notification
     PublicActivity::Activity.where(owner_id: current_user.my_visible_friends_ids, owner_type: 'User').each do |activity|

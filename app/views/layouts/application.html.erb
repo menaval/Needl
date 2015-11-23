@@ -44,7 +44,11 @@
 
     <%= yield %>
   </div>
-  <%= render "shared/footer" %>
+
+  <!-- On n'affiche pas le footer quand quelqu'un fait une recommandation depuis un mail -->
+  <% if params["origin"] != "mail" %>
+    <%= render "shared/footer" %>
+  <% end %>
 
   <%= javascript_include_tag :application %>
   <%= yield(:after_js) %>
