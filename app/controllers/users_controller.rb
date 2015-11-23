@@ -2,6 +2,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @user.send_new_friend_email(User.find(45))
   end
 
   def verification_code

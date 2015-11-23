@@ -141,16 +141,31 @@ module Api
     end
 
     def create_a_wish
-      # si l'utilisateur a déjà mis sur sa liste de souhaits cet endroit (sachant que ça peut être fait depuis 2 endroits) alors on le lui dit
+      # si l'utilisateur a déjà mis sur sa liste de souhaits cet endroit (sachant que ça peut être fait depuis 2 endroits) alors on le lui dit et différemment suivant que provient de l'app ou d'un mail
       if params["restaurant_id"].length <= 9 && Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
-        render(:json => {notice: "Restaurant déjà sur ta wishlist"}, :status => 409, :layout => false)
+
+        if params["origin"] == "mail"
+          sign_out
+          render(:json => {notice: "Ce restaurant était déjà sur ta wishlist ! Tu peux le retrouver en te connectant sur l'app !"}, :status => 409, :layout => false)
+        else
+
+          render(:json => {notice: "Restaurant déjà sur ta wishlist"}, :status => 409, :layout => false)
+
+        end
 
       # Si c'est une nouvelle whish on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
       elsif identify_or_create_restaurant != nil
 
-        # On vérifie qu'il n'a pas déjà recommandé l'endroit, sinon pas de raison de le mettre dans les restos à tester
+        # On vérifie qu'il n'a pas déjà recommandé l'endroit, sinon pas de raison de le mettre dans les restos à tester. La reaction dépend du fait qu"il vienne de l'app ou d'un mail
         if params["restaurant_id"].length <= 9 && Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).length > 0
-          render(:json => {notice: "Cette adresse fait déjà partie des restaurants que vous recommandez"}, :status => 409, :layout => false)
+
+          if params["origin"] == "mail"
+            sign_out
+            render(:json => {notice: "Cette adresse fait déjà partie des restaurants que tu recommandes ! Tu peux le retrouver en te connectant sur l'app !"}, :status => 409, :layout => false)
+          else
+
+            render(:json => {notice: "Cette adresse fait déjà partie des restaurants que tu recommandes"}, :status => 409, :layout => false)
+          end
         else
 
           # On crée la recommandation à partir des infos récupérées et on track
@@ -164,7 +179,14 @@ module Api
             Friendship.create(sender_id: 125, receiver_id: @user.id, accepted: true)
           end
 
-          redirect_to api_restaurant_path(@wish.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
+          #  Verifier si la wishlist vient de l'app ou d'un mail
+          if params["origin"] == "mail"
+          sign_out
+          render(:json => {notice: "Le restaurant a bien été ajouté à ta wishlist ! Tu peux le retrouver en te connectant sur l'app !"}, :status => 409, :layout => false)
+
+          else
+            redirect_to api_restaurant_path(@wish.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
+          end
         end
 
       # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page

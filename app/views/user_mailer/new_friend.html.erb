@@ -4,6 +4,19 @@ Hey <%= @user.name.split(" ")[0] %>,
 <%= @friend.name.split(" ")[0] %> t'invite à découvrir ses restaurants sur Needl.
 Tu peux gérer cette nouvelle relation en allant sur la page de son profil.
 <br>
+<br>
+<%= image_tag @friend_first_restaurant_picture, :style => "height: 200px" %>
+<br>
+<br>
+<strong><%= @friend_first_restaurant.name %></strong>, <%= @friend_first_restaurant.food.name %>, Métro <%= @friend_first_restaurant.subway_name %>
+<br>
+<em>"<%= @friend_first_restaurant_review %>"</em>
+<br>
+<a href = "http://www.needl.fr/api/recommendations.json?restaurant_id=<%=@friend_first_restaurant.id%>&&restaurant_origin=db&recommendation[wish]=true&origin=mail&user_email=<%=@user.email%>&user_token=<%=@user.authentication_token%>" target = "_blank"> Ca a l'air cool, je le mets sur ma Wishlist !</a>
+<br>
+<a href = "" target = "_blank"> Ah je connais, je le recommande à mes potes !</a>
+<br>
+<br>
 J'espère que ça t'aidera à y voir plus clair dans Paris :)
 <br>
 <br>
