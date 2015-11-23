@@ -55,9 +55,10 @@ module Api
               Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).first.destroy
               @tracker.track(@user.id, 'Wish to Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
             end
-            # si première recommandation ou wish, alors devient pote avec ceo
+            # si première recommandation ou wish, alors devient pote avec ceo, pour la première, à la sortie de l'onboarding, faire en sorte qu'on ne lui propose pas de wishlister
             if @user.recommendations.count == 1 && @user.wishes.count == 0
               Friendship.create(sender_id: 125, receiver_id: @user.id, accepted: true)
+              # accept_all_friends
             end
             redirect_to api_restaurant_path(@recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
 
@@ -158,7 +159,7 @@ module Api
           @tracker.track(@user.id, 'New Wish', { "restaurant" => @restaurant.name, "user" => @user.name })
           notif_reco("wish")
 
-          # si première wish ou reco, devient pote avec le ceo
+          # si première wish ou reco, devient pote avec Needl: à supprimer, ne devrait plus etre possible
           if @user.wishes.count == 1 && @user.recommendations.count == 0
             Friendship.create(sender_id: 125, receiver_id: @user.id, accepted: true)
           end
@@ -277,6 +278,33 @@ module Api
       recommendation = Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).first
       recommendation.update_attributes(recommendation_params)
       redirect_to api_restaurant_path(recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
+    end
+
+    def accept_all_friends
+      friends = @user.user_friends
+      if friends.length > 0
+        friends.each do |friend|
+          @friend = friend
+          friendship = Friendship.create(sender_id: @user.id, receiver_id: @friend.id, accepted: true)
+          @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
+          notif_friendship
+          @friend.send_new_friend_email(@user)
+        end
+      end
+
+    end
+
+    def notif_friendship
+
+      client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
+        # envoyer à @friend qu'il a été accepté
+        data = { :alert => "#{@user.name} te fait découvrir ses restos!", :badge => 'Increment', :type => 'friend' }
+        push = client.push(data)
+        # push.type = "ios"
+        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend.id)
+        push.where = query.where
+        push.save
+
     end
 
     def notif_reco(status)
