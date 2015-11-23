@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  # after_create :send_welcome_email
+  after_create :send_welcome_email
 
   acts_as_token_authenticatable
   has_many :recommendations, dependent: :destroy
