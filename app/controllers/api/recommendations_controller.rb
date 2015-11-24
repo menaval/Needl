@@ -58,7 +58,7 @@ module Api
             # si première recommandation ou wish, alors devient pote avec ceo, pour la première, à la sortie de l'onboarding, faire en sorte qu'on ne lui propose pas de wishlister
             if @user.recommendations.count == 1
               Friendship.create(sender_id: 125, receiver_id: @user.id, accepted: true)
-              accept_all_friends
+              tell_all_friends
             end
             redirect_to api_restaurant_path(@recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
 
@@ -297,13 +297,11 @@ module Api
       redirect_to api_restaurant_path(recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
     end
 
-    def accept_all_friends
-      friends = @user.user_friends
-      if friends.length > 0
-        friends.each do |friend|
-          @friend = friend
-          friendship = Friendship.create(sender_id: @user.id, receiver_id: @friend.id, accepted: true)
-          @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
+    def tell_all_friends
+      friends_id = @user.my_friends_ids
+      if friends_id.length > 0
+        friends_id.each do |friend_id|
+          @friend = User.find(friend_id)
           notif_friendship
           @friend.send_new_friend_email(@user)
         end
@@ -314,8 +312,8 @@ module Api
     def notif_friendship
 
       client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
-        # envoyer à @friend qu'il a été accepté
-        data = { :alert => "#{@user.name} te fait découvrir ses restos!", :badge => 'Increment', :type => 'friend' }
+        # envoyer à @friend qu'il a recommandé son premier endroit
+        data = { :alert => "#{@user.name} a son premier resto à te recommander !", :badge => 'Increment', :type => 'friend' }
         push = client.push(data)
         # push.type = "ios"
         query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend.id)

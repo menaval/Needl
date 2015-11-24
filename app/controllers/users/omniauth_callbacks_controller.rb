@@ -60,6 +60,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           }
         )
 
+      accept_all_friends
+
       #  Si c'est un login
 
       else
@@ -68,6 +70,18 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
       render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
     end
+  end
+
+  def accept_all_friends
+    friends = @user.user_friends
+    if friends.length > 0
+      friends.each do |friend|
+        @friend = friend
+        friendship = Friendship.create(sender_id: @user.id, receiver_id: @friend.id, accepted: true)
+        @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
+      end
+    end
+
   end
 
 end
