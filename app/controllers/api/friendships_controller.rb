@@ -38,7 +38,8 @@ module Api
 
     def create
       @friend_id = params["friend_id"].to_i
-      @friendship = Friendship.new(sender_id: @user.id, receiver_id: @friend_id, accepted: false)
+      # en attendant de détruire complètement cette étape, on met accepted à true
+      @friendship = Friendship.new(sender_id: @user.id, receiver_id: @friend_id, accepted: true)
       @friendship.save
       @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
       notif_friendship("invited")
@@ -105,7 +106,7 @@ module Api
         push.save
       else
         # envoyer à @friend qu'on l'a invité
-        data = { :alert => "#{@user.name} vous a invite a decouvrir ses restaurants", :badge => 'Increment', :type => 'friend' }
+        data = { :alert => "#{@user.name} vous invite a decouvrir ses restaurants", :badge => 'Increment', :type => 'friend' }
         push = client.push(data)
         # push.type = "ios"
         query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend_id)
