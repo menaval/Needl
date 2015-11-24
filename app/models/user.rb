@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  # after_create :send_welcome_email
+  after_create :send_welcome_email
 
   acts_as_token_authenticatable
   has_many :recommendations, dependent: :destroy
@@ -126,6 +126,10 @@ class User < ActiveRecord::Base
 
   def send_welcome_email
     UserMailer.welcome(self).deliver
+  end
+
+  def send_new_friend_email(friend)
+    UserMailer.new_friend(self, friend).deliver
   end
 
 end

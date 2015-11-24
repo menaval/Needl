@@ -48,16 +48,17 @@ module Api
 
             @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
             @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
-            notif_reco("recommendation")
+            notif_reco
 
             # si c'était sur ma liste de wish ça l'enlève
             if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
               Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).first.destroy
               @tracker.track(@user.id, 'Wish to Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
             end
-            # si première recommandation ou wish, alors devient pote avec ceo
-            if @user.recommendations.count == 1 && @user.wishes.count == 0
+            # si première recommandation ou wish, alors devient pote avec ceo, pour la première, à la sortie de l'onboarding, faire en sorte qu'on ne lui propose pas de wishlister
+            if @user.recommendations.count == 1
               Friendship.create(sender_id: 125, receiver_id: @user.id, accepted: true)
+              accept_all_friends
             end
             redirect_to api_restaurant_path(@recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
 
@@ -140,30 +141,47 @@ module Api
     end
 
     def create_a_wish
-      # si l'utilisateur a déjà mis sur sa liste de souhaits cet endroit (sachant que ça peut être fait depuis 2 endroits) alors on le lui dit
+      # si l'utilisateur a déjà mis sur sa liste de souhaits cet endroit alors on le lui dit. Et on vérifie qu'on ne choppe pas un id de foursquare non transformable en integer.
       if params["restaurant_id"].length <= 9 && Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
-        render(:json => {notice: "Restaurant déjà sur ta wishlist"}, :status => 409, :layout => false)
+
+        if params["origin"] == "mail"
+          sign_out
+          render(:json => {notice: "Ce restaurant était déjà sur ta wishlist ! Tu peux le retrouver en te connectant sur l'app !"}, :status => 409, :layout => false)
+        else
+
+          render(:json => {notice: "Restaurant déjà sur ta wishlist"}, :status => 409, :layout => false)
+
+        end
 
       # Si c'est une nouvelle whish on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
       elsif identify_or_create_restaurant != nil
 
-        # On vérifie qu'il n'a pas déjà recommandé l'endroit, sinon pas de raison de le mettre dans les restos à tester
+        # On vérifie qu'il n'a pas déjà recommandé l'endroit, sinon pas de raison de le mettre dans les restos à tester. La reaction dépend du fait qu"il vienne de l'app ou d'un mail
         if params["restaurant_id"].length <= 9 && Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).length > 0
-          render(:json => {notice: "Cette adresse fait déjà partie des restaurants que vous recommandez"}, :status => 409, :layout => false)
+
+          if params["origin"] == "mail"
+            sign_out
+            render(:json => {notice: "Cette adresse fait déjà partie des restaurants que tu recommandes ! Tu peux le retrouver en te connectant sur l'app !"}, :status => 409, :layout => false)
+          else
+
+            render(:json => {notice: "Cette adresse fait déjà partie des restaurants que tu recommandes"}, :status => 409, :layout => false)
+          end
         else
 
           # On crée la recommandation à partir des infos récupérées et on track
           @wish = Wish.create(user_id: @user.id, restaurant_id: @restaurant.id)
           # @wish.restaurant = @restaurant
           @tracker.track(@user.id, 'New Wish', { "restaurant" => @restaurant.name, "user" => @user.name })
-          notif_reco("wish")
 
-          # si première wish ou reco, devient pote avec le ceo
-          if @user.wishes.count == 1 && @user.recommendations.count == 0
-            Friendship.create(sender_id: 125, receiver_id: @user.id, accepted: true)
+          #  Verifier si la wishlist vient de l'app ou d'un mail
+          if params["origin"] == "mail"
+          @tracker.track(@user.id, 'New Wish from Mail', { "restaurant" => @restaurant.name, "user" => @user.name })
+          sign_out
+          render(:json => {notice: "Le restaurant a bien été ajouté à ta wishlist ! Tu peux le retrouver en te connectant sur l'app !"}, :status => 409, :layout => false)
+
+          else
+            redirect_to api_restaurant_path(@wish.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
           end
-
-          redirect_to api_restaurant_path(@wish.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
         end
 
       # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page
@@ -279,11 +297,38 @@ module Api
       redirect_to api_restaurant_path(recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
     end
 
-    def notif_reco(status)
+    def accept_all_friends
+      friends = @user.user_friends
+      if friends.length > 0
+        friends.each do |friend|
+          @friend = friend
+          friendship = Friendship.create(sender_id: @user.id, receiver_id: @friend.id, accepted: true)
+          @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
+          notif_friendship
+          @friend.send_new_friend_email(@user)
+        end
+      end
+
+    end
+
+    def notif_friendship
+
+      client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
+        # envoyer à @friend qu'il a été accepté
+        data = { :alert => "#{@user.name} te fait découvrir ses restos!", :badge => 'Increment', :type => 'friend' }
+        push = client.push(data)
+        # push.type = "ios"
+        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend.id)
+        push.where = query.where
+        push.save
+
+    end
+
+    def notif_reco
 
       client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
 
-      if status == "recommendation" && current_user.my_friends_seing_me_ids != []
+      if current_user.my_friends_seing_me_ids != []
        # envoyer à chaque friend que @user a fait une nouvelle reco du resto @restaurant
        data = { :alert => "#{@user.name} a recommande #{@restaurant.name}", :badge => 'Increment', :type => 'reco' }
        push = client.push(data)
@@ -291,17 +336,6 @@ module Api
        query = client.query(Parse::Protocol::CLASS_INSTALLATION).value_in('user_id', @user.my_friends_seing_me_ids)
        push.where = query.where
        push.save
-
-       # attention si remet en wish, a adapter au code ci-dessus
-
-      # else
-      #   # envoyer à chaque friend que @user a fait un nouveau wish du resto @restaurant
-      #   data = { :alert => "#{@user.name} a ajoute #{@restaurant.name} sur sa wishlist", :badge => 'Increment', :type => 'reco'  }
-      #   push = client.push(data)
-      #   # push.type = "ios"
-      #   query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @user.my_friends_seing_me_ids)
-      #   push.where = query.where
-      #   push.save
       end
 
     end

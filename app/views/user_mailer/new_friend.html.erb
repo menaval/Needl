@@ -1,0 +1,31 @@
+Hey <%= @user.name.split(" ")[0] %>,
+<br>
+<br>
+<%= @friend.name.split(" ")[0] %> t'invite à découvrir ses restaurants sur Needl!
+Tu peux à tout moment gérer cette nouvelle relation en allant sur son profil dans la rubrique de tes amis.
+<br>
+Regarde le premier restaurant qu'il t'a recommandé :
+<br>
+<br>
+<%= image_tag @picture, :style => "height: 300px" %>
+<br>
+<br>
+<strong><%= @restaurant.name %></strong>, <%= @restaurant.types.length > 0 ? @restaurant.types.first.name : @restaurant.food.name %>, Métro <%= @restaurant.subway_name %>
+<br>
+<em>"<%= @review %>"</em>, <%= @friend.name.split(" ")[0] %>
+<br>
+<!-- mettre localhost pour les tests -->
+<a href = "http://www.needl.fr/api/recommendations.json?restaurant_id=<%=@restaurant.id%>&&restaurant_origin=db&recommendation[wish]=true&origin=mail&user_email=<%=@user.email%>&user_token=<%=@user.authentication_token%>" target = "_blank"> Ca a l'air cool, je le mets sur ma Wishlist !</a>
+<br>
+<a href = "http://www.needl.fr/recommendations/new?restaurant_id=<%=@restaurant.id%>&&restaurant_origin=db&recommendation[wish]=false&origin=mail&user_email=<%=@user.email%>&user_token=<%=@user.authentication_token%>" target = "_blank"> Ah je le connais, je le recommande à mes amis !</a>
+<br>
+<br>
+Tu peux voir tous ses autres restaurants préférés sur Needl !
+<br>
+J'espère que ça t'aidera à y voir plus clair dans Paris :)
+<br>
+<br>
+Salut,
+<br>
+<br>
+L'équipe Needl

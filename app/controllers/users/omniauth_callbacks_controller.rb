@@ -25,21 +25,24 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def facebook_access_token
-    user = User.find_for_facebook_oauth(request.env["omniauth.auth"])
+    @user = User.find_for_facebook_oauth(request.env["omniauth.auth"])
 
     if user.persisted?
-      sign_in user#, event: :authentication
-      if user.sign_in_count == 1
+      sign_in @user#, event: :authentication
+
+      # Si c'est un signup
+
+      if @user.sign_in_count == 1
 
         # On track l'arrivée sur Mixpanel
 
         @tracker.people.set(user.id, {
-          "gender" => user.gender,
-          "name" => user.name,
-          "age" => user.age_range,
-          "$email": user.email
+          "gender" => @user.gender,
+          "name" => @user.name,
+          "age" => @user.age_range,
+          "$email": @user.email
         })
-        @tracker.track(user.id, 'signup', {"user" => user.name, "browser" => browser.name} )
+        @tracker.track(user.id, 'signup', {"user" => @user.name, "browser" => browser.name} )
 
         # On ajoute le nouveau membre sur la mailing liste de mailchimp
 
@@ -48,20 +51,23 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
         @gibbon.lists(@list_id).members.create(
           body: {
-            email_address: user.email,
+            email_address: @user.email,
             status: "subscribed",
             merge_fields: {
-              FNAME: user.name.partition(" ").first,
-              LNAME: user.name.partition(" ").last
+              FNAME: @user.name.partition(" ").first,
+              LNAME: @user.name.partition(" ").last
             }
           }
         )
 
+      #  Si c'est un login
+
       else
-        @tracker.track(user.id, 'signin', {"user" => user.name, "browser" => browser.name} )
+        @tracker.track(@user.id, 'signin', {"user" => @user.name, "browser" => browser.name} )
       end
 
-      render json: {user: user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: user.id}).count}
+      render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
     end
   end
+
 end
