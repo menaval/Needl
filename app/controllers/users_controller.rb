@@ -2,10 +2,6 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-
-    # pour faire les tests de mails
-    # @user.send_welcome_email
-    @user.send_new_friend_email(User.find(45))
   end
 
   def verification_code

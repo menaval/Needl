@@ -2,7 +2,6 @@ class UserMailer < ApplicationMailer
 
   def welcome(user)
     @user = user
-    #  a changer la subject line
     mail(to: @user.email, subject: 'Hey')
   end
 
@@ -15,6 +14,6 @@ class UserMailer < ApplicationMailer
       @picture = "https://static.pexels.com/photos/536/road-street-sign-way.jpg"
     end
     @review = @friend.recommendations.first.review
-    mail(to: @user.email, subject: "#{@friend.name.split(" ")[0]} te fait découvrir ses restos")
+    mail(to: @user.email, subject: "Un des restos préférés de #{@friend.name.split(" ")[0]}")
   end
 end
