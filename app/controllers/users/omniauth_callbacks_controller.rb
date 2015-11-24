@@ -32,7 +32,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     #   @user.save
     # end
 
-    if user.persisted?
+    if @user.persisted?
       sign_in @user#, event: :authentication
 
       # Si c'est un signup
