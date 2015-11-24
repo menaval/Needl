@@ -26,6 +26,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def facebook_access_token
     @user = User.find_for_facebook_oauth(request.env["omniauth.auth"])
+    if @user.token_expiry < Time.now
+      @user.token = request.env["omniauth.auth"].credentials.token
+      @user.token_expiry = Time.at(request.env["omniauth.auth"].credentials.expires_at)
+      @user.save
+    end
 
     if user.persisted?
       sign_in @user#, event: :authentication
@@ -76,8 +81,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     friends = @user.user_friends
     if friends.length > 0
       friends.each do |friend|
-        @friend = friend
-        friendship = Friendship.create(sender_id: @user.id, receiver_id: @friend.id, accepted: true)
+        Friendship.create(sender_id: @user.id, receiver_id: friend.id, accepted: true)
         @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
       end
     end
