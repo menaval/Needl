@@ -41,7 +41,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
         # On track l'arrivée sur Mixpanel
 
-        @tracker.people.set(user.id, {
+        @tracker.people.set(@user.id, {
           "gender" => @user.gender,
           "name" => @user.name,
           "age" => @user.age_range,
