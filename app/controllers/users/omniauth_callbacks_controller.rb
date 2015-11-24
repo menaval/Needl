@@ -37,7 +37,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
       # Si c'est un signup
 
-      if @user.sign_in_count == 1
+      if @user.sign_in_count == 2
 
         # On track l'arrivée sur Mixpanel
 
