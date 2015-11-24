@@ -47,7 +47,7 @@ class RecommendationsController < ApplicationController
           if current_user.recommendations.count == 1
             Friendship.create(sender_id: 125, receiver_id: current_user.id, accepted: true)
             if params["origin"] == "mail"
-              accept_all_friends
+              tell_all_friends
               @tracker.track(current_user.id, 'New Reco from Mail', { "restaurant" => @restaurant.name, "user" => current_user.name })
               sign_out
               render(:json => {notice: "Tu as recommandé ton premier restaurant ! L'app t'ouvre désormais ses portes ! Connecte toi sur l'app pour voir ce que tes amis t'ont recommandé !"}, :status => 409, :layout => false)
@@ -293,13 +293,11 @@ class RecommendationsController < ApplicationController
     end
   end
 
-  def accept_all_friends
-    friends = current_user.user_friends
-    if friends.length > 0
-      friends.each do |friend|
-        @friend = friend
-        friendship = Friendship.create(sender_id: current_user.id, receiver_id: @friend.id, accepted: true)
-        @tracker.track(current_user.id, 'add_friend', { "user" => current_user.name })
+  def tell_all_friends
+    friends_id = current_user.my_friends_ids
+    if friends_id.length > 0
+      friends_id.each do |friend_id|
+        @friend = User.find(friend_id)
         notif_friendship
         @friend.send_new_friend_email(current_user)
       end
@@ -310,8 +308,8 @@ class RecommendationsController < ApplicationController
   def notif_friendship
 
     client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
-      # envoyer à @friend qu'il a été accepté
-      data = { :alert => "#{current_user.name} te fait découvrir ses restos!", :badge => 'Increment', :type => 'friend' }
+      # envoyer à @friend qu'il a recommandé son premier endroit
+      data = { :alert => "#{current_user.name} a son premier resto à te recommander !", :badge => 'Increment', :type => 'friend' }
       push = client.push(data)
       # push.type = "ios"
       query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend.id)
