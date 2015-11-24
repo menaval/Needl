@@ -4,7 +4,7 @@ Hey <%= @user.name.split(" ")[0] %>,
 <%= @friend.name.split(" ")[0] %> t'invite à découvrir ses restaurants sur Needl!
 Tu peux à tout moment gérer cette nouvelle relation en allant sur son profil dans la rubrique de tes amis.
 <br>
-Regarde le premier restaurant qu'il t'a recommandé :
+Regarde le premier restaurant qu'<%= @user.gender == "male" ? "il" : "elle" %> t'a recommandé :
 <br>
 <br>
 <%= image_tag @picture, :style => "height: 300px" %>
