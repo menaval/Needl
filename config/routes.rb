@@ -11,9 +11,7 @@ Rails.application.routes.draw do
 
   resources :users, only: [:show] do
     collection do
-      get :access
       get :welcome_ceo
-      post :verification_code
     end
   end
   resources :friendships, only: [:index, :new, :create, :destroy] do

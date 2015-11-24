@@ -11,7 +11,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       sign_in user#, event: :authentication
       if user.sign_in_count == 1
         @tracker.track(current_user.id, 'signup', {"user" => user.name, "browser" => browser.name} )
-        redirect_to access_users_path
+        redirect_to new_recommendation_path, notice: "Partage ta première reco avant de découvrir celles de tes amis"
       else
         @tracker.track(current_user.id, 'signin', {"user" => user.name, "browser" => browser.name} )
 
