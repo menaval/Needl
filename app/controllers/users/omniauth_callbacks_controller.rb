@@ -10,10 +10,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if user.persisted?
       sign_in user#, event: :authentication
       if user.sign_in_count == 1
-        @tracker.track(current_user.id, 'signup', {"user" => user.name, "browser" => browser.name} )
+        @tracker.track(current_user.id, 'signup', {"user" => user.name} )
         redirect_to new_recommendation_path, notice: "Partage ta première reco avant de découvrir celles de tes amis"
       else
-        @tracker.track(current_user.id, 'signin', {"user" => user.name, "browser" => browser.name} )
+        @tracker.track(current_user.id, 'signin', {"user" => user.name} )
 
         redirect_to root_path
       end
@@ -47,7 +47,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           "age" => @user.age_range,
           "$email": @user.email
         })
-        @tracker.track(user.id, 'signup', {"user" => @user.name, "browser" => browser.name} )
+        @tracker.track(@user.id, 'signup', {"user" => @user.name} )
 
         # On ajoute le nouveau membre sur la mailing liste de mailchimp
 
@@ -65,12 +65,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           }
         )
 
-      accept_all_friends
+        accept_all_friends
 
       #  Si c'est un login
 
       else
-        @tracker.track(@user.id, 'signin', {"user" => @user.name, "browser" => browser.name} )
+        @tracker.track(@user.id, 'signin', {"user" => @user.name} )
       end
 
       render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
