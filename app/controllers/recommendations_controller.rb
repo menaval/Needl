@@ -45,7 +45,6 @@ class RecommendationsController < ApplicationController
 
           # si première recommandation, alors page d'accueil du profil ceo ou message mail
           if current_user.recommendations.count == 1
-            Friendship.create(sender_id: 125, receiver_id: current_user.id, accepted: true)
             if params["origin"] == "mail"
               tell_all_friends
               @tracker.track(current_user.id, 'New Reco from Mail', { "restaurant" => @restaurant.name, "user" => current_user.name })

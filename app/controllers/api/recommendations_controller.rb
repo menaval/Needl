@@ -57,7 +57,6 @@ module Api
             end
             # si première recommandation ou wish, alors devient pote avec ceo, pour la première, à la sortie de l'onboarding, faire en sorte qu'on ne lui propose pas de wishlister
             if @user.recommendations.count == 1
-              Friendship.create(sender_id: 125, receiver_id: @user.id, accepted: true)
               tell_all_friends
             end
             redirect_to api_restaurant_path(@recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])

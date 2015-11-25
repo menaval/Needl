@@ -85,6 +85,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
       end
     end
+    # Pour tous ceux qui sont déjà amis avec needl sur Facebook
+    if Friendship.where(sender_id: @user.id, receiver_id: 125).length == 0
+      Friendship.create(sender_id: 125, receiver_id: @user.id, accepted: true)
+    end
 
   end
 
