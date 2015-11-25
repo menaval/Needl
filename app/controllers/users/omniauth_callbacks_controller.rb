@@ -60,7 +60,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
             status: "subscribed",
             merge_fields: {
               FNAME: @user.name.partition(" ").first,
-              LNAME: @user.name.partition(" ").last
+              LNAME: @user.name.partition(" ").last,
+              TOKEN: @user.authentication_token,
+              GENDER: @user.gender
             }
           }
         )
