@@ -121,7 +121,7 @@ module Api
         food:         Food.where(name: search.categories[0].shortName).first_or_create,
         latitude:     search.location.lat,
         longitude:    search.location.lng,
-        picture_url:  search.photos.groups[0] ? "#{search.photos.groups[0].items[0].prefix}1000x1000#{search.photos.groups[0].items[0].suffix}" : "https://s3-eu-west-1.amazonaws.com/needl/production/restaurant_pictures/pictures/000/restaurant+default.jpg?X-Amz-Date=20151125T213149Z&X-Amz-Expires=300&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Signature=cc504c04cd1d9e1d7847c38a4be964a8575db5df7f1246c640489a751e3daef0&X-Amz-Credential=ASIAJ6LCLBJKOE4KQVTQ/20151125/eu-west-1/s3/aws4_request&X-Amz-SignedHeaders=Host&x-amz-security-token=AQoDYXdzEE8akALMwTZQSrGQ18GJXFNjehtoMrTmWMTHLRgjG2T0K8uqU5C0fBF89ze8qkKp1T78mFlTzUOZnFiSTnHVs8vkZdPLAZ5bSnyDtWD8EeXg3KfNX7dWKtY9M5BXg3jPudzpO4li3hspkFKXqau9jMsFIUz4WCfuLlhhqoFD6zTuVp6IlMAbYniIdHzF4sJbQBGtX7N9qJEwfNs6pE5wPzyRTTp4JT5IPPPkI6jbyWH%2B6jKv9GCzAf3Zu2LIa89LGslSIou7mmOu9xD5bQ06ocv8oPvBXnogKFpkm6IqRkzo7o15ofnbuN%2BAypFwjQvs2O/BC9yN5bJatQiwF8QrWy26QA0VPjPcS3RagjcWg3z6wcjDqCDZ0NiyBQ%3D%3D",
+        picture_url:  search.photos.groups[0] ? "#{search.photos.groups[0].items[0].prefix}1000x1000#{search.photos.groups[0].items[0].suffix}" : "http://needl.s3.amazonaws.com/production/restaurant_pictures/pictures/000/restaurant%20default.jpg",
         phone_number: search.contact.phone ? search.contact.phone : nil
       )
 
