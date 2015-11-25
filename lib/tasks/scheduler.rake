@@ -145,9 +145,9 @@ def send_mailchimp_the_updates(user, type_selected_id, reco1, reco2, reco3)
   gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
   list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
 
-  resto1 = reco1 != "" Restaurant.find(reco1.restaurant_id) : ""
-  resto2 = reco2 != "" Restaurant.find(reco2.restaurant_id) : ""
-  resto3 = reco3 != "" Restaurant.find(reco3.restaurant_id) : ""
+  resto1 = reco1 != "" ? Restaurant.find(reco1.restaurant_id) : ""
+  resto2 = reco2 != "" ? Restaurant.find(reco2.restaurant_id) : ""
+  resto3 = reco3 != "" ? Restaurant.find(reco3.restaurant_id) : ""
 
   # Si c'est aussi moche c'est pour que ca remplisse en vide s'il n'y a pas assez de restaurants de la part de Needl
 
