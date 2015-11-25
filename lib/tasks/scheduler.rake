@@ -17,10 +17,10 @@ task :update_mailchimp => :environment do
       restaurants_ids = my_friends_except_needl_and_me_this_month_restaurants_ids(user)
       puts "les restos dans le dernier mois de mes amis: #{restaurants_ids}"
 
-      # Récupérer la sélection de types que l'on va checker.A la base c'est Japonais - Burger - Thaï - Italien - Français - Street Food - Oriental - Pizza et on retire ceux qui sont déjà tombés.
+      # Récupérer la sélection de types que l'on va checker.A la base c'est  Burger - Thaï - Japonais - Italien - Français - Street Food - Oriental - Pizza et on retire ceux qui sont déjà tombés.
 
       fetching_types_used(user)
-      types_selection_ids = [5, 11, 2, 9, 8, 12, 17, 15, 10] - @types_already_used
+      types_selection_ids = [11, 5, 2, 9, 8, 12, 17, 15, 10] - @types_already_used
       puts "Les types associés: #{types_selection_ids}"
 
       # Récupérer le premier thème où plus de 2 recos d'amis
@@ -41,8 +41,7 @@ task :update_mailchimp => :environment do
 
         # S'il n'y en a que 2, on en met une de Needl
         if final_recommendations.length == 2
-          @array = []
-          # la ligne au dessus, c'est seulement pour que la fonction marche également quand on a besoin de 3 restaurants
+          @array = [final_recommendations[0].restaurant_id, final_recommendations[1].restaurant_id]
           reco_needl = reco_from_needl(type_selected_id)
           puts "la reco needl: #{reco_needl}"
           final_recommendations << reco_needl
@@ -132,7 +131,7 @@ def reco_from_needl(type_selected_id)
   Recommendation.where(user_id: 125).each do |reco|
     restaurant_id = reco.restaurant_id
     if Restaurant.find(restaurant_id).types.first.id == type_selected_id && @array.exclude?(restaurant_id)
-      # cette ligne c'est pour le cas ou 3 recos viennent de Needl
+      # cette ligne c'est pour qu'il ne choisisse pas un resto deja choisi
       @array << reco.restaurant_id
       return reco
     end
