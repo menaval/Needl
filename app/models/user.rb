@@ -70,11 +70,6 @@ class User < ActiveRecord::Base
     restos_ids = Restaurant.joins(:recommendations).where(recommendations: { user_id: user_ids }).pluck(:id).uniq
   end
 
-  def my_friends_except_needl_restaurants_ids
-    user_ids = my_visible_friends_ids - [125]
-    restos_ids = Restaurant.joins(:recommendations).where(recommendations: { user_id: user_ids }).pluck(:id).uniq
-  end
-
   def my_restaurants_ids
     restos_ids = Restaurant.joins(:recommendations).where(recommendations: { user_id: self.id }).pluck(:id)
     restos_ids += Restaurant.joins(:wishes).where(wishes: {user_id: self.id}).pluck(:id)
