@@ -1,30 +1,29 @@
 # "This task is called by the Heroku scheduler add-on"
 task :update_mailchimp => :environment do
 
-  # pour tester en dev changer Time.now.wday != 5 et Recommendation.where(user_id: 125).each do |reco|
+  # pour tester en dev changer Time.now.wday != 5 et Recommendation.where(user_id: 125).each do |reco|, et ne le faire que sur un user, pas la peine de le faire sur User.all
 
-# ok: Verifier si on est vendredi matin (on fera le rake sur Heroku tous les jours très tot)
+# Verifier si on est vendredi matin (on fera le rake sur Heroku tous les jours très tot)
 # Hors test, mettre == 5, sinon à moins d'etre vendredi il ne se passera rien
   if Time.now.wday == 5
     puts "Nothing Today."
   else
     puts "Updating mailchimp infos ..."
     # ok: isoler un user
-    # User.all.each do |user|
-      user = User.find(40)
+    User.all.each do |user|
       puts "Updating #{user.name}"
 
-      # ok: récupérer la liste des restaurants, hormis Needl et hormis ceux que j'ai déjà recommandé, recommandés par mes amis au cours du mois
+      # Récupérer la liste des restaurants, hormis Needl et hormis ceux que j'ai déjà recommandé, recommandés par mes amis au cours du mois
       restaurants_ids = my_friends_except_needl_and_me_this_month_restaurants_ids(user)
       puts "les restos dans le dernier mois de mes amis: #{restaurants_ids}"
 
-      # ok: récupérer la sélection de types que l'on va checker.A la base c'est Japonais - Burger - Thaï - Italien - Français - Street Food - Oriental - Pizza et on retire ceux qui sont déjà tombés.
+      # Récupérer la sélection de types que l'on va checker.A la base c'est Japonais - Burger - Thaï - Italien - Français - Street Food - Oriental - Pizza et on retire ceux qui sont déjà tombés.
 
       fetching_types_used(user)
       types_selection_ids = [5, 11, 2, 9, 8, 12, 17, 15, 10] - @types_already_used
       puts "Les types associés: #{types_selection_ids}"
 
-      # ok: récupérer le premier thème où plus de 2 recos d'amis
+      # Récupérer le premier thème où plus de 2 recos d'amis
 
       type_selected_id = return_type_selected_id(types_selection_ids, restaurants_ids)
       puts "Le type choisi pour la newsletter: #{type_selected_id}"
@@ -72,7 +71,7 @@ task :update_mailchimp => :environment do
       puts "La colomne newsletter themes actualisée pour le user"
 
     end
-  # end
+  end
   puts "done."
 
 
