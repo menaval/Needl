@@ -148,7 +148,12 @@ def send_mailchimp_the_updates(user, type_selected_id, reco1, reco2, reco3)
   resto1 = reco1 != "" ? Restaurant.find(reco1.restaurant_id) : ""
   resto2 = reco2 != "" ? Restaurant.find(reco2.restaurant_id) : ""
   resto3 = reco3 != "" ? Restaurant.find(reco3.restaurant_id) : ""
-
+  # photo1 = resto1.restaurant_pictures.first ? resto1.restaurant_pictures.first.picture.url : resto1.picture_url
+  # photo1 = (photo1 == "restaurant_default.jpg") ? "" : photo1
+  # photo2 = resto2.restaurant_pictures.first.picture.url : resto2.picture_url
+  # photo2 = (photo2 == "restaurant_default.jpg") ? "" : photo2
+  # photo3 = resto3.restaurant_pictures.first ? resto3.restaurant_pictures.first.picture.url : resto3.picture_url
+  # photo3 = (photo3 == "restaurant_default.jpg") ? "" : photo3
   # Si c'est aussi moche c'est pour que ca remplisse en vide s'il n'y a pas assez de restaurants de la part de Needl
 
   gibbon.lists(list_id).members(mail_encrypted).upsert(
