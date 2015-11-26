@@ -15,9 +15,9 @@ Regarde le premier restaurant qu'<%= @user.gender == "male" ? "il" : "elle" %> t
 <em>"<%= @review %>"</em>, <%= @friend.name.split(" ")[0] %>
 <br>
 <!-- mettre localhost pour les tests -->
-<a href = "http://www.needl.fr/api/recommendations.json?restaurant_id=<%=@restaurant.id%>&&restaurant_origin=db&recommendation[wish]=true&origin=mail&user_email=<%=@user.email%>&user_token=<%=@user.authentication_token%>" target = "_blank"> Ca a l'air cool, je le mets sur ma Wishlist !</a>
+<a href = "http://www.needl.fr/api/recommendations.json?restaurant_id=<%=@restaurant.id%>&restaurant_origin=db&recommendation[wish]=true&origin=mail&user_email=<%=@user.email%>&user_token=<%=@user.authentication_token%>" target = "_blank"> Ca a l'air cool, je le mets sur ma Wishlist !</a>
 <br>
-<a href = "http://www.needl.fr/recommendations/new?restaurant_id=<%=@restaurant.id%>&&restaurant_origin=db&recommendation[wish]=false&origin=mail&user_email=<%=@user.email%>&user_token=<%=@user.authentication_token%>" target = "_blank"> Ah je le connais, je le recommande à mes amis !</a>
+<a href = "http://www.needl.fr/recommendations/new?restaurant_id=<%=@restaurant.id%>&restaurant_origin=db&recommendation[wish]=false&origin=mail&user_email=<%=@user.email%>&user_token=<%=@user.authentication_token%>" target = "_blank"> Ah je le connais, je le recommande à mes amis !</a>
 <br>
 <br>
 Tu peux voir tous ses autres restaurants préférés sur Needl !
