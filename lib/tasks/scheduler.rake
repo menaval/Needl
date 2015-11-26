@@ -5,7 +5,7 @@ task :update_mailchimp => :environment do
 
 # Verifier si on est vendredi matin (on fera le rake sur Heroku tous les jours très tot)
 # Hors test, mettre == 5, sinon à moins d'etre vendredi il ne se passera rien
-  if Time.now.wday != 5
+  if Time.now.wday != 4
     puts "Nothing Today."
   else
     puts "Updating mailchimp infos ..."
