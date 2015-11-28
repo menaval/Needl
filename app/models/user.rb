@@ -105,26 +105,26 @@ class User < ActiveRecord::Base
       puts "______________________________________________________________________"
       puts "#{auth}"
       user.provider = auth.provider
-      puts "#{auth.provider}"
+      puts "provider: #{auth.provider}"
       user.uid = auth.uid
-      puts "#{auth.uid}"
+      puts "uid: #{auth.uid}"
       user.gender = auth.extra.raw_info.gender
-      puts "#{auth.extra.raw_info.gender}"
+      puts "gender: #{auth.extra.raw_info.gender}"
       user.age_range = auth.extra.raw_info.age_range.min[1]
-      puts "#{auth.extra.raw_info.age_range.min[1]}"
+      puts "age: #{auth.extra.raw_info.age_range.min[1]}"
       if auth.info.email.nil?
         user.email = ""
       else
         user.email = auth.info.email
-        puts "#{auth.info.email}"
+        puts "email: #{auth.info.email}"
       end
       user.password = Devise.friendly_token[0,20]
-      puts "#{auth.info.email}"
+      puts "password: #{Devise.friendly_token[0,20]}"
       user.name = auth.info.name
-      puts "#{auth.info.name}"
+      puts "name: #{auth.info.name}"
       user.picture = auth.info.image.gsub('http://','https://') + "?width=1000&height=1000"
       user.token = auth.credentials.token
-      puts "#{auth.credentials.token}"
+      puts "token: #{auth.credentials.token}"
       if auth.credentials.expires_at
         user.token_expiry = Time.at(auth.credentials.expires_at)
       end
