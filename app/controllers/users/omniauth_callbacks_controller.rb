@@ -34,6 +34,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
 
     if @user.persisted?
+      puts "user persisted"
       sign_in @user#, event: :authentication
 
       # Si c'est un signup
@@ -77,6 +78,13 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       end
 
       render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
+
+    else
+
+      puts "user rejected"
+
+
+
     end
   end
 
