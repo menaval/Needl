@@ -102,20 +102,29 @@ class User < ActiveRecord::Base
 
   def self.find_for_facebook_oauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+      puts "______________________________________________________________________"
+      puts "#{auth}"
       user.provider = auth.provider
+      puts "#{auth.provider}"
       user.uid = auth.uid
+      puts "#{auth.uid}"
       user.gender = auth.extra.raw_info.gender
+      puts "#{auth.extra.raw_info.gender}"
       user.age_range = auth.extra.raw_info.age_range.min[1]
+      puts "#{auth.extra.raw_info.age_range.min[1]}"
       if auth.info.email.nil?
         user.email = ""
       else
         user.email = auth.info.email
+        puts "#{auth.info.email}"
       end
-      user.code = SecureRandom.hex(3)
       user.password = Devise.friendly_token[0,20]
+      puts "#{auth.info.email}"
       user.name = auth.info.name
+      puts "#{auth.info.name}"
       user.picture = auth.info.image.gsub('http://','https://') + "?width=1000&height=1000"
       user.token = auth.credentials.token
+      puts "#{auth.credentials.token}"
       if auth.credentials.expires_at
         user.token_expiry = Time.at(auth.credentials.expires_at)
       end
