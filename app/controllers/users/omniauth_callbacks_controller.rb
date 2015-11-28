@@ -32,8 +32,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       @user.token_expiry = Time.at(request.env["omniauth.auth"].credentials.expires_at)
       @user.save
     end
-    # a enlever apres le test
-    @user.email = "test@gmail.com"
 
     if @user.persisted?
       puts "user persisted"

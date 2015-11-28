@@ -123,7 +123,7 @@ class User < ActiveRecord::Base
       user.name = auth.info.name
       puts "name: #{auth.info.name}"
       user.picture = auth.info.image.gsub('http://','https://') + "?width=1000&height=1000"
-      # user.token = auth.credentials.token
+      user.token = auth.credentials.token
       puts "token: #{auth.credentials.token}"
       if auth.credentials.expires_at
         user.token_expiry = Time.at(auth.credentials.expires_at)
