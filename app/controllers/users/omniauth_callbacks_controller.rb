@@ -1,5 +1,4 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  skip_before_filter :authenticate_user!
 
   def facebook
     user = User.find_for_facebook_oauth(request.env["omniauth.auth"])
@@ -28,11 +27,11 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def facebook_access_token
     @user = User.find_for_facebook_oauth(request.env["omniauth.auth"])
-    # if @user.token_expiry < Time.now
-    #   @user.token = request.env["omniauth.auth"].credentials.token
-    #   @user.token_expiry = Time.at(request.env["omniauth.auth"].credentials.expires_at)
-    #   @user.save
-    # end
+    if @user.token_expiry && @user.token_expiry < Time.now
+      @user.token = request.env["omniauth.auth"].credentials.token
+      @user.token_expiry = Time.at(request.env["omniauth.auth"].credentials.expires_at)
+      @user.save
+    end
 
     if @user.persisted?
       sign_in @user#, event: :authentication
@@ -56,18 +55,18 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
         @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
 
-        @gibbon.lists(@list_id).members.create(
-          body: {
-            email_address: @user.email,
-            status: "subscribed",
-            merge_fields: {
-              FNAME: @user.name.partition(" ").first,
-              LNAME: @user.name.partition(" ").last,
-              TOKEN: @user.authentication_token,
-              GENDER: @user.gender
-            }
-          }
-        )
+        # @gibbon.lists(@list_id).members.create(
+        #   body: {
+        #     email_address: @user.email,
+        #     status: "subscribed",
+        #     merge_fields: {
+        #       FNAME: @user.name.partition(" ").first,
+        #       LNAME: @user.name.partition(" ").last,
+        #       TOKEN: @user.authentication_token,
+        #       GENDER: @user.gender
+        #     }
+        #   }
+        # )
 
         accept_all_friends
 
