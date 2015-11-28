@@ -3,7 +3,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def facebook
     user = User.find_for_facebook_oauth(request.env["omniauth.auth"])
-    if user.token_expiry < Time.now
+    if user.token_expiry  && user.token_expiry < Time.now
       user.token = request.env["omniauth.auth"].credentials.token
       user.token_expiry = Time.at(request.env["omniauth.auth"].credentials.expires_at)
       user.save
