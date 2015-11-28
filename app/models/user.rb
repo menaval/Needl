@@ -114,9 +114,15 @@ class User < ActiveRecord::Base
       puts "age: #{auth.extra.raw_info.age_range.min[1]}"
       if auth.info.email.nil?
         user.email = ""
+        puts "email est vide"
       else
-        user.email = auth.info.email
-        puts "email: #{auth.info.email}"
+        if defined? auth.info.email
+          user.email = auth.info.email
+          puts "email: #{auth.info.email}"
+        else
+          user.email = ""
+          puts "email est vide 2"
+        end
       end
       user.password = Devise.friendly_token[0,20]
       puts "password: #{Devise.friendly_token[0,20]}"
