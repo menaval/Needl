@@ -9,6 +9,7 @@ json.longitude                  @restaurant.longitude
 json.subways                    @restaurant.subways_near
 json.closest_subway             @restaurant.subway_id
 json.phone_number               @restaurant.phone_number
+json.occasions                  @restaurant.occasions_from_my_friends_api(@user)
 json.ambiences                  @restaurant.ambiences_from_my_friends_api(@user)
 json.strengths                  @restaurant.strengths_from_my_friends_api(@user)
 json.reviews                    @restaurant.reviews_from_my_friends(@user)

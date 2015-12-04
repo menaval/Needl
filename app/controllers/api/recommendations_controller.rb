@@ -283,7 +283,7 @@ module Api
     end
 
     def recommendation_params
-      params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { price_ranges: [] })
+      params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { occasions: [] }, { price_ranges: [] })
     end
 
     def load_activities

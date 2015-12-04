@@ -1,9 +1,9 @@
 $(document).ready(function() {
   $('#wish').click(function () {
-    $('.recommendation_ambiences, .recommendation_strengths, .recommendation_price_ranges, .recommendation_review').hide();
+    $('.recommendation_ambiences, .recommendation_strengths, .recommendation_occasions, .recommendation_price_ranges, .recommendation_review').hide();
   });
   $('#reco').click(function () {
-    $('.recommendation_ambiences, .recommendation_strengths, .recommendation_price_ranges, .recommendation_review').show();
+    $('.recommendation_ambiences, .recommendation_strengths, .recommendation_occasions, .recommendation_price_ranges, .recommendation_review').show();
   });
 
   // juste si on vient depuis la page d'un restaurant, enlève la classe border

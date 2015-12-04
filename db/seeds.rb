@@ -9,4 +9,5 @@
 Restaurant.all.each do |r|
   r.recompute_ambiences
   r.recompute_strengths
+  r.recompute_occasions
 end
