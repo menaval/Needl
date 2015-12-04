@@ -17,6 +17,7 @@ class Restaurant < ActiveRecord::Base
   scope :by_friend,    ->(friend)    {includes(:recommendations).where(recommendations: { user_id: friend.to_i }) if friend.present?}
   scope :by_subway,    ->(subway)    {includes(:restaurant_subways).where(restaurant_subways: { subway_id: subway.to_i}) if subway.present?}
   scope :by_ambience,  ->(ambience, user_id)  {includes(:recommendations).where("'#{ambience}' = ANY(recommendations.ambiences)").where(recommendations: {user_id: [User.find(user_id).my_visible_friends_ids_and_me]}).references(:recommendations)if ambience.present?}
+  scope :by_occasion,  ->(occasion, user_id)  {includes(:recommendations).where("'#{occasion}' = ANY(recommendations.occasions)").where(recommendations: {user_id: [User.find(user_id).my_visible_friends_ids_and_me]}).references(:recommendations)if occasion.present?}
 
   def number_from_my_friends(current_user)
     number = 0
@@ -56,6 +57,21 @@ class Restaurant < ActiveRecord::Base
     array.flatten.group_by(&:itself).sort_by { |_name, votes| -votes.length }.first(2).to_h.keys.first(3)
   end
 
+  # inutilisé car pour le site mais à mettre pour la migration !!!
+    # def occasions_from_my_friends(current_user)
+    #   array = []
+    #   occasions_list = ["rdv_galant", "entre_amis", "en_famille", "business", "brunch", "grandes_tablees", "a_emporter"]
+
+    #   self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
+    #     reco.occasions.each do |number|
+    #       occasion = occasions_list[number.to_i - 1]
+    #       array << occasion
+    #     end
+    #   end
+    #   array.flatten.group_by(&:itself).sort_by { |_name, votes| -votes.length }.first(2).to_h.keys.first(3)
+    # end
+
+
   def ambiences_from_my_friends_api(current_user)
     array = []
     self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
@@ -71,6 +87,15 @@ class Restaurant < ActiveRecord::Base
     end
     array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(3)
   end
+
+#  A mettre lors de la migration !!
+  # def occasions_from_my_friends_api(current_user)
+  #   array = []
+  #   self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
+  #     array += reco.occasions
+  #   end
+  #   array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(3)
+  # end
 
   def reviews_from_my_friends(current_user)
     hash = {}

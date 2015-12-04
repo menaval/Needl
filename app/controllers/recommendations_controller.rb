@@ -71,8 +71,11 @@ class RecommendationsController < ApplicationController
           if params["origin"] == "mail"
             sign_out
             render(:json => {notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"}, :status => 409, :layout => false)
+
+            # A mettre lors de la migration !!!
+            # render(:json => {notice: "Les occasions, ambiances, points forts ou le prix n'ont pas été remplis"}, :status => 409, :layout => false)
           else
-            redirect_to new_recommendation_path, notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"
+            redirect_to new_recommendation_path, notice: "Les occasions, ambiances ou points forts ou le prix n'ont pas été remplis"
           end
         end
 
@@ -272,7 +275,7 @@ class RecommendationsController < ApplicationController
   end
 
   def recommendation_params
-    params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { price_ranges: [] })
+    params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { occasions: [] }, { price_ranges: [] })
   end
 
   def load_activities

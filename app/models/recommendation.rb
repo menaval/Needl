@@ -5,6 +5,9 @@ class Recommendation < ActiveRecord::Base
   validates :strengths, presence: true
   validates :ambiences, presence: true
   validates :price_ranges, presence: true
+
+  # A mettre quand on fait la migration sur l'AppStore!!!
+  # validates :occasions, presence: true
   attr_accessor :wish
   has_many :activities, as: :trackable, class_name: 'PublicActivity::Activity', dependent: :destroy
   tracked owner: Proc.new { |controller, _model| controller.current_user }, only: [:create]
