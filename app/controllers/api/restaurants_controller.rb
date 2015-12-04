@@ -5,6 +5,9 @@ module Api
     skip_before_filter :authenticate_user!
 
     def show
+
+      #  Lors de la migration rajouter les occasions dans la vue !!!
+
       @restaurant = Restaurant.find(params["id"].to_i)
       @user = User.find_by(authentication_token: params["user_token"])
       @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
