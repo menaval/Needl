@@ -38,6 +38,8 @@ module Api
 
       # associer les ambiances, occasions et amis recommandant aux restaurants avec une seule requête
       @all_ambiences = {}
+
+      # A remettre pendant la migration et sur la view aussi !!
       # @all_occasions = {}
       @all_friends_recommending = {}
       @recommendations_from_friends.each do |recommendation|
