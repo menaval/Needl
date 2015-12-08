@@ -52,23 +52,15 @@ module Api
       users.each do |user|
         list.each do |contact|
 
-
-          phone_numbers = contact["phoneNumbers"] != nil ? contact["phoneNumbers"].map{|x| x["number"].delete(' ')} : []
+          phone_numbers = contact["phoneNumbers"] ? contact["phoneNumbers"].map{|x| x["number"].delete(' ')} : []
           user_phone_numbers = user.phone_numbers
-          emails = contact["emailAdresses"] != nil ? contact["emailAdresses"].map{|x| x["email"].downcase.delete(' ')} : []
+          emails = contact["emailAdresses"] ? contact["emailAdresses"].map{|x| x["email"].downcase.delete(' ')} : []
           user_emails = user.emails
 
-          # On test si on reconnait le user grace aux numéros de tel
-          if phone_numbers.any? {|number| user_phone_numbers.include?(number) }
+          # On test si on reconnait le user grace aux numéros de tel ou a une adresse mail
+          if phone_numbers.any? {|number| user_phone_numbers.include?(number) } || emails.any? {|email| user_emails.include?(email) }
 
-            # On ajoute le numéro de tel inconnu et on ajoute les adresses mails potentielles
-
-          # On test si on reconnait le user grace aux adresses mails
-          elsif emails.any? {|email| user_emails.include?(email) }
-
-            # on s'occupe des mails
-
-            # pour chaque email récupéré on l'enregistre seulement s'il n'est pas dans la base de données
+            # on rajoute des mails si pas dans la BDD
             emails.each do |email|
               if user_emails.include?(email) == false
                 user_emails << email
@@ -76,10 +68,7 @@ module Api
               end
             end
 
-
-
-            # on s'occupe des tels
-            # on s'assure qu'on ne les a pas déjà tous et que tous les champs ne sont pas occupés
+            # on rajoute des tels si pas dans la BDD
             phone_numbers.each do |number|
               if user_phone_numbers.include?(number) == false
                 user_phone_numbers << number
@@ -88,22 +77,23 @@ module Api
             end
 
           end
+
         end
       end
 
-      # Tu fais une itération sur tous les users
-      # Tu checks qu'un des numéros récupérés est dans l'un des numéros du user
-      # Si c'est le cas: tu ajoutes le 2e numéro s'il y en a un et qu'il n'en avait pas
-      # Et tu ajoutes les éventuels mails supplémentaires
-      # Si t'as rien trouvé tu checks qu'une des adresses mails récupérées est dans l'une des adresses mails du user
-      # Si c'est le cas: tu ajoutes les éventuelles autres adresses mails
-      # Et tu ajoutes les éventuels numéros de tel supplémentaires
-
     end
 
-
     def invite_contact
-
+      user = User.find_by(authentication_token: params["user_token"])
+      contact = params["contact"]
+      contact_name = contact["givenName"] ? contact["givenName"] : ""
+      contact_mail = contact["emailAdresses"] ? contact["emailAdresses"].first.downcase.delete(' ')} : ""
+      contact_phone_number = contact["phoneNumbers"] ? contact["phoneNumbers"].first.delete(' ') : ""
+      if contact_mail != ""
+        user.send_invite_contact_email(contact_mail, contact_name)
+      elsif contact_phone_number != ""
+        # integration twilio
+      end
     end
 
 

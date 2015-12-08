@@ -141,4 +141,8 @@ class User < ActiveRecord::Base
     UserMailer.new_friend(self, friend).deliver
   end
 
+  def send_invite_contact_email(contact_mail, contact_name)
+    UserMailer.invite_contact(self, contact_mail, contact_name).deliver
+  end
+
 end

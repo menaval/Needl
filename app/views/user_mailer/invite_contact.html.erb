@@ -1,0 +1,23 @@
+Salut <%= @contact_name %>,
+<br>
+<br>
+<%= @user.name.split(" ")[0] %> t'invite à <a href = "http://www.needl.fr/" target = "_blank">découvrir ses restaurants sur Needl !</a>
+<br>
+Celui-là par example, c'est un de ses préférés :
+<br>
+<br>
+<strong><%= @restaurant.name %></strong>, <%= @restaurant.types.length > 0 ? @restaurant.types.first.name : @restaurant.food.name %>, Métro <%= @restaurant.subway_name %>
+<br>
+<em>"<%= @review %>"</em>, <%= @user.name.split(" ")[0] %>
+<br>
+<br>
+<%= image_tag @picture, :style => "height: 300px" %>
+<br>
+<br>
+Tu peux voir tous ses autres restaurants préférés sur Needl !
+<br>
+<br>
+Salut,
+<br>
+<br>
+L'équipe Needl
