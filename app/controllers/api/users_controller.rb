@@ -84,16 +84,74 @@ module Api
     end
 
     def invite_contact
-      user = User.find_by(authentication_token: params["user_token"])
+
+      @user = User.find_by(authentication_token: params["user_token"])
       contact = params["contact"]
-      contact_name = contact["givenName"] ? contact["givenName"] : ""
+      @contact_name = contact["givenName"] ? contact["givenName"] : ""
       contact_mail = contact["emailAdresses"] ? contact["emailAdresses"].first.downcase.delete(' ')} : ""
-      contact_phone_number = contact["phoneNumbers"] ? contact["phoneNumbers"].first.delete(' ') : ""
+      @contact_phone_number = contact["phoneNumbers"] ? contact["phoneNumbers"].first.delete(' ') : ""
+
+      recos = @user.recommendations
+      recos_commented = recos.map {|x| [x.review, x.restaurant_id] if x.review != "Je recommande !"}.compact
+
+      # On envoie un mail si on l'a
       if contact_mail != ""
-        user.send_invite_contact_email(contact_mail, contact_name)
-      elsif contact_phone_number != ""
-        # integration twilio
+
+        #  on fait en sorte de mettre en priorité les recos qui ont des commentaires
+        if recos_commented.length > 0
+          @review = recos_commented.first[0]
+          @resto_id = recos_commented.first[1]
+          @user.send_invite_contact_with_restaurant_email(contact_mail, @contact_name, @review, @resto_id)
+        elsif recos.length > 0
+          @review = recos.first.review
+          @resto_id = recos.first.restaurant_id
+          @user.send_invite_contact_with_restaurant_email(contact_mail, @contact_name, @review, @resto_id)
+        else
+          @user.send_invite_contact_without_restaurant_email(contact_mail, contact_phone)
+        end
+
+        # si on n'a pas l'adresse mail, on envoie un texto
+      elsif @contact_phone_number != ""
+
+
+        if recos_commented.length > 0
+          @review = recos_commented.first[0]
+          @resto_id = recos_commented.first[1]
+          send_text_invitation_with_restaurant
+        elsif recos.length > 0
+          @review = recos.first.review
+          @resto_id = recos.first.restaurant_id
+          send_text_invitation_with_restaurant
+        else
+          send_text_invitation_without_restaurant
+        end
+
+
       end
+    end
+
+    def send_text_invitation_with_restaurant
+
+      restaurant = Restaurant.find(@resto_id)
+      account_sid = ENV['TWILIO_SID']
+      auth_token  = ENV['TWILIO_AUTH_TOKEN']
+      client = Twilio::REST::Client.new account_sid, auth_token
+      client.messages.create(
+        from: "+33644600179",
+        to: @contact_phone_number,
+        body: "Salut #{@contact_name}, #{@user.name.split(" ")[0]} te recommande #{restaurant.name} pour aller dîner ! #{@review == 'Je recommande !' ? '' : 'Je cite: '}#{@review == 'Je recommande !' ? '' : @review}#{['!','.', '?'].include?(@review.last) ? '' : '.'} Tu peux retrouver tous ses autres restaurants préférés sur l'app Needl depuis needl.fr !"
+      )
+    end
+
+    def send_text_invitation_without_restaurant
+      account_sid = ENV['TWILIO_SID']
+      auth_token  = ENV['TWILIO_AUTH_TOKEN']
+      client = Twilio::REST::Client.new account_sid, auth_token
+      client.messages.create(
+        from: "+33644600179",
+        to: @contact_phone_number,
+        body: "#{@user.name.split(" ")[0]} t'invite à découvrir ses restaurants préférés sur l'app Needl depuis needl.fr !"
+      )
     end
 
 
