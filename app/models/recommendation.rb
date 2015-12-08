@@ -4,7 +4,6 @@ class Recommendation < ActiveRecord::Base
   belongs_to :restaurant
   validates :strengths, presence: true
   validates :ambiences, presence: true
-  validates :price_ranges, presence: true
 
   # A mettre quand on fait la migration sur l'AppStore!!!
   # validates :occasions, presence: true
