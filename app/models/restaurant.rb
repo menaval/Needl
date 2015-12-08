@@ -31,10 +31,10 @@ class Restaurant < ActiveRecord::Base
   #   includes(:recommendations).where("'#{ambience}' = ANY(recommendations.ambiences)").where(recommendations: {user_id: [User.find(user_id).my_visible_friends_ids_and_me]}).references(:recommendations)if ambience.present?
   # end
 
-# inutilisé car pour le site
+# inutilisé car pour le site mais à mettre pour la migration !!!
   def ambiences_from_my_friends(current_user)
     array = []
-    ambiences_list = ["chic", "festif", "typique", "ensoleille", "fast", "casual"]
+    ambiences_list = ["chic", "festif", "traditionnel", "terrasse", "fast", "bonne_franquette", "romantique", "inclassable"]
     self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
       reco.ambiences.each do |number|
         ambience = ambiences_list[number.to_i - 1]
@@ -44,7 +44,7 @@ class Restaurant < ActiveRecord::Base
     array.flatten.group_by(&:itself).sort_by { |_name, votes| -votes.length }.first(2).to_h.keys.first(2)
   end
 
-# inutilisé car pour le site
+# Inutilisé car pour le site
   def strengths_from_my_friends(current_user)
     array = []
     strengths_list = ["cuisine", "service", "cadre", "original", "copieux", "vins", "qte_prix"]
@@ -57,19 +57,19 @@ class Restaurant < ActiveRecord::Base
     array.flatten.group_by(&:itself).sort_by { |_name, votes| -votes.length }.first(2).to_h.keys.first(3)
   end
 
-  # inutilisé car pour le site mais à mettre pour la migration !!!
-    # def occasions_from_my_friends(current_user)
-    #   array = []
-    #   occasions_list = ["rdv_galant", "entre_amis", "en_famille", "business", "brunch", "grandes_tablees", "a_emporter"]
+# Inutilisé car pour le site
+  def occasions_from_my_friends(current_user)
+    array = []
+    occasions_list = ["rdv_galant", "entre_amis", "en_famille", "business", "brunch", "grandes_tablees"]
 
-    #   self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
-    #     reco.occasions.each do |number|
-    #       occasion = occasions_list[number.to_i - 1]
-    #       array << occasion
-    #     end
-    #   end
-    #   array.flatten.group_by(&:itself).sort_by { |_name, votes| -votes.length }.first(2).to_h.keys.first(3)
-    # end
+    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
+      reco.occasions.each do |number|
+        occasion = occasions_list[number.to_i - 1]
+        array << occasion
+      end
+    end
+    array.flatten.group_by(&:itself).sort_by { |_name, votes| -votes.length }.first(2).to_h.keys.first(3)
+  end
 
 
   def ambiences_from_my_friends_api(current_user)
