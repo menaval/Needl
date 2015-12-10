@@ -49,7 +49,7 @@ module Api
       @user = User.find_by(authentication_token: params["user_token"])
       list = params["contact_list"]
       puts "----------------------------------------------------------------------------"
-      puts "list"
+      puts list
       users = User.all
 
       # users.each do |user|
