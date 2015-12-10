@@ -88,7 +88,7 @@ module Api
       @user = User.find_by(authentication_token: params["user_token"])
       contact = params["contact"]
       @contact_name = contact["givenName"] ? contact["givenName"] : ""
-      contact_mail = contact["emailAdresses"] ? contact["emailAdresses"].first.downcase.delete(' ')} : ""
+      contact_mail = contact["emailAdresses"] ? contact["emailAdresses"].first.downcase.delete(' ') : ""
       @contact_phone_number = contact["phoneNumbers"] ? contact["phoneNumbers"].first.delete(' ') : ""
 
       recos = @user.recommendations
