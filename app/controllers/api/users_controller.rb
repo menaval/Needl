@@ -46,6 +46,7 @@ module Api
     end
 
     def contacts_access
+      @user = User.find_by(authentication_token: params["user_token"])
       list = params["contact_list"]
       users = User.all
 
@@ -87,6 +88,8 @@ module Api
 
         end
       end
+
+      redirect_to new_api_friendship_path(@user.id)
 
     end
 
