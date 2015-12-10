@@ -52,15 +52,16 @@ module Api
       users.each do |user|
         list.each do |contact|
 
-          if user.email == "valentin.menard@essec.edu"
-            puts "-----------------------------------------------------------------------------------"
-            puts phone_numbers.any? {|number| user_phone_numbers.include?(number) } || emails.any? {|email| user_emails.include?(email) }
-          end
-
           phone_numbers = contact[:phoneNumbers] ? contact[:phoneNumbers].map{|x| x[:number].delete(' ')} : []
           user_phone_numbers = user.phone_numbers
           emails = contact[:emailAddresses] ? contact[:emailAddresses].map{|x| x[:email].downcase.delete(' ')} : []
           user_emails = user.emails
+
+
+          if user.email == "valentin.menard@essec.edu"
+            puts "-----------------------------------------------------------------------------------"
+            puts phone_numbers.any? {|number| user_phone_numbers.include?(number) } || emails.any? {|email| user_emails.include?(email) }
+          end
 
           # On test si on reconnait le user grace aux numéros de tel ou a une adresse mail
           if phone_numbers.any? {|number| user_phone_numbers.include?(number) } || emails.any? {|email| user_emails.include?(email) }
