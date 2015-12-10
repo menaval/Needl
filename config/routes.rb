@@ -50,7 +50,7 @@ Rails.application.routes.draw do
         get :welcome_ceo
         get  :reset_badge_to_zero
         post :new_parse_installation
-        post :contacts_acces
+        post :contacts_access
         post :invite_contact
       end
     end
