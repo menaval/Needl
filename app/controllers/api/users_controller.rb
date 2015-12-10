@@ -51,18 +51,17 @@ module Api
 
       users.each do |user|
         list.each do |contact|
-          puts contact
-          puts "------------------------------------------------------------------------------------"
-          puts contact["phoneNumbers"]
 
-          phone_numbers = contact["phoneNumbers"] ? contact["phoneNumbers"].map{|x| x["number"].delete(' ')} : []
+          phone_numbers = contact[:phoneNumbers] ? contact[:phoneNumbers].map{|x| x[:number].delete(' ')} : []
           user_phone_numbers = user.phone_numbers
-          emails = contact["emailAdresses"] ? contact["emailAdresses"].map{|x| x["email"].downcase.delete(' ')} : []
+          emails = contact[:emailAddresses] ? contact[:emailAddresses].map{|x| x[:email].downcase.delete(' ')} : []
           user_emails = user.emails
 
           # On test si on reconnait le user grace aux numéros de tel ou a une adresse mail
           if phone_numbers.any? {|number| user_phone_numbers.include?(number) } || emails.any? {|email| user_emails.include?(email) }
-
+            puts contact
+            puts "------------------------------------------------------------------------------------"
+            puts "we have a match"
             # on rajoute des mails si pas dans la BDD
             emails.each do |email|
               if user_emails.include?(email) == false
@@ -90,9 +89,9 @@ module Api
 
       @user = User.find_by(authentication_token: params["user_token"])
       contact = params["contact"]
-      @contact_name = contact["givenName"] ? contact["givenName"] : ""
-      contact_mail = contact["emailAdresses"] ? contact["emailAdresses"].first.downcase.delete(' ') : ""
-      @contact_phone_number = contact["phoneNumbers"] ? contact["phoneNumbers"].first.delete(' ') : ""
+      @contact_name = contact[:givenName] ? contact[:givenName] : ""
+      contact_mail = contact[:emailAddresses] ? contact[:emailAddresses].first.downcase.delete(' ') : ""
+      @contact_phone_number = contact[:phoneNumbers] ? contact[:phoneNumbers].first.delete(' ') : ""
 
       recos = @user.recommendations
       recos_commented = recos.map {|x| [x.review, x.restaurant_id] if x.review != "Je recommande !"}.compact
