@@ -48,8 +48,10 @@ Rails.application.routes.draw do
     resources :users, only: :show do
       collection do
         get :welcome_ceo
-        post :new_parse_installation
         get  :reset_badge_to_zero
+        post :new_parse_installation
+        post :contacts_acces
+        post :invite_contact
       end
     end
     resources :recommendations, only: [:index, :new] do

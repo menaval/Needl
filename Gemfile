@@ -39,6 +39,7 @@ gem "rails-i18n"
 gem "devise-i18n"
 gem "devise-i18n-views"
 gem 'gibbon'
+gem 'twilio-ruby', '~> 4.2.1'
 
 group :development, :test do
   gem "spring"
