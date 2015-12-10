@@ -51,6 +51,9 @@ module Api
 
       users.each do |user|
         list.each do |contact|
+          puts contact
+          puts "------------------------------------------------------------------------------------"
+          puts contact["phoneNumbers"]
 
           phone_numbers = contact["phoneNumbers"] ? contact["phoneNumbers"].map{|x| x["number"].delete(' ')} : []
           user_phone_numbers = user.phone_numbers
