@@ -31,7 +31,7 @@ class UserMailer < ApplicationMailer
 
   end
 
-  def invite_contact_with_restaurant(user, contact_mail, contact_name)
+  def invite_contact_without_restaurant(user, contact_mail, contact_name)
 
     @user = user
     @contact_name = contact_name
