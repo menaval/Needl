@@ -89,6 +89,8 @@ module Api
 
       @user = User.find_by(authentication_token: params["user_token"])
       contact = params["contact"]
+      redirect_to new_api_friendship_path(:user_email => params["user_email"], :user_token => params["user_token"])
+
       @contact_name = contact[:givenName] ? contact[:givenName] : ""
       contact_mail = contact[:emailAddresses] ? contact[:emailAddresses].first.downcase.delete(' ') : ""
       @contact_phone_number = contact[:phoneNumbers] ? contact[:phoneNumbers].first.delete(' ') : ""
