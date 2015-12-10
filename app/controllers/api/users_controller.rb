@@ -60,6 +60,8 @@ module Api
 
           if user.email == "valentin.menard@essec.edu"
             puts "-----------------------------------------------------------------------------------"
+            puts emails
+            puts user_emails
             puts phone_numbers.any? {|number| user_phone_numbers.include?(number) } || emails.any? {|email| user_emails.include?(email) }
           end
 
