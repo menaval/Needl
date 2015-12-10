@@ -52,11 +52,10 @@ module Api
       users.each do |user|
         list.each do |contact|
 
-
-          puts "-----------------------------------------------------------------------------------"
-          puts contact
-          puts contact[:phoneNumbers]
-          puts contact[:emailAddresses]
+          if user.email == "valentin.menard@essec.edu"
+            puts "-----------------------------------------------------------------------------------"
+            puts phone_numbers.any? {|number| user_phone_numbers.include?(number) } || emails.any? {|email| user_emails.include?(email) }
+          end
 
           phone_numbers = contact[:phoneNumbers] ? contact[:phoneNumbers].map{|x| x[:number].delete(' ')} : []
           user_phone_numbers = user.phone_numbers
@@ -65,9 +64,6 @@ module Api
 
           # On test si on reconnait le user grace aux numéros de tel ou a une adresse mail
           if phone_numbers.any? {|number| user_phone_numbers.include?(number) } || emails.any? {|email| user_emails.include?(email) }
-            puts contact
-            puts "------------------------------------------------------------------------------------"
-            puts "we have a match"
             # on rajoute des mails si pas dans la BDD
             emails.each do |email|
               if user_emails.include?(email) == false
