@@ -50,6 +50,8 @@ module Api
       list = params["contact_list"]
       users = User.all
 
+      redirect_to new_api_friendship_path(:user_email => params["user_email"], :user_token => params["user_token"])
+
       users.each do |user|
         list.each do |contact|
 
@@ -80,8 +82,6 @@ module Api
 
         end
       end
-
-      redirect_to new_api_friendship_path(:user_email => params["user_email"], :user_token => params["user_token"])
 
     end
 
