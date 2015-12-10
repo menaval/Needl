@@ -142,11 +142,11 @@ class User < ActiveRecord::Base
   end
 
   def send_invite_contact_with_restaurant_email(contact_mail, contact_name, review, resto_id)
-    UserMailer.invite_contact(self, contact_mail, contact_name, review, resto_id).deliver
+    UserMailer.invite_contact_with_restaurant(self, contact_mail, contact_name, review, resto_id).deliver
   end
 
   def send_invite_contact_without_restaurant_email(contact_mail, contact_name)
-    UserMailer.invite_contact(self, contact_mail, contact_name).deliver
+    UserMailer.invite_contact_without_restaurant(self, contact_mail, contact_name).deliver
   end
 
 end
