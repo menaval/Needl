@@ -46,7 +46,7 @@ module Api
           if @recommendation.save
 
 
-            @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
+            # @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
             @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
             notif_reco
 
@@ -283,7 +283,7 @@ module Api
     end
 
     def recommendation_params
-      params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { occasions: [] }, { price_ranges: [] })
+      params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { occasions: [] })
     end
 
     def load_activities

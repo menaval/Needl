@@ -33,7 +33,7 @@ class RecommendationsController < ApplicationController
         #  si les informations récupérées ont bien toutes été remplies on enregistre la reco, update le prix du resto et on le track
         if @recommendation.save
 
-          @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
+          # @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
           @tracker.track(current_user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => current_user.name })
           notif_reco
 
@@ -275,7 +275,7 @@ class RecommendationsController < ApplicationController
   end
 
   def recommendation_params
-    params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { occasions: [] }, { price_ranges: [] })
+    params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { occasions: [] })
   end
 
   def load_activities
