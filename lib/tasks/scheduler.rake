@@ -5,7 +5,7 @@ task :update_mailchimp => :environment do
 
 # Verifier si on est vendredi matin (on fera le rake sur Heroku tous les jours très tot)
 # Hors test, mettre == 5, sinon à moins d'etre vendredi il ne se passera rien
-  if Time.now.wday != 4
+  if Time.now.wday != 4 ||  Time.now.strftime("%U").to_i.odd?
     puts "Nothing Today."
   else
     puts "Updating mailchimp infos ..."
@@ -75,6 +75,68 @@ task :update_mailchimp => :environment do
 
 
 end
+
+
+task :import_contacts => :environment do
+
+  users = User.all
+
+  ImportedContact.where(imported: false).each do |import|
+
+    list = import.list
+
+    users.each do |user|
+      list.each do |contact|
+
+        # on met les numéros récupérés au meme format
+        phone_numbers = []
+        if contact[:phoneNumbers]
+          phone_numbers = contact[:phoneNumbers].map do |x|
+            n = x[:number].gsub(/[^0-9+]/, '')
+            n = n.gsub(/^00/,"+")
+            n = n.gsub(/^0/,"+33")
+          end
+        end
+        user_phone_numbers = user.phone_numbers
+        emails = contact[:emailAddresses] ? contact[:emailAddresses].map{|x| x[:email].downcase.delete(' ')} : []
+        user_emails = user.emails
+
+        # On test si on reconnait le user grace aux numéros de tel ou a une adresse mail
+        if phone_numbers.any? {|number| user_phone_numbers.include?(number) } || emails.any? {|email| user_emails.include?(email) }
+          # on rajoute des mails si pas dans la BDD
+          emails.each do |email|
+            if user_emails.include?(email) == false
+              user_emails << email
+              user.save
+            end
+          end
+
+          # on rajoute des tels si pas dans la BDD
+          phone_numbers.each do |number|
+            if user_phone_numbers.include?(number) == false
+              user_phone_numbers << number
+              user.save
+            end
+          end
+
+        end
+
+      end
+
+    end
+
+    import.update_attributes :imported, true
+    import.save
+  end
+
+end
+
+
+
+
+
+
+
 
 def my_friends_except_needl_and_me_this_month_restaurants_ids(user)
   # On récupère tous les amis sauf needl
