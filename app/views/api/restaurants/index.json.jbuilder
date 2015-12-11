@@ -15,9 +15,13 @@ json.array!                    @restaurants do |restaurant|
   json.phone_number         restaurant.phone_number
   if @all_ambiences[restaurant.id]
     json.ambiences           @all_ambiences[restaurant.id].flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
+  else
+    json.ambiences          []
   end
   if @all_occasions[restaurant.id]
     json.occasions           @all_occasions[restaurant.id].flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
+  else
+    json.occasions          []
   end
   json.subways                restaurant.subways_near
   json.closest_subway         restaurant.subway_id
