@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151208144524) do
+ActiveRecord::Schema.define(version: 20151211110336) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,16 @@ ActiveRecord::Schema.define(version: 20151208144524) do
     t.boolean  "sender_invisible",   default: false
     t.boolean  "receiver_invisible", default: false
   end
+
+  create_table "imported_contacts", force: :cascade do |t|
+    t.integer  "user_id"
+    t.json     "list"
+    t.boolean  "imported",   default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
+  add_index "imported_contacts", ["user_id"], name: "index_imported_contacts_on_user_id", using: :btree
 
   create_table "not_interested_relations", force: :cascade do |t|
     t.integer  "member_one_id"
@@ -241,6 +251,7 @@ ActiveRecord::Schema.define(version: 20151208144524) do
   add_index "wishes", ["restaurant_id"], name: "index_wishes_on_restaurant_id", using: :btree
   add_index "wishes", ["user_id"], name: "index_wishes_on_user_id", using: :btree
 
+  add_foreign_key "imported_contacts", "users"
   add_foreign_key "recommendations", "restaurants"
   add_foreign_key "recommendations", "users"
   add_foreign_key "restaurant_pictures", "restaurants"

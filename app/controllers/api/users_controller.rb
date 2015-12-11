@@ -51,37 +51,7 @@ module Api
       users = User.all
 
       redirect_to new_api_friendship_path(:user_email => params["user_email"], :user_token => params["user_token"])
-
-      users.each do |user|
-        list.each do |contact|
-
-          phone_numbers = contact[:phoneNumbers] ? contact[:phoneNumbers].map{|x| x[:number].delete(' ')} : []
-          user_phone_numbers = user.phone_numbers
-          emails = contact[:emailAddresses] ? contact[:emailAddresses].map{|x| x[:email].downcase.delete(' ')} : []
-          user_emails = user.emails
-
-          # On test si on reconnait le user grace aux numéros de tel ou a une adresse mail
-          if phone_numbers.any? {|number| user_phone_numbers.include?(number) } || emails.any? {|email| user_emails.include?(email) }
-            # on rajoute des mails si pas dans la BDD
-            emails.each do |email|
-              if user_emails.include?(email) == false
-                user_emails << email
-                user.save
-              end
-            end
-
-            # on rajoute des tels si pas dans la BDD
-            phone_numbers.each do |number|
-              if user_phone_numbers.include?(number) == false
-                user_phone_numbers << number
-                user.save
-              end
-            end
-
-          end
-
-        end
-      end
+      ImportedContact.create(user_id: @user.id, list: list, imported: false)
 
     end
 
