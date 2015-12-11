@@ -60,7 +60,7 @@ class Restaurant < ActiveRecord::Base
 # Inutilisé car pour le site
   def occasions_from_my_friends(current_user)
     array = []
-    occasions_list = ["rdv_galant", "entre_amis", "en_famille", "business", "brunch", "grandes_tablees", "terrasse", "fast"]
+    occasions_list = ["business", "rdv_galant", "en_famille", "entre_amis", "grandes_tablees", "brunch", "terrasse", "fast"]
 
     self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
       reco.occasions.each do |number|
