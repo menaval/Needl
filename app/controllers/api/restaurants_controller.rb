@@ -39,14 +39,14 @@ module Api
       # associer les ambiances, occasions et amis recommandant aux restaurants avec une seule requête
       @all_ambiences = {}
 
-      # A remettre pendant la migration et sur la view aussi !!
-      # @all_occasions = {}
+      A remettre pendant la migration et sur la view aussi !!
+      @all_occasions = {}
       @all_friends_recommending = {}
       @recommendations_from_friends.each do |recommendation|
         @all_ambiences[recommendation.restaurant_id] ||= []
         @all_ambiences[recommendation.restaurant_id] << recommendation.ambiences
-        # @all_occasions[recommendation.restaurant_id] ||= []
-        # @all_occasions[recommendation.restaurant_id] << recommendation.occasions
+        @all_occasions[recommendation.restaurant_id] ||= []
+        @all_occasions[recommendation.restaurant_id] << recommendation.occasions
         @all_friends_recommending[recommendation.restaurant_id] ||= []
         @all_friends_recommending[recommendation.restaurant_id] << recommendation.user_id
       end
