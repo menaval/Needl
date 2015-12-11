@@ -45,8 +45,8 @@ module Api
           #  si les informations récupérées ont bien toutes été remplies on enregistre la reco, update le prix du resto et on le track
           if @recommendation.save
 
-
-            # @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
+            # Enlever la ligne en dessous lors de la migration !!!
+            @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
             @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
             notif_reco
 
@@ -283,7 +283,8 @@ module Api
     end
 
     def recommendation_params
-      params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { occasions: [] })
+      # Enlever price_ranges lors de la migration !!!
+      params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { occasions: [] }, { price_ranges: [] })
     end
 
     def load_activities
