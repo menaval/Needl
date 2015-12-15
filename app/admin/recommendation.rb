@@ -2,6 +2,9 @@ ActiveAdmin.register Recommendation do
 
   permit_params :ambiences, :strengths, :review, :restaurant_id, :user_id, :occasions, :price_ranges
 
+  filter :restaurant, collection: Restaurant.all.order(:name)
+  filter :user, collection: User.all.order(:name)
+
   form do |f|
     f.inputs "Recommendation" do
       f.input :restaurant, collection: Restaurant.all.order(:name)
