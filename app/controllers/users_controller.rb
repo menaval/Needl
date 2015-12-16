@@ -18,9 +18,9 @@ class UsersController < ApplicationController
 
           # on met les numéros récupérés au meme format
           phone_numbers = []
-          if contact[:phoneNumbers]
-            phone_numbers = contact[:phoneNumbers].map do |x|
-              n = x[:number].gsub(/[^0-9+]/, '')
+          if contact["phoneNumbers"]
+            phone_numbers = contact["phoneNumbers"].map do |x|
+              n = x["number"].gsub(/[^0-9+]/, '')
               n = n.gsub(/^00/,"+")
               n = n.gsub(/^0/,"+33")
             end
@@ -28,7 +28,7 @@ class UsersController < ApplicationController
           user_phone_numbers = user.phone_numbers
            puts "numéros de tel récupérés #{phone_numbers}"
            puts "numéros de tel du user #{user_phone_numbers}"
-          emails = contact[:emailAddresses] ? contact[:emailAddresses].map{|x| x[:email].downcase.delete(' ')} : []
+          emails = contact["emailAddresses"] ? contact["emailAddresses"].map{|x| x["email"].downcase.delete(' ')} : []
           puts "emails récupérés #{emails}"
           user_emails = user.emails
           puts "emails du user #{user_emails}"
