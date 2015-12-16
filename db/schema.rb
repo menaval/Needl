@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151211110336) do
+ActiveRecord::Schema.define(version: 20151216165016) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -132,8 +132,8 @@ ActiveRecord::Schema.define(version: 20151211110336) do
   create_table "restaurants", force: :cascade do |t|
     t.string   "name"
     t.string   "address"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.integer  "food_id"
     t.float    "latitude"
     t.float    "longitude"
@@ -167,7 +167,8 @@ ActiveRecord::Schema.define(version: 20151211110336) do
     t.string   "food_name"
     t.integer  "subway_id"
     t.string   "subway_name"
-    t.string   "subways_near",                          array: true
+    t.string   "subways_near",                                      array: true
+    t.integer  "needl_coefficient",        default: 0
   end
 
   add_index "restaurants", ["food_id"], name: "index_restaurants_on_food_id", using: :btree
