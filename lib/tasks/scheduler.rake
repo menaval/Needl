@@ -103,9 +103,11 @@ task :import_contacts => :environment do
 
         # On test si on reconnait le user grace aux numéros de tel ou a une adresse mail
         if phone_numbers.any? {|number| user_phone_numbers.include?(number) } || emails.any? {|email| user_emails.include?(email) }
+          puts "a reconnu un numéro ou adresse mail chez #{user}"
           # on rajoute des mails si pas dans la BDD
           emails.each do |email|
             if user_emails.include?(email) == false
+              puts "a trouvé un mail (#{email}) qui n'était pas la chez #{user}"
               user_emails << email
               user.save
             end
@@ -114,6 +116,7 @@ task :import_contacts => :environment do
           # on rajoute des tels si pas dans la BDD
           phone_numbers.each do |number|
             if user_phone_numbers.include?(number) == false
+              puts "a trouvé un numéro (#{number}) qui n'était pas la chez #{user}"
               user_phone_numbers << number
               user.save
             end
