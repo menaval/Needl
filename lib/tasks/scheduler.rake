@@ -84,8 +84,11 @@ task :import_contacts => :environment do
   ImportedContact.where(imported: false).each do |import|
 
     list = import.list
-
+    puts "________________________________________"
+    puts "je suis sur la list #{import.id}"
     users.each do |user|
+      "puts _______________________________"
+      "je suis entré sur le user #{user.name}"
       list.each do |contact|
 
         # on met les numéros récupérés au meme format
@@ -98,7 +101,9 @@ task :import_contacts => :environment do
           end
         end
         user_phone_numbers = user.phone_numbers
+        puts "numéros de tel récupérés #{user_phone_numbers}"
         emails = contact[:emailAddresses] ? contact[:emailAddresses].map{|x| x[:email].downcase.delete(' ')} : []
+        puts ""
         user_emails = user.emails
 
         # On test si on reconnait le user grace aux numéros de tel ou a une adresse mail

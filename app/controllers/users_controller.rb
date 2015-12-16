@@ -9,8 +9,11 @@ class UsersController < ApplicationController
     ImportedContact.where(imported: false).each do |import|
 
       list = import.list
-
+      puts "________________________________________"
+      puts "je suis sur la list #{import.id}"
       users.each do |user|
+        "puts _______________________________"
+        "je suis entré sur le user #{user.name}"
         list.each do |contact|
 
           # on met les numéros récupérés au meme format
@@ -23,8 +26,12 @@ class UsersController < ApplicationController
             end
           end
           user_phone_numbers = user.phone_numbers
+           puts "numéros de tel récupérés #{phone_numbers}"
+           puts "numéros de tel du user #{user_phone_numbers}"
           emails = contact[:emailAddresses] ? contact[:emailAddresses].map{|x| x[:email].downcase.delete(' ')} : []
+          puts "emails récupérés #{emails}"
           user_emails = user.emails
+          puts "emails du user #{user_emails}"
 
           # On test si on reconnait le user grace aux numéros de tel ou a une adresse mail
           if phone_numbers.any? {|number| user_phone_numbers.include?(number) } || emails.any? {|email| user_emails.include?(email) }
