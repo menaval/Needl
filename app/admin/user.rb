@@ -1,6 +1,6 @@
 ActiveAdmin.register User do
 
-  permit_params :name, :email, :password, :admin, :picture
+  permit_params :name, :email, :password, :admin, :picture, :emails
 
   form do |f|
     f.inputs "Identity" do
