@@ -125,7 +125,7 @@ task :import_contacts => :environment do
 
     end
 
-    import.update_attributes :imported, true
+    import.update_attribute :imported, true
     import.save
   end
 
