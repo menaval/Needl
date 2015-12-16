@@ -19,14 +19,14 @@ module Api
 
     def index
 
-      @user                          = User.find_by(authentication_token: params["user_token"])
-      my_visible_friends_and_me      = @user.my_visible_friends_ids_and_me
-      restaurants_ids                = @user.my_friends_restaurants_ids + @user.my_restaurants_ids
-      @restaurants                   = Restaurant.where(id: restaurants_ids)
-      @recommendations_from_friends  = Recommendation.where(user_id: my_visible_friends_and_me)
-      @wishes                        = Wish.where(user_id: my_visible_friends_and_me)
-      restaurant_pictures            = RestaurantPicture.where(restaurant_id: restaurants_ids)
-      restaurant_subways             = RestaurantSubway.where(restaurant_id: restaurants_ids)
+      @user                                = User.find_by(authentication_token: params["user_token"])
+      my_visible_friends_me_and_needl      = @user.my_visible_friends_ids_and_me + [125]
+      restaurants_ids                      = @user.my_friends_restaurants_ids + @user.my_restaurants_ids
+      @restaurants                         = Restaurant.where(id: restaurants_ids)
+      @recommendations_from_friends        = Recommendation.where(user_id: my_visible_friends_me_and_needl)
+      @wishes                              = Wish.where(user_id: my_visible_friends_me_and_needl)
+      restaurant_pictures                  = RestaurantPicture.where(restaurant_id: restaurants_ids)
+      restaurant_subways                   = RestaurantSubway.where(restaurant_id: restaurants_ids)
       # elements de l'algorithme du score
       # @starting_score              = 55
       # @recommendation_coefficient  = 5
