@@ -34,7 +34,7 @@ class Restaurant < ActiveRecord::Base
 # inutilisé car pour le site mais à mettre pour la migration !!!
   def ambiences_from_my_friends(current_user)
     array = []
-    ambiences_list = ["chic", "festif", "bonne_franquette", "romantique", "inclassable"]
+    ambiences_list = ["chic", "festif", "convivial", "romantique", "branche", "typique", "cosy", "inclassable"]
     self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
       reco.ambiences.each do |number|
         ambience = ambiences_list[number.to_i - 1]
@@ -60,7 +60,7 @@ class Restaurant < ActiveRecord::Base
 # Inutilisé car pour le site
   def occasions_from_my_friends(current_user)
     array = []
-    occasions_list = ["business", "rdv_galant", "en_famille", "entre_amis", "grandes_tablees", "brunch", "terrasse", "fast"]
+    occasions_list = ["business", "couple", "famille", "amis", "groupe", "brunch", "terrasse", "fast", "date"]
 
     self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
       reco.occasions.each do |number|
