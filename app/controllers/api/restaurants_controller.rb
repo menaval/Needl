@@ -28,11 +28,11 @@ module Api
       restaurant_pictures                  = RestaurantPicture.where(restaurant_id: restaurants_ids)
       restaurant_subways                   = RestaurantSubway.where(restaurant_id: restaurants_ids)
       # elements de l'algorithme du score
-      # @starting_score              = 55
-      # @recommendation_coefficient  = 5
-      # @wish_coefficient            = 3
-      # @me_recommending_coefficient = 10
-      # @me_wishing_coefficient      = 20
+      # coefficient needl
+      @recommendation_coefficient  = 14
+      @wish_coefficient            = 6
+      @me_recommending_coefficient = 0
+      @me_wishing_coefficient      = 10
       # récupérer la géoloc pour calculer le trajet en transports
 
 
