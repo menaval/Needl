@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-  require 'twilio-ruby'
 
   def show
 
