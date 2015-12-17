@@ -59,9 +59,7 @@ task :update_mailchimp => :environment do
 
         end
 
-        # On envoie les infos à Mailchimp
-        send_mailchimp_the_updates(user, type_selected_id, final_recommendations[0], final_recommendations[1], final_recommendations[2])
-        puts "Data envoyée à mailchimp"
+
 
         # On retient le thème pris pour qu'il ne retombe pas pour le user
         @types_already_used << type_selected_id
@@ -71,10 +69,19 @@ task :update_mailchimp => :environment do
         user.save
         puts "La colomne newsletter themes actualisée pour le user"
 
+        # On envoie les infos à Mailchimp
+        send_mailchimp_the_updates(user, type_selected_id, final_recommendations[0], final_recommendations[1], final_recommendations[2])
+        puts "Data envoyée à mailchimp"
+
       else
         user.newsletter_updated = false
         user.save
         puts "#{user.name} already updated"
+
+        # On envoie les infos à Mailchimp
+        send_mailchimp_newsletter_not_updated(user)
+        puts "Data envoyée à mailchimp"
+
       end
 
     end
@@ -241,6 +248,7 @@ def send_mailchimp_the_updates(user, type_selected_id, reco1, reco2, reco3)
   gibbon.lists(list_id).members(mail_encrypted).upsert(
     body: {
       merge_fields: {
+        UPDATED: user.newsletter_updated
         THEME: reco1 != "" ? Type.find(type_selected_id).name : "",
         REST1NAME: reco1 != "" ? resto1.name : "",
         REST1TYPE: reco1 != "" ? resto1.types.first.name : "",
@@ -267,5 +275,18 @@ def send_mailchimp_the_updates(user, type_selected_id, reco1, reco2, reco3)
     }
   )
 
+end
 
+def send_mailchimp_newsletter_not_updated(user)
+  mail_encrypted = Digest::MD5.hexdigest(user.email)
+  gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
+  list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
+
+  gibbon.lists(list_id).members(mail_encrypted).upsert(
+    body: {
+      merge_fields: {
+        UPDATED: user.newsletter_updated
+      }
+    }
+  )
 end
