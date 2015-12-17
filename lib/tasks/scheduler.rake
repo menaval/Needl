@@ -150,7 +150,7 @@ end
 
 def my_friends_except_needl_and_me_this_month_restaurants_ids(user)
   # On récupère tous les amis sauf needl
-  user_ids = user.my_visible_friends_ids - [125]
+  user_ids = user.my_visible_friends_ids
 
   # On récupère tous les restaurants recommandés dans le mois
   restaurants_ids = Restaurant.joins(:recommendations).where(recommendations: {created_at: (Time.now - 1.month)..Time.now, user_id: user_ids }).pluck(:id).uniq
