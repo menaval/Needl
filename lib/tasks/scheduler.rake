@@ -248,7 +248,7 @@ def send_mailchimp_the_updates(user, type_selected_id, reco1, reco2, reco3)
   gibbon.lists(list_id).members(mail_encrypted).upsert(
     body: {
       merge_fields: {
-        UPDATED: user.newsletter_updated
+        UPDATED: user.newsletter_updated,
         THEME: reco1 != "" ? Type.find(type_selected_id).name : "",
         REST1NAME: reco1 != "" ? resto1.name : "",
         REST1TYPE: reco1 != "" ? resto1.types.first.name : "",
