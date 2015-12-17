@@ -5,71 +5,82 @@ task :update_mailchimp => :environment do
 
 # Verifier si on est vendredi matin (on fera le rake sur Heroku tous les jours très tot)
 # Hors test, mettre == 5, sinon à moins d'etre vendredi il ne se passera rien
-  if Time.now.wday != 4 ||  Time.now.strftime("%U").to_i.odd?
-    puts "Nothing Today."
-  else
+  if Time.now.wday == 4
     puts "Updating mailchimp infos ..."
     # ok: isoler un user
     User.all.each do |user|
-      puts "Updating #{user.name}"
 
-      # Récupérer la liste des restaurants, hormis Needl et hormis ceux que j'ai déjà recommandé, recommandés par mes amis au cours du mois
-      restaurants_ids = my_friends_except_needl_and_me_this_month_restaurants_ids(user)
-      puts "les restos dans le dernier mois de mes amis: #{restaurants_ids}"
+      if user.newsletter_updated == false
 
-      # Récupérer la sélection de types que l'on va checker.A la base c'est  Burger - Thaï - Japonais - Italien - Français - Street Food - Oriental - Pizza et on retire ceux qui sont déjà tombés.
+        puts "Updating #{user.name}"
 
-      fetching_types_used(user)
-      types_selection_ids = [11, 2, 5, 9, 8, 12, 17, 15, 10] - @types_already_used
-      puts "Les types associés: #{types_selection_ids}"
+        # Récupérer la liste des restaurants, hormis Needl et hormis ceux que j'ai déjà recommandé, recommandés par mes amis au cours du mois
+        restaurants_ids = my_friends_except_needl_and_me_this_month_restaurants_ids(user)
+        puts "les restos dans le dernier mois de mes amis: #{restaurants_ids}"
 
-      # Récupérer le premier thème où plus de 2 recos d'amis
+        # Récupérer la sélection de types que l'on va checker.A la base c'est  Burger - Thaï - Japonais - Italien - Français - Street Food - Oriental - Pizza et on retire ceux qui sont déjà tombés.
 
-      type_selected_id = return_type_selected_id(types_selection_ids, restaurants_ids)
-      puts "Le type choisi pour la newsletter: #{type_selected_id}"
+        fetching_types_used(user)
+        types_selection_ids = [11, 2, 5, 9, 8, 12, 17, 15, 10] - @types_already_used
+        puts "Les types associés: #{types_selection_ids}"
 
-      # On vérifie qu'il ya bien eu une catégorie pour laquelle l'utilisateur a eu 2 recos dans le mois
-      if type_selected_id != ""
+        # Récupérer le premier thème où plus de 2 recos d'amis
 
-        # On récupère les restaurants concernés
-        restaurants_on_type = Restaurant.joins(:types).where(types: {id: type_selected_id}, restaurants: {id: restaurants_ids})
-        puts "Les restaurants de tes amis: #{restaurants_on_type}"
+        type_selected_id = return_type_selected_id(types_selection_ids, restaurants_ids)
+        puts "Le type choisi pour la newsletter: #{type_selected_id}"
 
-        # On récupère les 2 ou 3 max recos de restaurants les plus fraiches
-        final_recommendations = select_fresh_recommendations_in_type_selected(user, restaurants_on_type)
-        puts "les recos qui paraitront de tes amis: #{final_recommendations}"
+        # On vérifie qu'il ya bien eu une catégorie pour laquelle l'utilisateur a eu 2 recos dans le mois
+        if type_selected_id != ""
 
-        # S'il n'y en a que 2, on en met une de Needl
-        if final_recommendations.length == 2
-          @array = [final_recommendations[0].restaurant_id, final_recommendations[1].restaurant_id]
-          reco_needl = reco_from_needl(type_selected_id)
-          puts "la reco needl: #{reco_needl}"
-          final_recommendations << reco_needl
+          # On récupère les restaurants concernés
+          restaurants_on_type = Restaurant.joins(:types).where(types: {id: type_selected_id}, restaurants: {id: restaurants_ids})
+          puts "Les restaurants de tes amis: #{restaurants_on_type}"
+
+          # On récupère les 2 ou 3 max recos de restaurants les plus fraiches
+          final_recommendations = select_fresh_recommendations_in_type_selected(user, restaurants_on_type)
+          puts "les recos qui paraitront de tes amis: #{final_recommendations}"
+
+          # S'il n'y en a que 2, on en met une de Needl
+          if final_recommendations.length == 2
+            @array = [final_recommendations[0].restaurant_id, final_recommendations[1].restaurant_id]
+            reco_needl = reco_from_needl(type_selected_id)
+            puts "la reco needl: #{reco_needl}"
+            final_recommendations << reco_needl
+            puts "la selection finale de recos: #{final_recommendations}"
+          end
+
+        else
+          # on refait la même manip avec les restos de Needl except me uniquement
+          type_selected_id = types_selection_ids.first
+          puts "le type sélectionné: #{type_selected_id}"
+          @array = []
+          final_recommendations = [reco_from_needl(type_selected_id), reco_from_needl(type_selected_id), reco_from_needl(type_selected_id)]
           puts "la selection finale de recos: #{final_recommendations}"
+
         end
 
-      else
-        # on refait la même manip avec les restos de Needl except me uniquement
-        type_selected_id = types_selection_ids.first
-        puts "le type sélectionné: #{type_selected_id}"
-        @array = []
-        final_recommendations = [reco_from_needl(type_selected_id), reco_from_needl(type_selected_id), reco_from_needl(type_selected_id)]
-        puts "la selection finale de recos: #{final_recommendations}"
+        # On envoie les infos à Mailchimp
+        send_mailchimp_the_updates(user, type_selected_id, final_recommendations[0], final_recommendations[1], final_recommendations[2])
+        puts "Data envoyée à mailchimp"
 
+        # On retient le thème pris pour qu'il ne retombe pas pour le user
+        @types_already_used << type_selected_id
+        puts "on récapitule les types déjà utilisés: #{@types_already_used.map(&:to_s)}"
+        user.update_attributes(newsletter_themes: @types_already_used.map(&:to_s))
+        user.update_attributes(newsletter_updated: true)
+        user.save
+        puts "La colomne newsletter themes actualisée pour le user"
+
+      else
+        user.newsletter_updated = false
+        user.save
+        puts "#{user.name} already updated"
       end
 
-      # On envoie les infos à Mailchimp
-      send_mailchimp_the_updates(user, type_selected_id, final_recommendations[0], final_recommendations[1], final_recommendations[2])
-      puts "Data envoyée à mailchimp"
-
-      # On retient le thème pris pour qu'il ne retombe pas pour le user
-      @types_already_used << type_selected_id
-      puts "on récapitule les types déjà utilisés: #{@types_already_used.map(&:to_s)}"
-      user.update_attributes(newsletter_themes: @types_already_used.map(&:to_s))
-      user.save
-      puts "La colomne newsletter themes actualisée pour le user"
-
     end
+
+  else
+    puts "Nothing Today."
   end
   puts "done."
 
