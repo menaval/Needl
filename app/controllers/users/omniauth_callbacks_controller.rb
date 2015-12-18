@@ -28,9 +28,13 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def facebook_access_token
     @user = User.find_for_facebook_oauth(request.env["omniauth.auth"])
     #  Pas hyper sur que ca serve a quelque chose puisque les nouvelles personnes n'ont pas d'expire_at
-    if @user.token_expiry && request.env["omniauth.auth"].credentials.expires_at && @user.token_expiry < Time.now
+    if @user.token_expiry && @user.token_expiry < Time.now
       @user.token = request.env["omniauth.auth"].credentials.token
-      @user.token_expiry = Time.at(request.env["omniauth.auth"].credentials.expires_at)
+      if request.env["omniauth.auth"].credentials.expires_at
+        @user.token_expiry = Time.at(request.env["omniauth.auth"].credentials.expires_at)
+      else
+        @user.token_expiry = nil
+      end
       @user.save
     end
 
