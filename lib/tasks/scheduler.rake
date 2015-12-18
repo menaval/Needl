@@ -230,7 +230,7 @@ def reco_from_needl(type_selected_id)
 end
 
 def send_mailchimp_the_updates(user, type_selected_id, reco1, reco2, reco3)
-  mail_encrypted = Digest::MD5.hexdigest(user.email)
+  mail_encrypted = Digest::MD5.hexdigest(user.email.downcase)
   gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
   list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
 
