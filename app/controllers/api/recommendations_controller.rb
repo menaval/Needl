@@ -32,7 +32,7 @@ module Api
         create_a_wish
       else
         # si l'utilisateur a déà recommandé cet endroit alors on actualise sa reco
-        if Recommendation.where(restaurant_id:params["restaurant_id"].first(4).to_i, user_id: @user.id).any?
+        if Recommendation.where(restaurant_id:params["restaurant_id"].first(5).to_i, user_id: @user.id).any?
           update
 
         # Si c'est une nouvelle recommandation on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
@@ -51,8 +51,8 @@ module Api
             notif_reco
 
             # si c'était sur ma liste de wish ça l'enlève
-            if Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).any?
-              Wish.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).first.destroy
+            if Wish.where(restaurant_id:params["restaurant_id"].first(5).to_i, user_id: @user.id).any?
+              Wish.where(restaurant_id:params["restaurant_id"].first(5).to_i, user_id: @user.id).first.destroy
               @tracker.track(@user.id, 'Wish to Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
             end
             # si première recommandation ou wish, alors devient pote avec ceo, pour la première, à la sortie de l'onboarding, faire en sorte qu'on ne lui propose pas de wishlister
