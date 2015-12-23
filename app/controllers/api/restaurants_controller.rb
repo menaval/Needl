@@ -34,9 +34,9 @@ module Api
       restaurant_subways                   = RestaurantSubway.where(restaurant_id: restaurants_ids)
       # elements de l'algorithme du score
       # coefficient needl
-      @recommendation_coefficient  = 14
-      @wish_coefficient            = 6
-      @me_recommending_coefficient = 0
+      @recommendation_coefficient  = 15
+      @wish_coefficient            = 7
+      @me_recommending_coefficient = 6
       @me_wishing_coefficient      = 10
       # récupérer la géoloc pour calculer le trajet en transports
 
