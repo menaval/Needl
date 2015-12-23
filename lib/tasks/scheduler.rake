@@ -1,7 +1,7 @@
 # "This task is called by the Heroku scheduler add-on"
 task :update_mailchimp => :environment do
 
-  # pour tester en dev changer Time.now.wday != 5 et Recommendation.where(user_id: 125).each do |reco|, et ne le faire que sur un user, pas la peine de le faire sur User.all
+  # pour tester en dev changer Time.now.wday != 5 et Recommendation.where(user_id: 553).each do |reco|, et ne le faire que sur un user, pas la peine de le faire sur User.all
 
 # Verifier si on est vendredi matin (on fera le rake sur Heroku tous les jours très tot)
 # Hors test, mettre == 5, sinon à moins d'etre vendredi il ne se passera rien
@@ -219,7 +219,7 @@ end
 
 def reco_from_needl(type_selected_id)
   # il faudra mettre 40 en développement !!
-  Recommendation.where(user_id: 125).each do |reco|
+  Recommendation.where(user_id: 553).each do |reco|
     restaurant_id = reco.restaurant_id
     if Restaurant.find(restaurant_id).types.first.id == type_selected_id && @array.exclude?(restaurant_id)
       # cette ligne c'est pour qu'il ne choisisse pas un resto deja choisi

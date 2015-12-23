@@ -25,7 +25,7 @@ json.array!                    @restaurants do |restaurant|
   end
   @all_friends_recommending[restaurant.id] ||= []
   @all_friends_wishing[restaurant.id] ||= []
-  if @all_friends_recommending[restaurant.id].include?(125)
+  if @all_friends_recommending[restaurant.id].include?(553)
     if @all_friends_recommending[restaurant.id].include?(@user.id)
       json.score            restaurant.needl_coefficient + @me_recommending_coefficient + @recommendation_coefficient*(@all_friends_recommending[restaurant.id].length - 2) + @wish_coefficient*(@all_friends_wishing[restaurant.id].length)
     elsif @all_friends_wishing[restaurant.id].include?(@user.id)
