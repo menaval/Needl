@@ -91,7 +91,9 @@ class Restaurant < ActiveRecord::Base
   def occasions_from_my_friends_api(current_user)
     array = []
     self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me + [553]).each do |reco|
-      array += reco.occasions
+      if reco.occasions
+        array += reco.occasions
+      end
     end
     array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(3)
   end
