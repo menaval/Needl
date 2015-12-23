@@ -12,10 +12,10 @@ ActiveAdmin.register Restaurant do
       f.input :full_address
       f.input :price_range
       f.input :phone_number
-      f.input :starter_1
+      f.input :starter1
       f.input :description_starter1
       f.input :price_starter1
-      f.input :starter_2
+      f.input :starter2
       f.input :description_starter2
       f.input :price_starter2
       f.input :main_course1
