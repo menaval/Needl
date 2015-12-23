@@ -155,7 +155,7 @@ task :update_needl_coefficients => :environment do
     Restaurant.all.each do |restaurant|
       restaurant.needl_coefficient = 0
       if restaurant.recommendations.where(user_id: 553).length > 0
-        restaurant.needl_coefficient = rand(0..5)
+        restaurant.needl_coefficient = rand(1..5)
       end
       restaurant.save
     end
