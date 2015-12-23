@@ -20,9 +20,14 @@ module Api
     def index
 
       @user                                = User.find_by(authentication_token: params["user_token"])
-      my_visible_friends_me_and_needl      = @user.my_visible_friends_ids_and_me + [125]
+      my_visible_friends_me_and_needl      = @user.my_visible_friends_ids_and_me + [553]
       restaurants_ids                      = @user.my_friends_restaurants_ids + @user.my_restaurants_ids
-      @restaurants                         = Restaurant.where(id: restaurants_ids)
+
+      # test en attendant la migration
+      if @user.id == 40
+        restaurants_ids                    += User.find(553).my_restaurants_ids
+      end
+      @restaurants                         = Restaurant.where(id: restaurants_ids.uniq)
       @recommendations_from_friends        = Recommendation.where(user_id: my_visible_friends_me_and_needl)
       @wishes                              = Wish.where(user_id: my_visible_friends_me_and_needl)
       restaurant_pictures                  = RestaurantPicture.where(restaurant_id: restaurants_ids)
