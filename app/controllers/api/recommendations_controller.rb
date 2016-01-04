@@ -46,7 +46,7 @@ module Api
           if @recommendation.save
 
             # Enlever la ligne en dessous lors de la migration !!!
-            @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
+            # @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
             @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
             notif_reco
 
