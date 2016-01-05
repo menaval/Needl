@@ -12,16 +12,22 @@ html {
     background: image-url('mangerie.jpg') center center;
     height: 100% !important;
     margin-bottom: 0;
-		
+
 		@media (max-width: 350px) and (max-height: 500px) {
 			height: 110% !important;
 		}
   }
+
   .mixpanel {
-  	position: absolute;
-  	right: 5;
-  	bottom: 5;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    img, a {
+      margin: 0
+    }
   }
+
 	.facebook-connect {
     opacity: 0;
     position: absolute;
@@ -285,36 +291,36 @@ html {
       }
     }
   }
-	
+
 	.social {
 		width: 200px;
 		position: absolute;
 		bottom: 0;
 		left: calc(50% - 100px);
-		
+
 		a {
 			width: 40px;
 			float: left;
-			
+
 			&.left {
 				margin: 0 10px 0 calc(50% - 50px);
-				
+
 				img {
 					width: 45px;
 					max-width: 100px;
 					margin: 0 0 5px 0;
 				}
 			}
-			
+
 			&.right {
 				margin: 0 calc(50% - 50px) 0 10px;
-				
+
 				img {
 					margin: 7px 0 0 0;
 					width: 31px;
 				}
 			}
 		}
-		
+
 	}
 }
