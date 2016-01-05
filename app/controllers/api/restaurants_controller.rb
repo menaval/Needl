@@ -24,7 +24,7 @@ module Api
       restaurants_ids                      = @user.my_friends_restaurants_ids + @user.my_restaurants_ids
 
       # test en attendant la migration
-      if @user.id == 40 || @user.id == 573
+      if @user.id == 40 || @user.id == 593
         restaurants_ids                    += User.find(553).my_restaurants_ids
       end
       @restaurants                         = Restaurant.where(id: restaurants_ids.uniq)
