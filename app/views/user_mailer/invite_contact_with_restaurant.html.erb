@@ -1,9 +1,9 @@
-Salut <%= @contact_name %>,
+Hello <%= @contact_name %>,
 <br>
 <br>
-<%= @user.name.split(" ")[0] %> t'invite à <a href = "http://www.needl.fr/" target = "_blank">découvrir ses restaurants sur Needl !</a>
+<%= @user.name %> t'invite à <a href = "http://www.needl.fr/" target = "_blank">découvrir ses restaurants préférés sur Needl !</a>
 <br>
-Celui-là par example, c'est un de ses préférés :
+Regarde le premier restaurant qu'<%= @user.gender == "male" ? "il" : "elle" %> t'a recommandé :
 <br>
 <br>
 <strong><%= @restaurant.name %></strong>, <%= @restaurant.types.length > 0 ? @restaurant.types.first.name : @restaurant.food.name %>, Métro <%= @restaurant.subway_name %>
@@ -14,10 +14,12 @@ Celui-là par example, c'est un de ses préférés :
 <%= image_tag @picture, :style => "height: 300px" %>
 <br>
 <br>
-Tu peux voir tous ses autres restaurants préférés sur Needl !
+Mais c'est quoi en fait Needl ?
+<br>
+C'est une app sur laquelle tu vas pouvoir retrouver les restaurants préférés de tes amis (et uniquement de tes amis), partager les tiens et garder en mémoire ceux où tu aimerais aller. En appoint, on te propose une sélection de valeurs sûres qui font l'unanimité auprès des blogueurs culinaires, professionnels et passionnés de la restauration.
 <br>
 <br>
-Salut,
+On espère te voir très vite,
 <br>
 <br>
 L'équipe Needl
