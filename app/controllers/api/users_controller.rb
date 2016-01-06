@@ -113,7 +113,7 @@ module Api
       auth_token  = ENV['TWILIO_AUTH_TOKEN']
       client = Twilio::REST::Client.new account_sid, auth_token
       client.messages.create(
-        from: "+33644600179",
+        from: "Needl",
         to: @contact_phone_number,
         body: "Salut #{@contact_name}, #{@user.name.split(" ")[0]} te recommande #{restaurant.name} pour aller dîner ! #{@review == 'Je recommande !' ? '' : 'Je cite: '}#{@review == 'Je recommande !' ? '' : @review}#{['!','.', '?'].include?(@review.last) ? '' : '.'} Tu peux retrouver tous ses autres restaurants préférés sur l'app Needl depuis needl.fr !"
       )
@@ -124,7 +124,7 @@ module Api
       auth_token  = ENV['TWILIO_AUTH_TOKEN']
       client = Twilio::REST::Client.new account_sid, auth_token
       client.messages.create(
-        from: "+33644600179",
+        from: "Needl",
         to: @contact_phone_number,
         body: "#{@user.name.split(" ")[0]} t'invite à découvrir ses restaurants préférés sur l'app Needl depuis needl.fr !"
       )

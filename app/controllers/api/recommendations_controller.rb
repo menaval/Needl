@@ -55,7 +55,7 @@ module Api
               Wish.where(restaurant_id:params["restaurant_id"].first(5).to_i, user_id: @user.id).first.destroy
               @tracker.track(@user.id, 'Wish to Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
             end
-            # si première recommandation ou wish, alors devient pote avec ceo, pour la première, à la sortie de l'onboarding, faire en sorte qu'on ne lui propose pas de wishlister
+            # si première recommandation, alors envoie un mail à tous ses potes
             if @user.recommendations.count == 1
               tell_all_friends
             end
@@ -302,25 +302,12 @@ module Api
       if friends_id.length > 0
         friends_id.each do |friend_id|
           @friend = User.find(friend_id)
-          notif_friendship
           @friend.send_new_friend_email(@user)
         end
       end
 
     end
 
-    def notif_friendship
-
-      client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
-        # envoyer à @friend qu'il a recommandé son premier endroit
-        data = { :alert => "#{@user.name} a son premier resto à te recommander !", :badge => 'Increment', :type => 'friend' }
-        push = client.push(data)
-        # push.type = "ios"
-        query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend.id)
-        push.where = query.where
-        push.save
-
-    end
 
     def notif_reco
 

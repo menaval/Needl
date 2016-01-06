@@ -300,23 +300,9 @@ class RecommendationsController < ApplicationController
     if friends_id.length > 0
       friends_id.each do |friend_id|
         @friend = User.find(friend_id)
-        notif_friendship
         @friend.send_new_friend_email(current_user)
       end
     end
-
-  end
-
-  def notif_friendship
-
-    client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
-      # envoyer à @friend qu'il a recommandé son premier endroit
-      data = { :alert => "#{current_user.name} a son premier resto à te recommander !", :badge => 'Increment', :type => 'friend' }
-      push = client.push(data)
-      # push.type = "ios"
-      query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend.id)
-      push.where = query.where
-      push.save
 
   end
 
