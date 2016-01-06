@@ -27,7 +27,7 @@ class UserMailer < ApplicationMailer
       @picture = "https://static.pexels.com/photos/536/road-street-sign-way.jpg"
     end
     @review = review
-    mail(to: contact_mail, subject: "#{@user.name.split(" ")[0]} te recommande #{@restaurant.name} sur Needl", from: "#{@user.name} <valentin.menard@needlapp.com>")
+    mail(to: contact_mail, subject: "#{@user.name.split(" ")[0]} te recommande #{@restaurant.name} sur Needl", from: "tarzan <valentin.menard@needlapp.com>")
 
   end
 
