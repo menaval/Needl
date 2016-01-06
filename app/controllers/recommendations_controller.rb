@@ -172,7 +172,7 @@ class RecommendationsController < ApplicationController
         # @wish.restaurant = @restaurant
 
         @tracker.track(current_user.id, 'New Wish', { "restaurant" => @restaurant.name, "user" => current_user.name })
-        redirect_to restaurant_path(@wish.restaurant)
+        redirect_to restaurant_path(@wish.restaurant_id)
       end
 
     # Si le restaurant n'a pas été pioché dans la liste, on le redirige sur la même page

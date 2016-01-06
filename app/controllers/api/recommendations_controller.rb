@@ -168,19 +168,18 @@ module Api
         else
 
           # On crée la recommandation à partir des infos récupérées et on track
-          @wish = Wish.new(user_id: @user.id, restaurant_id: @restaurant.id)
-          @wish.restaurant = @restaurant
-          @wish.create
+          @wish = Wish.create(user_id: @user.id, restaurant_id: @restaurant.id)
+          # @wish.restaurant = @restaurant
           @tracker.track(@user.id, 'New Wish', { "restaurant" => @restaurant.name, "user" => @user.name })
 
           #  Verifier si la wishlist vient de l'app ou d'un mail
           if params["origin"] == "mail"
-          @tracker.track(@user.id, 'New Wish from Mail', { "restaurant" => @restaurant.name, "user" => @user.name })
-          sign_out
-          render(:json => {notice: "Le restaurant a bien été ajouté à ta wishlist ! Tu peux le retrouver en te connectant sur l'app !"}, :status => 409, :layout => false)
+            @tracker.track(@user.id, 'New Wish from Mail', { "restaurant" => @restaurant.name, "user" => @user.name })
+            sign_out
+            render(:json => {notice: "Le restaurant a bien été ajouté à ta wishlist ! Tu peux le retrouver en te connectant sur l'app !"}, :status => 409, :layout => false)
 
           else
-            redirect_to api_restaurant_path(@wish.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
+            redirect_to api_restaurant_path(id: @restaurant.id, :user_email => params["user_email"], :user_token => params["user_token"])
           end
         end
 
