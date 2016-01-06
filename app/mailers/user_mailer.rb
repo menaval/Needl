@@ -14,7 +14,7 @@ class UserMailer < ApplicationMailer
       @picture = "https://static.pexels.com/photos/536/road-street-sign-way.jpg"
     end
     @review = @friend.recommendations.first.review
-    mail(to: @user.email, subject: "Un des restos préférés de #{@friend.name.split(" ")[0]}")
+    mail(to: @user.email, subject: "#{@user.name.split(" ")[0]}, je te recommande #{@restaurant.name} sur Needl", from: "#{@friend.name} <valentin.menard@needlapp.com>")
   end
 
   def invite_contact_with_restaurant(user, contact_mail, contact_name, review, resto_id)
@@ -27,7 +27,7 @@ class UserMailer < ApplicationMailer
       @picture = "https://static.pexels.com/photos/536/road-street-sign-way.jpg"
     end
     @review = review
-    mail(to: contact_mail, subject: "#{@user.name.split(" ")[0]} te recommande #{@restaurant.name} sur Needl", from: "tarzan <valentin.menard@needlapp.com>")
+    mail(to: contact_mail, subject: "#{@contact_name}, je te recommande #{@restaurant.name} sur Needl", from: "#{@user.name} <valentin.menard@needlapp.com>")
 
   end
 
@@ -35,7 +35,7 @@ class UserMailer < ApplicationMailer
 
     @user = user
     @contact_name = contact_name
-    mail(to: contact_mail, subject: "#{@user.name.split(" ")[0]} t'invite à découvrir ses restaurants sur Needl'", from: "#{@user.name} <valentin.menard@needlapp.com>")
+    mail(to: contact_mail, subject: "#{@contact_name}, je t'invite à découvrir mes restaurants préférés sur Needl", from: "#{@user.name} <valentin.menard@needlapp.com>")
 
   end
 
