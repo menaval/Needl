@@ -179,7 +179,7 @@ module Api
           render(:json => {notice: "Le restaurant a bien été ajouté à ta wishlist ! Tu peux le retrouver en te connectant sur l'app !"}, :status => 409, :layout => false)
 
           else
-            redirect_to api_restaurant_path(@wish.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
+            redirect_to api_restaurant_path(@restaurant.id, :user_email => params["user_email"], :user_token => params["user_token"])
           end
         end
 
