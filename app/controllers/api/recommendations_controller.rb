@@ -294,6 +294,7 @@ module Api
     end
 
     def load_activities
+      @user = User.find_by(authentication_token: params["user_token"])
       @api_activities = PublicActivity::Activity.where(owner_id: @user.my_visible_friends_ids, owner_type: 'User').order('created_at DESC')
     end
 
