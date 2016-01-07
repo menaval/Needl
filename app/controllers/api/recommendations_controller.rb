@@ -45,6 +45,10 @@ module Api
           #  si les informations récupérées ont bien toutes été remplies on enregistre la reco, update le prix du resto et on le track
           if @recommendation.save
 
+            # dans le cas ou la personne est restée sur la vieille version
+            if @recommendation.occasions == [] || @recommendation.occasions == nil
+              update_recommendation_from_old_version(@recommendation)
+            end
             # Enlever la ligne en dessous lors de la migration !!!
             # @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
             @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
@@ -338,6 +342,90 @@ module Api
         activity.read = true
         activity.save
       end
+    end
+
+    def update_recommendation_from_old_version(reco)
+
+      reco.ambiences.each do |ambience|
+        case ambience.to_i
+
+        when  1
+          # Si c'était chic alors pas de changement
+
+          puts "pas de changement"
+
+        when 2
+          # Si c'était Festif  alors pas de changement
+
+          puts "pas de changement"
+        when 3
+          # Si c'était typique alors reste typique mais son id devient 6 dans la migrationon
+
+          reco.ambiences -= ["3"]
+          # a confirmer que l'id en famille est bien 3
+          reco.ambiences << "6"
+        when 4
+          # Si c'était Ensoleillé alors l'ambiance disparait et on met en occasion dej en terrasse
+
+          reco.ambiences -= ["4"]
+
+          reco.occasions ||= []
+          # a confirmer que l'id dej en terrasse est bien 7
+          reco.occasions << "7"
+
+        when 5
+          # Si c'était Fast alors l'ambiance disparait et on met en occasion Dej rapide
+
+          reco.ambiences -= ["5"]
+
+          reco.occasions ||= []
+          # a confirmer que l'id dej rapide est bien 8
+          reco.occasions << "8"
+
+        when 6
+          # Si c'était Casual alors l'ambiance passe à Inclassable
+
+          reco.ambiences -= ["6"]
+
+          reco.ambiences << "8"
+        end
+
+      end
+
+      if reco.review.downcase.include?("cosy")
+        reco.ambiences ||= []
+        reco.ambiences << "7"
+      elsif reco.review.downcase.include?("convivial") || reco.review.downcase.include?("conviviale")
+        reco.ambiences ||= []
+        reco.ambiences << "3"
+      elsif reco.review.downcase.include?("branche") || reco.review.downcase.include?("branché") || reco.review.downcase.include?("branchée") || reco.review.downcase.include?("branchee")
+        reco.ambiences ||= []
+        reco.ambiences << "5"
+      elsif reco.review.downcase.include?("business")
+         reco.occasions ||= []
+         reco.occasions << "1"
+      elsif reco.review.downcase.include?("couple")
+         reco.occasions ||= []
+         reco.occasions << "2"
+      elsif reco.review.downcase.include?("famille") || reco.review.downcase.include?("famillial") || reco.review.downcase.include?("familial")
+         reco.occasions ||= []
+         reco.occasions << "3"
+      elsif reco.review.downcase.include?("amis")
+         reco.occasions ||= []
+         reco.occasions << "4"
+      elsif reco.review.downcase.include?("groupe")
+         reco.occasions ||= []
+         reco.occasions << "5"
+      elsif reco.review.downcase.include?("brunch")
+         reco.occasions ||= []
+         reco.occasions << "6"
+      elsif reco.review.downcase.include?("date")
+         reco.occasions ||= []
+         reco.occasions << "9"
+      end
+
+      reco.save
+
     end
   end
 end
