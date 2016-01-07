@@ -57,6 +57,14 @@ module Api
 
     end
 
+    def update_version
+      @user = User.find_by(authentication_token: params["user_token"])
+      app_version = params["version"]
+      @user.app_version = app_version
+      @user.save
+      redirect_to new_api_friendship_path(:user_email => params["user_email"], :user_token => params["user_token"])
+    end
+
     def invite_contact
 
       @user = User.find_by(authentication_token: params["user_token"])
