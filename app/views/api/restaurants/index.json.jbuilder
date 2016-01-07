@@ -15,11 +15,10 @@ json.array!                    @restaurants do |restaurant|
   json.phone_number         restaurant.phone_number
   if @all_ambiences[restaurant.id]
     if @user.app_version != "2.0.0"
-      json.ambiences           @all_ambiences[restaurant.id].flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2) - ["4", "5", "6", 7", "8"]
+      json.ambiences           @all_ambiences[restaurant.id].flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
     else
       json.ambiences           @all_ambiences[restaurant.id].flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
     end
-
   else
     json.ambiences          []
   end
