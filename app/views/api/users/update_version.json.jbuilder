@@ -1,1 +1,1 @@
-json.last_version                    @last_version
+json.is_last_version                    @last_version
