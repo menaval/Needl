@@ -63,7 +63,6 @@ module Api
       @user.app_version = app_version
       @user.save
       @last_version = @user.app_version == "2.0.0"
-      redirect_to new_api_friendship_path(:user_email => params["user_email"], :user_token => params["user_token"])
     end
 
     def invite_contact
