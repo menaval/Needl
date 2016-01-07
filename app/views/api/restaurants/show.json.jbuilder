@@ -9,7 +9,11 @@ json.longitude                  @restaurant.longitude
 json.subways                    @restaurant.subways_near
 json.closest_subway             @restaurant.subway_id
 json.phone_number               @restaurant.phone_number
-json.ambiences                  @restaurant.ambiences_from_my_friends_api(@user)
+if @user.app_version != "2.0.0"
+  json.ambiences                  @restaurant.old_ambiences_from_my_friends_api(@user)
+else
+  json.ambiences                  @restaurant.ambiences_from_my_friends_api(@user)
+end
 json.strengths                  @restaurant.strengths_from_my_friends_api(@user)
 json.occasions                  @restaurant.occasions_from_my_friends_api(@user)
 json.reviews                    @restaurant.reviews_from_my_friends(@user)

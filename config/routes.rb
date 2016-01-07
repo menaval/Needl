@@ -47,11 +47,12 @@ Rails.application.routes.draw do
     end
     resources :users, only: :show do
       collection do
-        get :welcome_ceo
+        get  :welcome_ceo
         get  :reset_badge_to_zero
         post :new_parse_installation
         post :contacts_access
         post :invite_contact
+        post :update_version
       end
     end
     resources :recommendations, only: [:index, :new] do

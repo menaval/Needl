@@ -45,7 +45,7 @@ module Api
           #  si les informations récupérées ont bien toutes été remplies on enregistre la reco, update le prix du resto et on le track
           if @recommendation.save
 
-            # dans le cas ou la personne est restée sur la vieille version
+            # dans le cas ou la personne est restée sur la vieille version. On pourrait aussi faire if app_version != "2.0.0"
             if @recommendation.occasions == [] || @recommendation.occasions == nil
               update_recommendation_from_old_version(@recommendation)
             end
