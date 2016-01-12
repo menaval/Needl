@@ -109,7 +109,8 @@ class User < ActiveRecord::Base
       puts "uid: #{auth.uid}"
       user.gender = auth.extra.raw_info.gender
       puts "gender: #{auth.extra.raw_info.gender}"
-      user.birthday = Date.parse(auth.extra.raw_info.birthday)
+      # a remettre quand on aura été validé
+      # user.birthday = Date.parse(auth.extra.raw_info.birthday)
       if auth.info.email.nil?
         user.email = ""
         user.emails = ""
