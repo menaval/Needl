@@ -8,6 +8,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       user.save
     end
 
+    # Pour tous ceux qui sont rentrés sur l'app avant qu'on mette e système pour récupérer la date de naissance
+    if user.birthday == nil
+      user.birthday = Date.parse(request.env["omniauth.auth"].extra.raw_info.birthday)
+      user.save
+    end
+
     if user.persisted?
       sign_in user#, event: :authentication
       if user.sign_in_count == 1
@@ -35,6 +41,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       else
         @user.token_expiry = nil
       end
+      @user.save
+    end
+
+    # Pour tous ceux qui sont rentrés sur l'app avant qu'on mette e système pour récupérer la date de naissance
+    if @user.birthday == nil
+      @user.birthday = Date.parse(request.env["omniauth.auth"].extra.raw_info.birthday)
       @user.save
     end
 
