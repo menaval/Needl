@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160107101117) do
+ActiveRecord::Schema.define(version: 20160112103403) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -229,7 +229,6 @@ ActiveRecord::Schema.define(version: 20160107101117) do
     t.integer  "picture_file_size"
     t.datetime "picture_updated_at"
     t.string   "gender"
-    t.string   "age_range"
     t.string   "authentication_token"
     t.string   "code"
     t.boolean  "mandrill_subscribed",    default: true
@@ -238,6 +237,7 @@ ActiveRecord::Schema.define(version: 20160107101117) do
     t.string   "phone_numbers",          default: [],                 array: true
     t.boolean  "newsletter_updated",     default: true
     t.string   "app_version"
+    t.date     "birthday"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", using: :btree
