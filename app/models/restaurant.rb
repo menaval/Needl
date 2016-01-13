@@ -87,8 +87,7 @@ class Restaurant < ActiveRecord::Base
       array += reco.ambiences
     end
     array = array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
-    array.map! { |x| x == 6 ? 3 : x }
-    array -= ["4", "5", "7", "8"]
+    array -= ["4", "5", "6", "7", "8"]
   end
 
   def strengths_from_my_friends_api(current_user)
