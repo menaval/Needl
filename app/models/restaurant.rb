@@ -85,7 +85,7 @@ class Restaurant < ActiveRecord::Base
     self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me + [553]).each do |reco|
       array += reco.ambiences
     end
-    array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
+    array = array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
     array = array.map {|x| (x.to_i - 1).to_s }
   end
 
