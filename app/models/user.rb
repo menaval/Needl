@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
   has_many :member_ones, :through => :not_interested_relations, dependent: :destroy
   has_many :member_twos, :through => :received_not_interested_relations, dependent: :destroy
 
+  has_many :imported_contacts, dependent: :destroy
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
