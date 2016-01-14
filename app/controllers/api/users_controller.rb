@@ -75,6 +75,9 @@ module Api
       contact_mail = contact[:emailAddresses] ? contact[:emailAddresses].first[:email].downcase.delete(' ') : ""
       @contact_phone_number = contact[:phoneNumbers] ? contact[:phoneNumbers].first[:number].delete(' ') : ""
 
+      # On track le referral
+      @tracker.track(@user.id, 'Invitation Sent To A Friend', { "invitee name" => @contact_name, "user" => @user.name })
+
       recos = @user.recommendations
       recos_commented = recos.map {|x| [x.review, x.restaurant_id] if x.review != "Je recommande !"}.compact
 
