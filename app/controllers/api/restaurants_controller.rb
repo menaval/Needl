@@ -6,13 +6,10 @@ module Api
 
     def show
 
-      #  Lors de la migration rajouter les occasions dans la vue !!!
-
       @restaurant = Restaurant.find(params["id"].to_i)
       @user = User.find_by(authentication_token: params["user_token"])
       @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
       @pictures = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.map {|element| element.picture} : [@restaurant.picture_url]
-      # @subway = Subway.find(@restaurant.closest_subway_id)
       @friends_wishing = @restaurant.friends_wishing_this_restaurant(@user)
       @tracker.track(@user.id, 'restaurant_page', { "user" => @user.name, "restaurant" => @restaurant.name })
     end
@@ -22,11 +19,7 @@ module Api
       @user                                = User.find_by(authentication_token: params["user_token"])
       my_visible_friends_me_and_needl      = @user.my_visible_friends_ids_and_me + [553]
       restaurants_ids                      = @user.my_friends_restaurants_ids + @user.my_restaurants_ids
-
-      # test en attendant la migration
-      if @user.id == 40 || @user.id == 593
-        restaurants_ids                    += User.find(553).my_restaurants_ids
-      end
+      restaurants_ids                     += User.find(553).my_restaurants_ids
       @restaurants                         = Restaurant.where(id: restaurants_ids.uniq)
       @recommendations_from_friends        = Recommendation.where(user_id: my_visible_friends_me_and_needl)
       @wishes                              = Wish.where(user_id: my_visible_friends_me_and_needl)
@@ -44,7 +37,6 @@ module Api
       # associer les ambiances, occasions et amis recommandant aux restaurants avec une seule requête
       @all_ambiences = {}
 
-      # A remettre pendant la migration et sur la view aussi !!
       @all_occasions = {}
       @all_friends_recommending = {}
       @recommendations_from_friends.each do |recommendation|

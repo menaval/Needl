@@ -5,7 +5,7 @@ class Recommendation < ActiveRecord::Base
   validates :strengths, presence: true
   validates :ambiences, presence: true
 
-  # A mettre quand on fait la migration sur l'AppStore!!!
+  # On garde pour l'instant sans les occasions pour l'ancienne version
   # validates :occasions, presence: true
   attr_accessor :wish
   has_many :activities, as: :trackable, class_name: 'PublicActivity::Activity', dependent: :destroy

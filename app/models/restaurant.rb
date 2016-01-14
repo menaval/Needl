@@ -31,7 +31,6 @@ class Restaurant < ActiveRecord::Base
   #   includes(:recommendations).where("'#{ambience}' = ANY(recommendations.ambiences)").where(recommendations: {user_id: [User.find(user_id).my_visible_friends_ids_and_me]}).references(:recommendations)if ambience.present?
   # end
 
-# inutilisé car pour le site mais à mettre pour la migration !!!
   def ambiences_from_my_friends(current_user)
     array = []
     ambiences_list = ["chic", "festif", "convivial", "romantique", "branche", "typique", "cosy", "inclassable"]

@@ -70,10 +70,8 @@ class RecommendationsController < ApplicationController
         else
           if params["origin"] == "mail"
             sign_out
-            render(:json => {notice: "Les ambiances, points forts ou le prix n'ont pas été remplis"}, :status => 409, :layout => false)
 
-            # A mettre lors de la migration !!!
-            # render(:json => {notice: "Les occasions, ambiances, points forts ou le prix n'ont pas été remplis"}, :status => 409, :layout => false)
+            render(:json => {notice: "Les occasions, ambiances, points forts ou le prix n'ont pas été remplis"}, :status => 409, :layout => false)
           else
             redirect_to new_recommendation_path, notice: "Les occasions, ambiances ou points forts ou le prix n'ont pas été remplis"
           end
