@@ -75,9 +75,6 @@ module Api
       contact_mail = contact[:emailAddresses] ? contact[:emailAddresses].first[:email].downcase.delete(' ') : ""
       @contact_phone_number = contact[:phoneNumbers] ? contact[:phoneNumbers].first[:number].delete(' ') : ""
 
-      # On track le referral
-      @tracker.track(@user.id, 'Invitation Sent To A Friend', { "invitee name" => @contact_name, "user" => @user.name })
-
       recos = @user.recommendations
       recos_commented = recos.map {|x| [x.review, x.restaurant_id] if x.review != "Je recommande !"}.compact
 
@@ -123,22 +120,32 @@ module Api
       account_sid = ENV['TWILIO_SID']
       auth_token  = ENV['TWILIO_AUTH_TOKEN']
       client = Twilio::REST::Client.new account_sid, auth_token
+
+      #  On track les invitations envoyées par texto (avec image)
+      @tracker.track(@user.id, 'Invitation Sent To A Friend', { "invitee name" => @contact_name, "user" => @user.name, "type" => "Text", "restaurant" => restaurant.name  })
+
       client.messages.create(
         from: "Needl",
         to: @contact_phone_number,
         body: "Salut #{@contact_name}, #{@user.name.split(" ")[0]} te recommande #{restaurant.name} pour aller dîner ! #{@review == 'Je recommande !' ? '' : 'Je cite: '}#{@review == 'Je recommande !' ? '' : @review}#{['!','.', '?'].include?(@review.last) ? '' : '.'} Tu peux retrouver tous ses autres restaurants préférés sur l'app Needl depuis needl.fr !"
       )
+
     end
 
     def send_text_invitation_without_restaurant
       account_sid = ENV['TWILIO_SID']
       auth_token  = ENV['TWILIO_AUTH_TOKEN']
       client = Twilio::REST::Client.new account_sid, auth_token
+
+      #  On track les invitations envoyées par texto (sans image)
+      @tracker.track(@user.id, 'Invitation Sent To A Friend', { "invitee name" => @contact_name, "user" => @user.name, "type" => "Text", "restaurant" => ""  })
+
       client.messages.create(
         from: "Needl",
         to: @contact_phone_number,
         body: "#{@user.name.split(" ")[0]} t'invite à découvrir ses restaurants préférés sur l'app Needl depuis needl.fr !"
       )
+
     end
 
 

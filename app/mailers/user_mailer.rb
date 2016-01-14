@@ -27,6 +27,10 @@ class UserMailer < ApplicationMailer
       @picture = "https://static.pexels.com/photos/536/road-street-sign-way.jpg"
     end
     @review = review
+
+    #  On track les invitations envoyées par mail (avec image)
+    @tracker.track(@user.id, 'Invitation Sent To A Friend', { "invitee name" => @contact_name, "user" => @user.name, "type" => "Mail", "restaurant" => @restaurant.name  })
+
     mail(to: contact_mail, subject: "#{@contact_name}, je te recommande #{@restaurant.name} sur Needl", from: "#{@user.name} <valentin.menard@needlapp.com>")
 
   end
@@ -35,6 +39,10 @@ class UserMailer < ApplicationMailer
 
     @user = user
     @contact_name = contact_name
+
+    #  On track les invitations envoyées par mail (sans image)
+    @tracker.track(@user.id, 'Invitation Sent To A Friend', { "invitee name" => @contact_name, "user" => @user.name, "type" => "Mail", "restaurant" => ""  })
+
     mail(to: contact_mail, subject: "#{@contact_name}, je t'invite à découvrir mes restaurants préférés sur Needl", from: "#{@user.name} <valentin.menard@needlapp.com>")
 
   end
