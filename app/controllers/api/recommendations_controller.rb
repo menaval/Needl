@@ -49,8 +49,7 @@ module Api
             if @recommendation.occasions == [] || @recommendation.occasions == nil
               update_recommendation_from_old_version(@recommendation)
             end
-            # Enlever la ligne en dessous lors de la migration !!!
-            # @recommendation.restaurant.update_price_range(@recommendation.price_ranges.first)
+
             @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
             notif_reco
 
@@ -293,7 +292,7 @@ module Api
     end
 
     def recommendation_params
-      # Enlever price_ranges lors de la migration !!!
+      # On garde price_ranges pour ceux qui sont encore sur l'ancienne version
       params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { occasions: [] }, { price_ranges: [] })
     end
 
