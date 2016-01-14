@@ -79,6 +79,16 @@ class Restaurant < ActiveRecord::Base
     array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
   end
 
+  #  changer lors de la migration !!!
+  def ambiences_from_my_friends_api_minus_one(current_user)
+    array = []
+    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me + [553]).each do |reco|
+      array += reco.ambiences
+    end
+    array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
+    array = array.map {|x| (x.to_i - 1).to_s }
+  end
+
   # Pour les anciennes versions
   def old_ambiences_from_my_friends_api(current_user)
     array = []
@@ -95,6 +105,16 @@ class Restaurant < ActiveRecord::Base
       array += reco.strengths
     end
     array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(3)
+  end
+
+  #  changer lors de la migration !!!
+  def strengths_from_my_friends_api_minus_one(current_user)
+    array = []
+    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me + [553]).each do |reco|
+      array += reco.strengths
+    end
+    array = array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(3)
+    array = array.map {|x| (x.to_i - 1).to_s }
   end
 
   def occasions_from_my_friends_api(current_user)

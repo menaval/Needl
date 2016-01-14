@@ -12,9 +12,9 @@ json.phone_number               @restaurant.phone_number
 if @user.app_version != "2.0.0"
   json.ambiences                  @restaurant.old_ambiences_from_my_friends_api(@user)
 else
-  json.ambiences                  @restaurant.ambiences_from_my_friends_api(@user)
+  json.ambiences                  @restaurant.ambiences_from_my_friends_api_minus_one(@user)
 end
-json.strengths                  @restaurant.strengths_from_my_friends_api(@user)
+json.strengths                  @restaurant.strengths_from_my_friends_api_minus_one(@user)
 json.occasions                  @restaurant.occasions_from_my_friends_api(@user)
 json.reviews                    @restaurant.reviews_from_my_friends(@user)
 json.starter1                   @restaurant.starter1
