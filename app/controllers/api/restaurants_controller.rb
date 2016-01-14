@@ -20,6 +20,8 @@ module Api
       my_visible_friends_me_and_needl      = @user.my_visible_friends_ids_and_me + [553]
       restaurants_ids                      = @user.my_friends_restaurants_ids + @user.my_restaurants_ids
       restaurants_ids                     += User.find(553).my_restaurants_ids
+
+      # ici on met .uniq parce que ça n'a jamais été fait dans les étapes précédentes
       @restaurants                         = Restaurant.where(id: restaurants_ids.uniq)
       @recommendations_from_friends        = Recommendation.where(user_id: my_visible_friends_me_and_needl)
       @wishes                              = Wish.where(user_id: my_visible_friends_me_and_needl)

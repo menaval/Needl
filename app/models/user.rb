@@ -66,7 +66,8 @@ class User < ActiveRecord::Base
 
   def my_friends_restaurants_ids
     user_ids = my_visible_friends_ids
-    restos_ids = Restaurant.joins(:recommendations).where(recommendations: { user_id: user_ids }).pluck(:id).uniq
+    restos_ids = Restaurant.joins(:recommendations).where(recommendations: { user_id: user_ids }).pluck(:id)
+    restos_ids += Restaurant.joins(:wishes).where(wishes: {user_id: user_ids}).pluck(:id)
   end
 
   def my_restaurants_ids
