@@ -65,7 +65,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @tracker.people.set(@user.id, {
           "gender" => @user.gender,
           "name" => @user.name,
-          "age" => @user.age_range,
           "$email": @user.email
         })
         @tracker.track(@user.id, 'signup', {"user" => @user.name} )
