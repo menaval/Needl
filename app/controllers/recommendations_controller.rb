@@ -133,9 +133,13 @@ class RecommendationsController < ApplicationController
       food:         Food.where(name: search.categories[0].shortName).first_or_create,
       latitude:     search.location.lat,
       longitude:    search.location.lng,
+      price_range:  search.attributes.groups[0] ? search.attributes.groups[0].items[0].priceTier  : nil,
       picture_url:  search.photos.groups[0] ? "#{search.photos.groups[0].items[0].prefix}1000x1000#{search.photos.groups[0].items[0].suffix}" : "http://needl.s3.amazonaws.com/production/restaurant_pictures/pictures/000/restaurant%20default.jpg",
-      phone_number: search.contact.phone ? search.contact.phone : nil
+      phone_number: search.contact.phone ? search.contact.phone : nil,
+      foursquare_id: @restaurant_id,
+      foursquare_rating: search.rating
     )
+
 
     # pour rendre plus vite dans l'api
     restaurant.food_name = Food.find(restaurant.food_id).name
