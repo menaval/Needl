@@ -9,7 +9,7 @@ json.longitude                  @restaurant.longitude
 json.subways                    @restaurant.subways_near
 json.closest_subway             @restaurant.subway_id
 json.phone_number               @restaurant.phone_number
-if @user.app_version != "2.0.0"
+if @user.app_version == nil
   json.ambiences                  @restaurant.old_ambiences_from_my_friends_api(@user)
 else
   json.ambiences                  @restaurant.ambiences_from_my_friends_api_minus_one(@user)
