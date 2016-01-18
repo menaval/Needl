@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
   has_many :member_twos, :through => :received_not_interested_relations, dependent: :destroy
 
   has_many :member_ones, :through => :taste_correspondences, dependent: :destroy
-  has_many :member_twos, :through => :mutual_taste_correspondes, dependent: :destroy
+  has_many :member_twos, :through => :mutual_taste_correspondences, dependent: :destroy
 
   has_many :imported_contacts, dependent: :destroy
 
