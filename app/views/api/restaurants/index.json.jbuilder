@@ -29,20 +29,24 @@ json.array!                    @restaurants do |restaurant|
   end
   @all_friends_recommending[restaurant.id] ||= []
   @all_friends_wishing[restaurant.id] ||= []
+  @score_from_friends = @recommendation_coefficient_category_1*(@all_friends_category_1_recommending[restaurant.id].length) + @recommendation_coefficient_category_2*(@all_friends_category_2_recommending[restaurant.id].length) +
+      @recommendation_coefficient_category_3*(@all_friends_category_3_recommending[restaurant.id].length) + @wish_coefficient_category_1*(@all_friends_category_1_wishing[restaurant.id].length) + @wish_coefficient_category_2*(@all_friends_category_2_wishing[restaurant.id].length) +
+      @wish_coefficient_category_3*(@all_friends_category_3_wishing[restaurant.id].length)
+
   if @all_friends_recommending[restaurant.id].include?(553)
     if @all_friends_recommending[restaurant.id].include?(@user.id)
-      json.score            restaurant.needl_coefficient + @me_recommending_coefficient + @recommendation_coefficient*(@all_friends_recommending[restaurant.id].length - 2) + @wish_coefficient*(@all_friends_wishing[restaurant.id].length)
+      json.score            restaurant.needl_coefficient + @me_recommending_coefficient + @score_from_friends
     elsif @all_friends_wishing[restaurant.id].include?(@user.id)
-      json.score            restaurant.needl_coefficient + @me_wishing_coefficient + @recommendation_coefficient*(@all_friends_recommending[restaurant.id].length - 1) + @wish_coefficient*(@all_friends_wishing[restaurant.id].length - 1)
+      json.score            restaurant.needl_coefficient + @me_wishing_coefficient + @score_from_friends
     else
-      json.score            restaurant.needl_coefficient + @recommendation_coefficient*(@all_friends_recommending[restaurant.id].length - 1) + @wish_coefficient*(@all_friends_wishing[restaurant.id].length)
+      json.score            restaurant.needl_coefficient + @score_from_friends
     end
   elsif @all_friends_recommending[restaurant.id].include?(@user.id)
-    json.score              @me_recommending_coefficient + @recommendation_coefficient*(@all_friends_recommending[restaurant.id].length - 1) + @wish_coefficient*(@all_friends_wishing[restaurant.id].length)
+    json.score              @me_recommending_coefficient + @score_from_friends
   elsif @all_friends_wishing[restaurant.id].include?(@user.id)
-    json.score              @me_wishing_coefficient + @recommendation_coefficient*(@all_friends_recommending[restaurant.id].length) + @wish_coefficient*(@all_friends_wishing[restaurant.id].length - 1)
+    json.score              @me_wishing_coefficient + @score_from_friends
   else
-    json.score              @recommendation_coefficient*(@all_friends_recommending[restaurant.id].length) + @wish_coefficient*(@all_friends_wishing[restaurant.id].length)
+    json.score              @score_from_friends
   end
 
   json.subways                restaurant.subways_near

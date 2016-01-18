@@ -28,12 +28,50 @@ module Api
       restaurant_pictures                  = RestaurantPicture.where(restaurant_id: restaurants_ids)
       restaurant_subways                   = RestaurantSubway.where(restaurant_id: restaurants_ids)
       # elements de l'algorithme du score
-      # coefficient needl
-      @recommendation_coefficient  = 15
-      @wish_coefficient            = 7
-      @me_recommending_coefficient = 6
-      @me_wishing_coefficient      = 10
+
+      @recommendation_coefficient_category_1   = 15
+      @recommendation_coefficient_category_2   = 16
+      @recommendation_coefficient_category_3   = 17
+      @wish_coefficient_category_1             = 7
+      @wish_coefficient_category_2             = 8
+      @wish_coefficient_category_3             = 9
+      @me_recommending_coefficient             = 6
+      @me_wishing_coefficient                  = 10
       # récupérer la géoloc pour calculer le trajet en transports
+
+
+      # On répartit les friends par catégorie d'affinité, on ne récupère ni l'utilisateur ni needl
+      category_1 = []
+      category_2 = []
+      category_3 = []
+
+      # marge minime d'amélioration: ne pas prendre en compte les invisible friends dans ces catégories (car non affiché)
+      TasteCorrespondence.where("member_one_id = ? or member_two_id = ?", @user.id, @user.id).each do |correspondence|
+
+        member_one_id = correspondence.member_one_id
+        member_two_id = correspondence.member_two_id
+        if member_one_id == @user.id
+          case correspondence.category
+            when 1
+              category_1 << member_two_id
+            when 2
+              category_2 << member_two_id
+            when 3
+              category_3 << member_two_id
+          end
+
+        elsif member_two_id == @user.id
+          case correspondence.category
+            when 1
+              category_1 << member_one_id
+            when 2
+              category_2 << member_one_id
+            when 3
+              category_3 << member_one_id
+          end
+        end
+
+      end
 
 
       # associer les ambiances, occasions et amis recommandant aux restaurants avec une seule requête
@@ -41,6 +79,9 @@ module Api
 
       @all_occasions = {}
       @all_friends_recommending = {}
+      @all_friends_category_1_recommending = {}
+      @all_friends_category_2_recommending = {}
+      @all_friends_category_3_recommending = {}
       @recommendations_from_friends.each do |recommendation|
         @all_ambiences[recommendation.restaurant_id] ||= []
         @all_ambiences[recommendation.restaurant_id] << recommendation.ambiences
@@ -50,12 +91,36 @@ module Api
         end
         @all_friends_recommending[recommendation.restaurant_id] ||= []
         @all_friends_recommending[recommendation.restaurant_id] << recommendation.user_id
+        if category_1.include?(recommendation.user_id)
+          @all_friends_category_1_recommending[recommendation.restaurant_id] ||= []
+          @all_friends_category_1_recommending[recommendation.restaurant_id] << recommendation.user_id
+        elsif category_2.include?(recommendation.user_id)
+          @all_friends_category_2_recommending[recommendation.restaurant_id] ||= []
+          @all_friends_category_2_recommending[recommendation.restaurant_id] << recommendation.user_id
+        elsif category_3.include?(recommendation.user_id)
+          @all_friends_category_3_recommending[recommendation.restaurant_id] ||= []
+          @all_friends_category_3_recommending[recommendation.restaurant_id] << recommendation.user_id
+        end
       end
 
+
       @all_friends_wishing = {}
+      @all_friends_category_1_wishing = {}
+      @all_friends_category_2_wishing = {}
+      @all_friends_category_3_wishing = {}
       @wishes.each do |wish|
         @all_friends_wishing[wish.restaurant_id] ||= []
         @all_friends_wishing[wish.restaurant_id] << wish.user_id
+        if category_1.include?(wish.user_id)
+          @all_friends_category_1_wishing[wish.restaurant_id] ||= []
+          @all_friends_category_1_wishing[wish.restaurant_id] << wish.user_id
+        elsif category_2.include?(wish.user_id)
+          @all_friends_category_2_wishing[wish.restaurant_id] ||= []
+          @all_friends_category_2_wishing[wish.restaurant_id] << wish.user_id
+        elsif category_3.include?(wish.user_id)
+          @all_friends_category_3_wishing[wish.restaurant_id] ||= []
+          @all_friends_category_3_wishing[wish.restaurant_id] << wish.user_id
+        end
       end
 
       @all_pictures = {}

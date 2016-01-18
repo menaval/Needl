@@ -4,5 +4,7 @@ ActiveAdmin.register TasteCorrespondence do
 
   filter :member_one, collection: User.all.order(:name)
   filter :member_two, collection: User.all.order(:name)
+  filter :number_of_shared_restaurants
+  filter :category
 
 end
