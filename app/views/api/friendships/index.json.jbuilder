@@ -8,6 +8,13 @@ json.friends                @friends do |friend|
   json.name              friend.name.split(" ")[0]
   json.picture           friend.picture
   json.id                friend.id
+  if @category_1.include?(friend.id)
+    json.correspondence_score     1
+  elsif @category_2.include?(friend.id)
+    json.correspondence_score     2
+  elsif @category_3.include?(friend.id)
+    json.correspondence_score     3
+  end
   json.number_of_recos   Recommendation.where(user_id: friend.id).count
 end
 

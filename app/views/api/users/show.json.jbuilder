@@ -6,6 +6,7 @@ json.number_of_recos       @recos.length
 json.picture               @user.picture
 if @user.id != @myself.id
   json.invisible               @invisible
+  json.correspondence_score    @correspondence_score
 end
 json.recommendations       @recos do |restaurant|
   json.id               restaurant.id
