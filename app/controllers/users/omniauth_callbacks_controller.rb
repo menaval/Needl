@@ -111,6 +111,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if friends.length > 0
       friends.each do |friend|
         Friendship.create(sender_id: @user.id, receiver_id: friend.id, accepted: true)
+        TasteCorrespondence.create(member_one_id: @user.id, member_two_id: friend.id, number_of_shared_restaurants: 0, category: 1)
         @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
       end
     end

@@ -162,6 +162,28 @@ task :update_needl_coefficients => :environment do
   end
 end
 
+task :update_taste_correspondes => :environment do
+  User.all.each do |user1|
+    user1_restaurants_ids = user1.my_restaurants_ids
+    TasteCorrespondence.where(member_one_id: user1.id).each do |taste_correspondence|
+      user2_restaurants_ids = user2.my_restaurants_ids
+      number_of_shared_restaurants = (user1_restaurants_ids & user2_restaurants_ids).length
+      case number_of_shared_restaurants
+        when 0..4
+          taste_correspondence.category = 1
+        when 5..8
+          taste_correspondence.category = 2
+        else
+          taste_correspondence.category = 3
+      end
+      taste_correspondence.number_of_shared_restaurants = number_of_shared_restaurants
+      taste_correspondence.save
+    end
+
+  end
+
+end
+
 
 
 
