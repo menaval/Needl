@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160115103805) do
+ActiveRecord::Schema.define(version: 20160118094846) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,15 @@ ActiveRecord::Schema.define(version: 20160115103805) do
   add_index "activities", ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type", using: :btree
   add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
   add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
+
+  create_table "correspondences", force: :cascade do |t|
+    t.integer  "user1_id"
+    t.integer  "user2_id"
+    t.integer  "number_of_shared_restaurants"
+    t.integer  "category"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
 
   create_table "foods", force: :cascade do |t|
     t.string   "name"
@@ -182,6 +191,15 @@ ActiveRecord::Schema.define(version: 20160115103805) do
     t.float    "longitude"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "taste_correspondences", force: :cascade do |t|
+    t.integer  "member_one_id"
+    t.integer  "member_two_id"
+    t.integer  "number_of_shared_restaurants"
+    t.integer  "category"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
   end
 
   create_table "types", force: :cascade do |t|

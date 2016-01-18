@@ -10,11 +10,17 @@ class User < ActiveRecord::Base
   has_many :not_interested_relations, foreign_key: :member_two_id, dependent: :destroy
   has_many :received_not_interested_relations, foreign_key: :member_one_id, class_name: 'NotInterestedRelation', dependent: :destroy
 
+  has_many :taste_correspondences, foreign_key: :member_two_id, dependent: :destroy
+  has_many :mutual_taste_correspondences, foreign_key: :member_one_id, class_name: 'TasteCorrespondence', dependent: :destroy
+
   has_many :senders, :through => :received_friendships, dependent: :destroy
   has_many :receivers, :through => :friendships, dependent: :destroy
 
   has_many :member_ones, :through => :not_interested_relations, dependent: :destroy
   has_many :member_twos, :through => :received_not_interested_relations, dependent: :destroy
+
+  has_many :member_ones, :through => :taste_correspondences, dependent: :destroy
+  has_many :member_twos, :through => :mutual_taste_correspondes, dependent: :destroy
 
   has_many :imported_contacts, dependent: :destroy
 
