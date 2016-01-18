@@ -158,4 +158,7 @@ class User < ActiveRecord::Base
     UserMailer.invite_contact_without_restaurant(self, contact_mail, contact_name).deliver
   end
 
+  def send_thank_friends_email(friends_infos, restaurant_id)
+    UserMailer.thank_friends(self, friends_infos, restaurant_id).deliver
+  end
 end

@@ -51,7 +51,14 @@ module Api
             end
 
             @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
-            notif_reco
+
+
+            # on redirige vers les actions de remerciement
+            thank_friends(params["friends_thanking"])
+            thank_contacts(params["contacts_thanking"])
+
+            # attention on ne l'envoie plus à ceux qui ont été remerciés
+            notif_reco(params["friends_thanking"])
 
             # si c'était sur ma liste de wish ça l'enlève
             if Wish.where(restaurant_id:params["restaurant_id"].first(5).to_i, user_id: @user.id).any?
@@ -293,7 +300,7 @@ module Api
 
     def recommendation_params
       # On garde price_ranges pour ceux qui sont encore sur l'ancienne version
-      params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { occasions: [] }, { price_ranges: [] })
+      params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { occasions: [] }, { price_ranges: [] }, { friends_thanking: [] }, { contacts_thanking: [] })
     end
 
     def load_activities
@@ -319,19 +326,64 @@ module Api
     end
 
 
-    def notif_reco
+    def notif_reco(users_already_thanked_ids)
 
       client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
 
-      if current_user.my_friends_seing_me_ids != []
+      # s'il ne renvoie rien ca donne un tableau vide
+      users_ids_not_to_send_again = users_already_thanked_ids ? users_already_thanked_ids : []
+      relevant_friends_ids = @user.my_friends_seing_me_ids - users_ids_not_to_send_again
+      if relevant_friends_ids != []
        # envoyer à chaque friend que @user a fait une nouvelle reco du resto @restaurant
        data = { :alert => "#{@user.name} a recommande #{@restaurant.name}", :badge => 'Increment', :type => 'reco' }
        push = client.push(data)
        # push.type = "ios"
-       query = client.query(Parse::Protocol::CLASS_INSTALLATION).value_in('user_id', @user.my_friends_seing_me_ids)
+       query = client.query(Parse::Protocol::CLASS_INSTALLATION).value_in('user_id', relevant_friends_ids)
        push.where = query.where
        push.save
       end
+
+    end
+
+    def thank_friends(friends_to_thank_ids)
+
+      client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'], master_key:ENV['PARSE_MASTER_KEY'])
+      friends_to_notif_ids = []
+      friends_to_mail_ids = []
+      # pour chaque utilisateur on va regarder si il a activé les notis et s'il l'a fait on lui envoie une notif, s'il ne l'a pas fait on lui envoie un mail
+      friends_to_thank_ids.each do |friend_id|
+        info = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id).get
+        if info.length > 0
+          friends_to_notif_ids << friend_id
+        else
+          friends_to_mail_ids << friend_id
+        end
+      end
+
+      # on envoie les notifs aux bonnes personnes s'il y en a
+      if friends_to_notif_ids.length > 0
+        data = { :alert => "#{@user.name} te remercie de lui avoir fait découvrir #{@restaurant.name}", :badge => 'Increment', :type => 'thanks' }
+        push = client.push(data)
+        query = client.query(Parse::Protocol::CLASS_INSTALLATION).value_in('user_id', friends_to_notif_ids)
+        push.where = query.where
+        push.save
+        # on track les envois
+        friends_to_notif_ids.each do |friend_id|
+          @tracker.track(@user.id, 'Thanks sent', { "user" => @user.name, "type" => "Notif",  "Needl User ?" => "Yes" })
+        end
+      end
+
+      # on envoie les mails aux bonnes personnes s'il y en a
+      if friends_to_mail_ids.length > 0
+        friends = User.find(friends_to_mail_ids)
+        friends_infos = users.map {|x| {name: x.name.split(" ")[0], email: x.email}}
+        @user.send_thank_friends_email(friends_infos, @restaurant.id)
+      end
+
+    end
+
+    def thank_contacts(contacts_to_thank)
+      # pour chaque contact, on va regarder si on a un numéro de téléphone, si on en a un on lui envoie par texto et s'il n'en a pas on lui envoie par mail
 
     end
 

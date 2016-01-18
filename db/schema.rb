@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160118094846) do
+ActiveRecord::Schema.define(version: 20160118170558) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,15 +49,6 @@ ActiveRecord::Schema.define(version: 20160118094846) do
   add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
   add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
 
-  create_table "correspondences", force: :cascade do |t|
-    t.integer  "user1_id"
-    t.integer  "user2_id"
-    t.integer  "number_of_shared_restaurants"
-    t.integer  "category"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-  end
-
   create_table "foods", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false
@@ -93,14 +84,16 @@ ActiveRecord::Schema.define(version: 20160118094846) do
 
   create_table "recommendations", force: :cascade do |t|
     t.string   "review"
-    t.string   "strengths",                  array: true
-    t.string   "ambiences",                  array: true
+    t.string   "strengths",                      array: true
+    t.string   "ambiences",                      array: true
     t.integer  "user_id"
     t.integer  "restaurant_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-    t.string   "price_ranges",               array: true
-    t.string   "occasions",                  array: true
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.string   "price_ranges",                   array: true
+    t.string   "occasions",                      array: true
+    t.integer  "friends_thanking",               array: true
+    t.json     "contacts_thanking",              array: true
   end
 
   add_index "recommendations", ["restaurant_id"], name: "index_recommendations_on_restaurant_id", using: :btree
@@ -258,6 +251,7 @@ ActiveRecord::Schema.define(version: 20160118094846) do
     t.boolean  "newsletter_updated",     default: true
     t.string   "app_version"
     t.date     "birthday"
+    t.integer  "score"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", using: :btree

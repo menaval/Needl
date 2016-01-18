@@ -47,4 +47,17 @@ class UserMailer < ApplicationMailer
 
   end
 
+  def thank_friends(user, friends_infos, restaurant_id)
+
+    @user = user
+    @restaurant = Restaurant.find(restaurant_id)
+    friends_infos.each do |friend_info|
+      @friend_name = friend_info[:name]
+      friend_mail =  friend_info[:email]
+      @tracker.track(@user.id, 'Thanks sent', { "user" => @user.name, "type" => "Mail",  "Needl User ?" => "Yes" })
+      mail(to: friend_mail, subject: "#{@friend_name}, merci pour l'adresse !", from: "#{@user.name} <valentin.menard@needlapp.com>")
+    end
+
+  end
+
 end
