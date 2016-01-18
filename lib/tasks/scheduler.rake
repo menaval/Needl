@@ -166,7 +166,7 @@ task :update_taste_correspondences => :environment do
   User.all.each do |user1|
     user1_restaurants_ids = user1.my_restaurants_ids
     TasteCorrespondence.where(member_one_id: user1.id).each do |taste_correspondence|
-      user2_restaurants_ids = user2.my_restaurants_ids
+      user2_restaurants_ids = User.find(taste_correspondence.member_two_id).my_restaurants_ids
       number_of_shared_restaurants = (user1_restaurants_ids & user2_restaurants_ids).length
       case number_of_shared_restaurants
         when 0..4
