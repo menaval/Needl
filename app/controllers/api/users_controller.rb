@@ -18,6 +18,11 @@ module Api
       end
     end
 
+    def score
+      @user = User.find(params["id"].to_i)
+      @recos = Recommendation.find_by_sql("SELECT * FROM recommendations WHERE recommendations.friends_thanking @> '{#{@user.id}}'")
+    end
+
     def new_parse_installation
 
       client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
