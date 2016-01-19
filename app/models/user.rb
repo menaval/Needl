@@ -96,6 +96,7 @@ class User < ActiveRecord::Base
     Food.joins(restaurants: :recommendations).where(recommendations: {user_id: my_visible_friends_ids}).uniq
   end
 
+  # ne sert plus a rien sur l'app mais bug (avec contacts_thanking en json)
   def my_friends_subways
     Subway.joins(:restaurant_subways).includes(restaurants: :recommendations).where(recommendations: {user_id: self.my_visible_friends_ids + [self.id]}).uniq
   end
@@ -156,6 +157,14 @@ class User < ActiveRecord::Base
 
   def send_invite_contact_without_restaurant_email(contact_mail, contact_name)
     UserMailer.invite_contact_without_restaurant(self, contact_mail, contact_name).deliver
+  end
+
+  def send_thank_friends_email(friends_infos, restaurant_id)
+    UserMailer.thank_friends(self, friends_infos, restaurant_id).deliver
+  end
+
+  def send_thank_contacts_email(contacts_infos, restaurant_id)
+    UserMailer.thank_contacts(self, contacts_infos, restaurant_id).deliver
   end
 
 end

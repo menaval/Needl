@@ -29,6 +29,7 @@ class UserMailer < ApplicationMailer
     @review = review
 
     #  On track les invitations envoyées par mail (avec image)
+    @tracker = Mixpanel::Tracker.new(ENV['MIXPANEL_TOKEN'])
     @tracker.track(@user.id, 'Invitation Sent To A Friend', { "invitee name" => @contact_name, "user" => @user.name, "type" => "Mail", "restaurant" => @restaurant.name  })
 
     mail(to: contact_mail, subject: "#{@contact_name}, je te recommande #{@restaurant.name} sur Needl", from: "#{@user.name} <valentin.menard@needlapp.com>")
@@ -41,10 +42,40 @@ class UserMailer < ApplicationMailer
     @contact_name = contact_name
 
     #  On track les invitations envoyées par mail (sans image)
+    @tracker = Mixpanel::Tracker.new(ENV['MIXPANEL_TOKEN'])
     @tracker.track(@user.id, 'Invitation Sent To A Friend', { "invitee name" => @contact_name, "user" => @user.name, "type" => "Mail", "restaurant" => ""  })
 
     mail(to: contact_mail, subject: "#{@contact_name}, je t'invite à découvrir mes restaurants préférés sur Needl", from: "#{@user.name} <valentin.menard@needlapp.com>")
 
   end
+
+  def thank_friends(user, friends_infos, restaurant_id)
+
+    @user = user
+    @restaurant = Restaurant.find(restaurant_id)
+    @tracker = Mixpanel::Tracker.new(ENV['MIXPANEL_TOKEN'])
+    friends_infos.each do |friend_info|
+      @friend_name = friend_info[:name]
+      friend_mail =  friend_info[:email]
+      @tracker.track(@user.id, 'Thanks sent', { "user" => @user.name, "type" => "Mail",  "Needl User ?" => "Yes" })
+      mail(to: friend_mail, subject: "#{@friend_name}, merci pour l'adresse !", from: "#{@user.name} <valentin.menard@needlapp.com>")
+    end
+
+  end
+
+  def thank_contacts(user, contacts_infos, restaurant_id)
+
+    @user = user
+    @restaurant = Restaurant.find(restaurant_id)
+    @tracker = Mixpanel::Tracker.new(ENV['MIXPANEL_TOKEN'])
+    contacts_infos.each do |contact_info|
+      @contact_name = contact_info[:name]
+      contact_mail =  contact_info[:email]
+      @tracker.track(@user.id, 'Thanks sent', { "user" => @user.name, "type" => "Mail",  "Needl User ?" => "No" })
+      mail(to: contact_mail, subject: "#{@contact_name}, merci pour l'adresse !", from: "#{@user.name} <valentin.menard@needlapp.com>")
+    end
+
+  end
+
 
 end

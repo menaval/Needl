@@ -49,7 +49,8 @@ Rails.application.routes.draw do
       collection do
         get  :welcome_ceo
         get  :reset_badge_to_zero
-        get :update_version
+        get  :update_version
+        get  :score
         post :new_parse_installation
         post :contacts_access
         post :invite_contact

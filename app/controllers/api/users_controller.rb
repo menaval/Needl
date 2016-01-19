@@ -18,6 +18,11 @@ module Api
       end
     end
 
+    def score
+      @user = User.find(params["id"].to_i)
+      @recos = Recommendation.find_by_sql("SELECT * FROM recommendations WHERE recommendations.friends_thanking @> '{#{@user.id}}'")
+    end
+
     def new_parse_installation
 
       client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
@@ -74,7 +79,7 @@ module Api
 
       @contact_name = contact[:givenName] ? contact[:givenName] : ""
       contact_mail = contact[:emailAddresses] ? contact[:emailAddresses].first[:email].downcase.delete(' ') : ""
-      @contact_phone_number = contact[:phoneNumbers] ? contact[:phoneNumbers].first[:number].delete(' ') : ""
+      @contact_phone_number = contact[:phoneNumbers] ? contact[:phoneNumbers].first[:number] : ""
 
       recos = @user.recommendations
       recos_commented = recos.map {|x| [x.review, x.restaurant_id] if x.review != "Je recommande !"}.compact
@@ -98,6 +103,7 @@ module Api
         # si on n'a pas l'adresse mail, on envoie un texto
       elsif @contact_phone_number != ""
 
+        @contact_phone_number = @contact_phone_number.gsub(/[^0-9+]/, '').gsub(/^00/,"+").gsub(/^0/,"+33")
 
         if recos_commented.length > 0
           @review = recos_commented.first[0]
@@ -128,7 +134,7 @@ module Api
       client.messages.create(
         from: "Needl",
         to: @contact_phone_number,
-        body: "Salut #{@contact_name}, #{@user.name.split(" ")[0]} te recommande #{restaurant.name} pour aller dîner ! #{@review == 'Je recommande !' ? '' : 'Je cite: '}#{@review == 'Je recommande !' ? '' : @review}#{['!','.', '?'].include?(@review.last) ? '' : '.'} Tu peux retrouver tous ses autres restaurants préférés sur l'app Needl depuis needl.fr !"
+        body: "Salut #{I18n.transliterate(@contact_name)}, #{I18n.transliterate(@user.name)} te recommande #{I18n.transliterate(restaurant.name)} pour aller dîner ! #{@review == 'Je recommande !' ? '' : 'Je cite: '}#{@review == 'Je recommande !' ? '' : I18n.transliterate(@review)}#{['!','.', '?'].include?(@review.last) ? '' : '.'} Tu peux retrouver tous ses autres restaurants preferes sur l'app Needl depuis needl.fr !"
       )
 
     end
@@ -144,7 +150,7 @@ module Api
       client.messages.create(
         from: "Needl",
         to: @contact_phone_number,
-        body: "#{@user.name.split(" ")[0]} t'invite à découvrir ses restaurants préférés sur l'app Needl depuis needl.fr !"
+        body: "#{I18n.transliterate(@user.name)} t'invite a decouvrir ses restaurants preferes sur l'app Needl depuis needl.fr !"
       )
 
     end

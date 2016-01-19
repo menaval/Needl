@@ -8,6 +8,7 @@ json.friends                @friends do |friend|
   json.name              friend.name.split(" ")[0]
   json.picture           friend.picture
   json.id                friend.id
+  json.score             friend.score
   if @category_1.include?(friend.id)
     json.correspondence_score     1
   elsif @category_2.include?(friend.id)
