@@ -56,10 +56,14 @@ module Api
 
 
             # on redirige vers les actions de remerciement
-            thank_friends(params["friends_thanking"])
-            thank_contacts(params["contacts_thanking"])
+            if params["friends_thanking"] != []
+              thank_friends(params["friends_thanking"])
+            end
+            if params["contacts_thanking"] != []
+              thank_contacts(params["contacts_thanking"])
+            end
 
-            # attention on ne l'envoie plus à ceux qui ont été remerciés
+            # attention on ne l'envoie plus à ceux qui ont été remerciés (pas besoin de checker si different du vide on le fait rapidement apres)
             notif_reco(params["friends_thanking"])
 
             # si c'était sur ma liste de wish ça l'enlève

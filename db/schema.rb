@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160119093444) do
+ActiveRecord::Schema.define(version: 20160119160354) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,16 +84,16 @@ ActiveRecord::Schema.define(version: 20160119093444) do
 
   create_table "recommendations", force: :cascade do |t|
     t.string   "review"
-    t.string   "strengths",                      array: true
-    t.string   "ambiences",                      array: true
+    t.string   "strengths",                                   array: true
+    t.string   "ambiences",                                   array: true
     t.integer  "user_id"
     t.integer  "restaurant_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.string   "price_ranges",                   array: true
-    t.string   "occasions",                      array: true
-    t.integer  "friends_thanking",               array: true
-    t.json     "contacts_thanking",              array: true
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.string   "price_ranges",                                array: true
+    t.string   "occasions",                                   array: true
+    t.integer  "friends_thanking",  default: [], null: false, array: true
+    t.json     "contacts_thanking", default: [], null: false, array: true
   end
 
   add_index "recommendations", ["restaurant_id"], name: "index_recommendations_on_restaurant_id", using: :btree
@@ -251,7 +251,7 @@ ActiveRecord::Schema.define(version: 20160119093444) do
     t.boolean  "newsletter_updated",     default: true
     t.string   "app_version"
     t.date     "birthday"
-    t.integer  "score",                  default: 0
+    t.integer  "score",                  default: 0,     null: false
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", using: :btree
