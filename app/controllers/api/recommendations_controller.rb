@@ -383,9 +383,55 @@ module Api
     end
 
     def thank_contacts(contacts_to_thank)
+
+
+      contacts_to_text = []
+      contacts_to_mail = []
       # pour chaque contact, on va regarder si on a un numéro de téléphone, si on en a un on lui envoie par texto et s'il n'en a pas on lui envoie par mail
+      contacts_to_thank.each do |contact|
+        contact_name = contact[:givenName] ? contact[:givenName] : ""
+        contact_mail = contact[:emailAddresses] ? contact[:emailAddresses].first[:email].downcase.delete(' ') : ""
+        contact_phone_number = contact[:phoneNumbers] ? contact[:phoneNumbers].first[:number].delete(' ') : ""
+        if contact_phone_number != ""
+          contacts_to_text << {name: contact_name, phone_number: contact_phone_number}
+        else
+          contacts_to_mail << {name: contact_name, email: contact_mail}
+        end
+      end
+
+      #  On envoie un texto à toutes les personnes qui ont un numéro
+      if contacts_to_text.length > 0
+        send_text_thanks_to_contacts(contacts_to_text, @restaurant.id)
+      end
+
+
+      # a faire
+      if contacts_to_mail.length > 0
+        @user.send_thank_contact_email(contacts_to_mail, @restaurant.id)
+      end
 
     end
+
+    def send_text_thanks_to_contacts(contacts_infos, restaurant_id)
+
+      restaurant = Restaurant.find(restaurant_id)
+      account_sid = ENV['TWILIO_SID']
+      auth_token  = ENV['TWILIO_AUTH_TOKEN']
+      client = Twilio::REST::Client.new account_sid, auth_token
+
+      contacts_infos.each do |contact|
+      #  On track les invitations envoyées par texto (avec image)
+        @tracker.track(@user.id, 'Thanks sent', { "user" => @user.name, "type" => "Text",  "Needl User ?" => "No" })
+
+        client.messages.create(
+          from: "Needl",
+          to: contact[:phone_number],
+          body: "Salut #{contact[:name]}, #{@user.name} tenait à te remercier pour lui avoir fait découvrir #{restaurant.name} ! Tu as gagné 1 point d'expertise que tu peux retrouver en t'inscrivant avec ce lien: needl.fr ! A bientôt ! Needl, l'app pour découvrir les restaurants préférés de tes amis"
+        )
+      end
+
+    end
+
 
     def read_all_notification
       load_activities
@@ -394,6 +440,7 @@ module Api
         activity.save
       end
     end
+
 
     def update_recommendation_from_old_version(reco)
 

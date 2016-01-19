@@ -161,4 +161,9 @@ class User < ActiveRecord::Base
   def send_thank_friends_email(friends_infos, restaurant_id)
     UserMailer.thank_friends(self, friends_infos, restaurant_id).deliver
   end
+
+  def send_thank_contacts_email(contacts_infos, restaurant_id)
+    UserMailer.thank_contacts(self, contacts_infos, restaurant_id).deliver
+  end
+
 end
