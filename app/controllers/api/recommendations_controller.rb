@@ -56,10 +56,10 @@ module Api
 
 
             # on redirige vers les actions de remerciement
-            if params["friends_thanking"] != []
+            if params["friends_thanking"] != [] && params["friends_thanking"] != nil
               thank_friends(params["friends_thanking"])
             end
-            if params["contacts_thanking"] != []
+            if params["contacts_thanking"] != [] && params["contacts_thanking"] != nil
               thank_contacts(params["contacts_thanking"])
             end
 
