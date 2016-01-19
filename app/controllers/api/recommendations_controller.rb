@@ -358,11 +358,17 @@ module Api
         else
           friends_to_mail_ids << friend_id
         end
+
+        # on leur fait gagner à chacun un point d'expertise
+        friend = User.find(friend_id)
+        friend.score += 1
+        friend.save
+
       end
 
       # on envoie les notifs aux bonnes personnes s'il y en a
       if friends_to_notif_ids.length > 0
-        data = { :alert => "#{@user.name} te remercie de lui avoir fait découvrir #{@restaurant.name}", :badge => 'Increment', :type => 'thanks' }
+        data = { :alert => "#{@user.name} te remercie de lui avoir fait découvrir #{@restaurant.name}. Tu gagnes 1 point d'expertise !", :badge => 'Increment', :type => 'thanks' }
         push = client.push(data)
         query = client.query(Parse::Protocol::CLASS_INSTALLATION).value_in('user_id', friends_to_notif_ids)
         push.where = query.where
