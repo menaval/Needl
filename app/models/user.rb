@@ -96,6 +96,7 @@ class User < ActiveRecord::Base
     Food.joins(restaurants: :recommendations).where(recommendations: {user_id: my_visible_friends_ids}).uniq
   end
 
+  # ne sert plus a rien sur l'app mais bug (avec contacts_thanking en json)
   def my_friends_subways
     Subway.joins(:restaurant_subways).includes(restaurants: :recommendations).where(recommendations: {user_id: self.my_visible_friends_ids + [self.id]}).uniq
   end

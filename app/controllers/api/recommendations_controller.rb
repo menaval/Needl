@@ -4,6 +4,8 @@ module Api
     skip_before_action :verify_authenticity_token
     skip_before_filter :authenticate_user!
 
+    require 'twilio-ruby'
+
     def index
       @user = User.find_by(authentication_token: params["user_token"])
       load_activities
@@ -368,7 +370,7 @@ module Api
 
       # on envoie les notifs aux bonnes personnes s'il y en a
       if friends_to_notif_ids.length > 0
-        data = { :alert => "#{@user.name} te remercie de lui avoir fait découvrir #{@restaurant.name}. Tu gagnes 1 point d'expertise !", :badge => 'Increment', :type => 'thanks' }
+        data = { :alert => "#{@user.name} te remercie de lui avoir fait decouvrir #{@restaurant.name}. Tu gagnes 1 point d'expertise !", :badge => 'Increment', :type => 'thanks' }
         push = client.push(data)
         query = client.query(Parse::Protocol::CLASS_INSTALLATION).value_in('user_id', friends_to_notif_ids)
         push.where = query.where
@@ -382,7 +384,7 @@ module Api
       # on envoie les mails aux bonnes personnes s'il y en a
       if friends_to_mail_ids.length > 0
         friends = User.find(friends_to_mail_ids)
-        friends_infos = users.map {|x| {name: x.name.split(" ")[0], email: x.email}}
+        friends_infos = friends.map {|x| {name: x.name.split(" ")[0], email: x.email}}
         @user.send_thank_friends_email(friends_infos, @restaurant.id)
       end
 
@@ -397,8 +399,9 @@ module Api
       contacts_to_thank.each do |contact|
         contact_name = contact[:givenName] ? contact[:givenName] : ""
         contact_mail = contact[:emailAddresses] ? contact[:emailAddresses].first[:email].downcase.delete(' ') : ""
-        contact_phone_number = contact[:phoneNumbers] ? contact[:phoneNumbers].first[:number].delete(' ') : ""
+        contact_phone_number = contact[:phoneNumbers] ? contact[:phoneNumbers].first[:number] : ""
         if contact_phone_number != ""
+          contact_phone_number = contact_phone_number.gsub(/[^0-9+]/, '').gsub(/^00/,"+").gsub(/^0/,"+33")
           contacts_to_text << {name: contact_name, phone_number: contact_phone_number}
         else
           contacts_to_mail << {name: contact_name, email: contact_mail}
@@ -410,10 +413,9 @@ module Api
         send_text_thanks_to_contacts(contacts_to_text, @restaurant.id)
       end
 
-
       # a faire
       if contacts_to_mail.length > 0
-        @user.send_thank_contact_email(contacts_to_mail, @restaurant.id)
+        @user.send_thank_contacts_email(contacts_to_mail, @restaurant.id)
       end
 
     end
@@ -428,11 +430,12 @@ module Api
       contacts_infos.each do |contact|
       #  On track les invitations envoyées par texto (avec image)
         @tracker.track(@user.id, 'Thanks sent', { "user" => @user.name, "type" => "Text",  "Needl User ?" => "No" })
-
+        # Problème avec les accents, il faut l'unicoder
+        contact[:name] = "Héôàèî"
         client.messages.create(
           from: "Needl",
           to: contact[:phone_number],
-          body: "Salut #{contact[:name]}, #{@user.name} tenait à te remercier pour lui avoir fait découvrir #{restaurant.name} ! Tu as gagné 1 point d'expertise que tu peux retrouver en t'inscrivant avec ce lien: needl.fr ! A bientôt ! Needl, l'app pour découvrir les restaurants préférés de tes amis"
+          body: "Salut #{I18n.transliterate(contact[:name])}, #{I18n.transliterate(@user.name)} tenait a te remercier pour lui avoir fait decouvrir #{I18n.transliterate(restaurant.name)} ! Tu as gagne 1 point d'expertise que tu peux retrouver en t'inscrivant avec ce lien: needl.fr ! A bientot ! Needl, l'app pour les restaurants preferes de tes amis"
         )
       end
 
