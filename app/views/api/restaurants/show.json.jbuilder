@@ -11,10 +11,16 @@ json.closest_subway             @restaurant.subway_id
 json.phone_number               @restaurant.phone_number
 if @user.app_version == nil
   json.ambiences                  @restaurant.old_ambiences_from_my_friends_api(@user)
-else
+elsif @user.app_version == '2.0.0'
   json.ambiences                  @restaurant.ambiences_from_my_friends_api_minus_one(@user)
+else
+  json.ambiences                  @restaurant.ambiences_from_my_friends_api(@user)
 end
-json.strengths                  @restaurant.strengths_from_my_friends_api_minus_one(@user)
+if @user.app_version == '2.0.0'
+  json.strengths                  @restaurant.strengths_from_my_friends_api_minus_one(@user)
+else
+  json.strengths                  @restaurant.strengths_from_my_friends_api(@user)
+end
 json.occasions                  @restaurant.occasions_from_my_friends_api(@user)
 json.reviews                    @restaurant.reviews_from_my_friends(@user)
 json.starter1                   @restaurant.starter1
