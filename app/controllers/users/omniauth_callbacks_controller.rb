@@ -70,22 +70,23 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @tracker.track(@user.id, 'signup', {"user" => @user.name} )
 
         # On ajoute le nouveau membre sur la mailing liste de mailchimp
+        if @user.email != "blank@needlapp.com"
+          @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
+          @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
 
-        @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
-        @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
-
-        @gibbon.lists(@list_id).members.create(
-          body: {
-            email_address: @user.email,
-            status: "subscribed",
-            merge_fields: {
-              FNAME: @user.name.partition(" ").first,
-              LNAME: @user.name.partition(" ").last,
-              TOKEN: @user.authentication_token,
-              GENDER: @user.gender
+          @gibbon.lists(@list_id).members.create(
+            body: {
+              email_address: @user.email,
+              status: "subscribed",
+              merge_fields: {
+                FNAME: @user.name.partition(" ").first,
+                LNAME: @user.name.partition(" ").last,
+                TOKEN: @user.authentication_token,
+                GENDER: @user.gender
+              }
             }
-          }
-        )
+          )
+        end
 
         accept_all_friends
 

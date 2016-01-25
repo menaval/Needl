@@ -121,8 +121,8 @@ class User < ActiveRecord::Base
       # a remettre quand on aura été validé
       # user.birthday = Date.parse(auth.extra.raw_info.birthday)
       if auth.info.email.nil?
-        user.email = ""
-        user.emails = ""
+        user.email = "blank@needlapp.com"
+        user.emails << "blank@needlapp.com"
       else
         user.email = auth.info.email
         user.emails << auth.info.email
