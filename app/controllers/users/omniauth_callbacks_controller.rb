@@ -70,7 +70,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @tracker.track(@user.id, 'signup', {"user" => @user.name} )
 
         # On ajoute le nouveau membre sur la mailing liste de mailchimp
-        if @user.email != "blank@needlapp.com"
+        if @user.email != "blank@needlapp.com" && Rails.env.development? == true
           @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
           @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
 

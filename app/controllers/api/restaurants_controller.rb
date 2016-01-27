@@ -17,9 +17,15 @@ module Api
     def index
 
       @user                                = User.find_by(authentication_token: params["user_token"])
-      my_visible_friends_me_and_needl      = @user.my_visible_friends_ids_and_me + [553]
+      if Rails.env.development? == true
+        my_visible_friends_me_and_needl      = @user.my_visible_friends_ids_and_me
+      else
+        my_visible_friends_me_and_needl      = @user.my_visible_friends_ids_and_me + [553]
+      end
       restaurants_ids                      = @user.my_friends_restaurants_ids + @user.my_restaurants_ids
-      restaurants_ids                     += User.find(553).my_restaurants_ids
+      if Rails.env.development? != true
+        restaurants_ids                     += User.find(553).my_restaurants_ids
+      end
 
       # ici on met .uniq parce que ça n'a jamais été fait dans les étapes précédentes
       @restaurants                         = Restaurant.where(id: restaurants_ids.uniq)
