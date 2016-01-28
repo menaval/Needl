@@ -241,9 +241,9 @@ end
 
 def reco_from_needl(type_selected_id)
   # il faudra mettre 40 en développement !!
-  Recommendation.where(user_id: 553).each do |reco|
+  Recommendation.joins(restaurant: :restaurant_types).where(user_id: 553, restaurant_types: {type_id: type_selected_id}).each do |reco|
     restaurant_id = reco.restaurant_id
-    if Restaurant.find(restaurant_id).types.first.id == type_selected_id && @array.exclude?(restaurant_id)
+    if @array.exclude?(restaurant_id)
       # cette ligne c'est pour qu'il ne choisisse pas un resto deja choisi
       @array << reco.restaurant_id
       return reco
