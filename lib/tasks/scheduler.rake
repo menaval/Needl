@@ -10,8 +10,8 @@ task :update_mailchimp => :environment do
     # ok: isoler un user
     User.all.each do |user|
 
-      if user.newsletter_updated == false
-
+      if user.email != "blank@needlapp.com"
+        # ne sert à rien d'actualiser la newsletter de ceux qui n'ont pas d'adresse mail
         puts "Updating #{user.name}"
 
         # Récupérer la liste des restaurants, hormis Needl et hormis ceux que j'ai déjà recommandé, recommandés par mes amis au cours du mois
@@ -65,21 +65,11 @@ task :update_mailchimp => :environment do
         @types_already_used << type_selected_id
         puts "on récapitule les types déjà utilisés: #{@types_already_used.map(&:to_s)}"
         user.update_attributes(newsletter_themes: @types_already_used.map(&:to_s))
-        user.update_attributes(newsletter_updated: true)
         user.save
         puts "La colomne newsletter themes actualisée pour le user"
 
         # On envoie les infos à Mailchimp
         send_mailchimp_the_updates(user, type_selected_id, final_recommendations[0], final_recommendations[1], final_recommendations[2])
-        puts "Data envoyée à mailchimp"
-
-      else
-        user.newsletter_updated = false
-        user.save
-        puts "#{user.name} already updated"
-
-        # On envoie les infos à Mailchimp
-        send_mailchimp_newsletter_not_updated(user)
         puts "Data envoyée à mailchimp"
 
       end
@@ -271,7 +261,6 @@ def send_mailchimp_the_updates(user, type_selected_id, reco1, reco2, reco3)
   gibbon.lists(list_id).members(mail_encrypted).upsert(
     body: {
       merge_fields: {
-        UPDATED: user.newsletter_updated,
         THEME: reco1 != "" ? Type.find(type_selected_id).name : "",
         REST1NAME: reco1 != "" ? resto1.name : "",
         REST1TYPE: reco1 != "" ? resto1.types.first.name : "",
@@ -298,18 +287,4 @@ def send_mailchimp_the_updates(user, type_selected_id, reco1, reco2, reco3)
     }
   )
 
-end
-
-def send_mailchimp_newsletter_not_updated(user)
-  mail_encrypted = Digest::MD5.hexdigest(user.email)
-  gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
-  list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
-
-  gibbon.lists(list_id).members(mail_encrypted).upsert(
-    body: {
-      merge_fields: {
-        UPDATED: user.newsletter_updated
-      }
-    }
-  )
 end
