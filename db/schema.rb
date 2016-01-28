@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160119160354) do
+ActiveRecord::Schema.define(version: 20160128220237) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -248,7 +248,6 @@ ActiveRecord::Schema.define(version: 20160119160354) do
     t.string   "newsletter_themes",                                   array: true
     t.string   "emails",                 default: [],    null: false, array: true
     t.string   "phone_numbers",          default: [],                 array: true
-    t.boolean  "newsletter_updated",     default: true
     t.string   "app_version"
     t.date     "birthday"
     t.integer  "score",                  default: 0,     null: false
