@@ -21,7 +21,7 @@ task :update_mailchimp => :environment do
         # Récupérer la sélection de types que l'on va checker.A la base c'est  Burger - Thaï - Japonais - Italien - Français - Street Food - Oriental - Pizza et on retire ceux qui sont déjà tombés.
 
         fetching_types_used(user)
-        types_selection_ids = [11, 2, 5, 9, 8, 12, 17, 15, 10] - @types_already_used
+        types_selection_ids = [11, 2, 5, 9, 8, 12, 15, 10] - @types_already_used
         puts "Les types associés: #{types_selection_ids}"
 
         # Récupérer le premier thème où plus de 2 recos d'amis
