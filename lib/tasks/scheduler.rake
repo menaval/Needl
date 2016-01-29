@@ -5,7 +5,7 @@ task :update_mailchimp => :environment do
 
 # Verifier si on est vendredi matin (on fera le rake sur Heroku tous les jours très tot)
 # Hors test, mettre == 5, sinon à moins d'etre vendredi il ne se passera rien
-  if Time.now.wday == 4
+  if Time.now.wday == 5
     puts "Updating mailchimp infos ..."
     # ok: isoler un user
     User.all.each do |user|
@@ -183,8 +183,8 @@ def my_friends_except_needl_and_me_this_month_restaurants_ids(user)
   # On récupère tous les amis sauf needl
   user_ids = user.my_visible_friends_ids
 
-  # On récupère tous les restaurants recommandés dans le mois
-  restaurants_ids = Restaurant.joins(:recommendations).where(recommendations: {created_at: (Time.now - 1.month)..Time.now, user_id: user_ids }).pluck(:id).uniq
+  # On récupère tous les restaurants recommandés dans les deux derniers mois
+  restaurants_ids = Restaurant.joins(:recommendations).where(recommendations: {created_at: (Time.now - 2.month)..Time.now, user_id: user_ids }).pluck(:id).uniq
   # On enlève les miens, car ça perdrait de son interet pour moi de les avoir dans la newsletter
   restaurants_ids -= user.my_restaurants_ids
 
