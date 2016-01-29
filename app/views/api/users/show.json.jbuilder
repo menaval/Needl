@@ -13,6 +13,8 @@ json.recommendations       @recos do |restaurant|
   json.id               restaurant.id
   json.name             restaurant.name
   json.address          restaurant.address
+  json.latitude         restaurant.latitude
+  json.longitude        restaurant.longitude
   json.type             restaurant.food.name
   json.price_range      restaurant.price_range
   json.picture          restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url
