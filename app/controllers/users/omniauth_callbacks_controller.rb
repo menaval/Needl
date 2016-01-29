@@ -74,6 +74,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
           @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
 
+          accept_all_friends
+
           @gibbon.lists(@list_id).members.create(
             body: {
               email_address: @user.email,
@@ -88,7 +90,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           )
         end
 
-        accept_all_friends
+
 
       #  Si c'est un login
 
