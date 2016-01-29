@@ -235,6 +235,11 @@ def reco_from_needl(type_selected_id)
     restaurant_id = reco.restaurant_id
     if @array.exclude?(restaurant_id)
       # cette ligne c'est pour qu'il ne choisisse pas un resto deja choisi
+      # le if c'est pour leur envoyer PNY à la place de Schwartz Deli
+      if restaurant_id == 285 && @array.exclude?(118)
+        @array << 118
+        return Recommendation.find(1638)
+      end
       @array << reco.restaurant_id
       return reco
     end
