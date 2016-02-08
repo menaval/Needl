@@ -68,7 +68,7 @@ module Api
       app_version = params["version"]
       @user.app_version = app_version
       @user.save
-      @last_version = @user.app_version == "2.0.0"
+      @last_version = @user.app_version == "2.0.2"
     end
 
     def invite_contact
