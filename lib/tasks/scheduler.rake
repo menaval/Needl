@@ -10,7 +10,7 @@ task :update_mailchimp => :environment do
     # ok: isoler un user
     User.all.each do |user|
 
-      if user.email != "blank@needlapp.com" && (Time.now - user.created_at)/3600 > 9
+      if user.email.include?("needlapp.com") == false && (Time.now - user.created_at)/3600 > 9
         # ne sert à rien d'actualiser la newsletter de ceux qui n'ont pas d'adresse mail. De plus on ne l'envoie que à ceux qui sont inscrit depuis 10 jours donc pas la peine de le faire pour ceux inscrits depuis moins de 9 jours
         puts "Updating #{user.name}"
 
