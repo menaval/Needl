@@ -110,31 +110,31 @@ class User < ActiveRecord::Base
 
   def self.find_for_facebook_oauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
-      puts "______________________________________________________________________"
-      puts "#{auth}"
       user.provider = auth.provider
-      puts "provider: #{auth.provider}"
       user.uid = auth.uid
-      puts "uid: #{auth.uid}"
       user.gender = auth.extra.raw_info.gender
-      puts "gender: #{auth.extra.raw_info.gender}"
       # a remettre quand on aura été validé
       # user.birthday = Date.parse(auth.extra.raw_info.birthday)
       if auth.info.email.nil?
-        user.email = "blank@needlapp.com"
-        user.emails << "blank@needlapp.com"
+        # pour créer des adresses mails à ceux qui n'en ont pas renseigné sur facebook
+        adresses = User.all.pluck(:email)
+        i = 1
+        while i > 0
+          if adresses.include?("blank#{i}@needlapp.com") == false
+            user.email = "blank#{i}@needlapp.com"
+            user.emails << "blank#{i}@needlapp.com"
+            break
+          end
+          i += 1
+        end
       else
         user.email = auth.info.email
         user.emails << auth.info.email
-        puts "email: #{auth.info.email}"
       end
       user.password = Devise.friendly_token[0,20]
-      puts "password: #{Devise.friendly_token[0,20]}"
       user.name = auth.info.name
-      puts "name: #{auth.info.name}"
       user.picture = auth.info.image.gsub('http://','https://') + "?width=1000&height=1000"
       user.token = auth.credentials.token
-      puts "token: #{auth.credentials.token}"
       if auth.credentials.expires_at
         user.token_expiry = Time.at(auth.credentials.expires_at)
       end
