@@ -129,16 +129,19 @@ module Api
 
       search = client.venue(@restaurant_id)
       restaurant = Restaurant.where(name: @restaurant_name).first_or_initialize(
-        name:         search.name,
-        address:      "#{search.location.address}",
-        city:         "#{search.location.city}",
-        postal_code:  "#{search.location.postalCode}",
-        full_address: "#{search.location.address}, #{search.location.city} #{search.location.postalCode}",
-        food:         Food.where(name: search.categories[0].shortName).first_or_create,
-        latitude:     search.location.lat,
-        longitude:    search.location.lng,
-        picture_url:  search.photos.groups[0] ? "#{search.photos.groups[0].items[0].prefix}1000x1000#{search.photos.groups[0].items[0].suffix}" : "http://needl.s3.amazonaws.com/production/restaurant_pictures/pictures/000/restaurant%20default.jpg",
-        phone_number: search.contact.phone ? search.contact.phone : nil
+        name:               search.name,
+        address:            "#{search.location.address}",
+        city:               "#{search.location.city}",
+        postal_code:        "#{search.location.postalCode}",
+        full_address:       "#{search.location.address}, #{search.location.city} #{search.location.postalCode}",
+        food:               Food.where(name: search.categories[0].shortName).first_or_create,
+        latitude:           search.location.lat,
+        longitude:          search.location.lng,
+        rice_range:         search.attributes.groups[0] ? search.attributes.groups[0].items[0].priceTier  : nil,
+        picture_url:        search.photos.groups[0] ? "#{search.photos.groups[0].items[0].prefix}1000x1000#{search.photos.groups[0].items[0].suffix}" : "http://needl.s3.amazonaws.com/production/restaurant_pictures/pictures/000/restaurant%20default.jpg",
+        phone_number:       search.contact.phone ? search.contact.phone : nil,
+        foursquare_id:      @restaurant_id,
+        foursquare_rating:  search.rating
       )
 
       # pour rendre plus vite dans l'api
