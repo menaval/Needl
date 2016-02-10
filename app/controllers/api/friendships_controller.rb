@@ -9,7 +9,7 @@ module Api
       @user = User.find_by(authentication_token: params["user_token"])
       @friends = User.where(id: @user.my_friends_ids).order(:name)
       @requests = User.where(id: @user.my_requests_received_ids)
-      my_friends_and_me_ids = @user.my_friends_ids + @user.id
+      my_friends_and_me_ids = @user.my_friends_ids + [@user.id]
 
       recommendations_from_friends_and_me  = Recommendation.where(user_id: my_friends_and_me_ids)
       wishes_from_friends_and_me          = Wish.where(user_id: my_friends_and_me_ids)
@@ -17,13 +17,13 @@ module Api
       @friends_recommendations = {}
       recommendations_from_friends_and_me.each do |recommendation|
         @friends_recommendations[recommendation.user_id] ||= []
-        @friends_recommendations[recommendation.user_id] << recommendation.id
+        @friends_recommendations[recommendation.user_id] << recommendation.restaurant_id
       end
 
       @friends_wishes = {}
       wishes_from_friends_and_me.each do |wish|
         @friends_wishes[wish.user_id] ||= []
-        @friends_wishes[wish.user_id] << wish.id
+        @friends_wishes[wish.user_id] << wish.restaurant_id
       end
 
 

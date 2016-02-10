@@ -17,17 +17,17 @@ json.friends                @friends do |friend|
   elsif @category_3.include?(friend.id)
     json.correspondence_score     3
   end
-  json.number_of_recos   @friends_recommendations[:friend.id] ? @friends_recommendations[:friend.id].length : 0
-  json.recommendations   @friends_recommendations[:friend.id]
-  json.wishes            @friends_wishes[:friend.id]
+  json.number_of_recos   @friends_recommendations[friend.id] ? @friends_recommendations[friend.id].length : 0
+  json.recommendations   @friends_recommendations[friend.id] ? @friends_recommendations[friend.id] : []
+  json.wishes            @friends_wishes[friend.id] ? @friends_wishes[friend.id] : []
 end
 json.me do
   json.name              @user.name.split(" ")[0]
   json.fullname          @user.name
   json.picture           @user.picture
   json.id                @user.id
-  json.number_of_recos   @friends_recommendations[:@user.id] ? @friends_recommendations[:@user.id].length : 0
-  json.recommendations   @friends_recommendations[:@user.id]
-  json.wishes            @friends_wishes[:@user.id]
+  json.number_of_recos   @friends_recommendations[@user.id] ? @friends_recommendations[@user.id].length : 0
+  json.recommendations   @friends_recommendations[@user.id] ? @friends_recommendations[@user.id] : []
+  json.wishes            @friends_wishes[@user.id] ? @friends_wishes[@user.id] : []
 end
 
