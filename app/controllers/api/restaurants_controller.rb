@@ -79,8 +79,15 @@ module Api
 
       end
 
+      # on récupère les infos de chaque user pour ne pas avoir à faire des requêtes pour chaque boucle lorsque l'on va donner dans friends_recommending et friends_wishing les noms et picture à partir des ids des users
+      friends_infos = {}
+      friends = User.where(id: my_visible_friends_me_and_needl)
+      friends.each do |friend|
+        friends_infos[friend.id] = {name: friend.name, picture: friend.picture}
+      end
 
-      # associer les ambiances, occasions et amis recommandant aux restaurants avec une seule requête
+
+      # associer les ambiances, occasions et amis recommandant aux restaurants avec une seule requête. De même pour récupérer dans chacun des restaurants quels sont les amis qui recommandent
       @all_ambiences = {}
 
       @all_occasions = {}
@@ -88,6 +95,8 @@ module Api
       @all_friends_category_1_recommending = {}
       @all_friends_category_2_recommending = {}
       @all_friends_category_3_recommending = {}
+      @all_friends_recommending_new_version = {}
+
       @recommendations_from_friends.each do |recommendation|
         @all_ambiences[recommendation.restaurant_id] ||= []
         @all_ambiences[recommendation.restaurant_id] << recommendation.ambiences
@@ -97,6 +106,8 @@ module Api
         end
         @all_friends_recommending[recommendation.restaurant_id] ||= []
         @all_friends_recommending[recommendation.restaurant_id] << recommendation.user_id
+        @all_friends_recommending_new_version[recommendation.restaurant_id] ||= []
+        @all_friends_recommending_new_version[recommendation.restaurant_id] << {id: recommendation.user_id, name: friends_infos[recommendation.user_id][:name], picture: friends_infos[recommendation.user_id][:picture], review: recommendation.review}
         if category_1.include?(recommendation.user_id)
           @all_friends_category_1_recommending[recommendation.restaurant_id] ||= []
           @all_friends_category_1_recommending[recommendation.restaurant_id] << recommendation.user_id
@@ -109,14 +120,19 @@ module Api
         end
       end
 
+      # récupérer en une seule requête tous les amis qui ont wishlisté les restaurants
 
       @all_friends_wishing = {}
       @all_friends_category_1_wishing = {}
       @all_friends_category_2_wishing = {}
       @all_friends_category_3_wishing = {}
+      @all_friends_wishing_new_version = {}
+
       @wishes.each do |wish|
         @all_friends_wishing[wish.restaurant_id] ||= []
         @all_friends_wishing[wish.restaurant_id] << wish.user_id
+        @all_friends_wishing_new_version[wish.restaurant_id] ||= []
+        @all_friends_wishing_new_version[wish.restaurant_id] << {id: wish.user_id, name: friends_infos[wish.user_id][:name], picture: friends_infos[wish.user_id][:picture]}
         if category_1.include?(wish.user_id)
           @all_friends_category_1_wishing[wish.restaurant_id] ||= []
           @all_friends_category_1_wishing[wish.restaurant_id] << wish.user_id
@@ -128,6 +144,7 @@ module Api
           @all_friends_category_3_wishing[wish.restaurant_id] << wish.user_id
         end
       end
+
 
       @all_pictures = {}
       restaurant_pictures.each do |restaurant_picture|
