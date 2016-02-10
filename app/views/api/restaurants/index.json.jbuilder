@@ -27,11 +27,11 @@ json.array!                    @restaurants do |restaurant|
   else
     json.occasions          []
   end
-  @all_friends_recommending[restaurant.id] ||= []
+  @all_friends_recommending_new_version[restaurant.id] ||= []
   @all_friends_category_1_recommending[restaurant.id] ||= []
   @all_friends_category_2_recommending[restaurant.id] ||= []
   @all_friends_category_3_recommending[restaurant.id] ||= []
-  @all_friends_wishing[restaurant.id] ||= []
+  @all_friends_wishing_new_version[restaurant.id] ||= []
   @all_friends_category_1_wishing[restaurant.id] ||= []
   @all_friends_category_2_wishing[restaurant.id] ||= []
   @all_friends_category_3_wishing[restaurant.id] ||= []
@@ -40,39 +40,41 @@ json.array!                    @restaurants do |restaurant|
       @recommendation_coefficient_category_3*(@all_friends_category_3_recommending[restaurant.id].length) + @wish_coefficient_category_1*(@all_friends_category_1_wishing[restaurant.id].length) + @wish_coefficient_category_2*(@all_friends_category_2_wishing[restaurant.id].length) +
       @wish_coefficient_category_3*(@all_friends_category_3_wishing[restaurant.id].length)
 
-  if @all_friends_recommending[restaurant.id].include?(553)
-    if @all_friends_recommending[restaurant.id].include?(@user.id)
+  if @all_friends_recommending_new_version[restaurant.id] && @all_friends_recommending_new_version[restaurant.id].map{|x| x[:id]}.include?(553)
+    if @all_friends_recommending_new_version[restaurant.id].map{|x| x[:id]}.include?(@user.id)
       json.score            restaurant.needl_coefficient + @me_recommending_coefficient + @score_from_friends
-    elsif @all_friends_wishing[restaurant.id].include?(@user.id)
+    elsif @all_friends_wishing_new_version[restaurant.id] && @all_friends_wishing_new_version[restaurant.id].include?(@user.id)
       json.score            restaurant.needl_coefficient + @me_wishing_coefficient + @score_from_friends
     else
       json.score            restaurant.needl_coefficient + @score_from_friends
     end
-  elsif @all_friends_recommending[restaurant.id].include?(@user.id)
+  elsif @all_friends_recommending_new_version[restaurant.id] && @all_friends_recommending_new_version[restaurant.id].map{|x| x[:id]}.include?(@user.id)
     json.score              @me_recommending_coefficient + @score_from_friends
-  elsif @all_friends_wishing[restaurant.id].include?(@user.id)
+  elsif @all_friends_wishing_new_version[restaurant.id] && @all_friends_wishing_new_version[restaurant.id].map{|x| x[:id]}.include?(@user.id)
     json.score              @me_wishing_coefficient + @score_from_friends
   else
     json.score              @score_from_friends
   end
 
-  json.subways                restaurant.subways_near
-  json.closest_subway         restaurant.subway_id
-  json.friends_recommending   @all_friends_recommending[restaurant.id]
-  json.friends_wishing        @all_friends_wishing[restaurant.id]
-  json.starter1             restaurant.starter1
-  json.price_starter1       restaurant.price_starter1
-  json.starter2             restaurant.starter2
-  json.price_starter2       restaurant.price_starter2
-  json.main_course1         restaurant.main_course1
-  json.price_main_course1   restaurant.price_main_course1
-  json.main_course2         restaurant.main_course2
-  json.price_main_course2   restaurant.price_main_course2
-  json.main_course3         restaurant.main_course3
-  json.price_main_course3   restaurant.price_main_course3
-  json.dessert1             restaurant.dessert1
-  json.price_dessert1       restaurant.price_dessert1
-  json.dessert2             restaurant.dessert2
-  json.price_dessert2       restaurant.price_dessert2
+  json.subways                   restaurant.subways_near
+  json.closest_subway            restaurant.subway_id
+  json.friends_recommending      @all_friends_recommending[restaurant.id]
+  json.friends_wishing           @all_friends_wishing[restaurant.id]
+  json.my_friends_recommending   @all_friends_recommending_new_version[restaurant.id]
+  json.my_friends_wishing        @all_friends_wishing_new_version[restaurant.id]
+  json.starter1                  restaurant.starter1
+  json.price_starter1            restaurant.price_starter1
+  json.starter2                  restaurant.starter2
+  json.price_starter2            restaurant.price_starter2
+  json.main_course1              restaurant.main_course1
+  json.price_main_course1        restaurant.price_main_course1
+  json.main_course2              restaurant.main_course2
+  json.price_main_course2        restaurant.price_main_course2
+  json.main_course3              restaurant.main_course3
+  json.price_main_course3        restaurant.price_main_course3
+  json.dessert1                  restaurant.dessert1
+  json.price_dessert1            restaurant.price_dessert1
+  json.dessert2                  restaurant.dessert2
+  json.price_dessert2            restaurant.price_dessert2
 end
 
