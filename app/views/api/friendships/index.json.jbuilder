@@ -26,6 +26,7 @@ json.me do
   json.fullname          @user.name
   json.picture           @user.picture
   json.id                @user.id
+  json.score             @user.score
   json.number_of_recos   @friends_recommendations[@user.id] ? @friends_recommendations[@user.id].length : 0
   json.recommendations   @friends_recommendations[@user.id] ? @friends_recommendations[@user.id] : []
   json.wishes            @friends_wishes[@user.id] ? @friends_wishes[@user.id] : []
