@@ -12,6 +12,31 @@ module Api
       @pictures = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.map {|element| element.picture} : [@restaurant.picture_url]
       @friends_wishing = @restaurant.friends_wishing_this_restaurant(@user)
       @tracker.track(@user.id, 'restaurant_page', { "user" => @user.name, "restaurant" => @restaurant.name })
+
+      @my_friends_recommending = []
+      @my_friends_wishing = []
+
+      if Rails.env.development? == true
+        my_visible_friends_me_and_needl      = @user.my_visible_friends_ids_and_me
+      else
+        my_visible_friends_me_and_needl      = @user.my_visible_friends_ids_and_me + [553]
+      end
+
+      # on récupère les infos de chaque user pour ne pas avoir à faire des requêtes pour chaque boucle lorsque l'on va donner dans friends_recommending et friends_wishing les noms et picture à partir des ids des users
+      friends_infos = {}
+      friends = User.where(id: my_visible_friends_me_and_needl)
+      friends.each do |friend|
+        friends_infos[friend.id] = {name: friend.name, picture: friend.picture}
+      end
+
+      Recommendation.where(restaurant_id: @restaurant.id, user_id: my_visible_friends_me_and_needl).each do |recommendation|
+        @my_friends_recommending << {id: recommendation.user_id, name: friends_infos[recommendation.user_id][:name], picture: friends_infos[recommendation.user_id][:picture], review: recommendation.review}
+      end
+
+      Wish.where(restaurant_id: @restaurant.id, user_id: my_visible_friends_me_and_needl).each do |wish|
+        @my_friends_wishing << {id: wish.user_id, name: friends_infos[wish.user_id][:name], picture: friends_infos[wish.user_id][:picture]}
+      end
+
     end
 
     def index

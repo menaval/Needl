@@ -45,5 +45,7 @@ json.dessert2                   @restaurant.dessert2
 json.description_dessert2       @restaurant.description_dessert2
 json.price_dessert2             @restaurant.price_dessert2
 json.friends_wishing            @friends_wishing
+json.my_friends_recommending    @my_friends_recommending
+json.my_friends_wishing         @my_friends_wishing
 
 
