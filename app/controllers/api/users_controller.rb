@@ -12,7 +12,7 @@ module Api
       @wishes = @user.my_wishes
       @myself = User.find_by(authentication_token: params["user_token"])
       # le user.id != 533 c'est pour empêcher une erreur qui devrait disparaitre avec la grosse update de gregoire
-      if @myself.id != @user.id && user.id != 533
+      if @myself.id != @user.id && @user.id != 533
         @friendship = Friendship.find_by(sender_id: [@myself.id, @user.id], receiver_id: [@myself.id, @user.id])
         @invisible  = (@friendship.sender_id == @myself.id && @friendship.receiver_invisible == true ) || ( @friendship.receiver_id == @myself.id && @friendship.sender_invisible == true )
          @correspondence_score =  TasteCorrespondence.where("member_one_id = ? and member_two_id = ? or member_one_id = ? and member_two_id = ?", @user.id, @myself.id, @myself.id, @user.id).first.category
