@@ -114,7 +114,7 @@ module Api
 
       # associer les ambiances, occasions et amis recommandant aux restaurants avec une seule requête. De même pour récupérer dans chacun des restaurants quels sont les amis qui recommandent
       @all_ambiences = {}
-
+      @all_strengths = {}
       @all_occasions = {}
       @all_friends_recommending = {}
       @all_friends_category_1_recommending = {}
@@ -124,7 +124,9 @@ module Api
 
       @recommendations_from_friends.each do |recommendation|
         @all_ambiences[recommendation.restaurant_id] ||= []
-        @all_ambiences[recommendation.restaurant_id] << recommendation.ambiences
+        @all_ambiences[recommendation.restaurant_id] << recommendation.strengths
+        @all_strengths[recommendation.restaurant_id] ||= []
+        @all_strengths[recommendation.restaurant_id] << recommendation.strengths
         @all_occasions[recommendation.restaurant_id] ||= []
         if recommendation.occasions
           @all_occasions[recommendation.restaurant_id] << recommendation.occasions

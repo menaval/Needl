@@ -36,6 +36,8 @@ json.array!                    @restaurants do |restaurant|
   @all_friends_category_2_wishing[restaurant.id] ||= []
   @all_friends_category_3_wishing[restaurant.id] ||= []
 
+  json.strengths           @all_strengths[restaurant.id].flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
+
   @score_from_friends = @recommendation_coefficient_category_1*(@all_friends_category_1_recommending[restaurant.id].length) + @recommendation_coefficient_category_2*(@all_friends_category_2_recommending[restaurant.id].length) +
       @recommendation_coefficient_category_3*(@all_friends_category_3_recommending[restaurant.id].length) + @wish_coefficient_category_1*(@all_friends_category_1_wishing[restaurant.id].length) + @wish_coefficient_category_2*(@all_friends_category_2_wishing[restaurant.id].length) +
       @wish_coefficient_category_3*(@all_friends_category_3_wishing[restaurant.id].length)
