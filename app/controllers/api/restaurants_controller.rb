@@ -43,9 +43,9 @@ module Api
 
       @user                                = User.find_by(authentication_token: params["user_token"])
       if Rails.env.development? == true
-        my_visible_friends_me_and_needl      = @user.my_visible_friends_ids_and_me
+        my_friends_me_and_needl      = @user.my_friends_ids + [@user.id]
       else
-        my_visible_friends_me_and_needl      = @user.my_visible_friends_ids_and_me + [553]
+        my_friends_me_and_needl      = @user.my_friends_ids + [@user.id] + [553]
       end
       restaurants_ids                      = @user.my_friends_restaurants_ids + @user.my_restaurants_ids
       if Rails.env.development? != true
@@ -54,8 +54,8 @@ module Api
 
       # ici on met .uniq parce que ça n'a jamais été fait dans les étapes précédentes
       @restaurants                         = Restaurant.where(id: restaurants_ids.uniq)
-      @recommendations_from_friends        = Recommendation.where(user_id: my_visible_friends_me_and_needl)
-      @wishes                              = Wish.where(user_id: my_visible_friends_me_and_needl)
+      @recommendations_from_friends        = Recommendation.where(user_id: my_friends_me_and_needl)
+      @wishes                              = Wish.where(user_id: my_friends_me_and_needl)
       restaurant_pictures                  = RestaurantPicture.where(restaurant_id: restaurants_ids)
       restaurant_subways                   = RestaurantSubway.where(restaurant_id: restaurants_ids)
       # elements de l'algorithme du score
@@ -106,7 +106,7 @@ module Api
 
       # on récupère les infos de chaque user pour ne pas avoir à faire des requêtes pour chaque boucle lorsque l'on va donner dans friends_recommending et friends_wishing les noms et picture à partir des ids des users
       friends_infos = {}
-      friends = User.where(id: my_visible_friends_me_and_needl)
+      friends = User.where(id: my_friends_me_and_needl)
       friends.each do |friend|
         friends_infos[friend.id] = {name: friend.name, picture: friend.picture}
       end
