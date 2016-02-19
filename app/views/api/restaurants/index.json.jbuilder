@@ -62,8 +62,8 @@ json.array!                    @restaurants do |restaurant|
 
   json.subways                   restaurant.subways_near
   json.closest_subway            restaurant.subway_id
-  json.friends_recommending      @all_friends_recommending[restaurant.id]
-  json.friends_wishing           @all_friends_wishing[restaurant.id]
+  json.friends_recommending      @all_friends_recommending[restaurant.id] ? @all_friends_recommending[restaurant.id] : []
+  json.friends_wishing           @all_friends_wishing[restaurant.id] ? @all_friends_wishing[restaurant.id] : []
   json.my_friends_recommending   @all_friends_recommending_new_version[restaurant.id]
   json.my_friends_wishing        @all_friends_wishing_new_version[restaurant.id]
   json.starter1                  restaurant.starter1
