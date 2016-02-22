@@ -37,6 +37,7 @@ module Api
         i.device_type = @device_type
         if params["device_type"] == "android"
           i.push_type = "gcm"
+          i.gcm_sender_id = ENV['PARSE_GCM_SENDER_ID']
         end
         i['user_id'] = @user.id
       end
