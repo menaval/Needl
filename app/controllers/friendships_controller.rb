@@ -82,7 +82,7 @@ class FriendshipsController < ApplicationController
         # envoyer à @friend qu'il a été accepté
         data = { :alert => "#{current_user.name} a accepte votre invitation", :badge => 'Increment' }
         push = client.push(data)
-        push.type = "ios"
+        # push.type = "ios"
         query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend_id)
         push.where = query.where
         push.save
@@ -90,7 +90,7 @@ class FriendshipsController < ApplicationController
         # envoyer à @friend qu'on l'a invité
         data = { :alert => "#{current_user.name} vous a invite a decouvrir ses restaurants", :badge => 'Increment' }
         push = client.push(data)
-        push.type = "ios"
+        # push.type = "ios"
         query = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', @friend_id)
         push.where = query.where
         push.save
