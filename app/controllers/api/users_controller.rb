@@ -35,6 +35,9 @@ module Api
       installation = client.installation.tap do |i|
         i.device_token = @device_token
         i.device_type = @device_type
+        if params["device_type"] == "android"
+          i.push_type = "gcm"
+        end
         i['user_id'] = @user.id
       end
       installation.save
