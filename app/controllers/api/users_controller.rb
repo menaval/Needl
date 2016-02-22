@@ -74,7 +74,7 @@ module Api
       @user.app_version = app_version
       @user.platform = params["platform"]
       @user.save
-      @last_version = @user.app_version == "2.0.2"
+      @last_version = @user.app_version == "2.0.2" && @user.platform == "ios"
     end
 
     def invite_contact
