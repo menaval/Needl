@@ -44,6 +44,7 @@ module Api
           @recommendation = @user.recommendations.new(recommendation_params)
           @recommendation.restaurant = @restaurant
           @recommendation.review = ( recommendation_params["review"] != "" && recommendation_params["review"] != nil ) ? recommendation_params["review"] : "Je recommande !"
+
           #  si les informations récupérées ont bien toutes été remplies on enregistre la reco, update le prix du resto et on le track
           if @recommendation.save
 
@@ -359,9 +360,12 @@ module Api
       client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'], master_key:ENV['PARSE_MASTER_KEY'])
       friends_to_notif_ids = []
       friends_to_mail_ids = []
+      @recommendation.friends_thanking = params["friends_thanking"]
       # pour chaque utilisateur on va regarder si il a activé les notis et s'il l'a fait on lui envoie une notif, s'il ne l'a pas fait on lui envoie un mail
       friends_to_thank_ids.each do |friend_id|
         info = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id).get
+        puts "-----------------------------------------------------------------------"
+        puts "#{info.length}"
         if info.length > 0
           friends_to_notif_ids << friend_id
         else
@@ -377,6 +381,8 @@ module Api
 
       # on envoie les notifs aux bonnes personnes s'il y en a
       if friends_to_notif_ids.length > 0
+        puts "---------------------------------------------------------------------------"
+        puts "#{friends_to_notif_ids}"
         data = { :alert => "#{@user.name} te remercie de lui avoir fait decouvrir #{@restaurant.name}. Tu gagnes 1 point d'expertise !", :badge => 'Increment', :type => 'thanks' }
         push = client.push(data)
         query = client.query(Parse::Protocol::CLASS_INSTALLATION).value_in('user_id', friends_to_notif_ids)
