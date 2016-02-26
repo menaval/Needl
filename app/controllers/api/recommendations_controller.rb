@@ -65,7 +65,7 @@ module Api
             end
 
             # attention on ne l'envoie plus à ceux qui ont été remerciés (pas besoin de checker si different du vide on le fait rapidement apres)
-            notif_reco(params["friends_thanking"])
+            notif_reco(params["friends_thanking"].map{|x| x.to_i})
 
             # si c'était sur ma liste de wish ça l'enlève
             if Wish.where(restaurant_id:params["restaurant_id"].first(5).to_i, user_id: @user.id).any?
@@ -360,7 +360,8 @@ module Api
       client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'], master_key:ENV['PARSE_MASTER_KEY'])
       friends_to_notif_ids = []
       friends_to_mail_ids = []
-      @recommendation.update_attributes(friends_thanking: friends_to_thank_ids)
+      @recommendation.friends_thanking = friends_to_thank_ids
+      @recommendation.save
       # pour chaque utilisateur on va regarder si il a activé les notis et s'il l'a fait on lui envoie une notif, s'il ne l'a pas fait on lui envoie un mail
       friends_to_thank_ids.each do |friend_id|
         info = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id).get
