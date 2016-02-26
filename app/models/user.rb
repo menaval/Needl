@@ -7,6 +7,9 @@ class User < ActiveRecord::Base
   has_many :friendships, foreign_key: :sender_id, dependent: :destroy
   has_many :received_friendships, foreign_key: :receiver_id, class_name: 'Friendship', dependent: :destroy
 
+  has_many :followerships, foreign_key: :following_id, dependent: :destroy
+  has_many :received_followerships, foreign_key: :follower_id, class_name: 'Followership', dependent: :destroy
+
   has_many :not_interested_relations, foreign_key: :member_two_id, dependent: :destroy
   has_many :received_not_interested_relations, foreign_key: :member_one_id, class_name: 'NotInterestedRelation', dependent: :destroy
 
@@ -15,6 +18,9 @@ class User < ActiveRecord::Base
 
   has_many :senders, :through => :received_friendships, dependent: :destroy
   has_many :receivers, :through => :friendships, dependent: :destroy
+
+  has_many :followers, :through => :received_followerships, dependent: :destroy
+  has_many :followings, :through => :followerships, dependent: :destroy
 
   has_many :member_ones, :through => :not_interested_relations, dependent: :destroy
   has_many :member_twos, :through => :received_not_interested_relations, dependent: :destroy

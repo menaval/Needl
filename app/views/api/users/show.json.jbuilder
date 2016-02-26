@@ -5,6 +5,13 @@ json.authentication_token  @user.authentication_token
 json.number_of_recos       @recos.length
 json.score                 @user.score
 json.picture               @user.picture
+json.public                @user.public
+if @user.public == true
+  json.public_score     @user.public_score
+  json.followings       @user.followings
+  json.description      @user.description
+  json.tags             @user.tags
+end
 if @user.id != @myself.id
   json.invisible               @invisible
   json.correspondence_score    @correspondence_score
@@ -30,4 +37,5 @@ json.wishes                @wishes do |restaurant|
   json.price_range      restaurant.price_range
   json.picture          restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url
 end
+
 
