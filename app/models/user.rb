@@ -19,8 +19,8 @@ class User < ActiveRecord::Base
   has_many :senders, :through => :received_friendships, dependent: :destroy
   has_many :receivers, :through => :friendships, dependent: :destroy
 
-  has_many :followers, :through => :received_followerships, dependent: :destroy
-  has_many :followings, :through => :followerships, dependent: :destroy
+  has_many :followings, :through => :received_followerships, dependent: :destroy
+  has_many :followers, :through => :followerships, dependent: :destroy
 
   has_many :member_ones, :through => :not_interested_relations, dependent: :destroy
   has_many :member_twos, :through => :received_not_interested_relations, dependent: :destroy
@@ -117,7 +117,6 @@ class User < ActiveRecord::Base
     Subway.joins(:restaurant_subways).includes(restaurants: :recommendations).where(recommendations: {user_id: self.my_visible_friends_ids + [self.id]}).uniq
   end
 
-
   def user_friends
     graph = Koala::Facebook::API.new(self.token)
     friends_uids = graph.get_connections("me", "friends").map { |friend| friend["id"] }
@@ -179,8 +178,8 @@ class User < ActiveRecord::Base
     UserMailer.thank_friends(self, friends_infos, restaurant_id).deliver
   end
 
-  def send_thank_contacts_email(contacts_infos, restaurant_id)
-    UserMailer.thank_contacts(self, contacts_infos, restaurant_id).deliver
-  end
+  # def send_thank_contacts_email(contacts_infos, restaurant_id)
+  #   UserMailer.thank_contacts(self, contacts_infos, restaurant_id).deliver
+  # end
 
 end

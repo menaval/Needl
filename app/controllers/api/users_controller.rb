@@ -19,6 +19,7 @@ module Api
       end
       if @user.public == true
         @public_recos = @user.my_public_recos
+        @followers = @user.followers
       end
     end
 

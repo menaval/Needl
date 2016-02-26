@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160226101003) do
+ActiveRecord::Schema.define(version: 20160226105552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(version: 20160226101003) do
     t.json     "contacts_thanking", default: [],    null: false, array: true
     t.boolean  "public",            default: false
     t.string   "url"
+    t.integer  "experts_thanking",  default: [],    null: false, array: true
   end
 
   add_index "recommendations", ["restaurant_id"], name: "index_recommendations_on_restaurant_id", using: :btree
