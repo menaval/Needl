@@ -65,7 +65,7 @@ module Api
             end
 
             # attention on ne l'envoie plus à ceux qui ont été remerciés (pas besoin de checker si different du vide on le fait rapidement apres)
-            notif_reco(params["friends_thanking"].map{|x| x.to_i})
+            notif_reco(params["friends_thanking"])
 
             # si c'était sur ma liste de wish ça l'enlève
             if Wish.where(restaurant_id:params["restaurant_id"].first(5).to_i, user_id: @user.id).any?
@@ -341,7 +341,7 @@ module Api
       client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
 
       # s'il ne renvoie rien ca donne un tableau vide
-      users_ids_not_to_send_again = users_already_thanked_ids ? users_already_thanked_ids : []
+      users_ids_not_to_send_again = users_already_thanked_ids != nil ? users_already_thanked_ids.map{|x| x.to_i} : []
       relevant_friends_ids = @user.my_friends_seing_me_ids - users_ids_not_to_send_again
       if relevant_friends_ids != []
        # envoyer à chaque friend que @user a fait une nouvelle reco du resto @restaurant
