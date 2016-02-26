@@ -58,10 +58,13 @@ module Api
 
             # on redirige vers les actions de remerciement
             if params["friends_thanking"] != [] && params["friends_thanking"] != nil
-              thank_friends(params["friends_thanking"])
+              thank_friends(params["friends_thanking"].map{|x| x.to_i})
+            end
+            if params["experts_thanking"] != [] && params["experts_thanking"] != nil
+              thank_experts(params["experts_thanking"].map{|x| x.to_i})
             end
             if params["contacts_thanking"] != [] && params["contacts_thanking"] != nil
-              thank_contacts(params["contacts_thanking"])
+              thank_contacts(params["contacts_thanking"].map{|x| x.to_i})
             end
 
             # attention on ne l'envoie plus à ceux qui ont été remerciés (pas besoin de checker si different du vide on le fait rapidement apres)
@@ -360,7 +363,8 @@ module Api
       client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'], master_key:ENV['PARSE_MASTER_KEY'])
       friends_to_notif_ids = []
       friends_to_mail_ids = []
-      @recommendation.friends_thanking = params["friends_thanking"]
+      @recommendation.friends_thanking = friends_to_thank_ids
+      @recommendation.save
       # pour chaque utilisateur on va regarder si il a activé les notis et s'il l'a fait on lui envoie une notif, s'il ne l'a pas fait on lui envoie un mail
       friends_to_thank_ids.each do |friend_id|
         info = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id).get
@@ -399,6 +403,21 @@ module Api
         friends = User.find(friends_to_mail_ids)
         friends_infos = friends.map {|x| {name: x.name.split(" ")[0], email: x.email}}
         @user.send_thank_friends_email(friends_infos, @restaurant.id)
+      end
+
+    end
+
+    def thank_experts(experts_to_thank_ids)
+
+      @recommendation.experts_thanking = experts_to_thank_ids
+      @recommendation.save
+
+      experts_to_thank_ids.each do |expert_id|
+        # on leur fait gagner à chacun un point d'expertise
+        expert = User.find(expert_id)
+        expert.public_score += 1
+        expert.save
+        @tracker.track(@user.id, 'Thanks sent', { "user" => @user.name, "type" => "Nothing",  "Needl User ?" => "Yes", "user_type" => "Expert" })
       end
 
     end

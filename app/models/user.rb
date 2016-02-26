@@ -100,6 +100,10 @@ class User < ActiveRecord::Base
     Restaurant.joins(:recommendations).where(recommendations: { user_id: self.id })
   end
 
+  def my_public_recos
+    Restaurant.joins(:recommendations).where(recommendations: { user_id: self.id, public: true })
+  end
+
   def my_wishes
     Restaurant.joins(:wishes).where(wishes: {user_id: self.id})
   end
