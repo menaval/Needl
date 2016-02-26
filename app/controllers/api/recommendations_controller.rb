@@ -360,7 +360,7 @@ module Api
       client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'], master_key:ENV['PARSE_MASTER_KEY'])
       friends_to_notif_ids = []
       friends_to_mail_ids = []
-      @recommendation.friends_thanking = params["friends_thanking"].to_i
+      @recommendation.friends_thanking = params["friends_thanking"].map{|x| x.to_i}
       # pour chaque utilisateur on va regarder si il a activé les notis et s'il l'a fait on lui envoie une notif, s'il ne l'a pas fait on lui envoie un mail
       friends_to_thank_ids.each do |friend_id|
         info = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id).get
