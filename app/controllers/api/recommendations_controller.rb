@@ -9,6 +9,41 @@ module Api
     def index
       @user = User.find_by(authentication_token: params["user_token"])
       load_activities
+
+      users = User.where(id: @api_activities.pluck(:owner_id).uniq)
+      recommendations = Recommendation.where(id: @api_activities.where(trackable_type: "Recommendation").pluck(:trackable_id).uniq)
+      wishes = Wish.where(id: @api_activities.where(trackable_type: "Wish").pluck(:trackable_id).uniq)
+      restaurants_ids = recommendations.pluck(:id) + wishes.pluck(:id)
+      restaurants = Restaurant.where(id: restaurants_ids.uniq)
+      restaurants_pictures = RestaurantPicture.where(restaurant_id: restaurants_ids)
+
+      # comme pour restaurants index, on refait ici un travail pour faire le moins de requetes possibles
+      @all_users_infos = {}
+      users.each do |user|
+        @all_users_infos[user.id] = {name: user.name, picture: user.picture}
+      end
+
+      @all_recommendations_infos = {}
+      recommendations.each do |recommendation|
+        @all_recommendations_infos[recommendation.id] = {review: recommendation.review, restaurant_id: recommendation.restaurant_id}
+      end
+
+      @all_wishes_infos = {}
+      wishes.each do |wish|
+        @all_wishes_infos[wish.id] = wish.restaurant_id
+      end
+
+      @all_restaurants_infos = {}
+      restaurants.each do |restaurant|
+        @all_restaurants_infos[restaurant.id] = {name: restaurant.name, food: restaurant.food_name, price_range: restaurant.price_range, picture_url: restaurant.picture_url}
+      end
+
+      @all_restaurant_pictures_infos = {}
+      restaurants_pictures.each do |restaurant_picture|
+        @all_restaurant_pictures_infos[restaurant_picture.restaurant_id] ||= []
+        @all_restaurant_pictures_infos[restaurant_picture.restaurant_id] << restaurant_picture.picture
+      end
+
       if params['recommendation']
         create
       elsif params['destroy']
