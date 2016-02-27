@@ -22,27 +22,41 @@ module Api
       users.each do |user|
         @all_users_infos[user.id] = {name: user.name, picture: user.picture}
       end
+      puts "---------------------------------------------------------------------"
+      puts "user info : #{@all_users_infos}"
 
       @all_recommendations_infos = {}
       recommendations.each do |recommendation|
         @all_recommendations_infos[recommendation.id] = {review: recommendation.review, restaurant_id: recommendation.restaurant_id}
       end
 
+      puts "---------------------------------------------------------------------"
+      puts "recommendation info : #{@all_recommendations_infos}"
+
       @all_wishes_infos = {}
       wishes.each do |wish|
         @all_wishes_infos[wish.id] = wish.restaurant_id
       end
+
+      puts "---------------------------------------------------------------------"
+      puts "wish info : #{@all_wishes_infos}"
 
       @all_restaurants_infos = {}
       restaurants.each do |restaurant|
         @all_restaurants_infos[restaurant.id] = {name: restaurant.name, food: restaurant.food_name, price_range: restaurant.price_range, picture_url: restaurant.picture_url}
       end
 
+      puts "---------------------------------------------------------------------"
+      puts "restaurant info : #{@all_restaurants_infos}"
+
       @all_restaurant_pictures_infos = {}
       restaurants_pictures.each do |restaurant_picture|
         @all_restaurant_pictures_infos[restaurant_picture.restaurant_id] ||= []
         @all_restaurant_pictures_infos[restaurant_picture.restaurant_id] << restaurant_picture.picture
       end
+
+      puts "---------------------------------------------------------------------"
+      puts "restaurant picture info : #{@all_restaurants_pictures_infos}"
 
       if params['recommendation']
         create
