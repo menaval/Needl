@@ -5,11 +5,11 @@ json.array! @api_activities do |activity|
   if activity.owner_type == 'User'
     json.user                    user.name.split(" ")[0]
   else
-    json.user                    user.owner.name
+    json.user                    user.name
   end
   json.user_type                 activity.owner_type
-  json.user_picture              user.owner.picture
-  json.user_id                   user.owner.id
+  json.user_picture              user.picture
+  json.user_id                   user.id
   json.restaurant_name           restaurant.name
   json.restaurant_picture        restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url
   json.restaurant_id             restaurant.id
