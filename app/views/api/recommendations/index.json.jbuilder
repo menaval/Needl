@@ -1,7 +1,7 @@
 json.array! @api_activities do |activity|
-  if activity.trackable.is_a? Recommendation
+  if activity.trackable_type == "Recommendation"
     @restaurant_id = @all_recommendations_infos[activity.trackable_id][:restaurant_id]
-  elsif activity.trackable.is_a? Wish
+  elsif activity.trackable_type == "Wish"
     @restaurant_id = @all_wishes_infos[activity.trackable_id]
   end
   if activity.owner_type == 'User'
@@ -19,7 +19,7 @@ json.array! @api_activities do |activity|
   if restaurant.price_range
     json.restaurant_price_range  @all_restaurants_infos[@restaurant_id][:price_range]
   end
-  if activity.trackable.is_a? Recommendation
+  if activity.trackable_type == "Recommendation"
     json.review                  @all_recommendations_infos[activity.trackable_id][:review]
   end
   json.date                      activity.created_at.strftime('%-d %B')
