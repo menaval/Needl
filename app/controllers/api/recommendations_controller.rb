@@ -60,9 +60,15 @@ module Api
             if params["friends_thanking"] != [] && params["friends_thanking"] != nil
               thank_friends(params["friends_thanking"].map{|x| x.to_i})
             end
-            if params["contacts_thanking"] != [] && params["contacts_thanking"] != nil
-              thank_contacts(params["contacts_thanking"].map{|x| x.to_i})
+
+            if params["experts_thanking"] != [] && params["experts_thanking"] != nil
+              thank_experts(params["experts_thanking"].map{|x| x.to_i})
             end
+
+            # on les met de côté pour l'instant puisque pour l'instant on laisse l'utilisateur envoyer lui même le texto
+            # if params["contacts_thanking"] != [] && params["contacts_thanking"] != nil
+            #   thank_contacts(params["contacts_thanking"].map{|x| x.to_i})
+            # end
 
             # attention on ne l'envoie plus à ceux qui ont été remerciés (pas besoin de checker si different du vide on le fait rapidement apres)
             notif_reco(params["friends_thanking"])
@@ -391,7 +397,7 @@ module Api
         push.save
         # on track les envois
         friends_to_notif_ids.each do |friend_id|
-          @tracker.track(@user.id, 'Thanks sent', { "user" => @user.name, "type" => "Notif",  "Needl User ?" => "Yes" })
+          @tracker.track(@user.id, 'Thanks sent', { "user" => @user.name, "type" => "Notif",  "User Type" => "Friend" })
         end
       end
 
@@ -404,56 +410,71 @@ module Api
 
     end
 
-    def thank_contacts(contacts_to_thank)
+    def thank_experts(experts_to_thank_ids)
 
+      @recommendation.experts_thanking = experts_to_thank_ids
+      @recommendation.save
 
-      contacts_to_text = []
-      contacts_to_mail = []
-      # pour chaque contact, on va regarder si on a un numéro de téléphone, si on en a un on lui envoie par texto et s'il n'en a pas on lui envoie par mail
-      contacts_to_thank.each do |contact|
-        contact_name = contact[:givenName] ? contact[:givenName] : ""
-        contact_mail = contact[:emailAddresses] ? contact[:emailAddresses].first[:email].downcase.delete(' ') : ""
-        contact_phone_number = contact[:phoneNumbers] ? contact[:phoneNumbers].first[:number] : ""
-        if contact_phone_number != ""
-          contact_phone_number = contact_phone_number.gsub(/[^0-9+]/, '').gsub(/^00/,"+").gsub(/^0/,"+33")
-          contacts_to_text << {name: contact_name, phone_number: contact_phone_number}
-        else
-          contacts_to_mail << {name: contact_name, email: contact_mail}
-        end
-      end
-
-      #  On envoie un texto à toutes les personnes qui ont un numéro
-      if contacts_to_text.length > 0
-        send_text_thanks_to_contacts(contacts_to_text, @restaurant.id)
-      end
-
-      # a faire
-      if contacts_to_mail.length > 0
-        @user.send_thank_contacts_email(contacts_to_mail, @restaurant.id)
+      experts_to_thank_ids.each do |expert_id|
+        # on leur fait gagner à chacun un point d'expertise
+        expert = User.find(expert_id)
+        expert.public_score += 1
+        expert.save
+        @tracker.track(@user.id, 'Thanks sent', { "user" => @user.name, "type" => "Nothing",  "User Type" => "Expert"})
       end
 
     end
 
-    def send_text_thanks_to_contacts(contacts_infos, restaurant_id)
+    # def thank_contacts(contacts_to_thank)
 
-      restaurant = Restaurant.find(restaurant_id)
-      account_sid = ENV['TWILIO_SID']
-      auth_token  = ENV['TWILIO_AUTH_TOKEN']
-      client = Twilio::REST::Client.new account_sid, auth_token
 
-      contacts_infos.each do |contact|
-      #  On track les invitations envoyées par texto (avec image)
-        @tracker.track(@user.id, 'Thanks sent', { "user" => @user.name, "type" => "Text",  "Needl User ?" => "No" })
-        # Problème avec les accents, il faut l'unicoder
-        contact[:name] = "Héôàèî"
-        client.messages.create(
-          from: "Needl",
-          to: contact[:phone_number],
-          body: "Salut #{I18n.transliterate(contact[:name])}, #{I18n.transliterate(@user.name)} tenait a te remercier pour lui avoir fait decouvrir #{I18n.transliterate(restaurant.name)} ! Tu as gagne 1 point d'expertise que tu peux retrouver en t'inscrivant avec ce lien: needl.fr ! A bientot ! Needl, l'app pour les restaurants preferes de tes amis"
-        )
-      end
+    #   contacts_to_text = []
+    #   contacts_to_mail = []
+    #   # pour chaque contact, on va regarder si on a un numéro de téléphone, si on en a un on lui envoie par texto et s'il n'en a pas on lui envoie par mail
+    #   contacts_to_thank.each do |contact|
+    #     contact_name = contact[:givenName] ? contact[:givenName] : ""
+    #     contact_mail = contact[:emailAddresses] ? contact[:emailAddresses].first[:email].downcase.delete(' ') : ""
+    #     contact_phone_number = contact[:phoneNumbers] ? contact[:phoneNumbers].first[:number] : ""
+    #     if contact_phone_number != ""
+    #       contact_phone_number = contact_phone_number.gsub(/[^0-9+]/, '').gsub(/^00/,"+").gsub(/^0/,"+33")
+    #       contacts_to_text << {name: contact_name, phone_number: contact_phone_number}
+    #     else
+    #       contacts_to_mail << {name: contact_name, email: contact_mail}
+    #     end
+    #   end
 
-    end
+    #   #  On envoie un texto à toutes les personnes qui ont un numéro
+    #   if contacts_to_text.length > 0
+    #     send_text_thanks_to_contacts(contacts_to_text, @restaurant.id)
+    #   end
+
+    #   # a faire
+    #   if contacts_to_mail.length > 0
+    #     @user.send_thank_contacts_email(contacts_to_mail, @restaurant.id)
+    #   end
+
+    # end
+
+    # def send_text_thanks_to_contacts(contacts_infos, restaurant_id)
+
+    #   restaurant = Restaurant.find(restaurant_id)
+    #   account_sid = ENV['TWILIO_SID']
+    #   auth_token  = ENV['TWILIO_AUTH_TOKEN']
+    #   client = Twilio::REST::Client.new account_sid, auth_token
+
+    #   contacts_infos.each do |contact|
+    #   #  On track les invitations envoyées par texto (avec image)
+    #     @tracker.track(@user.id, 'Thanks sent', { "user" => @user.name, "type" => "Text",  "User Type" => "Contact" })
+    #     # Problème avec les accents, il faut l'unicoder
+    #     contact[:name] = "Héôàèî"
+    #     client.messages.create(
+    #       from: "Needl",
+    #       to: contact[:phone_number],
+    #       body: "Salut #{I18n.transliterate(contact[:name])}, #{I18n.transliterate(@user.name)} tenait a te remercier pour lui avoir fait decouvrir #{I18n.transliterate(restaurant.name)} ! Tu as gagne 1 point d'expertise que tu peux retrouver en t'inscrivant avec ce lien: needl.fr ! A bientot ! Needl, l'app pour les restaurants preferes de tes amis"
+    #     )
+    #   end
+
+    # end
 
 
     def read_all_notification

@@ -17,6 +17,10 @@ module Api
         @invisible  = (@friendship.sender_id == @myself.id && @friendship.receiver_invisible == true ) || ( @friendship.receiver_id == @myself.id && @friendship.sender_invisible == true )
          @correspondence_score =  TasteCorrespondence.where("member_one_id = ? and member_two_id = ? or member_one_id = ? and member_two_id = ?", @user.id, @myself.id, @myself.id, @user.id).first.category
       end
+      if @user.public == true
+        @public_recos = @user.my_public_recos
+        @followers = @user.followers
+      end
     end
 
     def score

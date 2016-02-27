@@ -11,6 +11,7 @@ gem 'bootstrap_form'
 gem "country_select"
 gem "high_voltage"
 gem "devise"
+gem 'devise_token_auth'
 gem 'omniauth-facebook'
 gem 'omniauth-facebook-access-token'
 gem 'public_activity'

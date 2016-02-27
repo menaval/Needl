@@ -7,6 +7,9 @@ class User < ActiveRecord::Base
   has_many :friendships, foreign_key: :sender_id, dependent: :destroy
   has_many :received_friendships, foreign_key: :receiver_id, class_name: 'Friendship', dependent: :destroy
 
+  has_many :followerships, foreign_key: :following_id, dependent: :destroy
+  has_many :received_followerships, foreign_key: :follower_id, class_name: 'Followership', dependent: :destroy
+
   has_many :not_interested_relations, foreign_key: :member_two_id, dependent: :destroy
   has_many :received_not_interested_relations, foreign_key: :member_one_id, class_name: 'NotInterestedRelation', dependent: :destroy
 
@@ -15,6 +18,9 @@ class User < ActiveRecord::Base
 
   has_many :senders, :through => :received_friendships, dependent: :destroy
   has_many :receivers, :through => :friendships, dependent: :destroy
+
+  has_many :followings, :through => :received_followerships, dependent: :destroy
+  has_many :followers, :through => :followerships, dependent: :destroy
 
   has_many :member_ones, :through => :not_interested_relations, dependent: :destroy
   has_many :member_twos, :through => :received_not_interested_relations, dependent: :destroy
@@ -94,6 +100,10 @@ class User < ActiveRecord::Base
     Restaurant.joins(:recommendations).where(recommendations: { user_id: self.id })
   end
 
+  def my_public_recos
+    Restaurant.joins(:recommendations).where(recommendations: { user_id: self.id, public: true })
+  end
+
   def my_wishes
     Restaurant.joins(:wishes).where(wishes: {user_id: self.id})
   end
@@ -106,7 +116,6 @@ class User < ActiveRecord::Base
   def my_friends_subways
     Subway.joins(:restaurant_subways).includes(restaurants: :recommendations).where(recommendations: {user_id: self.my_visible_friends_ids + [self.id]}).uniq
   end
-
 
   def user_friends
     graph = Koala::Facebook::API.new(self.token)
@@ -169,8 +178,8 @@ class User < ActiveRecord::Base
     UserMailer.thank_friends(self, friends_infos, restaurant_id).deliver
   end
 
-  def send_thank_contacts_email(contacts_infos, restaurant_id)
-    UserMailer.thank_contacts(self, contacts_infos, restaurant_id).deliver
-  end
+  # def send_thank_contacts_email(contacts_infos, restaurant_id)
+  #   UserMailer.thank_contacts(self, contacts_infos, restaurant_id).deliver
+  # end
 
 end

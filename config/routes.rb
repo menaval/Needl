@@ -63,6 +63,7 @@ Rails.application.routes.draw do
     end
 
     resources :friendships, only: [:index, :new]
+    resources :followerships, only: [:index, :new]
     resources :wishes, only: [:index, :create]
     resources :registrations, only: [:edit, :update]
     resources :user_wishlist_pictures, only: [:new, :create]
