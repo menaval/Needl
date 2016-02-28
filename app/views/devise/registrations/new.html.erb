@@ -29,6 +29,20 @@
 		<%= render "devise/shared/links" %>
 	</div>
 
+  <div class="container">
+    <div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+  <h2>Sign up</h2>
+  <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+  <%= f.error_notification %>
+  <%= f.input :email, required: true, autofocus: true %>
+  <%= f.input :password, required: true, hint: ("#{@minimum_password_length} characters m inimum" if @validatable) %>
+  <%= f.input :password_confirmation, required: true %>
+  <%= f.button :submit, "Sign up", class: "btn btn-primary" %> <% end %>
+  <%= render "devise/shared/links" %> </div>
+    </div>
+  </div>
+
 	<script>
 		$(document).ready(function() {
 			if (window.location.search.indexOf('subscribed=true') > -1) {

@@ -4,6 +4,55 @@ module Api
     skip_before_action :verify_authenticity_token
     skip_before_filter :authenticate_user!
 
+    def create
+      name = params['user']['name']
+      puts "#{params['user']['name']}"
+      email = params['user']['email']
+      password = params['user']['password']
+      password_confirmation = params['user']['password_confirmation']
+      if password  == password_confirmation
+        @user = User.new(name: name, email: email, provider: "mail", uid: 123456738437829, gender: "male", emails: [email], password: password)
+        @user.save
+        sign_in @user
+      end
+      # On track l'arrivée sur Mixpanel
+
+      @tracker.people.set(@user.id, {
+        "gender" => @user.gender,
+        "name" => @user.name,
+        "$email": @user.email
+      })
+      @tracker.track(@user.id, 'signup', {"user" => @user.name} )
+
+      # On ajoute le nouveau membre sur la mailing liste de mailchimp
+      if @user.email.include?("needlapp.com") == false && Rails.env.development? != true
+
+        begin
+          @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
+          @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
+          @gibbon.lists(@list_id).members.create(
+            body: {
+              email_address: @user.email,
+              status: "subscribed",
+              merge_fields: {
+                FNAME: @user.name.partition(" ").first,
+                LNAME: @user.name.partition(" ").last,
+                TOKEN: @user.authentication_token,
+                GENDER: @user.gender
+              }
+            }
+          )
+        rescue Gibbon::MailChimpError
+          puts "error catched --------------------------------------------"
+        end
+      end
+
+      redirect_to api_restaurants_path(:user_email => email, :user_token => @user.authentication_token)
+
+# La requete sur Postman
+# http://localhost:3000/api/registrations.json?utf8=✓&authenticity_token=rMNz1VKp70hDIkFwbefVSmE7cWVbp3aIcDYDlz8YKHZEO/PwCcbByOHG7drWtdxHWSBd7RDXkGDQWVBTztPsug==&user[name]=valentin&user[email]=yolo2@gmail.co&user[password]=12345678&user[password_confirmation]=12345678&commit=Sign up&provider=mail
+    end
+
     def edit
       # @user = User.find_by(authentication_token: params["user_token"])
       @user = User.find(params['id'])
@@ -56,5 +105,11 @@ module Api
       redirect_to edit_api_registration_path(:user_email => params["user_email"], :user_token => params["user_token"])
 
     end
+
+    private
+
+    # def registration_params
+    #   params.require(:registration).permit(:, :wish, { strengths: [] }, { ambiences: [] }, { occasions: [] }, { friends_thanking: [] }, { contacts_thanking: [] }, { experts_thanking: [] })
+    # end
   end
 end
