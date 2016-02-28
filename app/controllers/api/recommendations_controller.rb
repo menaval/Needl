@@ -15,7 +15,7 @@ module Api
       wishes = Wish.where(id: @api_activities.where(trackable_type: "Wish").pluck(:trackable_id).uniq)
       restaurants_ids = recommendations.pluck(:restaurant_id) + wishes.pluck(:restaurant_id)
       restaurants = Restaurant.where(id: restaurants_ids.uniq)
-      restaurants_pictures = RestaurantPicture.where(restaurant_id: restaurants_ids)
+      restaurants_pictures = RestaurantPicture.where(restaurant_id: restaurants_ids.uniq)
 
       # comme pour restaurants index, on refait ici un travail pour faire le moins de requetes possibles
       @all_users_infos = {}

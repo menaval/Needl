@@ -16,7 +16,7 @@ json.array! @api_activities do |activity|
   json.restaurant_picture        @all_restaurant_pictures_infos[@restaurant_id] ? @all_restaurant_pictures_infos[@restaurant_id].first : @all_restaurants_infos[@restaurant_id][:picture_url]
   json.restaurant_id             @restaurant_id
   json.restaurant_food           @all_restaurants_infos[@restaurant_id][:food_name]
-  if restaurant.price_range
+  if @all_restaurants_infos[@restaurant_id][:price_range] != nil
     json.restaurant_price_range  @all_restaurants_infos[@restaurant_id][:price_range]
   end
   if activity.trackable_type == "Recommendation"
