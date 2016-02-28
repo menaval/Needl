@@ -10,7 +10,7 @@ json.array!                    @restaurants do |restaurant|
     json.pictures           [restaurant.picture_url]
   end
   json.food                 [restaurant.food_id, restaurant.food_name]
-  json.types                restaurant.types.pluck(:id)
+  json.types                @all_types[restaurant.id]
   json.price_range          restaurant.price_range
   json.phone_number         restaurant.phone_number
   if @all_ambiences[restaurant.id]

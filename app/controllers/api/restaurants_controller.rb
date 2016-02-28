@@ -58,6 +58,7 @@ module Api
       @wishes                              = Wish.where(user_id: my_friends_me_and_needl)
       restaurant_pictures                  = RestaurantPicture.where(restaurant_id: restaurants_ids)
       restaurant_subways                   = RestaurantSubway.where(restaurant_id: restaurants_ids)
+      restaurant_types                     = RestaurantType.where(restaurant_id: restaurants_ids)
       # elements de l'algorithme du score
 
       @recommendation_coefficient_category_1   = 15
@@ -177,6 +178,12 @@ module Api
       restaurant_pictures.each do |restaurant_picture|
         @all_pictures[restaurant_picture.restaurant_id] ||= []
         @all_pictures[restaurant_picture.restaurant_id] << restaurant_picture.picture
+      end
+
+      @all_types = {}
+      restaurant_types.each do |restaurant_type|
+        @all_types[restaurant_type.restaurant_id] ||= []
+        @all_types[restaurant_type.restaurant_id] << restaurant_type.type_id
       end
 
     end
