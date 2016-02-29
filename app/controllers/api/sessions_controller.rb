@@ -7,7 +7,7 @@ module Api
     def create
       email = params['email']
       password = params['password']
-      @user = User.find_by(email: 'yolo@gmail.co')
+      @user = User.find_by(email: email)
 
       # connection réussie
       if @user != nil && password == @user.encrypted_password
@@ -15,12 +15,12 @@ module Api
         render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
       # l'utilisateur a rempli la bonne adresse mail mais il s'est inscrit via facebook
       elsif @user != nil && @user.token != nil
-        render json: {error_message: "ce compte est relié à une connection par Facebook !"}
+        render json: {error_message: "Facebook_account"}
       #  l'utilisateur a rempli la bonne adresse mais mauvais mot de passe
       elsif @user != nil && password != @user.encrypted_password
-        render json: {error_message: "Tu as la bonne adresse mail mais le mot de passe n'est pas le bon"}
+        render json: {error_message: "wrong_password"}
       else
-        render json: {error_message: "Nous n'avons aucun compte à cette adresse mail"}
+        render json: {error_message: "wrong_email"}
       end
 
       # la requete postman
