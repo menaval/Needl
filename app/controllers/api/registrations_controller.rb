@@ -11,7 +11,7 @@ module Api
       password = params['password']
       all_emails = User.all.pluck(:email)
       if all_emails.include?(email)
-        render json: {error_message: account_already_exists}
+        render json: {error_message: "account_already_exists"}
       else
         @user = User.new(name: name, email: email, provider: "mail", emails: [email], password: password)
         @user.save
