@@ -7,6 +7,8 @@ module Api
     def create
       resource = warden.authenticate!(:scope => :user)
       sign_in(:user, resource)
+      puts "#{resource.name}"
+      puts "#{resource.email}"
       render json: {user: resource, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: resource.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: resource.id}).count}
 
       # la requete postman
