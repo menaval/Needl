@@ -17,35 +17,35 @@ module Api
       end
       # On track l'arrivée sur Mixpanel
 
-      @tracker.people.set(@user.id, {
-        "gender" => @user.gender,
-        "name" => @user.name,
-        "$email": @user.email
-      })
-      @tracker.track(@user.id, 'signup', {"user" => @user.name} )
-
+      # @tracker.people.set(@user.id, {
+        # "gender" => @user.gender,
+        # "name" => @user.name,
+        # "$email": @user.email
+      # })
+      # @tracker.track(@user.id, 'signup', {"user" => @user.name} )
+#
       # On ajoute le nouveau membre sur la mailing liste de mailchimp
-      if @user.email.include?("needlapp.com") == false && Rails.env.development? != true
-
-        begin
-          @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
-          @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
-          @gibbon.lists(@list_id).members.create(
-            body: {
-              email_address: @user.email,
-              status: "subscribed",
-              merge_fields: {
-                FNAME: @user.name.partition(" ").first,
-                LNAME: @user.name.partition(" ").last,
-                TOKEN: @user.authentication_token,
-                GENDER: @user.gender
-              }
-            }
-          )
-        rescue Gibbon::MailChimpError
-          puts "error catched --------------------------------------------"
-        end
-      end
+      # if @user.email.include?("needlapp.com") == false && Rails.env.development? != true
+#
+        # begin
+          # @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
+          # @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
+          # @gibbon.lists(@list_id).members.create(
+            # body: {
+              # email_address: @user.email,
+              # status: "subscribed",
+              # merge_fields: {
+                # FNAME: @user.name.partition(" ").first,
+                # LNAME: @user.name.partition(" ").last,
+                # TOKEN: @user.authentication_token,
+                # GENDER: @user.gender
+              # }
+            # }
+          # )
+        # rescue Gibbon::MailChimpError
+          # puts "error catched --------------------------------------------"
+        # end
+      # end
 
       redirect_to api_restaurants_path(:user_email => email, :user_token => @user.authentication_token)
 
