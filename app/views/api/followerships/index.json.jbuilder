@@ -1,4 +1,4 @@
-json.experts           @experts do |expert|
+json.followings           @experts do |expert|
   json.name                 expert.name.split(" ")[0]
   json.fullname             expert.name
   json.picture              expert.picture

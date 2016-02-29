@@ -11,26 +11,32 @@ if @user.id != @myself.id
   json.invisible               @invisible
   json.correspondence_score    @correspondence_score
 end
-json.recommendations       @recos do |restaurant|
-  json.id               restaurant.id
-  json.name             restaurant.name
-  json.address          restaurant.address
-  json.latitude         restaurant.latitude
-  json.longitude        restaurant.longitude
-  json.type             restaurant.food.name
-  json.price_range      restaurant.price_range
-  json.picture          restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url
-  json.review           Recommendation.where(restaurant_id: restaurant.id, user_id: @user.id).first.review
-end
-json.wishes                @wishes do |restaurant|
-  json.id               restaurant.id
-  json.name             restaurant.name
-  json.address          restaurant.address
-  json.latitude         restaurant.latitude
-  json.longitude        restaurant.longitude
-  json.type             restaurant.food.name
-  json.price_range      restaurant.price_range
-  json.picture          restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url
+a
+if (@user.platform == "ios" && @user.version) < "2.0.3" || (@user.platform == "android" && @user.version) < "1.0.2"
+  json.recommendations       @recos do |restaurant|
+    json.id               restaurant.id
+    json.name             restaurant.name
+    json.address          restaurant.address
+    json.latitude         restaurant.latitude
+    json.longitude        restaurant.longitude
+    json.type             restaurant.food.name
+    json.price_range      restaurant.price_range
+    json.picture          restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url
+    json.review           Recommendation.where(restaurant_id: restaurant.id, user_id: @user.id).first.review
+  end
+  json.wishes                @wishes do |restaurant|
+    json.id               restaurant.id
+    json.name             restaurant.name
+    json.address          restaurant.address
+    json.latitude         restaurant.latitude
+    json.longitude        restaurant.longitude
+    json.type             restaurant.food.name
+    json.price_range      restaurant.price_range
+    json.picture          restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url
+  end
+else
+  json.recommendations   Restaurant.joins(:recommendations).where(recommendations: {user_id: @user.id}).pluck(:id)
+  json.wishes            Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).pluck(:id)
 end
 if @user.public == true
   json.public_profile do
