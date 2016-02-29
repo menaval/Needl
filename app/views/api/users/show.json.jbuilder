@@ -11,7 +11,6 @@ if @user.id != @myself.id
   json.invisible               @invisible
   json.correspondence_score    @correspondence_score
 end
-a
 if (@user.platform == "ios" && @user.version) < "2.0.3" || (@user.platform == "android" && @user.version) < "1.0.2"
   json.recommendations       @recos do |restaurant|
     json.id               restaurant.id
