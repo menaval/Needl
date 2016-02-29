@@ -9,12 +9,9 @@ module Api
       puts "#{params['user']['name']}"
       email = params['user']['email']
       password = params['user']['password']
-      password_confirmation = params['user']['password_confirmation']
-      if password  == password_confirmation
-        @user = User.new(name: name, email: email, provider: "mail", uid: 123456738437829, gender: "male", emails: [email], password: password)
-        @user.save
-        sign_in @user
-      end
+      @user = User.new(name: name, email: email, provider: "mail", emails: [email], password: password)
+      @user.save
+      sign_in @user
       # On track l'arrivée sur Mixpanel
 
       # @tracker.people.set(@user.id, {
