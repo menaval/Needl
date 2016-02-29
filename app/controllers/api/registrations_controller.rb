@@ -5,10 +5,10 @@ module Api
     skip_before_filter :authenticate_user!
 
     def create
-      name = params['user']['name']
-      puts "#{params['user']['name']}"
-      email = params['user']['email']
-      password = params['user']['password']
+      name = params['name']
+      puts "#{params['name']}"
+      email = params['email']
+      password = params['password']
       @user = User.new(name: name, email: email, provider: "mail", emails: [email], password: password)
       @user.save
       sign_in @user
