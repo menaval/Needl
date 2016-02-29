@@ -10,14 +10,14 @@ module Api
       @user = User.find_by(email: email)
 
       # connection réussie
-      if @user != nil && password == @user.encrypted_password
+      if @user != nil && @user.valid_password?(password) == true
         sign_in @user
         render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
       # l'utilisateur a rempli la bonne adresse mail mais il s'est inscrit via facebook
       elsif @user != nil && @user.token != nil
         render json: {error_message: "Facebook_account"}
       #  l'utilisateur a rempli la bonne adresse mais mauvais mot de passe
-      elsif @user != nil && password != @user.encrypted_password
+      elsif @user != nil && @user.valid_password?(password) == false
         render json: {error_message: "wrong_password"}
       else
         render json: {error_message: "wrong_email"}
