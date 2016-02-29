@@ -1,5 +1,6 @@
 json.id                    @user.id
-json.name                  @user.name
+json.name                  @user.name.split(" ")[0]
+json.fullname              @user.name
 json.email                 @user.email
 json.authentication_token  @user.authentication_token
 json.number_of_recos       @recos.length
@@ -11,7 +12,7 @@ if @user.id != @myself.id
   json.invisible               @invisible
   json.correspondence_score    @correspondence_score
 end
-if (@user.platform == "ios" && @user.version) < "2.0.3" || (@user.platform == "android" && @user.version) < "1.0.2"
+if (@user.platform == "ios" && @user.app_version) < "2.0.3" || (@user.platform == "android" && @user.app_version) < "1.0.2"
   json.recommendations       @recos do |restaurant|
     json.id               restaurant.id
     json.name             restaurant.name
