@@ -47,7 +47,7 @@ module Api
       render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
 
 # La requete sur Postman
-# http://localhost:3000/api/registrations.json?utf8=✓&authenticity_token=rMNz1VKp70hDIkFwbefVSmE7cWVbp3aIcDYDlz8YKHZEO/PwCcbByOHG7drWtdxHWSBd7RDXkGDQWVBTztPsug==&user[name]=valentin&user[email]=yolo2@gmail.co&user[password]=12345678&user[password_confirmation]=12345678&commit=Sign up&provider=mail
+# http://localhost:3000/api/registrations.json?user[name]=valentin&user[email]=yolo2@gmail.co&user[password]=12345678&user[password_confirmation]=12345678
     end
 
     def edit
