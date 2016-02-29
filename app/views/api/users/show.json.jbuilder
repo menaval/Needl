@@ -35,8 +35,8 @@ if (@user.platform == "ios" && (@user.app_version == nil || @user.app_version < 
     json.picture          restaurant.restaurant_pictures.first ? restaurant.restaurant_pictures.first.picture : restaurant.picture_url
   end
 else
-  json.recommendations   Restaurant.joins(:recommendations).where(recommendations: {user_id: @user.id}).pluck(:id)
-  json.wishes            Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).pluck(:id)
+  json.recommendations   @restaurants_recommended_ids
+  json.wishes            @restaurants_wished_ids
 end
 if @user.public == true
   json.public_profile do
