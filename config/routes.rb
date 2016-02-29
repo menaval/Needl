@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   ActiveAdmin.routes(self)
 
-  devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks", registrations: 'registrations'}
+  devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks", registrations: 'registrations', sessions: 'sessions'}
   # root to: 'restaurants#index'
 
   devise_scope :user do
@@ -65,7 +65,8 @@ Rails.application.routes.draw do
     resources :friendships, only: [:index, :new]
     resources :followerships, only: [:index, :new]
     resources :wishes, only: [:index, :create]
-    resources :registrations, only: [:edit, :update]
+    resources :registrations, only: [:edit, :update, :new, :create]
+    resources :sessions, only: [:create]
     resources :user_wishlist_pictures, only: [:new, :create]
   end
 end
