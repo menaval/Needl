@@ -12,7 +12,7 @@ if @user.id != @myself.id
   json.invisible               @invisible
   json.correspondence_score    @correspondence_score
 end
-if (@user.platform == "ios" && (@user.app_version == nil || @user.app_version < "2.0.3")) || (@user.platform == "android" && (@user.app_version == nil || @user.app_version < "1.0.2" ))
+if (@myself.platform == "ios" && (@myself.app_version == nil || @myself.app_version < "2.0.3")) || (@myself.platform == "android" && (@myself.app_version == nil || @myself.app_version < "1.0.2" ))
   json.recommendations       @recos do |restaurant|
     json.id               restaurant.id
     json.name             restaurant.name
