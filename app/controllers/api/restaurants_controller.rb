@@ -15,27 +15,27 @@ module Api
 
       # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
       # changer les noms maintenant qu'il y a les experts et ne faire apparaitre que les recos des experts si leur reco est visible
-      @my_friends_recommending = []
+      @my_friends_and_experts_recommending = []
       @my_friends_wishing = []
-      my_experts_ids = @user.followings.pluck(:id)
+      @my_friends_ids = @user.my_visible_friends_ids
+      @my_experts_ids = @user.followings.pluck(:id)
       if Rails.env.development? == true
-        my_experts_ids      = []
+        @my_experts_ids      = []
       end
-        my_visible_friends_me_and_experts      = @user.my_visible_friends_ids_and_me + my_experts_ids
 
       # on récupère les infos de chaque user pour ne pas avoir à faire des requêtes pour chaque boucle lorsque l'on va donner dans friends_recommending et friends_wishing les noms et picture à partir des ids des users
-      friends_infos = {}
-      friends = User.where(id: my_visible_friends_me_and_experts)
-      friends.each do |friend|
-        friends_infos[friend.id] = {name: friend.name, picture: friend.picture}
+      friends_and_experts_infos = {}
+      friends_and_experts = User.where(id: @my_friends_ids + @my_experts_ids + [@user.id])
+      friends_and_experts.each do |user|
+        friends_and_experts_infos[user.id] = {name: user.name, picture: user.picture}
       end
 
-      Recommendation.where(restaurant_id: @restaurant.id, user_id: my_visible_friends_me_and_experts).each do |recommendation|
-        @my_friends_recommending << {id: recommendation.user_id, name: friends_infos[recommendation.user_id][:name], picture: friends_infos[recommendation.user_id][:picture], review: recommendation.review}
+      recommendations_i_trust do |recommendation|
+        @my_friends_and_experts_recommending << {id: recommendation.user_id, name: friends_and_experts_infos[recommendation.user_id][:name], picture: friends_and_experts_infos[recommendation.user_id][:picture], review: recommendation.review}
       end
 
-      Wish.where(restaurant_id: @restaurant.id, user_id: my_visible_friends_me_and_experts).each do |wish|
-        @my_friends_wishing << {id: wish.user_id, name: friends_infos[wish.user_id][:name], picture: friends_infos[wish.user_id][:picture]}
+      Wish.where(restaurant_id: @restaurant.id, user_id: @my_friends_ids + [@user.id]).each do |wish|
+        @my_friends_wishing << {id: wish.user_id, name: friends_and_experts_infos[wish.user_id][:name], picture: friends_and_experts_infos[wish.user_id][:picture]}
       end
 
     end
@@ -43,17 +43,19 @@ module Api
     def index
 
       @user                                = User.find_by(authentication_token: params["user_token"])
-      my_friends_ids                       = @user.my_friends_ids
-      my_experts_ids                       = @user.followings.pluck(:id)
+      @my_friends_ids                       = @user.my_friends_ids
+      @my_experts_ids                       = @user.followings.pluck(:id)
       if Rails.env.development? == true
         my_experts_ids = []
       end
-      my_friends_me_and_experts                  = my_friends_ids + [@user.id] + my_experts_ids
+      my_friends_me_and_experts                  = @my_friends_ids + [@user.id] + @my_experts_ids
       restaurants_ids                            = @user.my_friends_restaurants_ids + @user.my_restaurants_ids + @user.my_experts_restaurants_ids
       @restaurants                               = Restaurant.where(id: restaurants_ids.uniq)
-      t = Recommendation.arel_table
-      recommendations_from_friends_and_experts   = Recommendation.where(t[:user_id].eq_any(my_friends_ids + [@user.id]).or(t[:user_id].eq_any(my_experts_ids).and(t[:public].eq(true))))
-      wishes                                    = Wish.where(user_id: my_friends_ids)
+
+
+
+
+      wishes                                     = Wish.where(user_id: @my_friends_ids + [@user.id])
       restaurant_pictures                        = RestaurantPicture.where(restaurant_id: restaurants_ids)
       restaurant_subways                         = RestaurantSubway.where(restaurant_id: restaurants_ids)
       restaurant_types                           = RestaurantType.where(restaurant_id: restaurants_ids)
@@ -62,6 +64,7 @@ module Api
       @recommendation_coefficient_category_1   = 15
       @recommendation_coefficient_category_2   = 16
       @recommendation_coefficient_category_3   = 17
+      @recommendation_coefficient_expert       = 14
       @wish_coefficient_category_1             = 7
       @wish_coefficient_category_2             = 8
       @wish_coefficient_category_3             = 9
@@ -104,10 +107,10 @@ module Api
       end
 
       # on récupère les infos de chaque user pour ne pas avoir à faire des requêtes pour chaque boucle lorsque l'on va donner dans friends_recommending et friends_wishing les noms et picture à partir des ids des users
-      friends_infos = {}
-      friends = User.where(id: my_friends_me_and_experts)
-      friends.each do |friend|
-        friends_infos[friend.id] = {name: friend.name, picture: friend.picture}
+      friends_and_experts_infos = {}
+      friends_and_experts = User.where(id: my_friends_me_and_experts)
+      friends_and_experts.each do |user|
+        friends_and_experts_infos[user.id] = {name: user.name, picture: user.picture}
       end
 
 
@@ -115,13 +118,14 @@ module Api
       @all_ambiences = {}
       @all_strengths = {}
       @all_occasions = {}
-      @all_friends_recommending = {}
+      @all_friends_and_experts_recommending = {}
       @all_friends_category_1_recommending = {}
       @all_friends_category_2_recommending = {}
       @all_friends_category_3_recommending = {}
-      @all_friends_recommending_new_version = {}
+      @all_friends_and_experts_recommending_new_version = {}
+      @all_experts_recommending = {}
 
-      recommendations_from_friends_and_experts.each do |recommendation|
+      recommendations_i_trust.each do |recommendation|
         @all_ambiences[recommendation.restaurant_id] ||= []
         @all_ambiences[recommendation.restaurant_id] << recommendation.strengths
         @all_strengths[recommendation.restaurant_id] ||= []
@@ -130,10 +134,10 @@ module Api
         if recommendation.occasions
           @all_occasions[recommendation.restaurant_id] << recommendation.occasions
         end
-        @all_friends_recommending[recommendation.restaurant_id] ||= []
-        @all_friends_recommending[recommendation.restaurant_id] << recommendation.user_id
-        @all_friends_recommending_new_version[recommendation.restaurant_id] ||= []
-        @all_friends_recommending_new_version[recommendation.restaurant_id] << {id: recommendation.user_id, name: friends_infos[recommendation.user_id][:name], picture: friends_infos[recommendation.user_id][:picture], review: recommendation.review}
+        @all_friends_and_experts_recommending[recommendation.restaurant_id] ||= []
+        @all_friends_and_experts_recommending[recommendation.restaurant_id] << recommendation.user_id
+        @all_friends_and_experts_recommending_new_version[recommendation.restaurant_id] ||= []
+        @all_friends_and_experts_recommending_new_version[recommendation.restaurant_id] << {id: recommendation.user_id, name: friends_and_experts_infos[recommendation.user_id][:name], picture: friends_and_experts_infos[recommendation.user_id][:picture], review: recommendation.review}
         if category_1.include?(recommendation.user_id)
           @all_friends_category_1_recommending[recommendation.restaurant_id] ||= []
           @all_friends_category_1_recommending[recommendation.restaurant_id] << recommendation.user_id
@@ -143,6 +147,9 @@ module Api
         elsif category_3.include?(recommendation.user_id)
           @all_friends_category_3_recommending[recommendation.restaurant_id] ||= []
           @all_friends_category_3_recommending[recommendation.restaurant_id] << recommendation.user_id
+        elsif @my_experts_ids.include?(recommendation.user_id)
+          @all_experts_recommending[recommendation.restaurant_id] ||= []
+          @all_experts_recommending[recommendation.restaurant_id] << recommendation.user_id
         end
       end
 
@@ -158,7 +165,7 @@ module Api
         @all_friends_wishing[wish.restaurant_id] ||= []
         @all_friends_wishing[wish.restaurant_id] << wish.user_id
         @all_friends_wishing_new_version[wish.restaurant_id] ||= []
-        @all_friends_wishing_new_version[wish.restaurant_id] << {id: wish.user_id, name: friends_infos[wish.user_id][:name], picture: friends_infos[wish.user_id][:picture]}
+        @all_friends_wishing_new_version[wish.restaurant_id] << {id: wish.user_id, name: friends_and_experts_infos[wish.user_id][:name], picture: friends_and_experts_infos[wish.user_id][:picture]}
         if category_1.include?(wish.user_id)
           @all_friends_category_1_wishing[wish.restaurant_id] ||= []
           @all_friends_category_1_wishing[wish.restaurant_id] << wish.user_id
@@ -244,6 +251,15 @@ module Api
       end
 
       return restaurants
+    end
+
+    def recommendations_i_trust
+      t = Recommendation.arel_table
+      if @my_experts_ids != []
+        Recommendation.where(t[:user_id].eq_any(@my_friends_ids + [@user.id]).or(t[:user_id].eq_any(@my_experts_ids).and(t[:public].eq(true))))
+      else
+        Recommendation.where(t[:user_id].eq_any(@my_friends_ids + [@user.id]))
+      end
     end
 
     def customize_postal_code(postal_code)

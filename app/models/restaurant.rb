@@ -19,9 +19,21 @@ class Restaurant < ActiveRecord::Base
   scope :by_ambience,  ->(ambience, user_id)  {includes(:recommendations).where("'#{ambience}' = ANY(recommendations.ambiences)").where(recommendations: {user_id: [User.find(user_id).my_visible_friends_ids_and_me]}).references(:recommendations)if ambience.present?}
   scope :by_occasion,  ->(occasion, user_id)  {includes(:recommendations).where("'#{occasion}' = ANY(recommendations.occasions)").where(recommendations: {user_id: [User.find(user_id).my_visible_friends_ids_and_me]}).references(:recommendations)if occasion.present?}
 
-  def number_from_my_friends(current_user)
+
+  def recommendations_ids(current_user)
+    t                        = Recommendation.arel_table
+    my_friends_ids           = current_user.my_friends_ids
+    my_experts_ids           = current_user.followings.pluck(:id)
+    if my_experts_ids != []
+      @recommendations_from_friends_and_experts   = Recommendation.where(t[:user_id].eq_any(my_friends_ids + [current_user.id]).or(t[:user_id].eq_any(my_experts_ids).and(t[:public].eq(true))))
+    else
+      @recommendations_from_friends_and_experts   = Recommendation.where(t[:user_id].eq_any(my_friends_ids + [current_user.id]))
+    end
+  end
+
+  def number_from_my_friends_and_experts(current_user)
     number = 0
-    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
+    self.recommendations_ids(current_user).each do |reco|
       number += 1
     end
     number
@@ -31,10 +43,10 @@ class Restaurant < ActiveRecord::Base
   #   includes(:recommendations).where("'#{ambience}' = ANY(recommendations.ambiences)").where(recommendations: {user_id: [User.find(user_id).my_visible_friends_ids_and_me]}).references(:recommendations)if ambience.present?
   # end
 
-  def ambiences_from_my_friends(current_user)
+  def ambiences_from_my_friends_and_experts(current_user)
     array = []
     ambiences_list = ["chic", "festif", "convivial", "romantique", "branche", "typique", "cosy", "inclassable"]
-    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me + [553]).each do |reco|
+    self.recommendations_ids(current_user).each do |reco|
       reco.ambiences.each do |number|
         ambience = ambiences_list[number.to_i - 1]
         array << ambience
@@ -44,10 +56,10 @@ class Restaurant < ActiveRecord::Base
   end
 
 # Inutilisé car pour le site
-  def strengths_from_my_friends(current_user)
+  def strengths_from_my_friends_and_experts(current_user)
     array = []
     strengths_list = ["cuisine", "service", "cadre", "original", "copieux", "vins", "qte_prix"]
-    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me + [553]).each do |reco|
+    self.recommendations_ids(current_user).each do |reco|
       reco.strengths.each do |number|
         strength = strengths_list[number.to_i - 1]
         array << strength
@@ -57,11 +69,11 @@ class Restaurant < ActiveRecord::Base
   end
 
 # Inutilisé car pour le site
-  def occasions_from_my_friends(current_user)
+  def occasions_from_my_friends_and_experts(current_user)
     array = []
     occasions_list = ["business", "couple", "famille", "amis", "groupe", "brunch", "terrasse", "fast", "date"]
 
-    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me + [553]).each do |reco|
+    self.recommendations_ids(current_user).each do |reco|
       reco.occasions.each do |number|
         occasion = occasions_list[number.to_i - 1]
         array << occasion
@@ -71,18 +83,18 @@ class Restaurant < ActiveRecord::Base
   end
 
 
-  def ambiences_from_my_friends_api(current_user)
+  def ambiences_from_my_friends_and_experts_api(current_user)
     array = []
-    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me + [553]).each do |reco|
+    self.recommendations_ids(current_user).each do |reco|
       array += reco.ambiences
     end
     array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
   end
 
   #  changer lors de la migration !!!
-  def ambiences_from_my_friends_api_minus_one(current_user)
+  def ambiences_from_my_friends_and_experts_api_minus_one(current_user)
     array = []
-    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me + [553]).each do |reco|
+    self.recommendations_ids(current_user).each do |reco|
       array += reco.ambiences
     end
     array = array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
@@ -90,36 +102,36 @@ class Restaurant < ActiveRecord::Base
   end
 
   # Pour les anciennes versions
-  def old_ambiences_from_my_friends_api(current_user)
+  def old_ambiences_from_my_friends_and_experts_api(current_user)
     array = []
-    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me + [553]).each do |reco|
+    self.recommendations_ids(current_user).each do |reco|
       array += reco.ambiences
     end
     array = array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
     array -= ["4", "5", "6", "7", "8"]
   end
 
-  def strengths_from_my_friends_api(current_user)
+  def strengths_from_my_friends_and_experts_api(current_user)
     array = []
-    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me + [553]).each do |reco|
+    self.recommendations_ids(current_user).each do |reco|
       array += reco.strengths
     end
     array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(3)
   end
 
   #  changer lors de la migration !!!
-  def strengths_from_my_friends_api_minus_one(current_user)
+  def strengths_from_my_friends_and_experts_api_minus_one(current_user)
     array = []
-    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me + [553]).each do |reco|
+    self.recommendations_ids(current_user).each do |reco|
       array += reco.strengths
     end
     array = array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(3)
     array = array.map {|x| (x.to_i - 1).to_s }
   end
 
-  def occasions_from_my_friends_api(current_user)
+  def occasions_from_my_friends_and_experts_api(current_user)
     array = []
-    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me + [553]).each do |reco|
+    self.recommendations_ids(current_user).each do |reco|
       if reco.occasions
         array += reco.occasions
       end
@@ -127,9 +139,9 @@ class Restaurant < ActiveRecord::Base
     array.flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(3)
   end
 
-  def reviews_from_my_friends(current_user)
+  def reviews_from_my_friends_and_experts(current_user)
     hash = {}
-    self.recommendations.where(user_id: current_user.my_visible_friends_ids_and_me).each do |reco|
+    self.recommendations_ids(current_user).each do |reco|
       hash[reco.user_id] = [reco.review, reco.created_at]
     end
     hash.sort_by { |_user_id, content_and_date| content_and_date[1] }.reverse.to_h
