@@ -12,8 +12,8 @@ module Api
       my_friends_and_me_ids = @user.my_friends_ids + [@user.id]
 
       # a adapter
-      @friendship = Friendship.find_by(sender_id: [@myself.id, @user.id], receiver_id: [@myself.id, @user.id])
-      @invisible  = (@friendship.sender_id == @myself.id && @friendship.receiver_invisible == true ) || ( @friendship.receiver_id == @myself.id && @friendship.sender_invisible == true )
+      # @friendship = Friendship.find_by(sender_id: [@myself.id, @user.id], receiver_id: [@myself.id, @user.id])
+      # @invisible  = (@friendship.sender_id == @myself.id && @friendship.receiver_invisible == true ) || ( @friendship.receiver_id == @myself.id && @friendship.sender_invisible == true )
       # a adapter
 
 
@@ -101,7 +101,7 @@ module Api
       @friendship.save
       @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
       notif_friendship("invited")
-      redirect_to new_friendship_path, notice: "Votre demande d'invitation a bien été envoyée, vous pourrez accéder à ses recommandations dès lors qu'il vous acceptera"
+      render json: {message: "sucess"}
       # ex: http://localhost:3000/api/friendships/new?friendship[sender_id]=40&friendship[receiver_id]=42&friendship[accepted]=false
 
     end
@@ -114,7 +114,7 @@ module Api
       friendship.update_attribute(:accepted, true)
       @tracker.track(@user.id, 'accept_friend', { "user" => @user.name })
       notif_friendship("accepted")
-      redirect_to friendships_path
+      render json: {message: "sucess"}
     end
 
     def destroy
@@ -127,7 +127,7 @@ module Api
       NotInterestedRelation.create(member_one_id: @user.id, member_two_id: params["friend_id"].to_i)
     end
       friendship.destroy
-      redirect_to friendships_path
+      render json: {message: "sucess"}
       # gérer la redirection suivant un delete ou un ignore
     end
 
@@ -145,7 +145,7 @@ module Api
       else
         @tracker.track(@user.id, 'unhide_friend', { "user" => @user.name })
       end
-      redirect_to friendships_path
+      render json: {message: "sucess"}
     end
 
     #  A supprimer
@@ -176,7 +176,7 @@ module Api
 
     def not_interested
       NotInterestedRelation.create(member_one_id: @user.id, member_two_id: params["friend_id"])
-      redirect_to new_friendship_path
+      render json: {message: "sucess"}
     end
 
     # def friendship_params
