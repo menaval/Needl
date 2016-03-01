@@ -13,6 +13,9 @@ module Api
       @myself = User.find_by(authentication_token: params["user_token"])
       @restaurants_recommended_ids = Restaurant.joins(:recommendations).where(recommendations: {user_id: @user.id}).length > 0 ? Restaurant.joins(:recommendations).where(recommendations: {user_id: @user.id}).pluck(:id) : []
       @restaurants_wished_ids = Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).length > 0 ? Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).pluck(:id) : []
+      test = (@user.platform == "ios" && (@user.app_version == nil || @user.app_version < "2.0.3")) || (@user.platform == "android" && (@user.app_version == nil || @user.app_version < "1.0.2" ))
+      puts "-----------------------------------------------------------------------"
+      puts "#{test}"
       # le user.id != 533 c'est pour empêcher une erreur qui devrait disparaitre avec la grosse update de gregoire
       if @myself.id != @user.id && @user.id != 533
         @friendship = Friendship.find_by(sender_id: [@myself.id, @user.id], receiver_id: [@myself.id, @user.id])

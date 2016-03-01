@@ -11,6 +11,12 @@ module Api
       @requests = User.where(id: @user.my_requests_received_ids)
       my_friends_and_me_ids = @user.my_friends_ids + [@user.id]
 
+      # a adapter
+      @friendship = Friendship.find_by(sender_id: [@myself.id, @user.id], receiver_id: [@myself.id, @user.id])
+      @invisible  = (@friendship.sender_id == @myself.id && @friendship.receiver_invisible == true ) || ( @friendship.receiver_id == @myself.id && @friendship.sender_invisible == true )
+      # a adapter
+
+
       recommendations_from_friends_and_me  = Recommendation.where(user_id: my_friends_and_me_ids)
       wishes_from_friends_and_me          = Wish.where(user_id: my_friends_and_me_ids)
 

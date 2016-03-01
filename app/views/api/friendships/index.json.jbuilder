@@ -20,6 +20,8 @@ json.friends                @friends do |friend|
   json.number_of_recos   @friends_recommendations[friend.id] ? @friends_recommendations[friend.id].length : 0
   json.recommendations   @friends_recommendations[friend.id] ? @friends_recommendations[friend.id] : []
   json.wishes            @friends_wishes[friend.id] ? @friends_wishes[friend.id] : []
+  json.followings        friend.followings.pluck(:id)
+  json.public            friend.public
 end
 json.me do
   json.name              @user.name.split(" ")[0]
