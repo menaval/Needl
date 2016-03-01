@@ -89,6 +89,11 @@ class User < ActiveRecord::Base
     restos_ids += Restaurant.joins(:wishes).where(wishes: {user_id: user_ids}).pluck(:id)
   end
 
+  def my_experts_restaurants_ids
+    experts_ids = self.followings.pluck(:id)
+    restos_ids = Restaurant.joins(:recommendations).where(recommendations: {user_id: experts_ids, public: true}).pluck(:id)
+  end
+
   def my_restaurants_ids
     restos_ids = Restaurant.joins(:recommendations).where(recommendations: { user_id: self.id }).pluck(:id)
     restos_ids += Restaurant.joins(:wishes).where(wishes: {user_id: self.id}).pluck(:id)

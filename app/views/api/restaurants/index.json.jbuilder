@@ -27,10 +27,11 @@ json.array!                    @restaurants do |restaurant|
   else
     json.occasions          []
   end
-  @all_friends_recommending_new_version[restaurant.id] ||= []
+  @all_friends_and_experts_recommending_new_version[restaurant.id] ||= []
   @all_friends_category_1_recommending[restaurant.id] ||= []
   @all_friends_category_2_recommending[restaurant.id] ||= []
   @all_friends_category_3_recommending[restaurant.id] ||= []
+  @all_experts_recommending[restaurant.id] ||= []
   @all_friends_wishing_new_version[restaurant.id] ||= []
   @all_friends_category_1_wishing[restaurant.id] ||= []
   @all_friends_category_2_wishing[restaurant.id] ||= []
@@ -43,28 +44,21 @@ json.array!                    @restaurants do |restaurant|
   @score_from_friends = @recommendation_coefficient_category_1*(@all_friends_category_1_recommending[restaurant.id].length) + @recommendation_coefficient_category_2*(@all_friends_category_2_recommending[restaurant.id].length) +
       @recommendation_coefficient_category_3*(@all_friends_category_3_recommending[restaurant.id].length) + @wish_coefficient_category_1*(@all_friends_category_1_wishing[restaurant.id].length) + @wish_coefficient_category_2*(@all_friends_category_2_wishing[restaurant.id].length) +
       @wish_coefficient_category_3*(@all_friends_category_3_wishing[restaurant.id].length)
+  @score_from_experts = @recommendation_coefficient_expert*@all_experts_recommending[restaurant.id].length
 
-  if @all_friends_recommending_new_version[restaurant.id] && @all_friends_recommending_new_version[restaurant.id].map{|x| x[:id]}.include?(553)
-    if @all_friends_recommending_new_version[restaurant.id].map{|x| x[:id]}.include?(@user.id)
-      json.score            restaurant.needl_coefficient + @me_recommending_coefficient + @score_from_friends
-    elsif @all_friends_wishing_new_version[restaurant.id] && @all_friends_wishing_new_version[restaurant.id].include?(@user.id)
-      json.score            restaurant.needl_coefficient + @me_wishing_coefficient + @score_from_friends
-    else
-      json.score            restaurant.needl_coefficient + @score_from_friends
-    end
-  elsif @all_friends_recommending_new_version[restaurant.id] && @all_friends_recommending_new_version[restaurant.id].map{|x| x[:id]}.include?(@user.id)
-    json.score              @me_recommending_coefficient + @score_from_friends
-  elsif @all_friends_wishing_new_version[restaurant.id] && @all_friends_wishing_new_version[restaurant.id].map{|x| x[:id]}.include?(@user.id)
-    json.score              @me_wishing_coefficient + @score_from_friends
+  if @all_friends_and_experts_recommending_new_version[restaurant.id].map{|x| x[:id]}.include?(@user.id)
+    json.score              @me_recommending_coefficient + @score_from_friends + @score_from_experts
+  elsif @all_friends_wishing_new_version[restaurant.id].map{|x| x[:id]}.include?(@user.id)
+    json.score              @me_wishing_coefficient + @score_from_friends + @score_from_experts
   else
-    json.score              @score_from_friends
+    json.score              @score_from_friends + @score_from_experts
   end
 
   json.subways                   restaurant.subways_near
   json.closest_subway            restaurant.subway_id
-  json.friends_recommending      @all_friends_recommending[restaurant.id] ? @all_friends_recommending[restaurant.id] : []
+  json.friends_recommending      @all_friends_and_experts_recommending[restaurant.id] ? @all_friends_and_experts_recommending[restaurant.id] : []
   json.friends_wishing           @all_friends_wishing[restaurant.id] ? @all_friends_wishing[restaurant.id] : []
-  json.my_friends_recommending   @all_friends_recommending_new_version[restaurant.id]
+  json.my_friends_recommending   @all_friends_and_experts_recommending_new_version[restaurant.id]
   json.my_friends_wishing        @all_friends_wishing_new_version[restaurant.id]
   json.starter1                  restaurant.starter1
   json.price_starter1            restaurant.price_starter1

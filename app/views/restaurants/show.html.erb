@@ -21,7 +21,7 @@
         <% if @number_of_friends_recommending > 0 %>
 
         <div class="end-word clearfix slider-nav">
-          <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
+          <% @restaurant.reviews_from_my_friends_and_experts(current_user).each do |friend_id, content_and_date| %>
             <div class="end-word-people">
               <%= image_tag User.find(friend_id).picture, class: "img-circle avatar img-responsive" %>
             </div>
@@ -29,7 +29,7 @@
         </div>
 
         <div class="end-word-quote slider-for">
-          <% @restaurant.reviews_from_my_friends(current_user).each do |friend_id, content_and_date| %>
+          <% @restaurant.reviews_from_my_friends_and_experts(current_user).each do |friend_id, content_and_date| %>
             <div>
              <!-- <span class="end-quote-arrow"></span> -->
               <%= content_and_date[0] %>
@@ -58,7 +58,7 @@
         <div class="title">Ambiances</div>
 
         <!-- icon -->
-            <%= render "block_bis", block: @restaurant.ambiences_from_my_friends(current_user), ambience_or_strength: "ambience" %>
+            <%= render "block_bis", block: @restaurant.ambiences_from_my_friends_and_experts(current_user), ambience_or_strength: "ambience" %>
           </div>
 
       </div>
@@ -70,7 +70,7 @@
       <div class="container">
 
         <div class="title">Points forts</div>
-        <%= render "block_bis", block: @restaurant.strengths_from_my_friends(current_user), ambience_or_strength: "strength" %>
+        <%= render "block_bis", block: @restaurant.strengths_from_my_friends_and_experts(current_user), ambience_or_strength: "strength" %>
       </div>
     </div>
 

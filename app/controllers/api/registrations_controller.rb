@@ -16,6 +16,9 @@ module Api
         @user = User.new(name: name, email: email, provider: "mail", emails: [email], password: password)
         @user.save
         sign_in @user
+
+        # les personnes suivent automatiquement Needl
+        Followership.create(follower_id: @user.id, following_id: 553)
         # On track l'arrivée sur Mixpanel
 
         # @tracker.people.set(@user.id, {
