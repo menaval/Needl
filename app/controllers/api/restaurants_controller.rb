@@ -48,15 +48,15 @@ module Api
       if Rails.env.development? == true
         my_experts_ids = []
       end
-      my_friends_me_and_experts            = my_friends_ids + [@user.id] + my_experts_ids
-      restaurants_ids                      = @user.my_friends_restaurants_ids + @user.my_restaurants_ids + @user.my_experts_restaurants_ids
-      @restaurants                         = Restaurant.where(id: restaurants_ids.uniq)
+      my_friends_me_and_experts                  = my_friends_ids + [@user.id] + my_experts_ids
+      restaurants_ids                            = @user.my_friends_restaurants_ids + @user.my_restaurants_ids + @user.my_experts_restaurants_ids
+      @restaurants                               = Restaurant.where(id: restaurants_ids.uniq)
       t = Recommendation.arel_table
-      @recommendations_from_friends_and_experts = Recommendation.where(t[:user_id].eq_any(my_friends_ids + [@user.id]).or(t[:user_id].eq_any(my_experts_ids).and(t[:public].eq(true))))
-      @wishes                                        = Wish.where(user_id: my_friends_ids)
-      restaurant_pictures                            = RestaurantPicture.where(restaurant_id: restaurants_ids)
-      restaurant_subways                             = RestaurantSubway.where(restaurant_id: restaurants_ids)
-      restaurant_types                               = RestaurantType.where(restaurant_id: restaurants_ids)
+      recommendations_from_friends_and_experts   = Recommendation.where(t[:user_id].eq_any(my_friends_ids + [@user.id]).or(t[:user_id].eq_any(my_experts_ids).and(t[:public].eq(true))))
+      wishes                                    = Wish.where(user_id: my_friends_ids)
+      restaurant_pictures                        = RestaurantPicture.where(restaurant_id: restaurants_ids)
+      restaurant_subways                         = RestaurantSubway.where(restaurant_id: restaurants_ids)
+      restaurant_types                           = RestaurantType.where(restaurant_id: restaurants_ids)
       # elements de l'algorithme du score
 
       @recommendation_coefficient_category_1   = 15
@@ -121,7 +121,7 @@ module Api
       @all_friends_category_3_recommending = {}
       @all_friends_recommending_new_version = {}
 
-      @recommendations_from_friends_and_experts.each do |recommendation|
+      recommendations_from_friends_and_experts.each do |recommendation|
         @all_ambiences[recommendation.restaurant_id] ||= []
         @all_ambiences[recommendation.restaurant_id] << recommendation.strengths
         @all_strengths[recommendation.restaurant_id] ||= []
@@ -154,7 +154,7 @@ module Api
       @all_friends_category_3_wishing = {}
       @all_friends_wishing_new_version = {}
 
-      @wishes.each do |wish|
+      wishes.each do |wish|
         @all_friends_wishing[wish.restaurant_id] ||= []
         @all_friends_wishing[wish.restaurant_id] << wish.user_id
         @all_friends_wishing_new_version[wish.restaurant_id] ||= []
