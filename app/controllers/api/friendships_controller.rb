@@ -7,15 +7,20 @@ module Api
 
     def index
       @user = User.find_by(authentication_token: params["user_token"])
-      @friends = User.where(id: @user.my_friends_ids).order(:name)
+      friends_ids = @user.my_friends_ids
+      @friends = User.where(id: friends_ids).order(:name)
       @requests = User.where(id: @user.my_requests_received_ids)
-      my_friends_and_me_ids = @user.my_friends_ids + [@user.id]
+      my_friends_and_me_ids = friends_ids + [@user.id]
+      friendships = Friendship.where(sender_id: my_friends_and_me_ids, receiver_id: my_friends_and_me_ids)
 
-      # a adapter
-      # @friendship = Friendship.find_by(sender_id: [@myself.id, @user.id], receiver_id: [@myself.id, @user.id])
-      # @invisible  = (@friendship.sender_id == @myself.id && @friendship.receiver_invisible == true ) || ( @friendship.receiver_id == @myself.id && @friendship.sender_invisible == true )
-      # a adapter
-
+      @invisibility = {}
+      friendships.each do |friendship|
+        if friendship.sender_id == @user.id
+          @invisibility[friendship.receiver_id] = friendship.receiver_invisible
+        else
+          @invisibility[friendship.sender_id] = friendship.sender_invisible
+        end
+      end
 
       recommendations_from_friends_and_me  = Recommendation.where(user_id: my_friends_and_me_ids)
       wishes_from_friends_and_me          = Wish.where(user_id: my_friends_and_me_ids)

@@ -22,6 +22,7 @@ json.friends                @friends do |friend|
   json.wishes            @friends_wishes[friend.id] ? @friends_wishes[friend.id] : []
   json.followings        friend.followings.pluck(:id)
   json.public            friend.public
+  json.invisible         @invisibility[friend.id]
 end
 json.me do
   json.name              @user.name.split(" ")[0]
