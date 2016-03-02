@@ -1,15 +1,16 @@
 json.requests               @requests do |request|
-  json.name              request.name.split(" ")[0]
-  json.picture           request.picture
-  json.id                request.id
+  json.name                       request.name.split(" ")[0]
+  json.picture                    request.picture
+  json.id                         request.id
 end
+
 json.friends                @friends do |friend|
-  json.id                friend.id
-  json.name              friend.name.split(" ")[0]
-  json.fullname          friend.name
-  json.picture           friend.picture
-  json.score             friend.score
-  json.invisible         @invisibility[friend.id]
+  json.id                         friend.id
+  json.name                       friend.name.split(" ")[0]
+  json.fullname                   friend.name
+  json.picture                    friend.picture
+  json.score                      friend.score
+  json.invisible                  @invisibility[friend.id]
   if @category_1.include?(friend.id)
     json.correspondence_score     1
   elsif @category_2.include?(friend.id)
