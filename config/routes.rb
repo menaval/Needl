@@ -40,11 +40,7 @@ Rails.application.routes.draw do
   resources :wishes, only: [:new, :create, :destroy]
 
   namespace :api, defaults: { format: :json } do
-    resources :restaurants, only: [:show, :index] do
-      collection do
-        get :autocomplete
-      end
-    end
+
     resources :users, only: :show do
       collection do
         get  :welcome_ceo
@@ -61,12 +57,47 @@ Rails.application.routes.draw do
         get :modify
       end
     end
-
     resources :friendships, only: [:index, :new]
     resources :followerships, only: [:index, :new]
     resources :wishes, only: [:index, :create]
     resources :registrations, only: [:edit, :update, :new, :create]
     resources :sessions, only: [:create]
     resources :user_wishlist_pictures, only: [:new, :create]
+    resources :restaurants, only: [:show, :index] do
+      collection do
+        get :autocomplete
+      end
+    end
+
+    namespace :v2 do
+      resources :users, only: :show do
+        collection do
+          get  :welcome_ceo
+          get  :reset_badge_to_zero
+          get  :update_version
+          get  :score
+          post :new_parse_installation
+          post :contacts_access
+          post :invite_contact
+        end
+      end
+      resources :recommendations, only: [:index, :new] do
+        collection do
+          get :modify
+        end
+      end
+      resources :friendships, only: [:index, :new]
+      resources :followerships, only: [:index, :new]
+      resources :wishes, only: [:index, :create]
+      resources :registrations, only: [:edit, :update, :new, :create]
+      resources :sessions, only: [:create]
+      resources :user_wishlist_pictures, only: [:new, :create]
+      resources :restaurants, only: [:show, :index] do
+        collection do
+          get :autocomplete
+        end
+      end
+    end
+
   end
 end
