@@ -6,7 +6,7 @@ class Api::V2::FollowershipsController < ApplicationController
   def index
     @user = User.find_by(authentication_token: params["user_token"])
     my_experts_ids = @user.followings.pluck(:id)
-    @my_expert = User.where(id: my_experts_ids)
+    @my_experts = User.where(id: my_experts_ids)
 
     @experts_recommendations = {}
     @experts_public_recommendations = {}
