@@ -9,6 +9,6 @@ json.array! @api_activities do |activity|
   json.restaurant_id             @restaurant_id
   json.date                      activity.created_at
   json.user_type                 @all_users_type[activity.owner_id]
-  json.notification_type         activity.trackable_type
+  json.notification_type         activity.trackable_type.downcase
 
 end
