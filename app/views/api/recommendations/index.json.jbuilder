@@ -1,6 +1,6 @@
 json.array! @api_activities do |activity|
 
-  if (@myself.platform == "ios" && (@myself.app_version == nil || @myself.app_version < "2.0.3")) || (@myself.platform == "android" && (@myself.app_version == nil || @myself.app_version < "1.0.2" ))
+  if (@user.platform == "ios" && (@user.app_version == nil || @user.app_version < "2.0.3")) || (@user.platform == "android" && (@user.app_version == nil || @user.app_version < "1.0.2" ))
 
     if activity.trackable_type == "Recommendation"
       @restaurant_id = @all_recommendations_infos[activity.trackable_id][:restaurant_id]
