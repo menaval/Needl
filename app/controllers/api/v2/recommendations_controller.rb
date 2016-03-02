@@ -69,13 +69,7 @@ class Api::V2::RecommendationsController < ApplicationController
         #  si les informations récupérées ont bien toutes été remplies on enregistre la reco, update le prix du resto et on le track
         if @recommendation.save
 
-          # dans le cas ou la personne est restée sur la vieille version. On pourrait aussi faire if app_version != "2.0.0"
-          if @recommendation.occasions == [] || @recommendation.occasions == nil
-            update_recommendation_from_old_version(@recommendation)
-          end
-
           @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
-
 
           # on redirige vers les actions de remerciement
           if params["friends_thanking"] != [] && params["friends_thanking"] != nil
@@ -85,11 +79,6 @@ class Api::V2::RecommendationsController < ApplicationController
           if params["experts_thanking"] != [] && params["experts_thanking"] != nil
             thank_experts(params["experts_thanking"].map{|x| x.to_i})
           end
-
-          # on les met de côté pour l'instant puisque pour l'instant on laisse l'utilisateur envoyer lui même le texto
-          # if params["contacts_thanking"] != [] && params["contacts_thanking"] != nil
-          #   thank_contacts(params["contacts_thanking"].map{|x| x.to_i})
-          # end
 
           # attention on ne l'envoie plus à ceux qui ont été remerciés (pas besoin de checker si different du vide on le fait rapidement apres)
           notif_reco(params["friends_thanking"])
@@ -445,58 +434,6 @@ class Api::V2::RecommendationsController < ApplicationController
 
   end
 
-  # def thank_contacts(contacts_to_thank)
-
-
-  #   contacts_to_text = []
-  #   contacts_to_mail = []
-  #   # pour chaque contact, on va regarder si on a un numéro de téléphone, si on en a un on lui envoie par texto et s'il n'en a pas on lui envoie par mail
-  #   contacts_to_thank.each do |contact|
-  #     contact_name = contact[:givenName] ? contact[:givenName] : ""
-  #     contact_mail = contact[:emailAddresses] ? contact[:emailAddresses].first[:email].downcase.delete(' ') : ""
-  #     contact_phone_number = contact[:phoneNumbers] ? contact[:phoneNumbers].first[:number] : ""
-  #     if contact_phone_number != ""
-  #       contact_phone_number = contact_phone_number.gsub(/[^0-9+]/, '').gsub(/^00/,"+").gsub(/^0/,"+33")
-  #       contacts_to_text << {name: contact_name, phone_number: contact_phone_number}
-  #     else
-  #       contacts_to_mail << {name: contact_name, email: contact_mail}
-  #     end
-  #   end
-
-  #   #  On envoie un texto à toutes les personnes qui ont un numéro
-  #   if contacts_to_text.length > 0
-  #     send_text_thanks_to_contacts(contacts_to_text, @restaurant.id)
-  #   end
-
-  #   # a faire
-  #   if contacts_to_mail.length > 0
-  #     @user.send_thank_contacts_email(contacts_to_mail, @restaurant.id)
-  #   end
-
-  # end
-
-  # def send_text_thanks_to_contacts(contacts_infos, restaurant_id)
-
-  #   restaurant = Restaurant.find(restaurant_id)
-  #   account_sid = ENV['TWILIO_SID']
-  #   auth_token  = ENV['TWILIO_AUTH_TOKEN']
-  #   client = Twilio::REST::Client.new account_sid, auth_token
-
-  #   contacts_infos.each do |contact|
-  #   #  On track les invitations envoyées par texto (avec image)
-  #     @tracker.track(@user.id, 'Thanks sent', { "user" => @user.name, "type" => "Text",  "User Type" => "Contact" })
-  #     # Problème avec les accents, il faut l'unicoder
-  #     contact[:name] = "Héôàèî"
-  #     client.messages.create(
-  #       from: "Needl",
-  #       to: contact[:phone_number],
-  #       body: "Salut #{I18n.transliterate(contact[:name])}, #{I18n.transliterate(@user.name)} tenait a te remercier pour lui avoir fait decouvrir #{I18n.transliterate(restaurant.name)} ! Tu as gagne 1 point d'expertise que tu peux retrouver en t'inscrivant avec ce lien: needl.fr ! A bientot ! Needl, l'app pour les restaurants preferes de tes amis"
-  #     )
-  #   end
-
-  # end
-
-
   def read_all_notification
     load_activities
     @activities.each do |activity|
@@ -504,92 +441,5 @@ class Api::V2::RecommendationsController < ApplicationController
       activity.save
     end
   end
-
-
-  def update_recommendation_from_old_version(reco)
-
-    reco.ambiences.each do |ambience|
-      case ambience.to_i
-
-      when  1
-        # Si c'était chic alors pas de changement
-
-        puts "pas de changement"
-
-      when 2
-        # Si c'était Festif  alors pas de changement
-
-        puts "pas de changement"
-      when 3
-        # Si c'était typique alors reste typique mais son id devient 6 dans la migrationon
-
-        reco.ambiences -= ["3"]
-        # a confirmer que l'id en famille est bien 3
-        reco.ambiences << "6"
-      when 4
-        # Si c'était Ensoleillé alors l'ambiance disparait et on met en occasion dej en terrasse
-
-        reco.ambiences -= ["4"]
-
-        reco.occasions ||= []
-        # a confirmer que l'id dej en terrasse est bien 7
-        reco.occasions << "7"
-
-      when 5
-        # Si c'était Fast alors l'ambiance disparait et on met en occasion Dej rapide
-
-        reco.ambiences -= ["5"]
-
-        reco.occasions ||= []
-        # a confirmer que l'id dej rapide est bien 8
-        reco.occasions << "8"
-
-      when 6
-        # Si c'était Casual alors l'ambiance passe à Inclassable
-
-        reco.ambiences -= ["6"]
-
-        reco.ambiences << "8"
-      end
-
-    end
-
-    if reco.review.downcase.include?("cosy")
-      reco.ambiences ||= []
-      reco.ambiences << "7"
-    elsif reco.review.downcase.include?("convivial") || reco.review.downcase.include?("conviviale")
-      reco.ambiences ||= []
-      reco.ambiences << "3"
-    elsif reco.review.downcase.include?("branche") || reco.review.downcase.include?("branché") || reco.review.downcase.include?("branchée") || reco.review.downcase.include?("branchee")
-      reco.ambiences ||= []
-      reco.ambiences << "5"
-    elsif reco.review.downcase.include?("business")
-       reco.occasions ||= []
-       reco.occasions << "1"
-    elsif reco.review.downcase.include?("couple")
-       reco.occasions ||= []
-       reco.occasions << "2"
-    elsif reco.review.downcase.include?("famille") || reco.review.downcase.include?("famillial") || reco.review.downcase.include?("familial")
-       reco.occasions ||= []
-       reco.occasions << "3"
-    elsif reco.review.downcase.include?("amis")
-       reco.occasions ||= []
-       reco.occasions << "4"
-    elsif reco.review.downcase.include?("groupe")
-       reco.occasions ||= []
-       reco.occasions << "5"
-    elsif reco.review.downcase.include?("brunch")
-       reco.occasions ||= []
-       reco.occasions << "6"
-    elsif reco.review.downcase.include?("date")
-       reco.occasions ||= []
-       reco.occasions << "9"
-    end
-
-    reco.save
-
-  end
-
-
 
 end

@@ -14,11 +14,7 @@ json.array!                    @restaurants do |restaurant|
   json.price_range          restaurant.price_range
   json.phone_number         restaurant.phone_number
   if @all_ambiences[restaurant.id]
-    if @user.app_version == nil
-      json.ambiences           @all_ambiences[restaurant.id].flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2) - ["4", "5", "6", "7", "8"]
-    else
-      json.ambiences           @all_ambiences[restaurant.id].flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
-    end
+    json.ambiences           @all_ambiences[restaurant.id].flatten.group_by(&:itself).sort_by { |_id, votes| -votes.length }.first(2).to_h.keys.first(2)
   else
     json.ambiences          []
   end

@@ -9,18 +9,8 @@ json.longitude                  @restaurant.longitude
 json.subways                    @restaurant.subways_near
 json.closest_subway             @restaurant.subway_id
 json.phone_number               @restaurant.phone_number
-if @user.app_version == nil
-  json.ambiences                  @restaurant.old_ambiences_from_my_friends_and_experts_api(@user)
-elsif @user.app_version == '2.0.0'
-  json.ambiences                  @restaurant.ambiences_from_my_friends_and_experts_api_minus_one(@user)
-else
-  json.ambiences                  @restaurant.ambiences_from_my_friends_and_experts_api(@user)
-end
-if @user.app_version == '2.0.0'
-  json.strengths                  @restaurant.strengths_from_my_friends_and_experts_api_minus_one(@user)
-else
-  json.strengths                  @restaurant.strengths_from_my_friends_and_experts_api(@user)
-end
+json.ambiences                  @restaurant.ambiences_from_my_friends_and_experts_api(@user)
+json.strengths                  @restaurant.strengths_from_my_friends_and_experts_api(@user)
 json.occasions                  @restaurant.occasions_from_my_friends_and_experts_api(@user)
 json.reviews                    @restaurant.reviews_from_my_friends_and_experts(@user)
 json.starter1                   @restaurant.starter1
