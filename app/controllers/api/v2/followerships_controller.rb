@@ -11,10 +11,9 @@ class Api::V2::FollowershipsController < ApplicationController
     @experts_recommendations = {}
     @experts_public_recommendations = {}
     Recommendation.where(user_id: my_experts_ids).each do |recommendation|
-      if recommendation.public == true
         @experts_recommendations[recommendation.user_id] ||= []
         @experts_recommendations[recommendation.user_id] << recommendation.restaurant_id
-      else
+      if recommendation.public == true
         @experts_public_recommendations[recommendation.user_id] ||= []
         @experts_public_recommendations[recommendation.user_id] << recommendation.restaurant_id
       end
