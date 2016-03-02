@@ -7,29 +7,6 @@ class Api::V2::RecommendationsController < ApplicationController
 
   def index
     @user = User.find_by(authentication_token: params["user_token"])
-    my_experts_ids = @user.followings.pluck(:id)
-    my_friends_ids = @user.my_friends_ids
-    @activities = []
-
-    Recommendation.where(user_id: my_friends_ids).each do |reco|
-      @activities << {user_id: reco.user_id, restaurant_id: reco.restaurant_id, date: reco.created_at, user_type: "friend" , notification_type: "recommendation", review: reco.review}
-    end
-
-    Recommendation.where(user_id: @user.id).each do |reco|
-      @activities << {user_id: reco.user_id, restaurant_id: reco.restaurant_id, date: reco.created_at, user_type: "me" , notification_type: "recommendation", review: reco.review}
-    end
-
-    Recommendation.where("user_id = ? AND public = ?", my_experts_ids, true).each do |reco|
-      @activities << {user_id: reco.user_id, restaurant_id: reco.restaurant_id, date: reco.created_at, user_type: "following" , notification_type: "recommendation", review: reco.review}
-    end
-
-    Wish.where(user_id: my_friends_ids).each do |wish|
-      @activities << {user_id: wish.user_id, restaurant_id: wish.restaurant_id, date: wish.created_at, user_type: "friend" , notification_type: "wish", review: "Sur ma wishlist"}
-    end
-
-    Wish.where(user_id: @user.id).each do |wish|
-      @activities << {user_id: wish.user_id, restaurant_id: wish.restaurant_id, date: wish.created_at, user_type: "me" , notification_type: "wish", review: "Sur ma wishlist"}
-    end
 
     if params['recommendation']
       create
@@ -93,7 +70,12 @@ class Api::V2::RecommendationsController < ApplicationController
           if @user.recommendations.count == 1
             tell_all_friends
           end
-          redirect_to api_restaurant_path(@recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
+
+          # AAAAAAAAAAAAAAAAAATTTTTTRRRRRRRRROOOOOOOOOOUUUUUUUUVVVVVVVVVEEEEEEEEEEERRRRRRR
+          respond_to do |format|
+            format.json  { render :json => {:restaurant => "api/v2/restaurants/show.json", params(id: @restaurant.id)
+                                            :activity => "api/v2/activities/show.json", params(id: @recommendation.id, type: "recommendation") }}
+          end
 
         # si certaines infos nécessaires n'ont pas été remplies
         else
@@ -208,8 +190,6 @@ class Api::V2::RecommendationsController < ApplicationController
         @wish = Wish.new(user_id: @user.id, restaurant_id: @restaurant.id)
         @wish.restaurant = @restaurant
         @wish.save
-        puts "#{@restaurant.id}"
-        puts "#{@wish.restaurant_id}"
         @tracker.track(@user.id, 'New Wish', { "restaurant" => @restaurant.name, "user" => @user.name })
 
         #  Verifier si la wishlist vient de l'app ou d'un mail
@@ -219,10 +199,12 @@ class Api::V2::RecommendationsController < ApplicationController
           render(:json => {notice: "Le restaurant a bien été ajouté à ta wishlist ! Tu peux le retrouver en te connectant sur l'app !"}, :status => 409, :layout => false)
 
         else
-          puts "juste avant d'envoyer"
-          puts "#{@restaurant.id}"
-          puts "#{@wish.restaurant_id}"
-          redirect_to api_restaurant_path(@wish.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
+
+          # AAAAAAAAAAAAAAAAAATTTTTTRRRRRRRRROOOOOOOOOOUUUUUUUUVVVVVVVVVEEEEEEEEEEERRRRRRR
+          respond_to do |format|
+            format.json  { render :json => {:restaurant => "api/v2/restaurants/show.json", params(id: @restaurant.id)
+                                            :activity => "api/v2/activities/show.json", params(id: @wish.id, type: "wish") }}
+          end
         end
       end
 

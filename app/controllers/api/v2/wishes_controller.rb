@@ -22,9 +22,11 @@ class Api::V2::WishesController < ApplicationController
       @tracker.track(@user.id, 'New Wish', { "restaurant" => restaurant.name, "user" => @user.name })
       # redirect_to api_restaurant_path(params["restaurant_id"].to_i, :user_email => params["user_email"], :user_token => params["user_token"], :notice => "Restaurant ajouté à ta wishlist")
 
+
+      # AAAAAAAAAAAAAAAAAATTTTTTRRRRRRRRROOOOOOOOOOUUUUUUUUVVVVVVVVVEEEEEEEEEEERRRRRRR
       respond_to do |format|
-        format.json  { render :json => {:restaurant => "api/v2/restaurants/show.json",
-                                        :activity => "api/v2/activities/show.json" }}
+        format.json  { render :json => {:restaurant => "api/v2/restaurants/show.json", params(id: restaurant.id)
+                                        :activity => "api/v2/activities/show.json", params(id: @wish.id, type: "wish") }}
       end
 
     end
