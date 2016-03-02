@@ -6,11 +6,11 @@ class Api::V2::FriendshipsController < ApplicationController
 
   def index
     @user = User.find_by(authentication_token: params["user_token"])
-    friends_ids = @user.my_friends_ids
-    @friends = User.where(id: friends_ids).order(:name)
+    my_friends_ids = @user.my_friends_ids
+    @friends = User.where(id: my_friends_ids).order(:name)
     @requests = User.where(id: @user.my_requests_received_ids)
-    my_friends_and_me_ids = friends_ids + [@user.id]
-    friendships = Friendship.where(sender_id: my_friends_and_me_ids, receiver_id: my_friends_and_me_ids)
+    t = Friendship.arel_table
+    friendships = Friendship.where(t[:sender_id].eq_any(my_friends_ids).and(t[:receiver_id].eq(@user.id)).or(t[:sender_id].eq(@user.id).and(t[:receiver_id].eq_any(my_friends_ids))))
 
     @invisibility = {}
     friendships.each do |friendship|
@@ -21,55 +21,40 @@ class Api::V2::FriendshipsController < ApplicationController
       end
     end
 
-    recommendations_from_friends_and_me  = Recommendation.where(user_id: my_friends_and_me_ids)
-    wishes_from_friends_and_me          = Wish.where(user_id: my_friends_and_me_ids)
+    recommendations_from_friends  = Recommendation.where(user_id: my_friends_ids)
+    wishes_from_friends          = Wish.where(user_id: my_friends_ids)
 
     @friends_recommendations = {}
-    recommendations_from_friends_and_me.each do |recommendation|
+    recommendations_from_friends.each do |recommendation|
       @friends_recommendations[recommendation.user_id] ||= []
       @friends_recommendations[recommendation.user_id] << recommendation.restaurant_id
     end
 
     @friends_wishes = {}
-    wishes_from_friends_and_me.each do |wish|
+    wishes_from_friends.each do |wish|
       @friends_wishes[wish.user_id] ||= []
       @friends_wishes[wish.user_id] << wish.restaurant_id
     end
 
-
-
-    #  On répartit les amis dans les 3 catégories
-    @category_1 = []
-    @category_2 = []
-    @category_3 = []
-
-    TasteCorrespondence.where("member_one_id = ? or member_two_id = ?", @user.id, @user.id).each do |correspondence|
-
-      member_one_id = correspondence.member_one_id
-      member_two_id = correspondence.member_two_id
-      if member_one_id == @user.id
-        case correspondence.category
-          when 1
-            @category_1 << member_two_id
-          when 2
-            @category_2 << member_two_id
-          when 3
-            @category_3 << member_two_id
-        end
-
-      elsif member_two_id == @user.id
-        case correspondence.category
-          when 1
-            @category_1 << member_one_id
-          when 2
-            @category_2 << member_one_id
-          when 3
-            @category_3 << member_one_id
-        end
-      end
-
+    @all_followers = {}
+    Followership.where(following_id: my_friends_ids).each do |followership|
+      @all_followers[followership.following_id] ||= []
+      @all_followers[followership.following_id] << followership.follower_id
     end
 
+    @all_followings = {}
+    Followership.where(follower_id: my_friends_ids).each do |followership|
+      @all_followers[followership.follower_id] ||= []
+      @all_followers[followership.follower_id] << followership.following_id
+    end
+
+    @all_public_recos = {}
+    Recommendation.where(user_id: my_friends_ids, public: true).each do |reco|
+      @all_public_recos[reco.user_id] ||= []
+      @all_public_recos[reco.user_id] << reco.restaurant_id
+    end
+
+    split_friends_by_categories
 
     # chercher une méthode 'automatique'
     if params["accepted"] == "false"

@@ -7,26 +7,20 @@ class Api::V2::UsersController < ApplicationController
 
   def show
     @user = User.find(params["id"].to_i)
-    @recos = @user.my_recos
-    @wishes = @user.my_wishes
     @myself = User.find_by(authentication_token: params["user_token"])
-    @restaurants_recommended_ids = Restaurant.joins(:recommendations).where(recommendations: {user_id: @user.id}).length > 0 ? Restaurant.joins(:recommendations).where(recommendations: {user_id: @user.id}).pluck(:id) : []
-    @restaurants_wished_ids = Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).length > 0 ? Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).pluck(:id) : []
-    # le user.id != 533 c'est pour empêcher une erreur qui devrait disparaitre avec la grosse update de gregoire
-    if @myself.id != @user.id && @user.id != 533
-      @friendship = Friendship.find_by(sender_id: [@myself.id, @user.id], receiver_id: [@myself.id, @user.id])
-      @invisible  = (@friendship.sender_id == @myself.id && @friendship.receiver_invisible == true ) || ( @friendship.receiver_id == @myself.id && @friendship.sender_invisible == true )
-       @correspondence_score =  TasteCorrespondence.where("member_one_id = ? and member_two_id = ? or member_one_id = ? and member_two_id = ?", @user.id, @myself.id, @myself.id, @user.id).first.category
-    end
-    if @user.public == true
-      @public_recos = @user.my_public_recos
-      @followers = @user.followers
-    end
-  end
+    @recos = @user.my_recos.pluck(:id)
+    @wishes = @user.my_wishes.pluck(:id)
 
-  def score
-    @user = User.find(params["id"].to_i)
-    @recos = Recommendation.find_by_sql("SELECT * FROM recommendations WHERE recommendations.friends_thanking @> '{#{@user.id}}'")
+    if @myself.id != @user.id && @myself.my_friends_ids.include?(@user.id)
+
+      friendship = Friendship.find_by(sender_id: [@myself.id, @user.id], receiver_id: [@myself.id, @user.id])
+      @invisible  = (friendship.sender_id == @myself.id && friendship.receiver_invisible == true ) || ( friendship.receiver_id == @myself.id && friendship.sender_invisible == true )
+       @correspondence_score =  TasteCorrespondence.where("member_one_id = ? and member_two_id = ? or member_one_id = ? and member_two_id = ?", @user.id, @myself.id, @myself.id, @user.id).first.category
+    else
+      @invisible = false
+      @correspondence_score = 0
+    end
+
   end
 
   def new_parse_installation

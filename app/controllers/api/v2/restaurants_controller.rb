@@ -229,41 +229,6 @@ class Api::V2::RestaurantsController < ApplicationController
 
   end
 
-  def split_friends_by_categories
-
-    @category_1 = []
-    @category_2 = []
-    @category_3 = []
-
-    # marge minime d'amélioration: ne pas prendre en compte les invisible friends dans ces catégories (car non affiché)
-    TasteCorrespondence.where("member_one_id = ? or member_two_id = ?", @user.id, @user.id).each do |correspondence|
-
-      member_one_id = correspondence.member_one_id
-      member_two_id = correspondence.member_two_id
-      if member_one_id == @user.id
-        case correspondence.category
-          when 1
-            @category_1 << member_two_id
-          when 2
-            @category_2 << member_two_id
-          when 3
-            @category_3 << member_two_id
-        end
-
-      elsif member_two_id == @user.id
-        case correspondence.category
-          when 1
-            @category_1 << member_one_id
-          when 2
-            @category_2 << member_one_id
-          when 3
-            @category_3 << member_one_id
-        end
-      end
-
-    end
-
-  end
 
   def customize_postal_code(postal_code)
     if postal_code != "" && postal_code != nil
