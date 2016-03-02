@@ -5,27 +5,25 @@ task :update_mailchimp => :environment do
 
 # Verifier si on est vendredi matin (on fera le rake sur Heroku tous les jours très tot)
 # Hors test, mettre == 5, sinon à moins d'etre vendredi il ne se passera rien
-  if Time.now.wday == 4
+  if Time.now.wday == 3
     puts "Updating mailchimp infos ..."
     # ok: isoler un user
-    User.all.each do |user|
+    # User.all.each do |user|
+      user  = User.find(58)
 
       if user.email.include?("needlapp.com") == false && (Time.now - user.created_at)/3600 > 9
         # ne sert à rien d'actualiser la newsletter de ceux qui n'ont pas d'adresse mail. De plus on ne l'envoie que à ceux qui sont inscrit depuis 10 jours donc pas la peine de le faire pour ceux inscrits depuis moins de 9 jours
         puts "Updating #{user.name}"
 
-        # Récupérer la liste des restaurants, hormis Needl et hormis ceux que j'ai déjà recommandé, recommandés par mes amis au cours du mois
-        restaurants_ids = my_friends_except_needl_and_me_this_month_restaurants_ids(user)
+        # Récupérer la liste des restaurants, hormis ceux que j'ai déjà recommandé, recommandés par mes amis au cours du mois
+        restaurants_ids = my_friends_restaurants_ids(user)
         puts "les restos dans le dernier mois de mes amis: #{restaurants_ids}"
 
         # Récupérer la sélection de types que l'on va checker.A la base c'est  Burger - Thaï - Japonais - Italien - Français - Street Food - Oriental - Pizza et on retire ceux qui sont déjà tombés.
-
-        fetching_types_used(user)
-        types_selection_ids = [11, 2, 5, 9, 8, 12, 15, 10] - @types_already_used
+        types_selection_ids = [11, 2, 5, 9, 8, 12, 15, 10] - fetching_types_used(user)
         puts "Les types associés: #{types_selection_ids}"
 
         # Récupérer le premier thème où plus de 2 recos d'amis
-
         type_selected_id = return_type_selected_id(types_selection_ids, restaurants_ids)
         puts "Le type choisi pour la newsletter: #{type_selected_id}"
 
@@ -43,9 +41,8 @@ task :update_mailchimp => :environment do
           # S'il n'y en a que 2, on en met une de Needl
           if final_recommendations.length == 2
             @array = [final_recommendations[0].restaurant_id, final_recommendations[1].restaurant_id]
-            reco_needl = reco_from_needl(type_selected_id)
-            puts "la reco needl: #{reco_needl}"
-            final_recommendations << reco_needl
+            reco_experts = reco_from_experts(user, type_selected_id)
+            final_recommendations << reco_experts
             puts "la selection finale de recos: #{final_recommendations}"
           end
 
@@ -54,17 +51,14 @@ task :update_mailchimp => :environment do
           type_selected_id = types_selection_ids.first
           puts "le type sélectionné: #{type_selected_id}"
           @array = []
-          final_recommendations = [reco_from_needl(type_selected_id), reco_from_needl(type_selected_id), reco_from_needl(type_selected_id)]
+          final_recommendations = [reco_from_experts(user, type_selected_id), reco_from_experts(user, type_selected_id), reco_from_experts(user,type_selected_id)]
           puts "la selection finale de recos: #{final_recommendations}"
 
         end
 
-
-
         # On retient le thème pris pour qu'il ne retombe pas pour le user
-        @types_already_used << type_selected_id
-        puts "on récapitule les types déjà utilisés: #{@types_already_used.map(&:to_s)}"
-        user.update_attributes(newsletter_themes: @types_already_used.map(&:to_s))
+        user.newsletter_themes << type_selected_id
+        user.newsletter_restaurants += [final_recommendations[0].restaurant_id, final_recommendations[1].restaurant_id, final_recommendations[2].restaurant_id]
         user.save
         puts "La colomne newsletter themes actualisée pour le user"
 
@@ -74,7 +68,7 @@ task :update_mailchimp => :environment do
 
       end
 
-    end
+    # end
 
   else
     puts "Nothing Today."
@@ -140,18 +134,6 @@ task :import_contacts => :environment do
 
 end
 
-task :update_needl_coefficients => :environment do
-  if Time.now.wday == 3
-    Restaurant.all.each do |restaurant|
-      restaurant.needl_coefficient = 0
-      if restaurant.recommendations.where(user_id: 553).length > 0
-        restaurant.needl_coefficient = rand(1..5)
-      end
-      restaurant.save
-    end
-  end
-end
-
 task :update_taste_correspondences => :environment do
   User.all.each do |user1|
     user1_restaurants_ids = user1.my_restaurants_ids
@@ -175,12 +157,8 @@ task :update_taste_correspondences => :environment do
 end
 
 
+def my_friends_restaurants_ids(user)
 
-
-
-
-def my_friends_except_needl_and_me_this_month_restaurants_ids(user)
-  # On récupère tous les amis sauf needl
   user_ids = user.my_visible_friends_ids
 
   # On récupère tous les restaurants recommandés dans les deux derniers mois
@@ -193,14 +171,12 @@ def my_friends_except_needl_and_me_this_month_restaurants_ids(user)
 end
 
 def fetching_types_used(user)
-  @types_already_used = user.newsletter_themes == nil ? [] : user.newsletter_themes.map(&:to_i)
   # S'ils sont tous tombés et dans ce cas on reprend à 0. La longueur de 9 peut évoluer, attention !!
-  if @types_already_used.length == 9
-    user.update_attributes(newsletter_themes: nil)
+  if user.newsletter_themes.length == 9
+    user.update_attributes(newsletter_themes: [])
     user.save
-    @types_already_used = []
   end
-  puts "types déjà utilisés : #{@types_already_used}"
+  return user.newsletter_themes
 end
 
 def return_type_selected_id(types_selection_ids, restaurants_ids)
@@ -229,17 +205,13 @@ def select_fresh_recommendations_in_type_selected(user, restaurants_on_type)
   return final_recommendations.sort_by{|element| element.created_at}.reverse.first(3)
 end
 
-def reco_from_needl(type_selected_id)
-  # il faudra mettre 40 en développement !!
-  Recommendation.joins(restaurant: :restaurant_types).where(user_id: 553, restaurant_types: {type_id: type_selected_id}).each do |reco|
+def reco_from_experts(user, type_selected_id)
+
+  my_expert_ids = user.followings.pluck(:id)
+  Recommendation.joins(restaurant: :restaurant_types).where(user_id: my_experts_ids, public: true, restaurant_types: {type_id: type_selected_id}).each do |reco|
     restaurant_id = reco.restaurant_id
     if @array.exclude?(restaurant_id)
       # cette ligne c'est pour qu'il ne choisisse pas un resto deja choisi
-      # le if c'est pour leur envoyer PNY à la place de Schwartz Deli
-      if restaurant_id == 285 && @array.exclude?(118)
-        @array << 118
-        return Recommendation.find(1638)
-      end
       @array << reco.restaurant_id
       return reco
     end

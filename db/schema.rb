@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160229171113) do
+ActiveRecord::Schema.define(version: 20160302132639) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -144,8 +144,8 @@ ActiveRecord::Schema.define(version: 20160229171113) do
   create_table "restaurants", force: :cascade do |t|
     t.string   "name"
     t.string   "address"
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.integer  "food_id"
     t.float    "latitude"
     t.float    "longitude"
@@ -179,8 +179,7 @@ ActiveRecord::Schema.define(version: 20160229171113) do
     t.string   "food_name"
     t.integer  "subway_id"
     t.string   "subway_name"
-    t.string   "subways_near",                                      array: true
-    t.integer  "needl_coefficient",        default: 0
+    t.string   "subways_near",                          array: true
     t.string   "foursquare_id"
     t.float    "foursquare_rating"
   end
@@ -253,9 +252,7 @@ ActiveRecord::Schema.define(version: 20160229171113) do
     t.datetime "picture_updated_at"
     t.string   "gender"
     t.string   "authentication_token"
-    t.string   "code"
     t.boolean  "mandrill_subscribed",    default: true
-    t.string   "newsletter_themes",                                     array: true
     t.string   "emails",                 default: [],      null: false, array: true
     t.string   "phone_numbers",          default: [],                   array: true
     t.string   "app_version"
@@ -267,7 +264,8 @@ ActiveRecord::Schema.define(version: 20160229171113) do
     t.string   "tags",                   default: [],      null: false, array: true
     t.integer  "public_score",           default: 0
     t.string   "url",                    default: "",      null: false
-    t.json     "tokens"
+    t.integer  "newsletter_restaurants", default: [],      null: false, array: true
+    t.integer  "newsletter_themes",      default: [],      null: false, array: true
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", using: :btree
