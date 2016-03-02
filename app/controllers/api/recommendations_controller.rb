@@ -16,11 +16,12 @@ module Api
       restaurants_ids = recommendations.pluck(:restaurant_id) + wishes.pluck(:restaurant_id)
       restaurants = Restaurant.where(id: restaurants_ids.uniq)
       restaurants_pictures = RestaurantPicture.where(restaurant_id: restaurants_ids.uniq)
+      my_experts_ids = @user.followings.pluck(:id)
 
       # comme pour restaurants index, on refait ici un travail pour faire le moins de requetes possibles
       @all_users_infos = {}
       users.each do |user|
-        @all_users_infos[user.id] = {name: user.name, picture: user.picture}
+        @all_users_infos[user.id] = {name: user.name, picture: user.picture, type: my_experts_ids.include?(user.id) ? "following" : "friend"}
       end
 
       @all_recommendations_infos = {}
