@@ -91,6 +91,7 @@ Rails.application.routes.draw do
       resources :wishes, only: [:index, :create]
       resources :registrations, only: [:edit, :update, :new, :create]
       resources :sessions, only: [:create]
+      resources :activities, only: [:show, :index]
       resources :user_wishlist_pictures, only: [:new, :create]
       resources :restaurants, only: [:show, :index] do
         collection do
