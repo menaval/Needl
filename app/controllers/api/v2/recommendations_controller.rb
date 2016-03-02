@@ -7,27 +7,20 @@ class Api::V2::RecommendationsController < ApplicationController
 
   def index
     @user = User.find_by(authentication_token: params["user_token"])
-    load_activities
-
-    users = User.where(id: @api_activities.pluck(:owner_id).uniq)
-    recommendations = Recommendation.where(id: @api_activities.where(trackable_type: "Recommendation").pluck(:trackable_id).uniq)
-    wishes = Wish.where(id: @api_activities.where(trackable_type: "Wish").pluck(:trackable_id).uniq)
     my_experts_ids = @user.followings.pluck(:id)
+    my_friends_ids = @user.my_friends_ids
+    @activities = []
 
-    # comme pour restaurants index, on refait ici un travail pour faire le moins de requetes possibles
-    @all_users_type = {}
-    users.each do |user|
-      @all_users_type[user.id] = my_experts_ids.include?(user.id) ? "following" : "friend"
+    Recommendation.where(user_id: my_friends_ids).each do |reco|
+      @activities << {user_id: reco.user_id, restaurant_id: reco.restaurant_id, date: reco.created_at, user_type: "friend" , notification_type: "recommendation"}
     end
 
-    @all_recommendations_infos = {}
-    recommendations.each do |recommendation|
-      @all_recommendations_infos[recommendation.id] = recommendation.restaurant_id
+    Recommendation.where("user_id = ? AND public = ?", my_experts_ids, true).each do |reco|
+      @activities << {user_id: reco.user_id, restaurant_id: reco.restaurant_id, date: reco.created_at, user_type: "following" , notification_type: "recommendation"}
     end
 
-    @all_wishes_infos = {}
-    wishes.each do |wish|
-      @all_wishes_infos[wish.id] = wish.restaurant_id
+    Wish.where(user_id: my_friends_ids).each do |wish|
+      @activities << {user_id: wish.user_id, restaurant_id: wish.restaurant_id, date: wish.created_at, user_type: "friend" , notification_type: "wish"}
     end
 
     if params['recommendation']
@@ -329,10 +322,6 @@ class Api::V2::RecommendationsController < ApplicationController
     params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { occasions: [] }, { price_ranges: [] }, { friends_thanking: [] }, { contacts_thanking: [] })
   end
 
-  def load_activities
-    @api_activities = PublicActivity::Activity.where(owner_id: @user.my_visible_friends_ids, owner_type: 'User').order('created_at DESC')
-  end
-
   def update
     recommendation = Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).first
     recommendation.update_attributes(recommendation_params)
@@ -434,12 +423,12 @@ class Api::V2::RecommendationsController < ApplicationController
 
   end
 
-  def read_all_notification
-    load_activities
-    @activities.each do |activity|
-      activity.read = true
-      activity.save
-    end
-  end
+  # def read_all_notification
+  #   load_activities
+  #   @activities.each do |activity|
+  #     activity.read = true
+  #     activity.save
+  #   end
+  # end
 
 end
