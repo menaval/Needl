@@ -22,7 +22,7 @@ class Api::V2::RecommendationsController < ApplicationController
 
     @all_recommendations_infos = {}
     recommendations.each do |recommendation|
-      @all_recommendations_infos[recommendation.id] = restaurant_id
+      @all_recommendations_infos[recommendation.id] = recommendation.restaurant_id
     end
 
     @all_wishes_infos = {}
