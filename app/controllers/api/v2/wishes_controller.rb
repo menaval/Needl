@@ -21,7 +21,7 @@ class Api::V2::WishesController < ApplicationController
         render(:json => {notice: "Ce restaurant était déjà sur ta wishlist ! Tu peux le retrouver en te connectant sur l'app !"}, :status => 409, :layout => false)
       else
 
-        render(:json => {notice: "Restaurant déjà sur ta wishlist"}, :status => 409, :layout => false)
+        render(:json => {notice: "Restaurant déjà sur ta wishlist", message: "already_wishlisted"}, :status => 409, :layout => false)
 
       end
 
@@ -33,7 +33,7 @@ class Api::V2::WishesController < ApplicationController
           render(:json => {notice: "Cette adresse fait déjà partie des restaurants que tu recommandes ! Tu peux le retrouver en te connectant sur l'app !"}, :status => 409, :layout => false)
         else
 
-          render(:json => {notice: "Cette adresse fait déjà partie des restaurants que tu recommandes"}, :status => 409, :layout => false)
+          render(:json => {notice: "Cette adresse fait déjà partie des restaurants que tu recommandes", message: "already_recommended"}, :status => 409, :layout => false)
         end
 
     # Si c'est une nouvelle whish on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
