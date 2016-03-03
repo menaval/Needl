@@ -68,11 +68,16 @@ class Api::V2::RecommendationsController < ApplicationController
   end
 
   def update(restaurant_id = 0, user_id = 0)
+    puts "----------------------------------------------------------------------------------------------------------"
+    puts "restaurant_id: #{restaurant_id}"
+    puts "user_id: #{user_id}"
     if restaurant_id == 0
       @recommendation = Recommendation.find(params["id"])
     else
       @recommendation = Recommendation.where(restaurant_id: restaurant_id, user_id: user_id).first
     end
+    puts "---------------------------------------------------------------------------------------------------------"
+    puts "reco: #{@recommendation}"
     params = recommendation_params
     params["friends_thanking"] = recommendation_params["friends_thanking"] ? recommendation_params["friends_thanking"] : []
     params["experts_thanking"] = recommendation_params["experts_thanking"] ? recommendation_params["experts_thanking"] : []
