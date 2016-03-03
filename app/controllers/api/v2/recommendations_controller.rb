@@ -22,6 +22,7 @@ class Api::V2::RecommendationsController < ApplicationController
       new_params = recommendation_params
       new_params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
       @recommendation = @user.recommendations.new(new_params)
+      @recommendation.save
       @recommendation.restaurant = @restaurant
       @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
 
@@ -88,8 +89,12 @@ class Api::V2::RecommendationsController < ApplicationController
     # experts_previously_thanked = @recommendation.experts_thanking.map{|x| x.to_i}
     # friends_newly_thanked      = new_params["friends_thanking"].map{|x| x.to_i}
     # experts_newly_thanked      = new_params["experts_thanking"].map{|x| x.to_i}
-    # all_friends_thanked        = (friends_previously_thanked + friends_newly_thanked).uniq
-    # all_experts_thanked        = (experts_previously_thanked + experts_newly_thanked).uniq
+
+    # old_minus_new_friends      = friends_previously_thanked - friends_newly_thanked
+    # new_minus_old_friends      = friends_newly_thanked - friends_previously_thanked
+
+    # old_minus_new_experts      = experts_previously_thanked - experts_newly_thanked
+    # new_minus_old_experts      = experts_newly_thanked - experts_previously_thanked
 
 
     redirect_to api_v2_restaurant_path(:id => @recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
