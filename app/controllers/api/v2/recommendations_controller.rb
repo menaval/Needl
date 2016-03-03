@@ -83,7 +83,7 @@ class Api::V2::RecommendationsController < ApplicationController
 
   def recommendation_params
     # On garde price_ranges pour ceux qui sont encore sur l'ancienne version
-    params.require(:recommendation).permit(:review, :wish, { strengths: [] }, { ambiences: [] }, { occasions: [] }, { price_ranges: [] }, { friends_thanking: [] }, { contacts_thanking: [] })
+    params.require(:recommendation).permit(:review, { strengths: [] }, { ambiences: [] }, { occasions: [] }, { friends_thanking: [] }, { experts_thanking: [] })
   end
 
 
