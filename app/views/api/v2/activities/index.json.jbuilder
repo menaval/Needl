@@ -4,5 +4,10 @@ json.array! @activities do |activity|
   json.date                      activity[:date]
   json.user_type                 activity[:user_type]
   json.notification_type         activity[:notification_type]
+  if activity[:notification_type] == "recommendation"
+    json.strengths               activity[:strengths]
+    json.ambiences               activity[:ambiences]
+    json.occasions               activity[:occasions]
+  end
   json.review                    activity[:review]
 end
