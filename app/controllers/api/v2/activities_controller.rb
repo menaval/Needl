@@ -31,15 +31,4 @@ class Api::V2::ActivitiesController < ApplicationController
     end
   end
 
-  def show
-    @user = User.find_by(authentication_token: params["user_token"])
-    @type = params["type"]
-    if @type == "recommendation"
-      @activity = Recommendation.find(params["id"])
-    else
-      @activity = Wish.find(params["id"])
-    end
-
-  end
-
 end
