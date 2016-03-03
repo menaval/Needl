@@ -74,8 +74,8 @@ class Api::V2::RecommendationsController < ApplicationController
       @recommendation = Recommendation.where(restaurant_id: restaurant_id, user_id: user_id).first
     end
     @recommendation.update_attributes(recommendation_params)
-    # @recommendation.review = ( recommendation_params["review"] != "" && recommendation_params["review"] != nil ) ? recommendation_params["review"] : "Je recommande !"
-    # @recommendation.save
+    @recommendation.review = ( recommendation_params["review"] != "" && recommendation_params["review"] != nil ) ? recommendation_params["review"] : "Je recommande !"
+    @recommendation.save
     redirect_to api_restaurant_path(@recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
   end
 
