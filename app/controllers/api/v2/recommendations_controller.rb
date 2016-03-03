@@ -14,7 +14,7 @@ class Api::V2::RecommendationsController < ApplicationController
 
     @user = User.find_by(authentication_token: params["user_token"])
     if params["restaurant_id"].length <= 9 && Recommendation.where(restaurant_id:params["restaurant_id"].to_i, user_id: @user.id).length > 0
-      update(params["restaurant_id"], params["user_id"])
+      update(params["restaurant_id"], @user.id)
     else
       identify_or_create_restaurant
 
@@ -84,13 +84,14 @@ class Api::V2::RecommendationsController < ApplicationController
     params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
     puts "---------------------------------------------------------------------------------------------------------"
     puts "#{params}"
-    @recommendation.review = params[:review]
-    @recommendation.strengths = params[:strength]
-    @recommendation.occasions = params[:occasions]
-    @recommendation.ambiences = params[:ambiences]
-    @recommendation.friends_thanking = params[:friends_thanking]
-    @recommendation.experts_thanking = params[:experts_thanking]
-    @recommendation.save
+    @recommendation.update_attributes(params)
+    # @recommendation.review = params[:review]
+    # @recommendation.strengths = params[:strength]
+    # @recommendation.occasions = params[:occasions]
+    # @recommendation.ambiences = params[:ambiences]
+    # @recommendation.friends_thanking = params[:friends_thanking]
+    # @recommendation.experts_thanking = params[:experts_thanking]
+    # @recommendation.save
     redirect_to api_restaurant_path(@recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
   end
 
