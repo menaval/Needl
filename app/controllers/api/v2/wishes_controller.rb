@@ -56,7 +56,7 @@ class Api::V2::WishesController < ApplicationController
 
         # AAAAAAAAAAAAAAAAAATTTTTTRRRRRRRRROOOOOOOOOOUUUUUUUUVVVVVVVVVEEEEEEEEEEERRRRRRR
 
-        redirect_to api_restaurant_path(@restaurant.id, :user_email => params["user_email"], :user_token => params["user_token"], :notice => "Restaurant ajouté à ta wishlist")
+        redirect_to api_v2_restaurant_path(@restaurant.id, :user_email => params["user_email"], :user_token => params["user_token"], :notice => "Restaurant ajouté à ta wishlist")
 
         # respond_to do |format|
         #   format.json  { render :json => {:restaurant => "api/v2/restaurants/show.json", params(id: @restaurant.id)
@@ -75,7 +75,7 @@ class Api::V2::WishesController < ApplicationController
       activity.destroy
     end
     wish.destroy
-    redirect_to api_restaurant_path(params["restaurant_id"].to_i, :user_email => params["user_email"], :user_token => params["user_token"], :notice => "Le restaurant a bien été retiré de la liste de vos envies")
+    redirect_to api_v2_restaurant_path(params["restaurant_id"].to_i, :user_email => params["user_email"], :user_token => params["user_token"], :notice => "Le restaurant a bien été retiré de la liste de vos envies")
   end
 
   private
