@@ -68,30 +68,29 @@ class Api::V2::RecommendationsController < ApplicationController
   end
 
   def update(restaurant_id = 0, user_id = 0)
-    puts "----------------------------------------------------------------------------------------------------------"
-    puts "restaurant_id: #{restaurant_id}"
-    puts "user_id: #{user_id}"
+
     if restaurant_id == 0
       @recommendation = Recommendation.find(params["id"].to_i)
     else
       @recommendation = Recommendation.where(restaurant_id: restaurant_id, user_id: user_id).first
     end
-    puts "---------------------------------------------------------------------------------------------------------"
-    puts "reco: #{@recommendation}"
+
     new_params = recommendation_params
     new_params["friends_thanking"] = recommendation_params["friends_thanking"] ? recommendation_params["friends_thanking"] : []
     new_params["experts_thanking"] = recommendation_params["experts_thanking"] ? recommendation_params["experts_thanking"] : []
     new_params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
-    puts "---------------------------------------------------------------------------------------------------------"
-    puts "#{new_params}"
+
     @recommendation.update_attributes(new_params)
-    # @recommendation.review = params[:review]
-    # @recommendation.strengths = params[:strength]
-    # @recommendation.occasions = params[:occasions]
-    # @recommendation.ambiences = params[:ambiences]
-    # @recommendation.friends_thanking = params[:friends_thanking]
-    # @recommendation.experts_thanking = params[:experts_thanking]
-    # @recommendation.save
+
+    # on réattribue les remerciements s'il y a changement
+    # friends_previously_thanked = @recommendation.friends_thanking.map{|x| x.to_i}
+    # experts_previously_thanked = @recommendation.experts_thanking.map{|x| x.to_i}
+    # friends_newly_thanked      = new_params["friends_thanking"].map{|x| x.to_i}
+    # experts_newly_thanked      = new_params["experts_thanking"].map{|x| x.to_i}
+    # all_friends_thanked        = (friends_previously_thanked + friends_newly_thanked).uniq
+    # all_experts_thanked        = (experts_previously_thanked + experts_newly_thanked).uniq
+
+
     redirect_to api_v2_restaurant_path(:id => @recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
   end
 

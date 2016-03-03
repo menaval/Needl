@@ -14,7 +14,7 @@ module Api
       @restaurants_recommended_ids = Restaurant.joins(:recommendations).where(recommendations: {user_id: @user.id}).length > 0 ? Restaurant.joins(:recommendations).where(recommendations: {user_id: @user.id}).pluck(:id) : []
       @restaurants_wished_ids = Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).length > 0 ? Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).pluck(:id) : []
       # le user.id != 533 c'est pour empêcher une erreur qui devrait disparaitre avec la grosse update de gregoire
-      if @myself.id != @user.id && @user.id != 533
+      if @myself.id != @user.id && @user.id != 553
         @friendship = Friendship.find_by(sender_id: [@myself.id, @user.id], receiver_id: [@myself.id, @user.id])
         @invisible  = (@friendship.sender_id == @myself.id && @friendship.receiver_invisible == true ) || ( @friendship.receiver_id == @myself.id && @friendship.sender_invisible == true )
          @correspondence_score =  TasteCorrespondence.where("member_one_id = ? and member_two_id = ? or member_one_id = ? and member_two_id = ?", @user.id, @myself.id, @myself.id, @user.id).first.category
