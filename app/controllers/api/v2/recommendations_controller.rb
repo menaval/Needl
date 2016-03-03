@@ -65,7 +65,7 @@ class Api::V2::RecommendationsController < ApplicationController
       activity.destroy
     end
     reco.destroy
-    redirect_to api_v2_restaurants_path(:user_email => params["user_email"], :user_token => params["user_token"], :notice => "Le restaurant a bien été retiré de vos recommandations")
+    redirect_to api_v2_restaurant_path(id: params["id"].to_i, :user_email => params["user_email"], :user_token => params["user_token"], :notice => "Le restaurant a bien été retiré de vos recommandations")
   end
 
   def update(restaurant_id = 0, user_id = 0)
@@ -93,6 +93,12 @@ class Api::V2::RecommendationsController < ApplicationController
 
 
     redirect_to api_v2_restaurant_path(:id => @recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
+
+    # respond_to do |format|
+    #   format.json  { render :json => {:restaurant => "api/v2/restaurants/show.json", params(id: @restaurant.id)
+    #                                   :activity => "api/v2/activities/show.json", params(id: @recommendation.id, type: "recommendation") }}
+    # end
+
   end
 
   private
