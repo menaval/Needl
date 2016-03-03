@@ -72,7 +72,7 @@ class Api::V2::RecommendationsController < ApplicationController
     puts "restaurant_id: #{restaurant_id}"
     puts "user_id: #{user_id}"
     if restaurant_id == 0
-      @recommendation = Recommendation.find(params["id"])
+      @recommendation = Recommendation.find(params["id"].to_i)
     else
       @recommendation = Recommendation.where(restaurant_id: restaurant_id, user_id: user_id).first
     end
