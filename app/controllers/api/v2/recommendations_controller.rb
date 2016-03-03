@@ -79,9 +79,13 @@ class Api::V2::RecommendationsController < ApplicationController
     params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
     puts "---------------------------------------------------------------------------------------------------------"
     puts "#{params}"
-    @recommendation.update_attributes(params)
-    # @recommendation.review = ( recommendation_params["review"] != "" && recommendation_params["review"] != nil ) ? recommendation_params["review"] : "Je recommande !"
-    # @recommendation.save
+    @recommendation.review = params[:review]
+    @recommendation.strengths = params[:strength]
+    @recommendation.occasions = params[:occasions]
+    @recommendation.ambiences = params[:ambiences]
+    @recommendation.friends_thanking = params[:friends_thanking]
+    @recommendation.experts_thanking = params[:experts_thanking]
+    @recommendation.save
     redirect_to api_restaurant_path(@recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
   end
 
