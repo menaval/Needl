@@ -89,7 +89,7 @@ Rails.application.routes.draw do
       resources :sessions, only: [:create]
       resources :activities, only: [:show, :index]
       resources :user_wishlist_pictures, only: [:new, :create]
-      resources :restaurants, only: [:show, :index] do
+      resources :restaurants, only: [:show, :index, :update] do
         collection do
           get :autocomplete
         end
