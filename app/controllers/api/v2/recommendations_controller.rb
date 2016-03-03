@@ -65,7 +65,7 @@ class Api::V2::RecommendationsController < ApplicationController
       activity.destroy
     end
     reco.destroy
-    redirect_to api_v2_restaurant_path(id: params["id"].to_i, :user_email => params["user_email"], :user_token => params["user_token"], :notice => "Le restaurant a bien été retiré de vos recommandations", status: 303)
+    redirect_to api_v2_restaurant_path(id: params["id"].to_i, :user_email => params["user_email"], :user_token => params["user_token"], :notice => "Le restaurant a bien été retiré de vos recommandations"), status: 303
   end
 
   def update(restaurant_id = 0, user_id = 0)
