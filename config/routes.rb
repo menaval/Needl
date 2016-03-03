@@ -81,16 +81,13 @@ Rails.application.routes.draw do
           post :invite_contact
         end
       end
-      resources :recommendations, only: [:index, :new] do
-        collection do
-          get :modify
-        end
-      end
+      resources :recommendations, only: [:index, :create, :destroy, :update]
       resources :friendships, only: [:index, :new]
       resources :followerships, only: [:index, :new]
-      resources :wishes, only: [:index, :create]
+      resources :wishes, only: [:index, :new, :create, :destroy]
       resources :registrations, only: [:edit, :update, :new, :create]
       resources :sessions, only: [:create]
+      resources :activities, only: [:show, :index]
       resources :user_wishlist_pictures, only: [:new, :create]
       resources :restaurants, only: [:show, :index] do
         collection do
