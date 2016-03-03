@@ -22,8 +22,8 @@ class Api::V2::RecommendationsController < ApplicationController
       new_params = recommendation_params
       new_params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
       @recommendation = @user.recommendations.new(new_params)
-      @recommendation.save
       @recommendation.restaurant = @restaurant
+      @recommendation.save
       @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
 
       # on redirige vers les actions de remerciement
