@@ -8,8 +8,6 @@ class Api::V2::RecommendationsController < ApplicationController
   def index
     @user = User.find_by(authentication_token: params["user_token"])
     @tracker.track(@user.id, 'notif_page', { "user" => @user.name })
-    end
-
   end
 
   def create
