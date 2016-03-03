@@ -75,7 +75,7 @@ class Api::V2::WishesController < ApplicationController
       activity.destroy
     end
     wish.destroy
-    redirect_to api_v2_restaurant_path(id: params["id"].to_i, :user_email => params["user_email"], :user_token => params["user_token"], :notice => "Le restaurant a bien été retiré de la liste de vos envies"), status: 303)
+    redirect_to api_v2_restaurant_path(id: params["id"].to_i, :user_email => params["user_email"], :user_token => params["user_token"], :notice => "Le restaurant a bien été retiré de la liste de vos envies"), status: 303
   end
 
   private
