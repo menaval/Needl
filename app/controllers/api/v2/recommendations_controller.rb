@@ -19,9 +19,9 @@ class Api::V2::RecommendationsController < ApplicationController
       identify_or_create_restaurant
 
       # On crée la recommandation à partir des infos récupérées
-      params = recommendation_params
-      params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
-      @recommendation = @user.recommendations.new(params)
+      new_params = recommendation_params
+      new_params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
+      @recommendation = @user.recommendations.new(new_params)
       @recommendation.restaurant = @restaurant
       @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
 
@@ -78,13 +78,13 @@ class Api::V2::RecommendationsController < ApplicationController
     end
     puts "---------------------------------------------------------------------------------------------------------"
     puts "reco: #{@recommendation}"
-    params = recommendation_params
-    params["friends_thanking"] = recommendation_params["friends_thanking"] ? recommendation_params["friends_thanking"] : []
-    params["experts_thanking"] = recommendation_params["experts_thanking"] ? recommendation_params["experts_thanking"] : []
-    params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
+    new_params = recommendation_params
+    new_params["friends_thanking"] = recommendation_params["friends_thanking"] ? recommendation_params["friends_thanking"] : []
+    new_params["experts_thanking"] = recommendation_params["experts_thanking"] ? recommendation_params["experts_thanking"] : []
+    new_params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
     puts "---------------------------------------------------------------------------------------------------------"
-    puts "#{params}"
-    @recommendation.update_attributes(params)
+    puts "#{new_params}"
+    @recommendation.update_attributes(new_params)
     # @recommendation.review = params[:review]
     # @recommendation.strengths = params[:strength]
     # @recommendation.occasions = params[:occasions]
@@ -92,7 +92,7 @@ class Api::V2::RecommendationsController < ApplicationController
     # @recommendation.friends_thanking = params[:friends_thanking]
     # @recommendation.experts_thanking = params[:experts_thanking]
     # @recommendation.save
-    redirect_to api_v2_restaurant_path(@recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
+    redirect_to api_v2_restaurant_path(:id => @recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
   end
 
   private
