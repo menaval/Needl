@@ -82,20 +82,9 @@ class Api::V2::RecommendationsController < ApplicationController
     new_params["experts_thanking"] = recommendation_params["experts_thanking"] ? recommendation_params["experts_thanking"] : []
     new_params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
 
+    reallocate_thanks_if_changes(new_params)
+
     @recommendation.update_attributes(new_params)
-
-    # on réattribue les remerciements s'il y a changement
-    # friends_previously_thanked = @recommendation.friends_thanking.map{|x| x.to_i}
-    # experts_previously_thanked = @recommendation.experts_thanking.map{|x| x.to_i}
-    # friends_newly_thanked      = new_params["friends_thanking"].map{|x| x.to_i}
-    # experts_newly_thanked      = new_params["experts_thanking"].map{|x| x.to_i}
-
-    # old_minus_new_friends      = friends_previously_thanked - friends_newly_thanked
-    # new_minus_old_friends      = friends_newly_thanked - friends_previously_thanked
-
-    # old_minus_new_experts      = experts_previously_thanked - experts_newly_thanked
-    # new_minus_old_experts      = experts_newly_thanked - experts_previously_thanked
-
 
     redirect_to api_v2_restaurant_path(:id => @recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
 
@@ -149,8 +138,8 @@ class Api::V2::RecommendationsController < ApplicationController
     client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'], master_key:ENV['PARSE_MASTER_KEY'])
     friends_to_notif_ids = []
     friends_to_mail_ids = []
-    @recommendation.friends_thanking = friends_to_thank_ids
-    @recommendation.save
+    # @recommendation.friends_thanking = friends_to_thank_ids
+    # @recommendation.save
     # pour chaque utilisateur on va regarder si il a activé les notis et s'il l'a fait on lui envoie une notif, s'il ne l'a pas fait on lui envoie un mail
     friends_to_thank_ids.each do |friend_id|
       info = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id).get
@@ -195,8 +184,8 @@ class Api::V2::RecommendationsController < ApplicationController
 
   def thank_experts(experts_to_thank_ids)
 
-    @recommendation.experts_thanking = experts_to_thank_ids
-    @recommendation.save
+    # @recommendation.experts_thanking = experts_to_thank_ids
+    # @recommendation.save
 
     experts_to_thank_ids.each do |expert_id|
       # on leur fait gagner à chacun un point d'expertise
@@ -204,6 +193,63 @@ class Api::V2::RecommendationsController < ApplicationController
       expert.public_score += 1
       expert.save
       @tracker.track(@user.id, 'Thanks sent', { "user" => @user.name, "type" => "Nothing",  "User Type" => "Expert"})
+    end
+  end
+
+  def reallocate_thanks_if_changes(new_params)
+
+    friends_previously_thanked = @recommendation.friends_thanking.map{|x| x.to_i}
+    experts_previously_thanked = @recommendation.experts_thanking.map{|x| x.to_i}
+    friends_newly_thanked      = new_params["friends_thanking"].map{|x| x.to_i}
+    experts_newly_thanked      = new_params["experts_thanking"].map{|x| x.to_i}
+
+    # On check ceux qui auraient été rajoutés avec l’update
+    new_minus_old_friends      = friends_newly_thanked - friends_previously_thanked
+    # On check ceux qui auraient été enlevés avec l’update
+    old_minus_new_friends      = friends_previously_thanked - friends_newly_thanked
+
+
+    old_minus_new_experts      = experts_previously_thanked - experts_newly_thanked
+    new_minus_old_experts      = experts_newly_thanked - experts_previously_thanked
+
+    if new_minus_old_friends.length > 0
+      thank_friends(new_minus_old_friends)
+    end
+
+    if old_minus_new_friends.length > 0
+      unthank_friends(new_minus_old_friends)
+    end
+
+    if new_minus_old_experts.length > 0
+      thank_experts(new_minus_old_experts)
+    end
+
+    if old_minus_new_experts.length > 0
+      unthank_experts(new_minus_old_experts)
+    end
+
+  end
+
+  def unthank_friends(friends_to_unthank_ids)
+
+    friends_to_unthank_ids.each do |friend_id|
+      # on leur fait perdre à chacun un point d'expertise
+      friend = User.find(friend_id)
+      friend.score -= 1
+      friend.save
+      @tracker.track(@user.id, 'Unthanks', { "user" => @user.name, "User Type" => "Friend"})
+    end
+
+  end
+
+  def unthank_experts(experts_to_unthank_ids)
+
+    experts_to_unthank_ids.each do |expert_id|
+      # on leur fait perdre à chacun un point d'expertise
+      expert = User.find(expert_id)
+      expert.public_score -= 1
+      expert.save
+      @tracker.track(@user.id, 'Unthanks', { "user" => @user.name, "User Type" => "Expert"})
     end
 
   end
