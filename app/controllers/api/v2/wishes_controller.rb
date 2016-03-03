@@ -3,6 +3,9 @@ class Api::V2::WishesController < ApplicationController
   skip_before_action :verify_authenticity_token
   skip_before_filter :authenticate_user!
 
+  require 'open-uri'
+  require 'nokogiri'
+  require 'json'
 
   def index
     if params["origin"] == mail
@@ -40,10 +43,11 @@ class Api::V2::WishesController < ApplicationController
     else
       identify_or_create_restaurant
 
-      # On crée la recommandation à partir des infos récupérées et on track
-      @wish = Wish.new(user_id: @user.id, restaurant_id: @restaurant.id)
-      @wish.restaurant = @restaurant
-      @wish.save
+      # On crée le wish à partir des infos récupérées et on track
+      wish = Wish.new(user_id: @user.id, restaurant_id: @restaurant.id)
+      wish.restaurant = @restaurant
+      wish.save
+
       @tracker.track(@user.id, 'New Wish', { "restaurant" => @restaurant.name, "user" => @user.name })
 
       #  Verifier si la wishlist vient de l'app ou d'un mail
@@ -54,14 +58,15 @@ class Api::V2::WishesController < ApplicationController
 
       else
 
-        # AAAAAAAAAAAAAAAAAATTTTTTRRRRRRRRROOOOOOOOOOUUUUUUUUVVVVVVVVVEEEEEEEEEEERRRRRRR
+        # on renvoie le restaurant et l'activité
+        restaurant_info = JSON(Nokogiri.HTML(open('http://www.needl.fr/api/v2/restaurants/#{@restaurant.id}.json?user_email=#{@user.email}&user_token=#{@user.authentication_token')))
+        restaurant_info.each { |k, v| restaurant[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
 
-        redirect_to api_v2_restaurant_path(@restaurant.id, :user_email => params["user_email"], :user_token => params["user_token"], :notice => "Restaurant ajouté à ta wishlist")
+          render json: {
+            restaurant: restaurant_info,
+            activity: {user_id: @user.id, restaurant_id: @restaurant.id, user_type: "me", notification_type: "wish", review: "Sur ma wishlist"}
+          }
 
-        # respond_to do |format|
-        #   format.json  { render :json => {:restaurant => "api/v2/restaurants/show.json", params(id: @restaurant.id)
-        #                                   :activity => "api/v2/activities/show.json", params(id: @wish.id, type: "wish") }}
-        # end
       end
     end
   end

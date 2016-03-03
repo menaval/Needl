@@ -47,14 +47,15 @@ class Api::V2::RecommendationsController < ApplicationController
         tell_all_friends
       end
 
-      # AAAAAAAAAAAAAAAAAATTTTTTRRRRRRRRROOOOOOOOOOUUUUUUUUVVVVVVVVVEEEEEEEEEEERRRRRRR
+      # on renvoie le restaurant et l'activité
+      restaurant_info = JSON(Nokogiri.HTML(open('http://www.needl.fr/api/v2/restaurants/#{@recommendation.restaurant_id}.json?user_email=#{@user.email}&user_token=#{@user.authentication_token')))
+      restaurant_info.each { |k, v| restaurant[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
 
-      redirect_to api_v2_restaurant_path(@restaurant.id, :user_email => params["user_email"], :user_token => params["user_token"], :notice => "Restaurant ajouté à ta wishlist")
+        render json: {
+          restaurant: restaurant_info,
+          activity: {user_id: @user.id, restaurant_id: @recommendation.restaurant_id, user_type: "me", notification_type: "recommendation", review: @recommendation.review}
+        }
 
-      # respond_to do |format|
-      #   format.json  { render :json => {:restaurant => "api/v2/restaurants/show.json", params(id: @restaurant.id)
-      #                                   :activity => "api/v2/activities/show.json", params(id: @recommendation.id, type: "recommendation") }}
-      # end
     end
   end
 
@@ -86,12 +87,14 @@ class Api::V2::RecommendationsController < ApplicationController
 
     @recommendation.update_attributes(new_params)
 
-    redirect_to api_v2_restaurant_path(:id => @recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
+    # on renvoie le restaurant et l'activité
+    restaurant_info = JSON(Nokogiri.HTML(open('http://www.needl.fr/api/v2/restaurants/#{@recommendation.restaurant_id}.json?user_email=#{@user.email}&user_token=#{@user.authentication_token')))
+    restaurant_info.each { |k, v| restaurant[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
 
-    # respond_to do |format|
-    #   format.json  { render :json => {:restaurant => "api/v2/restaurants/show.json", params(id: @restaurant.id)
-    #                                   :activity => "api/v2/activities/show.json", params(id: @recommendation.id, type: "recommendation") }}
-    # end
+      render json: {
+        restaurant: restaurant_info,
+        activity: {user_id: @user.id, restaurant_id: @recommendation.restaurant_id, user_type: "me", notification_type: "recommendation", review: @recommendation.review}
+      }
 
   end
 
