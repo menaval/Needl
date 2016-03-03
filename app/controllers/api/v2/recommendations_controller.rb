@@ -19,10 +19,9 @@ class Api::V2::RecommendationsController < ApplicationController
       identify_or_create_restaurant
 
       # On crée la recommandation à partir des infos récupérées
+      recommendation_params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
       @recommendation = @user.recommendations.new(recommendation_params)
       @recommendation.restaurant = @restaurant
-      @recommendation.review = ( recommendation_params["review"] != "" && recommendation_params["review"] != nil ) ? recommendation_params["review"] : "Je recommande !"
-      @recommendation.save
       @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
 
       # on redirige vers les actions de remerciement
@@ -73,16 +72,18 @@ class Api::V2::RecommendationsController < ApplicationController
     else
       @recommendation = Recommendation.where(restaurant_id: restaurant_id, user_id: user_id).first
     end
+    recommendation_params["friends_thanking"] = recommendation_params["friends_thanking"] ? recommendation_params["friends_thanking"] : []
+    recommendation_params["experts_thanking"] = recommendation_params["experts_thanking"] ? recommendation_params["experts_thanking"] : []
+    recommendation_params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
     @recommendation.update_attributes(recommendation_params)
-    @recommendation.review = ( recommendation_params["review"] != "" && recommendation_params["review"] != nil ) ? recommendation_params["review"] : "Je recommande !"
-    @recommendation.save
+    # @recommendation.review = ( recommendation_params["review"] != "" && recommendation_params["review"] != nil ) ? recommendation_params["review"] : "Je recommande !"
+    # @recommendation.save
     redirect_to api_restaurant_path(@recommendation.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
   end
 
   private
 
   def recommendation_params
-    # On garde price_ranges pour ceux qui sont encore sur l'ancienne version
     params.require(:recommendation).permit(:review, { strengths: [] }, { ambiences: [] }, { occasions: [] }, { friends_thanking: [] }, { experts_thanking: [] })
   end
 
