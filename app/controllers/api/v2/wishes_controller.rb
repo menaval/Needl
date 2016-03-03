@@ -69,7 +69,7 @@ class Api::V2::WishesController < ApplicationController
 
   def destroy
     @user = User.find_by(authentication_token: params["user_token"])
-    wish = Wish.find(params["id"].to_i)
+    wish = Wish.where(restaurant_id: params["id"].to_i, user_id: @user.id).first
     if PublicActivity::Activity.where(trackable_type: "Wish", trackable_id: wish.id).length > 0
       activity = PublicActivity::Activity.where(trackable_type: "Wish", trackable_id: wish.id).first
       activity.destroy

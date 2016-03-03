@@ -58,7 +58,8 @@ class Api::V2::RecommendationsController < ApplicationController
   end
 
   def destroy
-    reco = Recommendation.find(params['id'].to_i)
+    @user = User.find_by(authentication_token: params["user_token"])
+    reco = Recommendation.where(restaurant_id: params["id"].to_i, user_id: @user.id).first
     if PublicActivity::Activity.where(trackable_type: "Recommendation", trackable_id: reco.id).length > 0
       activity = PublicActivity::Activity.where(trackable_type: "Recommendation", trackable_id: reco.id).first
       activity.destroy
@@ -68,9 +69,9 @@ class Api::V2::RecommendationsController < ApplicationController
   end
 
   def update(restaurant_id = 0, user_id = 0)
-
+    @user = User.find_by(authentication_token: params["user_token"])
     if restaurant_id == 0
-      @recommendation = Recommendation.find(params["id"].to_i)
+      @recommendation = Recommendation.where(restaurant_id: params["id"].to_i, user_id: @user.id).first
     else
       @recommendation = Recommendation.where(restaurant_id: restaurant_id, user_id: user_id).first
     end
