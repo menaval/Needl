@@ -75,6 +75,8 @@ class Api::V2::RecommendationsController < ApplicationController
     recommendation_params["friends_thanking"] = recommendation_params["friends_thanking"] ? recommendation_params["friends_thanking"] : []
     recommendation_params["experts_thanking"] = recommendation_params["experts_thanking"] ? recommendation_params["experts_thanking"] : []
     recommendation_params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
+    puts "---------------------------------------------------------------------------------------------------------"
+    puts "#{recommendation_params}"
     @recommendation.update_attributes(recommendation_params)
     # @recommendation.review = ( recommendation_params["review"] != "" && recommendation_params["review"] != nil ) ? recommendation_params["review"] : "Je recommande !"
     # @recommendation.save
