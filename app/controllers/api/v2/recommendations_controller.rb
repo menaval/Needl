@@ -56,7 +56,7 @@ class Api::V2::RecommendationsController < ApplicationController
 
         render json: {
           restaurant: restaurant_info,
-          activity: {user_id: @user.id, restaurant_id: @recommendation.restaurant_id, user_type: "me", notification_type: "recommendation", review: @recommendation.review}
+          activity: {user_id: @user.id, restaurant_id: @recommendation.restaurant_id, user_type: "me", notification_type: "recommendation", review: @recommendation.review, date: @recommendation.created_at}
         }
 
     end
@@ -96,7 +96,7 @@ class Api::V2::RecommendationsController < ApplicationController
 
       render json: {
         restaurant: restaurant_info,
-        activity: {user_id: @user.id, restaurant_id: @recommendation.restaurant_id, user_type: "me", notification_type: "recommendation", review: @recommendation.review}
+        activity: {user_id: @user.id, restaurant_id: @recommendation.restaurant_id, user_type: "me", notification_type: "recommendation", review: @recommendation.review, date: @recommendation.created_at}
       }
 
   end

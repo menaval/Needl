@@ -64,7 +64,7 @@ class Api::V2::WishesController < ApplicationController
 
           render json: {
             restaurant: restaurant_info,
-            activity: {user_id: @user.id, restaurant_id: @restaurant.id, user_type: "me", notification_type: "wish", review: "Sur ma wishlist"}
+            activity: {user_id: @user.id, restaurant_id: @restaurant.id, user_type: "me", notification_type: "wish", review: "Sur ma wishlist", date: wish.created_at}
           }
 
       end
