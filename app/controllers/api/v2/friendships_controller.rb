@@ -115,15 +115,23 @@ class Api::V2::FriendshipsController < ApplicationController
       friendship = Friendship.where(sender_id: @user.id, receiver_id: friend_id).first
       NotInterestedRelation.create(member_one_id: @user.id, member_two_id: friend_id)
     end
-    # Supprimer tous les points donnés par le friend et tous ceux donnés par le user
 
-    @recos = Recommendation.find_by_sql("SELECT * FROM recommendations WHERE recommendations.friends_thanking @> '{#{@user.id}}'")
+
+    # Supprimer tous les points donnés par le friend
+    @recos = Recommendation.find_by_sql("SELECT * FROM recommendations WHERE recommendations.user_id = #{friend_id} WHERE recommendations.friends_thanking @> '{#{@user.id}}'")
     @recos.each do |reco|
-
-
+      new_friends_thanking = reco.friends_thanking - [@user.id]
+      reco.update_attributes(friends_thanking: new_friends_thanking)
+      unthank_friend([@user.id])
     end
 
-
+    # Supprimer tous les points donnés par le user
+    @recos = Recommendation.find_by_sql("SELECT * FROM recommendations WHERE recommendations.user_id = #{@user.id} WHERE recommendations.friends_thanking @> '{#{friend_id}}'")
+    @recos.each do |reco|
+      new_friends_thanking = reco.friends_thanking - [friend_id]
+      reco.update_attributes(friends_thanking: new_friends_thanking)
+      unthank_friend([friend_id])
+    end
 
     friendship.destroy
     @tracker.track(@user.id, 'refuse_or_delete_friend', { "user" => @user.name })

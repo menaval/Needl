@@ -82,6 +82,8 @@ class Api::V2::RecommendationsController < ApplicationController
 
   def update(restaurant_id = 0, user_id = 0)
     @user = User.find_by(authentication_token: params["user_token"])
+    puts "----------------------------------------------------------------------------"
+    puts "user : #{@user}"
     if restaurant_id == 0
       @recommendation = Recommendation.where(restaurant_id: params["id"].to_i, user_id: @user.id).first
     else
@@ -211,6 +213,9 @@ class Api::V2::RecommendationsController < ApplicationController
     experts_previously_thanked = @recommendation.experts_thanking.map{|x| x.to_i}
     friends_newly_thanked      = new_params["friends_thanking"].map{|x| x.to_i}
     experts_newly_thanked      = new_params["experts_thanking"].map{|x| x.to_i}
+    puts "----------------------------------------------------------------------------"
+    puts "friends_previously_thanked: #{friends_previously_thanked}"
+    puts "friends_newly_thanked: #{friends_newly_thanked}"
 
     # On check ceux qui auraient été rajoutés avec l’update
     new_minus_old_friends      = friends_newly_thanked - friends_previously_thanked
