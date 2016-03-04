@@ -48,7 +48,7 @@ module Api
         i['user_id'] = @user.id
       end
       installation.save
-      redirect_to user_path(@user.id)
+      render json: {message: "success"}
     end
 
     def reset_badge_to_zero
@@ -61,7 +61,7 @@ module Api
         installation['badge'] = 0
         installation.save
       end
-      redirect_to user_path(@user.id)
+      render json: {message: "success"}
     end
 
     def contacts_access
