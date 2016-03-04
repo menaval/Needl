@@ -242,30 +242,6 @@ class Api::V2::RecommendationsController < ApplicationController
 
   end
 
-  def unthank_friends(friends_to_unthank_ids)
-
-    friends_to_unthank_ids.each do |friend_id|
-      # on leur fait perdre à chacun un point d'expertise
-      friend = User.find(friend_id)
-      friend.score -= 1
-      friend.save
-      @tracker.track(@user.id, 'Unthanks', { "user" => @user.name, "User Type" => "Friend"})
-    end
-
-  end
-
-  def unthank_experts(experts_to_unthank_ids)
-
-    experts_to_unthank_ids.each do |expert_id|
-      # on leur fait perdre à chacun un point d'expertise
-      expert = User.find(expert_id)
-      expert.public_score -= 1
-      expert.save
-      @tracker.track(@user.id, 'Unthanks', { "user" => @user.name, "User Type" => "Expert"})
-    end
-
-  end
-
   # def read_all_notification
   #   load_activities
   #   @activities.each do |activity|
