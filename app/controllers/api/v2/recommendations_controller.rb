@@ -229,7 +229,7 @@ class Api::V2::RecommendationsController < ApplicationController
     end
 
     if old_minus_new_friends.length > 0
-      unthank_friends(new_minus_old_friends)
+      unthank_friends(old_minus_new_friends)
     end
 
     if new_minus_old_experts.length > 0
@@ -237,7 +237,7 @@ class Api::V2::RecommendationsController < ApplicationController
     end
 
     if old_minus_new_experts.length > 0
-      unthank_experts(new_minus_old_experts)
+      unthank_experts(old_minus_new_experts)
     end
 
   end
