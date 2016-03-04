@@ -4,9 +4,9 @@ class Api::V2::RegistrationsController < ApplicationController
       skip_before_filter :authenticate_user!
 
       def create
-        name = params['name']
+        name = params['name'].downcase.titleize
         puts "#{params['name']}"
-        email = params['email']
+        email = params['email'].downcase
         password = params['password']
         all_emails = User.all.pluck(:email)
         if all_emails.include?(email)
@@ -62,8 +62,8 @@ class Api::V2::RegistrationsController < ApplicationController
         # @user = User.find_by(authentication_token: params["user_token"])
         @user = User.find(params['id'])
         if params['email']
-          @name = params['name']
-          @email = params['email']
+          @name = params['name'].downcase.titleize
+          @email = params['email'].downcase
           update
         end
       end

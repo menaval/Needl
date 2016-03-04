@@ -70,7 +70,7 @@ Rails.application.routes.draw do
     end
 
     namespace :v2 do
-      resources :users, only: :show do
+      resources :users, only: [:index, :show] do
         collection do
           get  :welcome_ceo
           get  :reset_badge_to_zero

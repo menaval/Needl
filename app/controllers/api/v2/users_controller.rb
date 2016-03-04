@@ -5,6 +5,18 @@ class Api::V2::UsersController < ApplicationController
 
   require 'twilio-ruby'
 
+  def index
+    @user = User.find(params["id"].to_i)
+    query = params["query"].downcase.titleize
+    query_terms = query.split.collect { |name| "%#{name}%" }
+    users_table = User.arel_table
+    users_ids = User.where(users_table[:name].matches_all(query_terms)).pluck(:id)
+    users_ids += User.where(users_table[:name].matches_any(query_terms)).pluck(:id)
+    users_ids.uniq!
+    order = "position(id::text in '#{users_ids.join(',')}')"
+    @users = User.where(id: users_ids).order(order)
+  end
+
   def show
     @user = User.find(params["id"].to_i)
     @myself = User.find_by(authentication_token: params["user_token"])
