@@ -116,7 +116,7 @@ class Api::V2::FriendshipsController < ApplicationController
       NotInterestedRelation.create(member_one_id: @user.id, member_two_id: friend_id)
     end
 
-    @recos = Recommendation.find_by_sql("SELECT * FROM recommendations WHERE recommendations.friends_thanking @> '{#{@user.id}}'")
+    # @recos = Recommendation.find_by_sql("SELECT * FROM recommendations WHERE recommendations.friends_thanking @> '{#{@user.id}}'")
 
 
     # Supprimer tous les points donnés par le friend
