@@ -25,9 +25,9 @@ class Restaurant < ActiveRecord::Base
     my_friends_ids           = current_user.my_friends_ids
     my_experts_ids           = current_user.followings.pluck(:id)
     if my_experts_ids != []
-      @recommendations_from_friends_and_experts   = Recommendation.where(t[:user_id].eq_any(my_friends_ids + [current_user.id]).or(t[:user_id].eq_any(my_experts_ids).and(t[:public].eq(true))))
+      @recommendations_from_friends_and_experts   = Recommendation.where((t[:user_id].eq_any(my_friends_ids + [current_user.id]).or(t[:user_id].eq_any(my_experts_ids).and(t[:public].eq(true)))).and(t[:restaurant_id].eq(self.id)))
     else
-      @recommendations_from_friends_and_experts   = Recommendation.where(t[:user_id].eq_any(my_friends_ids + [current_user.id]))
+      @recommendations_from_friends_and_experts   = Recommendation.where(t[:user_id].eq_any(my_friends_ids + [current_user.id]).and(t[:restaurant_id].eq(self.id)))
     end
   end
 
