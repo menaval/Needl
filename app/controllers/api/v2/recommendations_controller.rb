@@ -26,6 +26,8 @@ class Api::V2::RecommendationsController < ApplicationController
       new_params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
       new_params["friends_thanking"] = recommendation_params["friends_thanking"] ? recommendation_params["friends_thanking"].map{|x| x.to_i} : []
       new_params["experts_thanking"] = recommendation_params["experts_thanking"] ? recommendation_params["experts_thanking"].map{|x| x.to_i} : []
+      puts "------------------------------------------------------------------------------------------------"
+      puts "params: #{recommendation_params}"
       @recommendation = @user.recommendations.new(new_params)
       @recommendation.restaurant = @restaurant
       @recommendation.save

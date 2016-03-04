@@ -118,6 +118,10 @@ class Api::V2::FriendshipsController < ApplicationController
     # Supprimer tous les points donnés par le friend et tous ceux donnés par le user
 
     @recos = Recommendation.find_by_sql("SELECT * FROM recommendations WHERE recommendations.friends_thanking @> '{#{@user.id}}'")
+    @recos.each do |reco|
+
+
+    end
 
 
 
