@@ -6,7 +6,7 @@ class Api::V2::UsersController < ApplicationController
   require 'twilio-ruby'
 
   def index
-    @user = User.find(params["id"].to_i)
+    @user = User.find_by(authentication_token: params["user_token"])
     query = params["query"].downcase.titleize
     query_terms = query.split.collect { |name| "%#{name}%" }
     users_table = User.arel_table
