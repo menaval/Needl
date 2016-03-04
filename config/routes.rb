@@ -82,7 +82,7 @@ Rails.application.routes.draw do
         end
       end
       resources :recommendations, only: [:index, :create, :destroy, :update]
-      resources :friendships, only: [:index, :new]
+      resources :friendships, only: [:index, :new, :destroy]
       resources :followerships, only: [:index, :new]
       resources :wishes, only: [:index, :new, :create, :destroy]
       resources :registrations, only: [:edit, :update, :new, :create]
