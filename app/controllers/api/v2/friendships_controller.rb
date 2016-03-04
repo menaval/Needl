@@ -76,33 +76,6 @@ class Api::V2::FriendshipsController < ApplicationController
     @new_potential_friends = @user.user_friends - User.where(id: @user.my_friends_ids) - User.where(id: @user.my_requests_sent_ids) - User.where(id: @user.my_requests_received_ids) - User.where(id: @user.refused_relations_ids) - [@user]
   end
 
-  private
-
-  # A supprimer
-
-  def create
-    @friend_id = params["friend_id"].to_i
-    # en attendant de détruire complètement cette étape, on met accepted à true
-    @friendship = Friendship.new(sender_id: @user.id, receiver_id: @friend_id, accepted: true)
-    @friendship.save
-    @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
-    notif_friendship("invited")
-    render json: {message: "sucess"}
-    # ex: http://localhost:3000/api/friendships/new?friendship[sender_id]=40&friendship[receiver_id]=42&friendship[accepted]=false
-
-  end
-
-  # A supprimer
-
-  def answer_yes
-    @friend_id = params["friend_id"].to_i
-    friendship = Friendship.where(sender_id: @friend_id, receiver_id: @user.id).first
-    friendship.update_attribute(:accepted, true)
-    @tracker.track(@user.id, 'accept_friend', { "user" => @user.name })
-    notif_friendship("accepted")
-    render json: {message: "sucess"}
-  end
-
   def destroy
 
     @user = User.find_by(authentication_token: params["user_token"])
@@ -137,6 +110,34 @@ class Api::V2::FriendshipsController < ApplicationController
     render json: {message: "sucess"}
     # gérer la redirection suivant un delete ou un ignore
   end
+
+  private
+
+  # A supprimer
+
+  def create
+    @friend_id = params["friend_id"].to_i
+    # en attendant de détruire complètement cette étape, on met accepted à true
+    @friendship = Friendship.new(sender_id: @user.id, receiver_id: @friend_id, accepted: true)
+    @friendship.save
+    @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
+    notif_friendship("invited")
+    render json: {message: "sucess"}
+    # ex: http://localhost:3000/api/friendships/new?friendship[sender_id]=40&friendship[receiver_id]=42&friendship[accepted]=false
+
+  end
+
+  # A supprimer
+
+  def answer_yes
+    @friend_id = params["friend_id"].to_i
+    friendship = Friendship.where(sender_id: @friend_id, receiver_id: @user.id).first
+    friendship.update_attribute(:accepted, true)
+    @tracker.track(@user.id, 'accept_friend', { "user" => @user.name })
+    notif_friendship("accepted")
+    render json: {message: "sucess"}
+  end
+
 
   def invisible
     invisible = params["invisible"]
