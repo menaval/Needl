@@ -51,7 +51,7 @@ class Api::V2::RecommendationsController < ApplicationController
       end
 
       # on renvoie le restaurant et l'activité
-      restaurant_info = JSON(Nokogiri.HTML(open('http://www.needl.fr/api/v2/restaurants/#{@recommendation.restaurant_id}.json?user_email=#{@user.email}&user_token=#{@user.authentication_token}')))
+      restaurant_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/restaurants/#{@recommendation.restaurant_id}.json?user_email=#{@user.email}&user_token=#{@user.authentication_token}")))
       restaurant_info.each { |k, v| restaurant[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
 
         render json: {
@@ -91,7 +91,7 @@ class Api::V2::RecommendationsController < ApplicationController
     @recommendation.update_attributes(new_params)
 
     # on renvoie le restaurant et l'activité
-    restaurant_info = JSON(Nokogiri.HTML(open('http://www.needl.fr/api/v2/restaurants/#{@recommendation.restaurant_id}.json?user_email=#{@user.email}&user_token=#{@user.authentication_token}')))
+    restaurant_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/restaurants/#{@recommendation.restaurant_id}.json?user_email=#{@user.email}&user_token=#{@user.authentication_token}")))
     restaurant_info.each { |k, v| restaurant[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
 
       render json: {

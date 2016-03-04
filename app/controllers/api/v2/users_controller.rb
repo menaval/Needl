@@ -41,7 +41,7 @@ class Api::V2::UsersController < ApplicationController
       i['user_id'] = @user.id
     end
     installation.save
-    redirect_to user_path(@user.id)
+    render json: {message: "success"}
   end
 
   def reset_badge_to_zero
@@ -54,7 +54,7 @@ class Api::V2::UsersController < ApplicationController
       installation['badge'] = 0
       installation.save
     end
-    redirect_to user_path(@user.id)
+    render json: {message: "success"}
   end
 
   def contacts_access
