@@ -82,8 +82,6 @@ class Api::V2::RecommendationsController < ApplicationController
 
   def update(restaurant_id = 0, user_id = 0)
     @user = User.find_by(authentication_token: params["user_token"])
-    puts "----------------------------------------------------------------------------"
-    puts "user : #{@user}"
     if restaurant_id == 0
       @recommendation = Recommendation.where(restaurant_id: params["id"].to_i, user_id: @user.id).first
     else
@@ -95,6 +93,7 @@ class Api::V2::RecommendationsController < ApplicationController
     new_params["experts_thanking"] = recommendation_params["experts_thanking"] ? recommendation_params["experts_thanking"].map{|x| x.to_i} : []
     new_params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
 
+    @restaurant = @recommendation.restaurant
     reallocate_thanks_if_changes(new_params)
 
     @recommendation.update_attributes(new_params)
@@ -174,11 +173,7 @@ class Api::V2::RecommendationsController < ApplicationController
 
     # on envoie les notifs aux bonnes personnes s'il y en a
     if friends_to_notif_ids.length > 0
-      puts "---------------------------------------------------------------------------"
-      puts "params : #{params}"
-      puts "user: #{@user.name}"
       @user = User.find_by(authentication_token: params["user_token"])
-      puts "user_new: #{@user.name}"
       data = { :alert => "#{@user.name} te remercie de lui avoir fait decouvrir #{@restaurant.name}. Tu gagnes 1 point d'expertise !", :badge => 'Increment', :type => 'thanks' }
       push = client.push(data)
       query = client.query(Parse::Protocol::CLASS_INSTALLATION).value_in('user_id', friends_to_notif_ids)
