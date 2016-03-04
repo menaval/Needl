@@ -121,7 +121,7 @@ class Api::V2::FriendshipsController < ApplicationController
     @recos_from_friend.each do |reco|
       new_friends_thanking = reco.friends_thanking - [@user.id]
       reco.update_attributes(friends_thanking: new_friends_thanking)
-      unthank_friend([@user.id])
+      unthank_friends([@user.id])
     end
 
     # Supprimer tous les points donnés par le user
@@ -129,7 +129,7 @@ class Api::V2::FriendshipsController < ApplicationController
     @recos_from_me.each do |reco|
       new_friends_thanking = reco.friends_thanking - [friend_id]
       reco.update_attributes(friends_thanking: new_friends_thanking)
-      unthank_friend([friend_id])
+      unthank_friends([friend_id])
     end
 
     friendship.destroy
