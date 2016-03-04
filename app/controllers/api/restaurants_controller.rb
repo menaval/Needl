@@ -30,7 +30,7 @@ module Api
         friends_and_experts_infos[user.id] = {name: user.name, picture: user.picture}
       end
 
-      recommendations_i_trust do |recommendation|
+      recommendations_i_trust.where(restaurant_id: @restaurant.id).each do |recommendation|
         @my_friends_and_experts_recommending << {id: recommendation.user_id, name: friends_and_experts_infos[recommendation.user_id][:name], picture: friends_and_experts_infos[recommendation.user_id][:picture], review: recommendation.review}
       end
 
