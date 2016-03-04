@@ -24,18 +24,20 @@ class Api::V2::RecommendationsController < ApplicationController
       # On crée la recommandation à partir des infos récupérées
       new_params = recommendation_params
       new_params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
+      new_params["friends_thanking"] = recommendation_params["friends_thanking"] ? recommendation_params["friends_thanking"].map{|x| x.to_i} : []
+      new_params["experts_thanking"] = recommendation_params["experts_thanking"] ? recommendation_params["experts_thanking"].map{|x| x.to_i} : []
       @recommendation = @user.recommendations.new(new_params)
       @recommendation.restaurant = @restaurant
       @recommendation.save
       @tracker.track(@user.id, 'New Reco', { "restaurant" => @restaurant.name, "user" => @user.name })
 
       # on redirige vers les actions de remerciement
-      if params["friends_thanking"] != [] && params["friends_thanking"] != nil
-        thank_friends(params["friends_thanking"].map{|x| x.to_i})
+      if params["friends_thanking"] != []
+        thank_friends(@recommendation.friends_thanking)
       end
 
-      if params["experts_thanking"] != [] && params["experts_thanking"] != nil
-        thank_experts(params["experts_thanking"].map{|x| x.to_i})
+      if params["experts_thanking"] != []
+        thank_experts(@recommendation.experts_thanking)
       end
       # attention on ne l'envoie plus à ceux qui ont été remerciés (pas besoin de checker si different du vide on le fait rapidement apres)
       notif_reco(params["friends_thanking"])
@@ -69,8 +71,8 @@ class Api::V2::RecommendationsController < ApplicationController
       activity.destroy
     end
     # il faut unthank les friends et les experts
-    unthank_friends(reco.friends_thanking.map{|x| x.to_i})
-    unthank_experts(reco.experts_thanking.map{|x| x.to_i})
+    unthank_friends(reco.friends_thanking)
+    unthank_experts(reco.experts_thanking)
     reco.destroy
 
     redirect_to api_v2_restaurant_path(id: params["id"].to_i, :user_email => params["user_email"], :user_token => params["user_token"], :notice => "Le restaurant a bien été retiré de vos recommandations"), status: 303
@@ -85,8 +87,8 @@ class Api::V2::RecommendationsController < ApplicationController
     end
 
     new_params = recommendation_params
-    new_params["friends_thanking"] = recommendation_params["friends_thanking"] ? recommendation_params["friends_thanking"] : []
-    new_params["experts_thanking"] = recommendation_params["experts_thanking"] ? recommendation_params["experts_thanking"] : []
+    new_params["friends_thanking"] = recommendation_params["friends_thanking"] ? recommendation_params["friends_thanking"].map{|x| x.to_i} : []
+    new_params["experts_thanking"] = recommendation_params["experts_thanking"] ? recommendation_params["experts_thanking"].map{|x| x.to_i} : []
     new_params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
 
     reallocate_thanks_if_changes(new_params)
@@ -147,8 +149,7 @@ class Api::V2::RecommendationsController < ApplicationController
     client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'], master_key:ENV['PARSE_MASTER_KEY'])
     friends_to_notif_ids = []
     friends_to_mail_ids = []
-    @recommendation.friends_thanking = friends_to_thank_ids
-    @recommendation.save
+
     # pour chaque utilisateur on va regarder si il a activé les notis et s'il l'a fait on lui envoie une notif, s'il ne l'a pas fait on lui envoie un mail
     friends_to_thank_ids.each do |friend_id|
       info = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id).get
@@ -192,9 +193,6 @@ class Api::V2::RecommendationsController < ApplicationController
   end
 
   def thank_experts(experts_to_thank_ids)
-
-    @recommendation.experts_thanking = experts_to_thank_ids
-    @recommendation.save
 
     experts_to_thank_ids.each do |expert_id|
       # on leur fait gagner à chacun un point d'expertise

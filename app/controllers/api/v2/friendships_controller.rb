@@ -61,9 +61,6 @@ class Api::V2::FriendshipsController < ApplicationController
       create
     elsif params["accepted"] == "true"
       answer_yes
-    elsif params["destroy"]
-      @tracker.track(@user.id, 'refuse_or_delete_friend', { "user" => @user.name })
-      destroy
     elsif params["invisible"]
       invisible
     elsif params["not_interested"]
@@ -107,15 +104,25 @@ class Api::V2::FriendshipsController < ApplicationController
   end
 
   def destroy
+
+    @user = User.find_by(authentication_token: params["user_token"])
+    friend_id = params["id"].to_i
     # pour voir dans quelle sens s'est faite la relation sans avoir à le préciser dans l'url
-    if Friendship.where(sender_id: params["friend_id"].to_i, receiver_id: @user.id).first
-    friendship = Friendship.where(sender_id: params["friend_id"].to_i, receiver_id: @user.id).first
-    NotInterestedRelation.create(member_one_id: params["friend_id"].to_i, member_two_id: @user.id)
-  else
-    friendship = Friendship.where(sender_id: @user.id, receiver_id: params["friend_id"].to_i).first
-    NotInterestedRelation.create(member_one_id: @user.id, member_two_id: params["friend_id"].to_i)
-  end
+    if Friendship.where(sender_id: friend_id, receiver_id: @user.id).first
+      friendship = Friendship.where(sender_id: friend_id, receiver_id: @user.id).first
+      NotInterestedRelation.create(member_one_id: friend_id, member_two_id: @user.id)
+    else
+      friendship = Friendship.where(sender_id: @user.id, receiver_id: friend_id).first
+      NotInterestedRelation.create(member_one_id: @user.id, member_two_id: friend_id)
+    end
+    # Supprimer tous les points donnés par le friend et tous ceux donnés par le user
+
+    @recos = Recommendation.find_by_sql("SELECT * FROM recommendations WHERE recommendations.friends_thanking @> '{#{@user.id}}'")
+
+
+
     friendship.destroy
+    @tracker.track(@user.id, 'refuse_or_delete_friend', { "user" => @user.name })
     render json: {message: "sucess"}
     # gérer la redirection suivant un delete ou un ignore
   end
