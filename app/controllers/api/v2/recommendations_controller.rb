@@ -56,9 +56,8 @@ class Api::V2::RecommendationsController < ApplicationController
 
         render json: {
           restaurant: restaurant_info,
-          activity: {user_id: @user.id, restaurant_id: @recommendation.restaurant_id, user_type: "me", notification_type: "recommendation", review: @recommendation.review, date: @recommendation.created_at}
+          activity: {user_id: @user.id, restaurant_id: @recommendation.restaurant_id, user_type: "me", notification_type: "recommendation", review: @recommendation.review, date: @recommendation.created_at, strengths: @recommendation.strengths, ambiences: @recommendation.ambiences, occasions: @recommendation.occasions, friends_thanking: @recommendation.friends_thanking, experts_thanking: @recommendation.experts_thanking}
         }
-
     end
   end
 
@@ -96,7 +95,7 @@ class Api::V2::RecommendationsController < ApplicationController
 
       render json: {
         restaurant: restaurant_info,
-        activity: {user_id: @user.id, restaurant_id: @recommendation.restaurant_id, user_type: "me", notification_type: "recommendation", review: @recommendation.review, date: @recommendation.created_at}
+        activity: {user_id: @user.id, restaurant_id: @recommendation.restaurant_id, user_type: "me", notification_type: "recommendation", review: @recommendation.review, date: @recommendation.created_at, strengths: @recommendation.strengths, ambiences: @recommendation.ambiences, occasions: @recommendation.occasions, friends_thanking: @recommendation.friends_thanking, experts_thanking: @recommendation.experts_thanking}
       }
 
   end
