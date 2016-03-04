@@ -68,7 +68,11 @@ class Api::V2::RecommendationsController < ApplicationController
       activity = PublicActivity::Activity.where(trackable_type: "Recommendation", trackable_id: reco.id).first
       activity.destroy
     end
+    # il faut unthank les friends et les experts
+    unthank_friends(reco.friends_thanking.map{|x| x.to_i})
+    unthank_experts(reco.experts_thanking.map{|x| x.to_i})
     reco.destroy
+
     redirect_to api_v2_restaurant_path(id: params["id"].to_i, :user_email => params["user_email"], :user_token => params["user_token"], :notice => "Le restaurant a bien été retiré de vos recommandations"), status: 303
   end
 
@@ -143,8 +147,8 @@ class Api::V2::RecommendationsController < ApplicationController
     client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'], master_key:ENV['PARSE_MASTER_KEY'])
     friends_to_notif_ids = []
     friends_to_mail_ids = []
-    # @recommendation.friends_thanking = friends_to_thank_ids
-    # @recommendation.save
+    @recommendation.friends_thanking = friends_to_thank_ids
+    @recommendation.save
     # pour chaque utilisateur on va regarder si il a activé les notis et s'il l'a fait on lui envoie une notif, s'il ne l'a pas fait on lui envoie un mail
     friends_to_thank_ids.each do |friend_id|
       info = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id).get
@@ -189,8 +193,8 @@ class Api::V2::RecommendationsController < ApplicationController
 
   def thank_experts(experts_to_thank_ids)
 
-    # @recommendation.experts_thanking = experts_to_thank_ids
-    # @recommendation.save
+    @recommendation.experts_thanking = experts_to_thank_ids
+    @recommendation.save
 
     experts_to_thank_ids.each do |expert_id|
       # on leur fait gagner à chacun un point d'expertise
