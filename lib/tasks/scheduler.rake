@@ -160,9 +160,7 @@ end
 def my_friends_restaurants_ids(user)
 
   user_ids = user.my_visible_friends_ids
-
-  # On récupère tous les restaurants recommandés dans les deux derniers mois
-  restaurants_ids = Restaurant.joins(:recommendations).where(recommendations: {created_at: (Time.now - 2.month)..Time.now, user_id: user_ids }).pluck(:id).uniq
+  restaurants_ids = Restaurant.joins(:recommendations).where(recommendations: {user_id: user_ids }).pluck(:id).uniq
   # On enlève les miens, car ça perdrait de son interet pour moi de les avoir dans la newsletter
   restaurants_ids -= user.my_restaurants_ids
 
