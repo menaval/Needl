@@ -2,8 +2,7 @@
 task :update_mailchimp => :environment do
 
 
-  # User.all.each do |user|
-    user  = User.find(58)
+  User.all.each do |user|
 
     if user.email.include?("needlapp.com") == false && (Time.now - user.created_at)/3600 > 9
 
@@ -14,8 +13,8 @@ task :update_mailchimp => :environment do
       # Récupérer la liste de tous les restaurants recommandés par mes gens de confiance
       restaurants_ids = my_friends_and_experts_restaurants_ids(user)
 
-      # Récupérer la sélection de types que l'on va checker.A la base c'est  Burger - Thaï - Japonais - Italien - Français - Street Food - Oriental - Pizza et on retire ceux qui sont déjà tombés.
-      types_selection_ids = [11, 2, 5, 9, 8, 12, 15, 10] - fetching_types_used(user)
+      # Récupérer la sélection de types que l'on va checker.A la base c'est  Burger - Thaï - Japonais - Italien - Français - Oriental - Pizza et on retire ceux qui sont déjà tombés.
+      types_selection_ids = [11, 2, 5, 9, 8, 15, 10] - fetching_types_used(user)
 
       # On récupère tous les thèmes où il y a au moins 3 recos
 
@@ -76,7 +75,9 @@ task :update_mailchimp => :environment do
       end
 
     end
-  # end
+
+  end
+
 end
 
 
@@ -174,7 +175,7 @@ end
 
 def fetching_types_used(user)
   # S'ils sont tous tombés et dans ce cas on reprend à 0. La longueur de 9 peut évoluer, attention !!
-  if user.newsletter_themes.length == 9
+  if user.newsletter_themes.length == 8
     user.update_attributes(newsletter_themes: [])
     user.save
   end
