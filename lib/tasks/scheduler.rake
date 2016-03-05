@@ -1,81 +1,82 @@
 # "This task is called by the Heroku scheduler add-on"
 task :update_mailchimp => :environment do
 
-  # pour tester en dev changer Time.now.wday != 5 et Recommendation.where(user_id: 553).each do |reco|, et ne le faire que sur un user, pas la peine de le faire sur User.all
 
-# Verifier si on est vendredi matin (on fera le rake sur Heroku tous les jours très tot)
-# Hors test, mettre == 5, sinon à moins d'etre vendredi il ne se passera rien
-  if Time.now.wday == 6
-    puts "Updating mailchimp infos ..."
-    # ok: isoler un user
-    # User.all.each do |user|
-      user  = User.find(58)
+  # User.all.each do |user|
+    user  = User.find(58)
 
-      if user.email.include?("needlapp.com") == false && (Time.now - user.created_at)/3600 > 9
-        # ne sert à rien d'actualiser la newsletter de ceux qui n'ont pas d'adresse mail. De plus on ne l'envoie que à ceux qui sont inscrit depuis 10 jours donc pas la peine de le faire pour ceux inscrits depuis moins de 9 jours
-        puts "Updating #{user.name}"
+    if user.email.include?("needlapp.com") == false && (Time.now - user.created_at)/3600 > 9
 
-        # Récupérer la liste des restaurants, hormis ceux que j'ai déjà recommandé, recommandés par mes amis au cours du mois
-        restaurants_ids = my_friends_restaurants_ids(user)
-        puts "les restos dans le dernier mois de mes amis: #{restaurants_ids}"
+      @my_visible_friends_ids = user.my_visible_friends_ids
+      @my_experts_ids         = user.followings.pluck(:id)
+      # ne sert à rien d'actualiser la newsletter de ceux qui n'ont pas d'adresse mail. De plus on ne l'envoie que à ceux qui sont inscrit depuis 10 jours donc pas la peine de le faire pour ceux inscrits depuis moins de 9 jours
 
-        # Récupérer la sélection de types que l'on va checker.A la base c'est  Burger - Thaï - Japonais - Italien - Français - Street Food - Oriental - Pizza et on retire ceux qui sont déjà tombés.
-        types_selection_ids = [11, 2, 5, 9, 8, 12, 15, 10] - fetching_types_used(user)
-        puts "Les types associés: #{types_selection_ids}"
+      # Récupérer la liste de tous les restaurants recommandés par mes gens de confiance
+      restaurants_ids = my_friends_and_experts_restaurants_ids(user)
 
-        # Récupérer le premier thème où plus de 2 recos d'amis
-        type_selected_id = return_type_selected_id(types_selection_ids, restaurants_ids)
-        puts "Le type choisi pour la newsletter: #{type_selected_id}"
+      # Récupérer la sélection de types que l'on va checker.A la base c'est  Burger - Thaï - Japonais - Italien - Français - Street Food - Oriental - Pizza et on retire ceux qui sont déjà tombés.
+      types_selection_ids = [11, 2, 5, 9, 8, 12, 15, 10] - fetching_types_used(user)
 
-        # On vérifie qu'il ya bien eu une catégorie pour laquelle l'utilisateur a eu 2 recos dans le mois
-        if type_selected_id != ""
+      # On récupère tous les thèmes où il y a au moins 3 recos
 
-          # On récupère les restaurants concernés
-          restaurants_on_type = Restaurant.joins(:types).where(types: {id: type_selected_id}, restaurants: {id: restaurants_ids})
-          puts "Les restaurants de tes amis: #{restaurants_on_type}"
+      potential_types = all_potential_types(types_selection_ids, restaurants_ids)
 
-          # On récupère les 2 ou 3 max recos de restaurants les plus fraiches
-          final_recommendations = select_fresh_recommendations_in_type_selected(user, restaurants_on_type)
-          puts "les recos qui paraitront de tes amis: #{final_recommendations}"
+      if potential_types.length > 0
+      # On ordonne les types par le nombre de recos par des amis
 
-          # S'il n'y en a que 2, on en met une de Needl
-          if final_recommendations.length == 2
-            @array = [final_recommendations[0].restaurant_id, final_recommendations[1].restaurant_id]
-            reco_experts = reco_from_experts(user, type_selected_id)
-            final_recommendations << reco_experts
-            puts "la selection finale de recos: #{final_recommendations}"
+        restaurants_from_friends = {}
+        potential_types.each do |type_id|
+          restaurants_on_type = Restaurant.joins(:types).where(types: {id: type_id}, restaurants: {id: restaurants_ids})
+          restaurants_on_type.each do |restaurant|
+            if restaurant.recommendations.where(user_id: @my_visible_friends_ids).length > 0
+              restaurants_from_friends[type_id] ||= []
+              restaurants_from_friends[type_id] << restaurant.id
+            end
           end
 
-        else
-          # on refait la même manip avec les restos de Needl except me uniquement
-          type_selected_id = types_selection_ids.first
-          puts "le type sélectionné: #{type_selected_id}"
-          @array = []
-          final_recommendations = [reco_from_experts(user, type_selected_id), reco_from_experts(user, type_selected_id), reco_from_experts(user,type_selected_id)]
-          puts "la selection finale de recos: #{final_recommendations}"
+        end
 
+
+        type_selected_id = Hash[restaurants_from_friends.sort_by {|k, v| v.length}.reverse].first.first
+        restaurants_on_type_from_friends_ids = Hash[restaurants_from_friends.sort_by {|k, v| v.length}.reverse].first[1]
+
+        # je récupère toutes les recos de mes amis
+
+        restaurants_on_type_from_friends = Restaurant.where(id: restaurants_on_type_from_friends_ids)
+        final_recommendations = select_recommendations_from_friends_in_type_selected(user, restaurants_on_type_from_friends)
+
+        # Je les complète par celles de mes experts
+
+        case final_recommendations.length
+        when 0
+          @array = []
+          final_recommendations += [reco_from_experts(user, type_selected_id, restaurants_ids), reco_from_experts(user, type_selected_id, restaurants_ids ), reco_from_experts(user, type_selected_id, restaurants_ids ) ]
+        when 1
+          @array = [final_recommendations[0].restaurant_id]
+          final_recommendations += [reco_from_experts(user, type_selected_id, restaurants_ids), reco_from_experts(user, type_selected_id, restaurants_ids)]
+        when 2
+          @array = [final_recommendations[0].restaurant_id, final_recommendations[1].restaurant_id ]
+          final_recommendations += [reco_from_experts(user, type_selected_id, restaurants_ids)]
+        when 3
+          @array = [final_recommendations[0].restaurant_id, final_recommendations[1].restaurant_id, final_recommendations[2].restaurant_id ]
         end
 
         # On retient le thème pris pour qu'il ne retombe pas pour le user
         user.newsletter_themes << type_selected_id
         user.newsletter_restaurants += [final_recommendations[0].restaurant_id, final_recommendations[1].restaurant_id, final_recommendations[2].restaurant_id]
         user.save
-        puts "La colomne newsletter themes actualisée pour le user"
 
-        # On envoie les infos à Mailchimp
+        # On envoie les infos à Mailchimp, mais il faut tester qu'on en a bien trois !
         send_mailchimp_the_updates(user, type_selected_id, final_recommendations[0], final_recommendations[1], final_recommendations[2])
-        puts "Data envoyée à mailchimp"
+
+      else
+
+        reset_mailchimp_to_zero(user)
 
       end
 
-    # end
-
-  else
-    puts "Nothing Today."
-  end
-  puts "done."
-
-
+    end
+  # end
 end
 
 
@@ -157,16 +158,19 @@ task :update_taste_correspondences => :environment do
 end
 
 
-def my_friends_restaurants_ids(user)
+def my_friends_and_experts_restaurants_ids(user)
 
-  user_ids = user.my_visible_friends_ids
-  restaurants_ids = Restaurant.joins(:recommendations).where(recommendations: {user_id: user_ids }).pluck(:id).uniq
+  restaurants_ids = Restaurant.joins(:recommendations).where(recommendations: {user_id: @my_visible_friends_ids}).pluck(:id)
+  restaurants_ids += Restaurant.joins(:recommendations).where(recommendations: {user_id: @my_experts_ids , public: true }).pluck(:id)
+  restaurants_ids = restaurants_ids.uniq
   # On enlève les miens, car ça perdrait de son interet pour moi de les avoir dans la newsletter
   restaurants_ids -= user.my_restaurants_ids
+  restaurants_ids -= user.newsletter_restaurants
 
   return restaurants_ids
 
 end
+
 
 def fetching_types_used(user)
   # S'ils sont tous tombés et dans ce cas on reprend à 0. La longueur de 9 peut évoluer, attention !!
@@ -177,21 +181,21 @@ def fetching_types_used(user)
   return user.newsletter_themes
 end
 
-def return_type_selected_id(types_selection_ids, restaurants_ids)
+def all_potential_types(types_selection_ids, restaurants_ids)
   types_ids = Type.joins(:restaurants).where(restaurants: {id: restaurants_ids}).pluck(:id)
+  potential_types = []
   types_selection_ids.each do |type_id|
-    return type_id if types_ids.count(type_id) >= 2
+    potential_types << type_id if types_ids.count(type_id) >= 3
   end
-  return ""
+  potential_types
 end
 
-def select_fresh_recommendations_in_type_selected(user, restaurants_on_type)
+def select_recommendations_from_friends_in_type_selected(user, restaurants_on_type_from_friends)
   # Pour chaque restaurant du bon type, on récupère la recommandation la plus fraiche avec un commentaire s'il y a
   final_recommendations = []
-  restaurants_on_type.each do |restaurant|
-    recommendations = restaurant.recommendations.where(user_id: user.my_visible_friends_ids).order('created_at DESC')
+  restaurants_on_type_from_friends.each do |restaurant|
+    recommendations = restaurant.recommendations.where(user_id: @my_visible_friends_ids).order('created_at DESC')
     recommendations_reviewed = recommendations.where("review != ?", "Je recommande !")
-    recommendation = Recommendation.new
     if recommendations_reviewed.length > 0
       recommendation = recommendations_reviewed.first
       final_recommendations << recommendation
@@ -203,12 +207,10 @@ def select_fresh_recommendations_in_type_selected(user, restaurants_on_type)
   return final_recommendations.sort_by{|element| element.created_at}.reverse.first(3)
 end
 
-def reco_from_experts(user, type_selected_id)
+def reco_from_experts(user, type_selected_id, restaurants_ids)
 
-  my_expert_ids = user.followings.pluck(:id)
-  Recommendation.joins(restaurant: :restaurant_types).where(user_id: my_experts_ids, public: true, restaurant_types: {type_id: type_selected_id}).each do |reco|
-    restaurant_id = reco.restaurant_id
-    if @array.exclude?(restaurant_id)
+  Recommendation.joins(restaurant: :restaurant_types).where(user_id: @my_experts_ids, public: true, restaurant_types: {type_id: type_selected_id}, restaurants: {id: restaurants_ids}).each do |reco|
+    if @array.exclude?(reco.restaurant_id)
       # cette ligne c'est pour qu'il ne choisisse pas un resto deja choisi
       @array << reco.restaurant_id
       return reco
@@ -222,44 +224,78 @@ def send_mailchimp_the_updates(user, type_selected_id, reco1, reco2, reco3)
   gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
   list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
 
-  resto1 = reco1 != "" ? Restaurant.find(reco1.restaurant_id) : ""
-  resto2 = reco2 != "" ? Restaurant.find(reco2.restaurant_id) : ""
-  resto3 = reco3 != "" ? Restaurant.find(reco3.restaurant_id) : ""
-  # photo1 = resto1.restaurant_pictures.first ? resto1.restaurant_pictures.first.picture.url : resto1.picture_url
-  # photo1 = (photo1 == "restaurant_default.jpg") ? "" : photo1
-  # photo2 = resto2.restaurant_pictures.first.picture.url : resto2.picture_url
-  # photo2 = (photo2 == "restaurant_default.jpg") ? "" : photo2
-  # photo3 = resto3.restaurant_pictures.first ? resto3.restaurant_pictures.first.picture.url : resto3.picture_url
-  # photo3 = (photo3 == "restaurant_default.jpg") ? "" : photo3
-  # Si c'est aussi moche c'est pour que ca remplisse en vide s'il n'y a pas assez de restaurants de la part de Needl
+  resto1 = Restaurant.find(reco1.restaurant_id)
+  resto2 = Restaurant.find(reco2.restaurant_id)
+  resto3 = Restaurant.find(reco3.restaurant_id)
+
+  # ici dans thème on va pouvoir changer chaque semaine le nom du thème suivant l'ID pour faire des beaux titres de mail
 
   gibbon.lists(list_id).members(mail_encrypted).upsert(
     body: {
       merge_fields: {
-        THEME: reco1 != "" ? Type.find(type_selected_id).name : "",
-        REST1NAME: reco1 != "" ? resto1.name : "",
-        REST1TYPE: reco1 != "" ? resto1.types.first.name : "",
-        REST1METRO: reco1 != "" ? resto1.subway_name : "",
-        REST1FR: reco1 != "" ? User.find(reco1.user_id).name : "",
-        REST1REV: reco1 != "" ? reco1.review : "",
-        REST1ID: reco1 != "" ? resto1.id : "",
-        REST1IMG: reco1 != "" ? resto1.restaurant_pictures.first ? resto1.restaurant_pictures.first.picture.url : resto1.picture_url : "",
-        REST2NAME: reco2 != "" ? resto2.name : "",
-        REST2TYPE: reco2 != "" ? resto2.types.first.name : "",
-        REST2METRO: reco2 != "" ? resto2.subway_name : "",
-        REST2FR: reco2 != "" ? User.find(reco2.user_id).name : "",
-        REST2REV: reco2 != "" ? reco2.review : "",
-        REST2ID: reco2 != "" ? resto2.id : "",
-        REST2IMG: reco2 != "" ? resto2.restaurant_pictures.first ? resto2.restaurant_pictures.first.picture.url : resto2.picture_url : "",
-        REST3NAME: reco3 != "" ? resto3.name : "",
-        REST3TYPE: reco3 != "" ? resto3.types.first.name : "",
-        REST3METRO: reco3 != "" ? resto3.subway_name : "",
-        REST3FR: reco3 != "" ? User.find(reco3.user_id).name : "",
-        REST3REV: reco3 != "" ? reco3.review : "",
-        REST3ID: reco3 != "" ? resto3.id : "",
-        REST3IMG: reco3 != "" ? resto3.restaurant_pictures.first ? resto3.restaurant_pictures.first.picture.url : resto3.picture_url : ""
+        THEME: Type.find(type_selected_id).name,
+        REST1NAME: resto1.name,
+        REST1METRO: resto1.subway_name,
+        REST1FR: User.find(reco1.user_id).name,
+        REST1REV: reco1.review,
+        REST1ID: resto1.id,
+        REST1IMG: resto1.restaurant_pictures.first ? resto1.restaurant_pictures.first.picture.url : resto1.picture_url,
+        REST2NAME: resto2.name,
+        REST2METRO: resto2.subway_name,
+        REST2FR: User.find(reco2.user_id).name,
+        REST2REV: reco2.review,
+        REST2ID: resto2.id,
+        REST2IMG: resto2.restaurant_pictures.first ? resto2.restaurant_pictures.first.picture.url : resto2.picture_url,
+        REST3NAME: resto3.name,
+        REST3METRO: resto3.subway_name,
+        REST3FR: User.find(reco3.user_id).name,
+        REST3REV: reco3.review,
+        REST3ID: resto3.id,
+        REST3IMG: resto3.restaurant_pictures.first ? resto3.restaurant_pictures.first.picture.url : resto3.picture_url
       }
     }
   )
 
 end
+
+def reset_mailchimp_to_zero(user)
+  mail_encrypted = Digest::MD5.hexdigest(user.email.downcase)
+  gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
+  list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
+
+
+  gibbon.lists(list_id).members(mail_encrypted).upsert(
+    body: {
+      merge_fields: {
+        THEME: "",
+        REST1NAME: "",
+        REST1METRO: "",
+        REST1FR: "",
+        REST1REV: "",
+        REST1ID: "",
+        REST1IMG: "",
+        REST2NAME: ""
+        REST2METRO: "",
+        REST2FR: "",
+        REST2REV: "",
+        REST2ID: "",
+        REST2IMG: "",
+        REST3NAME: "",
+        REST3METRO: "",
+        REST3FR: "",
+        REST3REV: "",
+        REST3ID: "",
+        REST3IMG: ""
+      }
+    }
+  )
+
+
+
+
+
+end
+
+
+
+
