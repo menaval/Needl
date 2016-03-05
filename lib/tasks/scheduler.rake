@@ -274,7 +274,7 @@ def reset_mailchimp_to_zero(user)
         REST1REV: "",
         REST1ID: "",
         REST1IMG: "",
-        REST2NAME: ""
+        REST2NAME: "",
         REST2METRO: "",
         REST2FR: "",
         REST2REV: "",
