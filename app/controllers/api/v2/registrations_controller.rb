@@ -41,7 +41,7 @@ class Api::V2::RegistrationsController < ApplicationController
                     # FNAME: @user.name.partition(" ").first,
                     # LNAME: @user.name.partition(" ").last,
                     # TOKEN: @user.authentication_token,
-                    # GENDER: @user.gender
+                    # GENDER: @user.gender ? @user.gender : ""
                   # }
                 # }
               # )
