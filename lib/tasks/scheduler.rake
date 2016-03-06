@@ -64,13 +64,13 @@ task :update_mailchimp => :environment do
           @array = [final_recommendations[0].restaurant_id, final_recommendations[1].restaurant_id, final_recommendations[2].restaurant_id ]
         end
 
+        # On envoie les infos à Mailchimp, mais il faut tester qu'on en a bien trois !
+        send_mailchimp_the_updates(user, type_selected_id, final_recommendations[0], final_recommendations[1], final_recommendations[2])
+
         # On retient le thème pris pour qu'il ne retombe pas pour le user
         user.newsletter_themes << type_selected_id
         user.newsletter_restaurants += [final_recommendations[0].restaurant_id, final_recommendations[1].restaurant_id, final_recommendations[2].restaurant_id]
         user.save
-
-        # On envoie les infos à Mailchimp, mais il faut tester qu'on en a bien trois !
-        send_mailchimp_the_updates(user, type_selected_id, final_recommendations[0], final_recommendations[1], final_recommendations[2])
 
       else
 
