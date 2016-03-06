@@ -6,6 +6,8 @@ task :update_mailchimp => :environment do
 
     if user.email.include?("needlapp.com") == false && (Time.now - user.created_at)/3600 > 9
 
+      puts "utilisateur #{user.name}, #{user.id}"
+
       @my_visible_friends_ids = user.my_visible_friends_ids
       @my_experts_ids         = user.followings.pluck(:id)
       # ne sert à rien d'actualiser la newsletter de ceux qui n'ont pas d'adresse mail. De plus on ne l'envoie que à ceux qui sont inscrit depuis 10 jours donc pas la peine de le faire pour ceux inscrits depuis moins de 9 jours
@@ -19,6 +21,7 @@ task :update_mailchimp => :environment do
       # On récupère tous les thèmes où il y a au moins 3 recos
 
       potential_types = all_potential_types(types_selection_ids, restaurants_ids)
+      puts "potential_types #{potential_types}"
 
       if potential_types.length > 0
       # On ordonne les types par le nombre de recos par des amis
@@ -35,7 +38,7 @@ task :update_mailchimp => :environment do
 
         end
 
-
+        puts "restaurants_on_type_from_friends: #{restaurants_from_friends}"
         type_selected_id = Hash[restaurants_from_friends.sort_by {|k, v| v.length}.reverse].first.first
         restaurants_on_type_from_friends_ids = Hash[restaurants_from_friends.sort_by {|k, v| v.length}.reverse].first[1]
 
