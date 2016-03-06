@@ -179,7 +179,7 @@ end
 
 def fetching_types_used(user)
   # S'ils sont tous tombés et dans ce cas on reprend à 0. La longueur de 9 peut évoluer, attention !!
-  if user.newsletter_themes.length == 8
+  if user.newsletter_themes.length == 7
     user.update_attributes(newsletter_themes: [])
     user.save
   end
