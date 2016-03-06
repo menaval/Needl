@@ -4,7 +4,8 @@ task :update_mailchimp => :environment do
 
   User.all.each do |user|
 
-    if user.email.include?("needlapp.com") == false && (Time.now - user.created_at)/3600 > 9
+    # le token on l'enlèvera quand les gens pourront s'inscrire par mail
+    if user.email.include?("needlapp.com") == false && (Time.now - user.created_at)/3600 > 9 && user.token
 
       puts "utilisateur #{user.name}, #{user.id}"
 
