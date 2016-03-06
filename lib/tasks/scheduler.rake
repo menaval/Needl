@@ -30,8 +30,8 @@ task :update_mailchimp => :environment do
         potential_types.each do |type_id|
           restaurants_on_type = Restaurant.joins(:types).where(types: {id: type_id}, restaurants: {id: restaurants_ids})
           restaurants_on_type.each do |restaurant|
+            restaurants_from_friends[type_id] ||= []
             if restaurant.recommendations.where(user_id: @my_visible_friends_ids).length > 0
-              restaurants_from_friends[type_id] ||= []
               restaurants_from_friends[type_id] << restaurant.id
             end
           end
