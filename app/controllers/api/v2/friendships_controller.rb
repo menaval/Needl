@@ -10,8 +10,8 @@ class Api::V2::FriendshipsController < ApplicationController
     @friends = User.where(id: my_friends_ids).order(:name)
     requests_received = Friendship.where(receiver_id: @user.id, accepted: false)
     @requests_received_users = User.where(id: @user.my_requests_received_ids)
-    request_sent = Friendship.where(seender_id: @user.id, accepted: false)
-    @request_sent_users = User.where(id: @user.my_requests_sent_ids)
+    requests_sent = Friendship.where(sender_id: @user.id, accepted: false)
+    @requests_sent_users = User.where(id: @user.my_requests_sent_ids)
     t = Friendship.arel_table
     friendships = Friendship.where(t[:sender_id].eq_any(my_friends_ids).and(t[:receiver_id].eq(@user.id)).or(t[:sender_id].eq(@user.id).and(t[:receiver_id].eq_any(my_friends_ids))))
 
@@ -21,7 +21,7 @@ class Api::V2::FriendshipsController < ApplicationController
     end
 
     @requests_sent_id = {}
-    requests_received.each do |request|
+    requests_sent.each do |request|
       @requests_sent_id[request.receiver_id] = request.id
     end
 
@@ -125,7 +125,9 @@ class Api::V2::FriendshipsController < ApplicationController
   end
 
   def refuse
+    friendship = Friendship.find()
     @tracker.track(@user.id, 'ignore_friend', { "user" => @user.name })
+
     NotInterestedRelation.create(member_one_id: @user.id, member_two_id: params["friend_id"])
     render json: {message: "success"}
   end
