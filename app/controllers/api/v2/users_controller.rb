@@ -37,6 +37,36 @@ class Api::V2::UsersController < ApplicationController
 
   def experts
     @all_experts = User.where(public: true)
+    all_experts_ids = @all_experts.pluck(:id)
+
+    @experts_recommendations = {}
+    @experts_public_recommendations = {}
+    Recommendation.where(user_id: all_experts_ids).each do |recommendation|
+        @experts_recommendations[recommendation.user_id] ||= []
+        @experts_recommendations[recommendation.user_id] << recommendation.restaurant_id
+      if recommendation.public == true
+        @experts_public_recommendations[recommendation.user_id] ||= []
+        @experts_public_recommendations[recommendation.user_id] << recommendation.restaurant_id
+      end
+    end
+
+    @experts_wishes = {}
+    Wish.where(user_id: all_experts_ids).each do |wish|
+      @experts_wishes[wish.user_id] ||= []
+      @experts_wishes[wish.user_id] << wish.restaurant_id
+    end
+
+    @experts_followers = {}
+    Followership.where(following_id: all_experts_ids).each do |followership|
+      @experts_followers[followership.following_id] ||= []
+      @experts_followers[followership.following_id] << followership.follower_id
+    end
+
+    @experts_followings = {}
+    Followership.where(follower_id: all_experts_ids).each do |followership|
+      @experts_followers[followership.follower_id] ||= []
+      @experts_followers[followership.follower_id] << followership.following_id
+    end
   end
 
   def new_parse_installation
