@@ -57,9 +57,10 @@ Rails.application.routes.draw do
         get :modify
       end
     end
-    resources :friendships, only: [:index, :create, :destroy] do
+    resources :friendships, only: [:index, :destroy] do
       collection do
         post :ask
+        post :accept
         post :refuse
         post :make_invisible
       end

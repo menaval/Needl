@@ -102,17 +102,8 @@ class Api::V2::FriendshipsController < ApplicationController
 
     friendship.destroy
     @tracker.track(@user.id, 'refuse_or_delete_friend', { "user" => @user.name })
-    render json: {message: "sucess"}
+    render json: {message: "success"}
     # gérer la redirection suivant un delete ou un ignore
-  end
-
-  def create
-    friendship = Friendship.find(params["id"])
-    @friend_id = friendship.sender_id
-    friendship.update_attribute(:accepted, true)
-    @tracker.track(@user.id, 'accept_friend', { "user" => @user.name })
-    notif_friendship("accepted")
-    render json: {message: "sucess"}
   end
 
   def ask
@@ -121,15 +112,22 @@ class Api::V2::FriendshipsController < ApplicationController
     @friendship.save
     @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
     notif_friendship("invited")
-    render json: {message: "sucess"}
-    # ex: http://localhost:3000/api/friendships/new?friendship[sender_id]=40&friendship[receiver_id]=42&friendship[accepted]=false
+    render json: {message: "success"}
+  end
 
+  def accept
+    friendship = Friendship.find(params["id"])
+    @friend_id = friendship.sender_id
+    friendship.update_attribute(:accepted, true)
+    @tracker.track(@user.id, 'accept_friend', { "user" => @user.name })
+    notif_friendship("accepted")
+    render json: {message: "success"}
   end
 
   def refuse
     @tracker.track(@user.id, 'ignore_friend', { "user" => @user.name })
     NotInterestedRelation.create(member_one_id: @user.id, member_two_id: params["friend_id"])
-    render json: {message: "sucess"}
+    render json: {message: "success"}
   end
 
 
