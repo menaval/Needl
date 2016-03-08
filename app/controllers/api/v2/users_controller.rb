@@ -35,7 +35,7 @@ class Api::V2::UsersController < ApplicationController
 
   end
 
-  def followings
+  def experts
     @all_experts = User.where(public: true)
   end
 

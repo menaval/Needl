@@ -69,12 +69,8 @@ class Api::V2::FriendshipsController < ApplicationController
 
     split_friends_by_categories
 
-    # chercher une méthode 'automatique'
-    if params["accepted"] == "false"
-      create
-    elsif params["accepted"] == "true"
-      answer_yes
-    elsif params["invisible"]
+
+    if params["invisible"]
       invisible
     elsif params["not_interested"]
       @tracker.track(@user.id, 'ignore_friend', { "user" => @user.name })
@@ -121,10 +117,9 @@ class Api::V2::FriendshipsController < ApplicationController
 
   # A supprimer
 
-  def create
+  def ask
     @friend_id = params["friend_id"].to_i
-    # en attendant de détruire complètement cette étape, on met accepted à true
-    @friendship = Friendship.new(sender_id: @user.id, receiver_id: @friend_id, accepted: true)
+    @friendship = Friendship.new(sender_id: @user.id, receiver_id: @friend_id, accepted: false)
     @friendship.save
     @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
     notif_friendship("invited")
@@ -135,9 +130,9 @@ class Api::V2::FriendshipsController < ApplicationController
 
   # A supprimer
 
-  def answer_yes
-    @friend_id = params["friend_id"].to_i
-    friendship = Friendship.where(sender_id: @friend_id, receiver_id: @user.id).first
+  def create
+    friendship = Friendship.find(params["id"])
+    @friend_id = friendship.sender_id
     friendship.update_attribute(:accepted, true)
     @tracker.track(@user.id, 'accept_friend', { "user" => @user.name })
     notif_friendship("accepted")

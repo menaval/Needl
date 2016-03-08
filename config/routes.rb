@@ -57,7 +57,11 @@ Rails.application.routes.draw do
         get :modify
       end
     end
-    resources :friendships, only: [:index, :new]
+    resources :friendships, only: [:index, :create] do
+      collection do
+        post :ask
+      end
+    end
     resources :followerships, only: [:index, :new]
     resources :wishes, only: [:index, :create]
     resources :registrations, only: [:edit, :update, :new, :create]
