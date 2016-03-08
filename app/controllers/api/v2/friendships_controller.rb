@@ -9,7 +9,7 @@ class Api::V2::FriendshipsController < ApplicationController
     my_friends_ids = @user.my_friends_ids
     @friends = User.where(id: my_friends_ids).order(:name)
     requests_received = Friendship.where(receiver_id: @user.id, accepted: false)
-    @requests_received_users = User.where(id: @user.my_requests_received_ids - @user.)
+    @requests_received_users = User.where(id: @user.my_requests_received_ids)
     requests_sent = Friendship.where(sender_id: @user.id, accepted: false)
     @requests_sent_users = User.where(id: @user.my_requests_sent_ids)
     t = Friendship.arel_table
@@ -102,7 +102,7 @@ class Api::V2::FriendshipsController < ApplicationController
     friendship.destroy
     @tracker.track(@user.id, 'delete_friend', { "user" => @user.name })
     render json: {message: "success"}
-    # gérer la redirection suivant un delete ou un ignore
+    # renvoyer des infos particulières pour actualiser les scores ?
   end
 
   def ask
@@ -123,6 +123,7 @@ class Api::V2::FriendshipsController < ApplicationController
     @tracker.track(@user.id, 'accept_friend', { "user" => @user.name })
     notif_friendship("accepted")
     render json: {message: "success"}
+    # renvoyer des infos particulières pour actualiser les scores ?
   end
 
   def refuse
@@ -144,6 +145,7 @@ class Api::V2::FriendshipsController < ApplicationController
     end
     @tracker.track(@user.id, 'hide_friend', { "user" => user.name })
     render json: {message: "sucess"}
+    # renvoyer des infos particulières pour actualiser les scores ?
   end
 
   def make_visible
@@ -156,6 +158,7 @@ class Api::V2::FriendshipsController < ApplicationController
     end
     @tracker.track(@user.id, 'unhide_friend', { "user" => user.name })
     render json: {message: "sucess"}
+    # renvoyer des infos particulières pour actualiser les scores ?
   end
 
   private

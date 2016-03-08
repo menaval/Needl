@@ -92,7 +92,7 @@ Rails.application.routes.draw do
           post :make_visible
         end
       end
-      resources :followerships, only: [:index, :new]
+      resources :followerships, only: [:index, :create, :destroy]
       resources :wishes, only: [:index, :new, :create, :destroy]
       resources :registrations, only: [:edit, :update, :new, :create]
       resources :sessions, only: [:create]

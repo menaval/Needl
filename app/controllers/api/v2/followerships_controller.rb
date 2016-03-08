@@ -45,4 +45,38 @@ class Api::V2::FollowershipsController < ApplicationController
 
   end
 
+  def create
+   user = User.find_by(authentication_token: params["user_token"])
+   following = User.find(params["following_id"].to_i)
+   Followership.create(follower_id: user.id, following_id: following.id)
+   @tracker.track(user.id, 'Followership Created', { "follower" => user.name, "following" => following.name})
+   render json: {message: "success"}
+   # renvoyer des infos particulières pour actualiser les scores ?
+  end
+
+
+  def destroy
+    user = User.find_by(authentication_token: params["user_token"])
+    followership = Followership.find(params["id"].to_i)
+    following = followership.following
+
+    # Supprimer tous les points donnés par l'utilisateur
+    @recos_from_expert = Recommendation.find_by_sql("SELECT * FROM recommendations WHERE user_id = #{user.id} AND experts_thanking @> '{#{following.id}}'")
+    @recos_from_expert.each do |reco|
+      new_experts_thanking = reco.experts_thanking - [following.id]
+      reco.update_attributes(experts_thanking: new_experts_thanking)
+      unthank_experts([following.id])
+    end
+
+    followership.destroy
+    @tracker.track(user.id, 'Followership Destroyed', { "user" => user.name, "following" => following.name})
+    render json: {message: "success"}
+    # renvoyer des infos particulières pour actualiser les scores ?
+
+
+  end
+
+
+
+
 end
