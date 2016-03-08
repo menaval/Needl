@@ -1,4 +1,5 @@
 json.followings           @my_experts do |expert|
+  json.followership_id         @followings_ids[expert.id]
   json.id                      expert.id
   json.name                    expert.name.split(" ")[0]
   json.fullname                expert.name

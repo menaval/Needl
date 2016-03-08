@@ -5,7 +5,8 @@ class Api::V2::FollowershipsController < ApplicationController
 
   def index
     @user = User.find_by(authentication_token: params["user_token"])
-    my_experts_ids = @user.followings.pluck(:id)
+    my_followerships = Followership.where(follower_id: @user.id)
+    my_experts_ids = my_followerships.pluck(:following_id)
     @my_experts = User.where(id: my_experts_ids)
 
     @experts_recommendations = {}
@@ -17,6 +18,11 @@ class Api::V2::FollowershipsController < ApplicationController
         @experts_public_recommendations[recommendation.user_id] ||= []
         @experts_public_recommendations[recommendation.user_id] << recommendation.restaurant_id
       end
+    end
+
+    @followings_ids = {}
+    my_followerships.each do |followership|
+      @followings_ids[followership.following_id] = followership.id
     end
 
     @experts_wishes = {}

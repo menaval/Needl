@@ -57,15 +57,7 @@ Rails.application.routes.draw do
         get :modify
       end
     end
-    resources :friendships, only: [:index, :destroy] do
-      collection do
-        post :ask
-        post :accept
-        post :refuse
-        post :make_invisible
-        post :make_visible
-      end
-    end
+    resources :friendships, only: [:index, :destroy]
     resources :followerships, only: [:index, :new]
     resources :wishes, only: [:index, :create]
     resources :registrations, only: [:edit, :update, :new, :create]
@@ -91,7 +83,15 @@ Rails.application.routes.draw do
         end
       end
       resources :recommendations, only: [:index, :create, :destroy, :update]
-      resources :friendships, only: [:index, :new, :destroy]
+      resources :friendships, only: [:index, :destroy] do
+        collection do
+          post :ask
+          post :accept
+          post :refuse
+          post :make_invisible
+          post :make_visible
+        end
+      end
       resources :followerships, only: [:index, :new]
       resources :wishes, only: [:index, :new, :create, :destroy]
       resources :registrations, only: [:edit, :update, :new, :create]

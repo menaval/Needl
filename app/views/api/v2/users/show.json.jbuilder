@@ -1,3 +1,4 @@
+json.friendship_id             @friendship_id
 json.id                        @user.id
 json.name                      @user.name.split(" ")[0]
 json.fullname                  @user.name
