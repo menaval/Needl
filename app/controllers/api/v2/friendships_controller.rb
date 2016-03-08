@@ -69,13 +69,6 @@ class Api::V2::FriendshipsController < ApplicationController
 
     split_friends_by_categories
 
-
-    if params["invisible"]
-      invisible
-    elsif params["not_interested"]
-      @tracker.track(@user.id, 'ignore_friend', { "user" => @user.name })
-      not_interested
-    end
   end
 
   def destroy
@@ -113,9 +106,14 @@ class Api::V2::FriendshipsController < ApplicationController
     # gérer la redirection suivant un delete ou un ignore
   end
 
-  private
-
-  # A supprimer
+  def create
+    friendship = Friendship.find(params["id"])
+    @friend_id = friendship.sender_id
+    friendship.update_attribute(:accepted, true)
+    @tracker.track(@user.id, 'accept_friend', { "user" => @user.name })
+    notif_friendship("accepted")
+    render json: {message: "sucess"}
+  end
 
   def ask
     @friend_id = params["friend_id"].to_i
@@ -128,19 +126,14 @@ class Api::V2::FriendshipsController < ApplicationController
 
   end
 
-  # A supprimer
-
-  def create
-    friendship = Friendship.find(params["id"])
-    @friend_id = friendship.sender_id
-    friendship.update_attribute(:accepted, true)
-    @tracker.track(@user.id, 'accept_friend', { "user" => @user.name })
-    notif_friendship("accepted")
+  def refuse
+    @tracker.track(@user.id, 'ignore_friend', { "user" => @user.name })
+    NotInterestedRelation.create(member_one_id: @user.id, member_two_id: params["friend_id"])
     render json: {message: "sucess"}
   end
 
 
-  def invisible
+  def make_invisible
     invisible = params["invisible"]
     if Friendship.where(sender_id: params["friend_id"].to_i, receiver_id: @user.id).first
       friendship = Friendship.where(sender_id: params["friend_id"].to_i, receiver_id: @user.id).first
@@ -157,7 +150,9 @@ class Api::V2::FriendshipsController < ApplicationController
     render json: {message: "sucess"}
   end
 
-  #  A supprimer
+
+
+  private
 
   def notif_friendship(status)
 
@@ -183,10 +178,7 @@ class Api::V2::FriendshipsController < ApplicationController
 
   end
 
-  def not_interested
-    NotInterestedRelation.create(member_one_id: @user.id, member_two_id: params["friend_id"])
-    render json: {message: "sucess"}
-  end
+
 
   # def friendship_params
   #   params.require(:friendship).permit(:sender_id, :receiver_id, :accepted)

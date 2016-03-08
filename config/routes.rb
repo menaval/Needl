@@ -57,9 +57,11 @@ Rails.application.routes.draw do
         get :modify
       end
     end
-    resources :friendships, only: [:index, :create] do
+    resources :friendships, only: [:index, :create, :destroy] do
       collection do
         post :ask
+        post :refuse
+        post :make_invisible
       end
     end
     resources :followerships, only: [:index, :new]
