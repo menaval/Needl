@@ -76,6 +76,7 @@ Rails.application.routes.draw do
           get  :reset_badge_to_zero
           get  :update_version
           get  :score
+          get  :experts
           post :new_parse_installation
           post :contacts_access
           post :invite_contact

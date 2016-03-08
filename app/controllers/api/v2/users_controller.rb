@@ -35,6 +35,10 @@ class Api::V2::UsersController < ApplicationController
 
   end
 
+  def followings
+    @all_experts = User.where(public: true)
+  end
+
   def new_parse_installation
 
     client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])
