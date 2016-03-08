@@ -54,7 +54,6 @@ class Api::V2::FollowershipsController < ApplicationController
    # renvoyer des infos particulières pour actualiser les scores ?
   end
 
-
   def destroy
     @user = User.find_by(authentication_token: params["user_token"])
     followership = Followership.find(params["id"].to_i)
@@ -72,11 +71,6 @@ class Api::V2::FollowershipsController < ApplicationController
     @tracker.track(user.id, 'Followership Destroyed', { "user" => @user.name, "following" => following.name})
     render json: {message: "success"}
     # renvoyer des infos particulières pour actualiser les scores ?
-
-
   end
-
-
-
 
 end

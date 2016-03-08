@@ -8,10 +8,10 @@ class Api::V2::FriendshipsController < ApplicationController
     @user = User.find_by(authentication_token: params["user_token"])
     my_friends_ids = @user.my_friends_ids
     @friends = User.where(id: my_friends_ids).order(:name)
-    requests_received = Friendship.where(receiver_id: @user.id, accepted: false)
-    @requests_received_users = User.where(id: @user.my_requests_received_ids)
-    requests_sent = Friendship.where(sender_id: @user.id, accepted: false)
-    @requests_sent_users = User.where(id: @user.my_requests_sent_ids)
+    requests_received = Friendship.where(receiver_id: @user.id, accepted: false).where.not(sender_id: @user.refuseds)
+    @requests_received_users = User.where(id: @user.my_requests_received_ids - @user.refuseds)
+    requests_sent = Friendship.where(sender_id: @user.id, accepted: false).where.not(receiver_id: @user.refusers)
+    @requests_sent_users = User.where(id: @user.my_requests_sent_ids - @user.refusers)
     t = Friendship.arel_table
 
     # pour éviter les bugs si l'utilisateur n'a pas d'amis
