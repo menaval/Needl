@@ -126,10 +126,10 @@ module Api
       # pour voir dans quelle sens s'est faite la relation sans avoir à le préciser dans l'url
       if Friendship.where(sender_id: params["friend_id"].to_i, receiver_id: @user.id).first
       friendship = Friendship.where(sender_id: params["friend_id"].to_i, receiver_id: @user.id).first
-      NotInterestedRelation.create(member_one_id: params["friend_id"].to_i, member_two_id: @user.id)
+      NotInterestedRelation.create(refuser_id: params["friend_id"].to_i, refused_id: @user.id)
     else
       friendship = Friendship.where(sender_id: @user.id, receiver_id: params["friend_id"].to_i).first
-      NotInterestedRelation.create(member_one_id: @user.id, member_two_id: params["friend_id"].to_i)
+      NotInterestedRelation.create(refuser_id: @user.id, refused_id: params["friend_id"].to_i)
     end
       friendship.destroy
       render json: {message: "sucess"}
@@ -180,7 +180,7 @@ module Api
     end
 
     def not_interested
-      NotInterestedRelation.create(member_one_id: @user.id, member_two_id: params["friend_id"])
+      NotInterestedRelation.create(refuser_id: @user.id, refused_id: params["friend_id"])
       render json: {message: "sucess"}
     end
 

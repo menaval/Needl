@@ -1,5 +1,5 @@
 ActiveAdmin.register NotInterestedRelation do
 
-  permit_params :member_one_id, :member_two_id
+  permit_params :refuser_id, :refused_id
 
 end

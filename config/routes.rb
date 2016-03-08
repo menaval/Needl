@@ -63,6 +63,7 @@ Rails.application.routes.draw do
         post :accept
         post :refuse
         post :make_invisible
+        post :make_visible
       end
     end
     resources :followerships, only: [:index, :new]

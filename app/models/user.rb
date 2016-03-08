@@ -10,8 +10,8 @@ class User < ActiveRecord::Base
   has_many :followerships, foreign_key: :following_id, dependent: :destroy
   has_many :received_followerships, foreign_key: :follower_id, class_name: 'Followership', dependent: :destroy
 
-  has_many :not_interested_relations, foreign_key: :member_two_id, dependent: :destroy
-  has_many :received_not_interested_relations, foreign_key: :member_one_id, class_name: 'NotInterestedRelation', dependent: :destroy
+  has_many :not_interested_relations, foreign_key: :refused_id, dependent: :destroy
+  has_many :received_not_interested_relations, foreign_key: :refuser_id, class_name: 'NotInterestedRelation', dependent: :destroy
 
   has_many :taste_correspondences, foreign_key: :member_two_id, dependent: :destroy
   has_many :mutual_taste_correspondences, foreign_key: :member_one_id, class_name: 'TasteCorrespondence', dependent: :destroy
@@ -22,8 +22,8 @@ class User < ActiveRecord::Base
   has_many :followings, :through => :received_followerships, dependent: :destroy
   has_many :followers, :through => :followerships, dependent: :destroy
 
-  has_many :member_ones, :through => :not_interested_relations, dependent: :destroy
-  has_many :member_twos, :through => :received_not_interested_relations, dependent: :destroy
+  has_many :refusers, :through => :not_interested_relations, dependent: :destroy
+  has_many :refuseds, :through => :received_not_interested_relations, dependent: :destroy
 
   has_many :member_ones, :through => :taste_correspondences, dependent: :destroy
   has_many :member_twos, :through => :mutual_taste_correspondences, dependent: :destroy
@@ -73,8 +73,8 @@ class User < ActiveRecord::Base
   end
 
   def refused_relations_ids
-    user_ids = self.member_ones.pluck(:id)
-    user_ids += self.member_twos.pluck(:id)
+    user_ids = self.refusers.pluck(:id)
+    user_ids += self.refuseds.pluck(:id)
   end
 
   def my_visible_friends_restaurants_ids

@@ -9,7 +9,7 @@ class NotInterestedRelationsController < ApplicationController
   private
 
   def not_interested_relation_params
-    params.require(:not_interested_relation).permit(:member_one_id, :member_two_id)
+    params.require(:not_interested_relation).permit(:refuser_id, :refused_id)
   end
 
 end

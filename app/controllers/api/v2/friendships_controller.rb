@@ -9,7 +9,7 @@ class Api::V2::FriendshipsController < ApplicationController
     my_friends_ids = @user.my_friends_ids
     @friends = User.where(id: my_friends_ids).order(:name)
     requests_received = Friendship.where(receiver_id: @user.id, accepted: false)
-    @requests_received_users = User.where(id: @user.my_requests_received_ids)
+    @requests_received_users = User.where(id: @user.my_requests_received_ids - @user.)
     requests_sent = Friendship.where(sender_id: @user.id, accepted: false)
     @requests_sent_users = User.where(id: @user.my_requests_sent_ids)
     t = Friendship.arel_table
@@ -75,17 +75,10 @@ class Api::V2::FriendshipsController < ApplicationController
   end
 
   def destroy
-
     @user = User.find_by(authentication_token: params["user_token"])
-    friend_id = params["id"].to_i
-    # pour voir dans quelle sens s'est faite la relation sans avoir à le préciser dans l'url
-    if Friendship.where(sender_id: friend_id, receiver_id: @user.id).first
-      friendship = Friendship.where(sender_id: friend_id, receiver_id: @user.id).first
-      NotInterestedRelation.create(member_one_id: friend_id, member_two_id: @user.id)
-    else
-      friendship = Friendship.where(sender_id: @user.id, receiver_id: friend_id).first
-      NotInterestedRelation.create(member_one_id: @user.id, member_two_id: friend_id)
-    end
+    friendship = Friendship.find(params["id"])
+    friend_id = friendship.sender_id == @user.id ? friendship.receiver_id : friendship.sender_id
+    NotInterestedRelation.create(refuser_id: @user.id, refused_id: friend_id)
 
     # Supprimer tous les points donnés par le friend
     @recos_from_friend = Recommendation.find_by_sql("SELECT * FROM recommendations WHERE user_id = #{friend_id} AND friends_thanking @> '{#{@user.id}}'")
@@ -104,21 +97,23 @@ class Api::V2::FriendshipsController < ApplicationController
     end
 
     friendship.destroy
-    @tracker.track(@user.id, 'refuse_or_delete_friend', { "user" => @user.name })
+    @tracker.track(@user.id, 'delete_friend', { "user" => @user.name })
     render json: {message: "success"}
     # gérer la redirection suivant un delete ou un ignore
   end
 
   def ask
+    @user = User.find_by(authentication_token: params["user_token"])
     @friend_id = params["friend_id"].to_i
     @friendship = Friendship.new(sender_id: @user.id, receiver_id: @friend_id, accepted: false)
     @friendship.save
-    @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
+    @tracker.track(@user.id, 'ask_friend', { "user" => @user.name })
     notif_friendship("invited")
     render json: {message: "success"}
   end
 
   def accept
+    @user = User.find_by(authentication_token: params["user_token"])
     friendship = Friendship.find(params["id"])
     @friend_id = friendship.sender_id
     friendship.update_attribute(:accepted, true)
@@ -128,32 +123,37 @@ class Api::V2::FriendshipsController < ApplicationController
   end
 
   def refuse
-    friendship = Friendship.find()
-    @tracker.track(@user.id, 'ignore_friend', { "user" => @user.name })
-
-    NotInterestedRelation.create(member_one_id: @user.id, member_two_id: params["friend_id"])
+    user = User.find_by(authentication_token: params["user_token"])
+    friendship = Friendship.find(params["id"])
+    @tracker.track(user.id, 'refuse_friend', { "user" => user.name })
+    NotInterestedRelation.create(refuser_id: user.id, refused_id: friendship.sender_id)
     render json: {message: "success"}
   end
 
 
   def make_invisible
-    invisible = params["invisible"]
-    if Friendship.where(sender_id: params["friend_id"].to_i, receiver_id: @user.id).first
-      friendship = Friendship.where(sender_id: params["friend_id"].to_i, receiver_id: @user.id).first
-      friendship.update_attribute(:sender_invisible, invisible)
+    user = User.find_by(authentication_token: params["user_token"])
+    friendship = Friendship.find(params["id"])
+    if friendship.sender_id == user.id
+      friendship.update_attribute(:receiver_invisible, true)
     else
-      friendship = Friendship.where(sender_id: @user.id, receiver_id: params["friend_id"].to_i).first
-      friendship.update_attribute(:receiver_invisible, invisible)
+      friendship.update_attribute(:sender_invisible, true)
     end
-    if invisible == true
-      @tracker.track(@user.id, 'hide_friend', { "user" => @user.name })
-    else
-      @tracker.track(@user.id, 'unhide_friend', { "user" => @user.name })
-    end
+    @tracker.track(@user.id, 'hide_friend', { "user" => user.name })
     render json: {message: "sucess"}
   end
 
-
+  def make_visible
+    user = User.find_by(authentication_token: params["user_token"])
+    friendship = Friendship.find(params["id"])
+    if friendship.sender_id == user.id
+      friendship.update_attribute(:receiver_invisible, false)
+    else
+      friendship.update_attribute(:sender_invisible, false)
+    end
+    @tracker.track(@user.id, 'unhide_friend', { "user" => user.name })
+    render json: {message: "sucess"}
+  end
 
   private
 

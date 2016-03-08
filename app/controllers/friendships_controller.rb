@@ -56,12 +56,12 @@ class FriendshipsController < ApplicationController
   def destroy
     if eval(params[:id]).is_a? Integer
       friendship = Friendship.find(eval(params[:id]))
-      NotInterestedRelation.create(member_one_id: friendship.sender_id, member_two_id: friendship.receiver_id)
+      NotInterestedRelation.create(refuser_id: friendship.sender_id, refused_id: friendship.receiver_id)
       friendship.destroy
       redirect_to friendships_path
     else
       friendship = Friendship.find(eval(params[:id])[:value])
-      NotInterestedRelation.create(member_one_id: friendship.sender_id, member_two_id: friendship.receiver_id)
+      NotInterestedRelation.create(refuser_id: friendship.sender_id, refused_id: friendship.receiver_id)
       friendship.destroy
       redirect_to new_friendship_path
     end
