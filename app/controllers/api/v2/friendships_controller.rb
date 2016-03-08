@@ -8,16 +8,29 @@ class Api::V2::FriendshipsController < ApplicationController
     @user = User.find_by(authentication_token: params["user_token"])
     my_friends_ids = @user.my_friends_ids
     @friends = User.where(id: my_friends_ids).order(:name)
-    @requests = User.where(id: @user.my_requests_received_ids)
+    requests_received = Friendship.where(receiver_id: @user.id, accepted: false)
+    @requests_received_users = User.where(id: @user.my_requests_received_ids)
+    request_sent = Friendship.where(seender_id: @user.id, accepted: false)
+    @request_sent_users = User.where(id: @user.my_requests_sent_ids)
     t = Friendship.arel_table
     friendships = Friendship.where(t[:sender_id].eq_any(my_friends_ids).and(t[:receiver_id].eq(@user.id)).or(t[:sender_id].eq(@user.id).and(t[:receiver_id].eq_any(my_friends_ids))))
 
-    @invisibility = {}
+    @requests_received_id = {}
+    requests_received.each do |request|
+      @requests_received_id[request.sender_id] = request.id
+    end
+
+    @requests_sent_id = {}
+    requests_received.each do |request|
+      @requests_sent_id[request.receiver_id] = request.id
+    end
+
+    @infos = {}
     friendships.each do |friendship|
       if friendship.sender_id == @user.id
-        @invisibility[friendship.receiver_id] = friendship.receiver_invisible
+        @infos[friendship.receiver_id] = {friendship_id: friendship.id, invisibility: friendship.receiver_invisible}
       else
-        @invisibility[friendship.sender_id] = friendship.sender_invisible
+        @infos[friendship.sender_id] = {friendship_id: friendship.id, invisibility: friendship.sender_invisible}
       end
     end
 
@@ -67,13 +80,6 @@ class Api::V2::FriendshipsController < ApplicationController
       @tracker.track(@user.id, 'ignore_friend', { "user" => @user.name })
       not_interested
     end
-  end
-
-  def new
-    @user = User.find_by(authentication_token: params["user_token"])
-    @friendship = Friendship.new
-    @not_interested_relation = NotInterestedRelation.new
-    @new_potential_friends = @user.user_friends - User.where(id: @user.my_friends_ids) - User.where(id: @user.my_requests_sent_ids) - User.where(id: @user.my_requests_received_ids) - User.where(id: @user.refused_relations_ids) - [@user]
   end
 
   def destroy

@@ -1,16 +1,25 @@
-json.requests               @requests do |request|
+json.requests_received      @requests_received_users do |request|
+  json.friendship_id              @requests_received_id[request.id]
+  json.name                       request.name.split(" ")[0]
+  json.picture                    request.picture
+  json.id                         request.id
+end
+
+json.requests_sent          @requests_sent_users do |request|
+  json.friendship_id              @requests_sent_id[request.id]
   json.name                       request.name.split(" ")[0]
   json.picture                    request.picture
   json.id                         request.id
 end
 
 json.friends                @friends do |friend|
+  json.friendship_id              @infos[friend.id][:friendship_id]
   json.id                         friend.id
   json.name                       friend.name.split(" ")[0]
   json.fullname                   friend.name
   json.picture                    friend.picture
   json.score                      friend.score
-  json.invisible                  @invisibility[friend.id]
+  json.invisible                  @infos[friend.id][:invisibility]
   if @category_1.include?(friend.id)
     json.correspondence_score     1
   elsif @category_2.include?(friend.id)
