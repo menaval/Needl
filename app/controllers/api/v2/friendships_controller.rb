@@ -13,8 +13,11 @@ class Api::V2::FriendshipsController < ApplicationController
     requests_sent = Friendship.where(sender_id: @user.id, accepted: false)
     @requests_sent_users = User.where(id: @user.my_requests_sent_ids)
     t = Friendship.arel_table
-    friendships = Friendship.where(t[:sender_id].eq_any(my_friends_ids).and(t[:receiver_id].eq(@user.id)).or(t[:sender_id].eq(@user.id).and(t[:receiver_id].eq_any(my_friends_ids))))
-
+    if @user.senders + @user.receivers != []
+      friendships = Friendship.where(t[:sender_id].eq_any(my_friends_ids).and(t[:receiver_id].eq(@user.id)).or(t[:sender_id].eq(@user.id).and(t[:receiver_id].eq_any(my_friends_ids))))
+    else
+      friendships = []
+    end
     @requests_received_id = {}
     requests_received.each do |request|
       @requests_received_id[request.sender_id] = request.id
