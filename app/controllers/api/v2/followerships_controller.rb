@@ -56,20 +56,20 @@ class Api::V2::FollowershipsController < ApplicationController
 
 
   def destroy
-    user = User.find_by(authentication_token: params["user_token"])
+    @user = User.find_by(authentication_token: params["user_token"])
     followership = Followership.find(params["id"].to_i)
     following = followership.following
 
     # Supprimer tous les points donnés par l'utilisateur
-    @recos_from_expert = Recommendation.find_by_sql("SELECT * FROM recommendations WHERE user_id = #{user.id} AND experts_thanking @> '{#{following.id}}'")
-    @recos_from_expert.each do |reco|
+    recos_from_expert = Recommendation.find_by_sql("SELECT * FROM recommendations WHERE user_id = #{@user.id} AND experts_thanking @> '{#{following.id}}'")
+    recos_from_expert.each do |reco|
       new_experts_thanking = reco.experts_thanking - [following.id]
       reco.update_attributes(experts_thanking: new_experts_thanking)
       unthank_experts([following.id])
     end
 
     followership.destroy
-    @tracker.track(user.id, 'Followership Destroyed', { "user" => user.name, "following" => following.name})
+    @tracker.track(user.id, 'Followership Destroyed', { "user" => @user.name, "following" => following.name})
     render json: {message: "success"}
     # renvoyer des infos particulières pour actualiser les scores ?
 
