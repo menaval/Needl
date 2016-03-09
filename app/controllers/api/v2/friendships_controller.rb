@@ -99,8 +99,7 @@ class Api::V2::FriendshipsController < ApplicationController
 
     friendship.destroy
     @tracker.track(@user.id, 'delete_friend', { "user" => @user.name })
-    render json: {message: "success"}
-    # renvoyer les restaurants
+    redirect_to user_updated_api_v2_restaurants_path(:user_updated => friend_id, :user_email => params["user_email"], :user_token => params["user_token"])
   end
 
   def ask
@@ -131,14 +130,14 @@ class Api::V2::FriendshipsController < ApplicationController
     activities_from_user_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/activities/#{@friend_id}.json?user_email=#{@user.email}&user_token=#{@user.authentication_token}")))
     activities_from_user_info.each { |k, v| activities_from_user_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
 
-    new_restaurants_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/restaurants.json?user_email=#{@user.email}&user_token=#{@user.authentication_token}")))
-    new_restaurants_info.each { |k, v| new_restaurants_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
+    user_restaurants_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/restaurants/user_updated.json?user_updated=#{@friend_id}&user_email=#{@user.email}&user_token=#{@user.authentication_token}")))
+    user_restaurants_info.each { |k, v| user_restaurants_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
 
 
       render json: {
         friend: user_info,
         activities: activities_from_user_info,
-        restaurants: new_restaurants_info
+        restaurants: user_restaurants_info
       }
   end
 
@@ -154,15 +153,18 @@ class Api::V2::FriendshipsController < ApplicationController
   def make_invisible
     user = User.find_by(authentication_token: params["user_token"])
     friendship = Friendship.find(params["id"])
+    friend_id = 0
     if friendship.sender_id == user.id
       friendship.update_attribute(:receiver_invisible, true)
+      friend_id = friendship.receiver_id
     else
       friendship.update_attribute(:sender_invisible, true)
+      friend_id = friendship.sender_id
     end
     @tracker.track(user.id, 'hide_friend', { "user" => user.name })
 
     # renvoyer restaurants
-    redirect_to api_v2_restaurants_path(:user_email => params["user_email"], :user_token => params["user_token"])
+    redirect_to user_updated_api_v2_restaurants_path(:user_updated => friend_id, :user_email => params["user_email"], :user_token => params["user_token"])
   end
 
   def make_visible
@@ -182,12 +184,12 @@ class Api::V2::FriendshipsController < ApplicationController
     activities_from_user_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/activities/#{friend_id}.json?user_email=#{user.email}&user_token=#{user.authentication_token}")))
     activities_from_user_info.each { |k, v| activities_from_user_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
 
-    new_restaurants_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/restaurants.json?user_email=#{user.email}&user_token=#{user.authentication_token}")))
-    new_restaurants_info.each { |k, v| new_restaurants_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
+    user_restaurants_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/restaurants/user_updated.json?user_updated=#{friend_id}&user_email=#{user.email}&user_token=#{user.authentication_token}")))
+    user_restaurants_info.each { |k, v| user_restaurants_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
 
     render json: {
       activities: activities_from_user_info,
-      restaurants: new_restaurants_info
+      restaurants: user_restaurants_info
     }
   end
 

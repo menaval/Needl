@@ -101,6 +101,7 @@ Rails.application.routes.draw do
       resources :restaurants, only: [:show, :index, :update] do
         collection do
           get :autocomplete
+          get :user_updated
         end
       end
     end

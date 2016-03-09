@@ -35,64 +35,24 @@ class Api::V2::RestaurantsController < ApplicationController
 
   def index
 
-    @user                                = User.find_by(authentication_token: params["user_token"])
+    @user                                 = User.find_by(authentication_token: params["user_token"])
     @my_friends_ids                       = @user.my_friends_ids
     @my_experts_ids                       = @user.followings.pluck(:id)
     if Rails.env.development? == true
       @my_experts_ids = []
     end
-    restaurants_ids                            = @user.my_friends_restaurants_ids + @user.my_restaurants_ids + @user.my_experts_restaurants_ids
-    @restaurants                               = Restaurant.where(id: restaurants_ids.uniq)
+    restaurants_ids                       = @user.my_friends_restaurants_ids + @user.my_restaurants_ids + @user.my_experts_restaurants_ids
+    @restaurants                          = Restaurant.where(id: restaurants_ids.uniq)
 
-    wishes                                     = Wish.where(user_id: @my_friends_ids + [@user.id])
-    restaurant_pictures                        = RestaurantPicture.where(restaurant_id: restaurants_ids)
-    restaurant_subways                         = RestaurantSubway.where(restaurant_id: restaurants_ids)
-    restaurant_types                           = RestaurantType.where(restaurant_id: restaurants_ids)
+    wishes                                = Wish.where(user_id: @my_friends_ids + [@user.id])
+    restaurant_pictures                   = RestaurantPicture.where(restaurant_id: restaurants_ids)
+    restaurant_subways                    = RestaurantSubway.where(restaurant_id: restaurants_ids)
+    restaurant_types                      = RestaurantType.where(restaurant_id: restaurants_ids)
     # elements de l'algorithme du score
 
     score_variables
+    fetch_restaurants_infos(wishes, restaurant_pictures, restaurant_types)
 
-    # associer les ambiances, occasions et amis recommandant aux restaurants avec une seule requête. De même pour récupérer dans chacun des restaurants quels sont les amis qui recommandent
-    @all_ambiences = {}
-    @all_strengths = {}
-    @all_occasions = {}
-    @all_friends_and_experts_recommending = {}
-
-    recommendations_i_trust.each do |recommendation|
-      @all_ambiences[recommendation.restaurant_id] ||= []
-      @all_ambiences[recommendation.restaurant_id] << recommendation.strengths
-      @all_strengths[recommendation.restaurant_id] ||= []
-      @all_strengths[recommendation.restaurant_id] << recommendation.strengths
-      @all_occasions[recommendation.restaurant_id] ||= []
-      if recommendation.occasions
-        @all_occasions[recommendation.restaurant_id] << recommendation.occasions
-      end
-      @all_friends_and_experts_recommending[recommendation.restaurant_id] ||= []
-      @all_friends_and_experts_recommending[recommendation.restaurant_id] << recommendation.user_id
-      score_allocation_recommendations(recommendation)
-    end
-
-    # récupérer en une seule requête tous les amis qui ont wishlisté les restaurants
-
-    @all_friends_wishing   = {}
-    wishes.each do |wish|
-      @all_friends_wishing[wish.restaurant_id] ||= []
-      @all_friends_wishing[wish.restaurant_id] << wish.user_id
-      score_allocation_wishes(wish)
-    end
-
-
-    @all_pictures = {}
-    restaurant_pictures.each do |restaurant_picture|
-      @all_pictures[restaurant_picture.restaurant_id] ||= []
-      @all_pictures[restaurant_picture.restaurant_id] << restaurant_picture.picture
-    end
-
-    @all_types = {}
-    restaurant_types.each do |restaurant_type|
-      @all_types[restaurant_type.restaurant_id] ||= []
-      @all_types[restaurant_type.restaurant_id] << restaurant_type.type_id
-    end
 
   end
 
@@ -104,6 +64,29 @@ class Api::V2::RestaurantsController < ApplicationController
 
     @restaurants.uniq! { |restaurant| [ restaurant[:name], restaurant[:address] ] }
     @restaurants.take(7)
+  end
+
+  def user_updated
+    @user                         = User.find_by(authentication_token: params["user_token"])
+    friend_or_expert_id           = params["user_id"]
+    friend_or_expert              = User.find(friend_id)
+    restaurants_ids               = []
+    if @user.followings.include?(friend_or_expert_id)
+      restaurants_ids             = Restaurant.joins(:recommendations).where(recommendations: {user_id: friend_or_expert_id, public: true})
+    else
+      restaurants_ids             = friend_or_expert.my_restaurants_ids
+    end
+    @restaurants                  = Restaurant.where(id: restaurants_ids)
+    @my_friends_ids               = @user.my_friends_ids
+    @my_experts_ids               = @user.followings.pluck(:id)
+    wishes                        = Wish.where(user_id: @my_friends_ids + [@user.id])
+    restaurant_pictures           = RestaurantPicture.where(restaurant_id: restaurants_ids)
+    restaurant_subways            = RestaurantSubway.where(restaurant_id: restaurants_ids)
+    restaurant_types              = RestaurantType.where(restaurant_id: restaurants_ids)
+
+    score_variables
+    fetch_restaurants_infos(wishes, restaurant_pictures, restaurant_types)
+
   end
 
   private
@@ -226,6 +209,53 @@ class Api::V2::RestaurantsController < ApplicationController
     @wish_coefficient_category_3             = 9
     @me_recommending_coefficient             = 6
     @me_wishing_coefficient                  = 10
+
+  end
+
+  def fetch_restaurants_infos(wishes, restaurant_pictures, restaurant_types)
+
+    # associer les ambiances, occasions et amis recommandant aux restaurants avec une seule requête. De même pour récupérer dans chacun des restaurants quels sont les amis qui recommandent
+
+    @all_ambiences = {}
+    @all_strengths = {}
+    @all_occasions = {}
+    @all_friends_and_experts_recommending = {}
+
+    recommendations_i_trust.each do |recommendation|
+      @all_ambiences[recommendation.restaurant_id] ||= []
+      @all_ambiences[recommendation.restaurant_id] << recommendation.strengths
+      @all_strengths[recommendation.restaurant_id] ||= []
+      @all_strengths[recommendation.restaurant_id] << recommendation.strengths
+      @all_occasions[recommendation.restaurant_id] ||= []
+      if recommendation.occasions
+        @all_occasions[recommendation.restaurant_id] << recommendation.occasions
+      end
+      @all_friends_and_experts_recommending[recommendation.restaurant_id] ||= []
+      @all_friends_and_experts_recommending[recommendation.restaurant_id] << recommendation.user_id
+      score_allocation_recommendations(recommendation)
+    end
+
+    # récupérer en une seule requête tous les amis qui ont wishlisté les restaurants
+
+    @all_friends_wishing   = {}
+    wishes.each do |wish|
+      @all_friends_wishing[wish.restaurant_id] ||= []
+      @all_friends_wishing[wish.restaurant_id] << wish.user_id
+      score_allocation_wishes(wish)
+    end
+
+
+    @all_pictures = {}
+    restaurant_pictures.each do |restaurant_picture|
+      @all_pictures[restaurant_picture.restaurant_id] ||= []
+      @all_pictures[restaurant_picture.restaurant_id] << restaurant_picture.picture
+    end
+
+    @all_types = {}
+    restaurant_types.each do |restaurant_type|
+      @all_types[restaurant_type.restaurant_id] ||= []
+      @all_types[restaurant_type.restaurant_id] << restaurant_type.type_id
+    end
 
   end
 

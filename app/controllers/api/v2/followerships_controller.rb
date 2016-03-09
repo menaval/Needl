@@ -55,12 +55,12 @@ class Api::V2::FollowershipsController < ApplicationController
    activities_from_user_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/activities/#{following.id}.json?user_email=#{user.email}&user_token=#{user.authentication_token}")))
    activities_from_user_info.each { |k, v| activities_from_user_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
 
-   new_restaurants_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/restaurants.json?user_email=#{user.email}&user_token=#{user.authentication_token}")))
-   new_restaurants_info.each { |k, v| new_restaurants_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
+   user_restaurants_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/restaurants/user_updated.json?user_id=#{following.id}&user_email=#{user.email}&user_token=#{user.authentication_token}")))
+   user_restaurants_info.each { |k, v| user_restaurants_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
 
    render json: {
      activities: activities_from_user_info,
-     restaurants: new_restaurants_info
+     restaurants: user_restaurants_info
    }
   end
 
@@ -81,7 +81,7 @@ class Api::V2::FollowershipsController < ApplicationController
     @tracker.track(user.id, 'Followership Destroyed', { "user" => @user.name, "following" => following.name})
 
     # renvoyer restaurants
-    redirect_to api_v2_restaurants_path(:user_email => params["user_email"], :user_token => params["user_token"])
+    redirect_to user_updated_api_v2_restaurants_path(:user_updated => following.id, :user_email => params["user_email"], :user_token => params["user_token"])
   end
 
 end
