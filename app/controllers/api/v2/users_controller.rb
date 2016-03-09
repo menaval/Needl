@@ -37,7 +37,8 @@ class Api::V2::UsersController < ApplicationController
   end
 
   def experts
-    @all_experts = User.where(public: true)
+    @user = User.find_by(authentication_token: params["user_token"])
+    @all_experts = User.where(public: true).where.not(id: @user.followings.pluck(:id))
     all_experts_ids = @all_experts.pluck(:id)
 
     @experts_recommendations = {}

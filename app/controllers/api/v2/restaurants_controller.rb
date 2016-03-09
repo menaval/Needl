@@ -69,7 +69,7 @@ class Api::V2::RestaurantsController < ApplicationController
   def user_updated
     @user                         = User.find_by(authentication_token: params["user_token"])
     friend_or_expert_id           = params["user_id"]
-    friend_or_expert              = User.find(friend_id)
+    friend_or_expert              = User.find(friend_or_expert_id)
     restaurants_ids               = []
     if @user.followings.include?(friend_or_expert_id)
       restaurants_ids             = Restaurant.joins(:recommendations).where(recommendations: {user_id: friend_or_expert_id, public: true})
