@@ -1,13 +1,13 @@
 json.requests_received      @requests_received_users do |request|
   json.friendship_id              @requests_received_id[request.id]
-  json.name                       request.name.split(" ")[0]
+  json.fullname                   request.name
   json.picture                    request.picture
   json.id                         request.id
 end
 
 json.requests_sent          @requests_sent_users do |request|
   json.friendship_id              @requests_sent_id[request.id]
-  json.name                       request.name.split(" ")[0]
+  json.fullname                   request.name
   json.picture                    request.picture
   json.id                         request.id
 end
