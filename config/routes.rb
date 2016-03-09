@@ -77,6 +77,7 @@ Rails.application.routes.draw do
           get  :update_version
           get  :score
           get  :experts
+          get  :pertinent_experts
           post :new_parse_installation
           post :contacts_access
           post :invite_contact

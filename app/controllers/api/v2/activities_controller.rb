@@ -7,7 +7,7 @@ class Api::V2::ActivitiesController < ApplicationController
 
     @user = User.find_by(authentication_token: params["user_token"])
     my_experts_ids = @user.followings.pluck(:id)
-    my_friends_ids = @user.my_visible_friends_ids
+    my_visible_friends_ids = @user.my_visible_friends_ids
     @activities = []
 
     Recommendation.where(user_id: my_visible_friends_ids).each do |reco|

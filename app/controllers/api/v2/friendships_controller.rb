@@ -97,7 +97,7 @@ class Api::V2::FriendshipsController < ApplicationController
 
     friendship.destroy
     @tracker.track(@user.id, 'delete_friend', { "user" => @user.name })
-    redirect_to user_updated_api_v2_restaurants_path(:user_id => friend_id, :user_email => params["user_email"], :user_token => params["user_token"])
+    redirect_to user_updated_api_v2_restaurants_path(:user_id => friend_id, :user_email => params["user_email"], :user_token => params["user_token"]), status: 303
   end
 
   def ask
