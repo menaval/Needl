@@ -42,6 +42,7 @@ class Api::V2::ActivitiesController < ApplicationController
 
     Wish.where(user_id: friend_id).each do |wish|
       @activities << {user_id: wish.user_id, restaurant_id: wish.restaurant_id, date: wish.created_at, user_type: friend_id == @user.id ? "me" : "friend" , notification_type: "wish", review: "Sur ma wishlist"}
+    end
 
   end
 
