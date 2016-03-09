@@ -121,7 +121,23 @@ class Api::V2::FriendshipsController < ApplicationController
     @tracker.track(@user.id, 'accept_friend', { "user" => @user.name })
     notif_friendship("accepted")
     render json: {message: "success"}
-    # renvoyer des infos particulières pour actualiser les scores ?
+
+    # on renvoie le profil, ses activités et les restaurants updatés
+    user_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/users/#{@friend_id}.json?user_email=#{@user.email}&user_token=#{@user.authentication_token}")))
+    user_info.each { |k, v| user_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
+
+    activities_from_user_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/activities/#{@friend_id}.json?user_email=#{@user.email}&user_token=#{@user.authentication_token}")))
+    activities_from_user_info.each { |k, v| activities_from_user_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
+
+    new_restaurants_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/restaurants.json?user_email=#{@user.email}&user_token=#{@user.authentication_token}")))
+    new_restaurants_info.each { |k, v| new_restaurants_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
+
+
+      render json: {
+        user: user_info,
+        user_activities: activities_from_user_info,
+        restaurants: new_restaurants_info
+      }
   end
 
   def refuse
