@@ -15,7 +15,7 @@ class Api::V2::FriendshipsController < ApplicationController
     t = Friendship.arel_table
     friendships = []
     # pour éviter les bugs si l'utilisateur n'a pas d'amis
-    if @user.senders + @user.receivers != []
+    if requests_received + requests_sent != []
       friendships = Friendship.where(t[:sender_id].eq_any(my_friends_ids).and(t[:receiver_id].eq(@user.id)).or(t[:sender_id].eq(@user.id).and(t[:receiver_id].eq_any(my_friends_ids))))
     end
 
