@@ -134,8 +134,8 @@ class Api::V2::FriendshipsController < ApplicationController
 
 
       render json: {
-        user: user_info,
-        user_activities: activities_from_user_info,
+        friend: user_info,
+        activities: activities_from_user_info,
         restaurants: new_restaurants_info
       }
   end
