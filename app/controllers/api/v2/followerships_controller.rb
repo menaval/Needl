@@ -78,7 +78,7 @@ class Api::V2::FollowershipsController < ApplicationController
     end
 
     followership.destroy
-    @tracker.track(user.id, 'Followership Destroyed', { "user" => @user.name, "following" => following.name})
+    @tracker.track(@user.id, 'Followership Destroyed', { "user" => @user.name, "following" => following.name})
 
     # renvoyer restaurants
     redirect_to user_updated_api_v2_restaurants_path(:user_id => following.id, :user_email => params["user_email"], :user_token => params["user_token"])
