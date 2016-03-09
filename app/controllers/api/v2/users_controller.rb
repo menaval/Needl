@@ -41,39 +41,22 @@ class Api::V2::UsersController < ApplicationController
     @all_experts = User.where(public: true).where.not(id: @user.followings.pluck(:id))
     all_experts_ids = @all_experts.pluck(:id)
 
-    @experts_recommendations = {}
-    @experts_public_recommendations = {}
-    Recommendation.where(user_id: all_experts_ids).each do |recommendation|
-        @experts_recommendations[recommendation.user_id] ||= []
-        @experts_recommendations[recommendation.user_id] << recommendation.restaurant_id
-      if recommendation.public == true
-        @experts_public_recommendations[recommendation.user_id] ||= []
-        @experts_public_recommendations[recommendation.user_id] << recommendation.restaurant_id
-      end
-    end
+    fetch_experts_info(all_experts_ids)
 
-    @experts_wishes = {}
-    Wish.where(user_id: all_experts_ids).each do |wish|
-      @experts_wishes[wish.user_id] ||= []
-      @experts_wishes[wish.user_id] << wish.restaurant_id
-    end
-
-    @experts_followers = {}
-    Followership.where(following_id: all_experts_ids).each do |followership|
-      @experts_followers[followership.following_id] ||= []
-      @experts_followers[followership.following_id] << followership.follower_id
-    end
-
-    @experts_followings = {}
-    Followership.where(follower_id: all_experts_ids).each do |followership|
-      @experts_followers[followership.follower_id] ||= []
-      @experts_followers[followership.follower_id] << followership.following_id
-    end
   end
 
   def pertinent_experts
     @user = User.find_by(authentication_token: params["user_token"])
+    all_experts = User.where(public: true).where.not(id: @user.followings.pluck(:id))
     @pertinent_experts = []
+
+    # a faire la pertinence
+    # all_experts.each do |expert|
+    #   if expert.
+    # do
+    pertinent_experts_ids = @pertinent_experts.pluck(:id)
+
+    fetch_experts_info(pertinent_experts_ids)
 
   end
 
@@ -128,6 +111,38 @@ class Api::V2::UsersController < ApplicationController
     @user.platform = params["platform"]
     @user.save
     @last_version = @user.app_version == "2.0.2" && @user.platform == "ios"
+  end
+
+  def fetch_experts_info(experts_ids)
+    @experts_recommendations = {}
+    @experts_public_recommendations = {}
+    Recommendation.where(user_id: experts_ids).each do |recommendation|
+        @experts_recommendations[recommendation.user_id] ||= []
+        @experts_recommendations[recommendation.user_id] << recommendation.restaurant_id
+      if recommendation.public == true
+        @experts_public_recommendations[recommendation.user_id] ||= []
+        @experts_public_recommendations[recommendation.user_id] << recommendation.restaurant_id
+      end
+    end
+
+    @experts_wishes = {}
+    Wish.where(user_id: experts_ids).each do |wish|
+      @experts_wishes[wish.user_id] ||= []
+      @experts_wishes[wish.user_id] << wish.restaurant_id
+    end
+
+    @experts_followers = {}
+    Followership.where(following_id: experts_ids).each do |followership|
+      @experts_followers[followership.following_id] ||= []
+      @experts_followers[followership.following_id] << followership.follower_id
+    end
+
+    @experts_followings = {}
+    Followership.where(follower_id: experts_ids).each do |followership|
+      @experts_followers[followership.follower_id] ||= []
+      @experts_followers[followership.follower_id] << followership.following_id
+    end
+
   end
 
   def invite_contact
