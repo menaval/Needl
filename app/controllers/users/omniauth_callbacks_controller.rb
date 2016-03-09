@@ -102,16 +102,19 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       else
         @tracker.track(@user.id, 'signin', {"user" => @user.name} )
       end
-
       render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
-
     else
-
       puts "user rejected"
-
-
-
     end
+  end
+
+  def link_account_to_facebook
+    @user = User.find_by(authentication_token: params["user_token"])
+    @user.link_account_to_facebook
+    @tracker.track(@user.id, 'Account Linked to Facebook', {"user" => @user.name} )
+    accept_new_friends
+    render json: {message: success}
+    # renvoyer des infos particulières ? (les activités, restaurants et profils de chaque nouvel utilisateur j'imagine)
   end
 
   def accept_all_friends
@@ -123,7 +126,19 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
       end
     end
+  end
 
+  def accept_new_friends
+    friends = @user.user_friends
+    if friends.length > 0
+      friends.each do |friend|
+        if Friendship.where(sender_id: [@user.id, friend.id], receiver_id: [@user.id, friend.id]).length == 0
+          Friendship.create(sender_id: @user.id, receiver_id: friend.id, accepted: true)
+          TasteCorrespondence.create(member_one_id: @user.id, member_two_id: friend.id, number_of_shared_restaurants: 0, category: 1)
+          @tracker.track(@user.id, 'add_friend', { "user" => @user.name })
+        end
+      end
+    end
   end
 
 end

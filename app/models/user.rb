@@ -161,6 +161,20 @@ class User < ActiveRecord::Base
     end
   end
 
+  def link_account_to_facebook(auth)
+    self.provider = auth.provider
+    self.uid = auth.uid
+    self.gender = auth.extra.raw_info.gender
+    # a remettre quand on aura été validé
+    # self.birthday = Date.parse(auth.extra.raw_info.birthday)
+    self.picture = auth.info.image.gsub('http://','https://') + "?width=1000&height=1000"
+    self.token = auth.credentials.token
+    if auth.credentials.expires_at
+      self.token_expiry = Time.at(auth.credentials.expires_at)
+    end
+    self.save
+  end
+
   # private
 
   def send_welcome_email
