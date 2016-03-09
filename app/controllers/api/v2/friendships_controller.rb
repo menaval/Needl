@@ -159,7 +159,7 @@ class Api::V2::FriendshipsController < ApplicationController
     else
       friendship.update_attribute(:sender_invisible, true)
     end
-    @tracker.track(@user.id, 'hide_friend', { "user" => user.name })
+    @tracker.track(user.id, 'hide_friend', { "user" => user.name })
 
     # renvoyer restaurants
     redirect_to api_v2_restaurants_path(:user_email => params["user_email"], :user_token => params["user_token"])
@@ -176,7 +176,7 @@ class Api::V2::FriendshipsController < ApplicationController
       friendship.update_attribute(:sender_invisible, false)
       friend_id = friendship.sender_id
     end
-    @tracker.track(@user.id, 'unhide_friend', { "user" => user.name })
+    @tracker.track(user.id, 'unhide_friend', { "user" => user.name })
 
     # renvoyer activities, restaurants
     activities_from_user_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/activities/#{friend_id}.json?user_email=#{user.email}&user_token=#{user.authentication_token}")))
