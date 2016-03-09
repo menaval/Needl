@@ -51,7 +51,7 @@ class Api::V2::FollowershipsController < ApplicationController
    Followership.create(follower_id: user.id, following_id: following.id)
    @tracker.track(user.id, 'Followership Created', { "follower" => user.name, "following" => following.name})
    render json: {message: "success"}
-   # renvoyer des infos particulières pour actualiser les scores ?
+   # renvoyer restaurants, activities
   end
 
   def destroy
@@ -70,7 +70,7 @@ class Api::V2::FollowershipsController < ApplicationController
     followership.destroy
     @tracker.track(user.id, 'Followership Destroyed', { "user" => @user.name, "following" => following.name})
     render json: {message: "success"}
-    # renvoyer des infos particulières pour actualiser les scores ?
+    # renvoyer restaurants
   end
 
 end

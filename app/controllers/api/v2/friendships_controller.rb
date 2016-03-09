@@ -100,7 +100,7 @@ class Api::V2::FriendshipsController < ApplicationController
     friendship.destroy
     @tracker.track(@user.id, 'delete_friend', { "user" => @user.name })
     render json: {message: "success"}
-    # renvoyer des infos particulières pour actualiser les scores ?
+    # renvoyer les restaurants
   end
 
   def ask
@@ -120,7 +120,6 @@ class Api::V2::FriendshipsController < ApplicationController
     friendship.update_attribute(:accepted, true)
     @tracker.track(@user.id, 'accept_friend', { "user" => @user.name })
     notif_friendship("accepted")
-    render json: {message: "success"}
 
     # on renvoie le profil, ses activités et les restaurants updatés
     user_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/users/#{@friend_id}.json?user_email=#{@user.email}&user_token=#{@user.authentication_token}")))
@@ -160,6 +159,7 @@ class Api::V2::FriendshipsController < ApplicationController
     @tracker.track(@user.id, 'hide_friend', { "user" => user.name })
     render json: {message: "sucess"}
     # renvoyer des infos particulières pour actualiser les scores ?
+    # renvoyer restaurants
   end
 
   def make_visible
@@ -173,6 +173,7 @@ class Api::V2::FriendshipsController < ApplicationController
     @tracker.track(@user.id, 'unhide_friend', { "user" => user.name })
     render json: {message: "sucess"}
     # renvoyer des infos particulières pour actualiser les scores ?
+    # renvoyer activities, restaurants
   end
 
   private
