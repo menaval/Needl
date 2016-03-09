@@ -9,9 +9,9 @@ class Api::V2::FriendshipsController < ApplicationController
     my_friends_ids = @user.my_friends_ids
     @friends = User.where(id: my_friends_ids).order(:name)
     requests_received = Friendship.where(receiver_id: @user.id, accepted: false).where.not(sender_id: @user.refuseds)
-    @requests_received_users = User.where(id: @user.my_requests_received_ids - @user.refuseds)
+    @requests_received_users = User.where(id: @user.my_requests_received_ids - @user.refuseds.pluck(:id))
     requests_sent = Friendship.where(sender_id: @user.id, accepted: false).where.not(receiver_id: @user.refusers)
-    @requests_sent_users = User.where(id: @user.my_requests_sent_ids - @user.refusers)
+    @requests_sent_users = User.where(id: @user.my_requests_sent_ids - @user.refusers.pluck(:id))
     t = Friendship.arel_table
     friendships = []
     # pour éviter les bugs si l'utilisateur n'a pas d'amis

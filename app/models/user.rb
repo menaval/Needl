@@ -65,11 +65,11 @@ class User < ActiveRecord::Base
   end
 
   def my_requests_received_ids
-    user_ids = self.senders.includes(:friendships).where(friendships: { accepted: false }).pluck(:id)
+    user_ids = self.senders.includes(:friendships).where(friendships: { accepted: false }).pluck(:id).uniq
   end
 
   def my_requests_sent_ids
-    user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: false }).pluck(:id)
+    user_ids = self.receivers.includes(:received_friendships).where(friendships: { accepted: false }).pluck(:id).uniq
   end
 
   def refused_relations_ids
