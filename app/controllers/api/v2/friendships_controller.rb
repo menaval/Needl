@@ -12,12 +12,10 @@ class Api::V2::FriendshipsController < ApplicationController
     @requests_received_users = User.where(id: @user.my_requests_received_ids - @user.refuseds.pluck(:id))
     requests_sent = Friendship.where(sender_id: @user.id, accepted: false).where.not(receiver_id: @user.refusers)
     @requests_sent_users = User.where(id: @user.my_requests_sent_ids - @user.refusers.pluck(:id))
-    t = Friendship.arel_table
-    friendships = []
-    # pour éviter les bugs si l'utilisateur n'a pas d'amis
-    if requests_received + requests_sent != []
-      friendships = Friendship.where(t[:sender_id].eq_any(my_friends_ids).and(t[:receiver_id].eq(@user.id)).or(t[:sender_id].eq(@user.id).and(t[:receiver_id].eq_any(my_friends_ids))))
-    end
+
+    friendships_ids = Friendship.where(sender_id: my_friends_ids, receiver_id: @user.id, accepted: true).pluck(:id)
+    friendships_ids += Friendship.where(sender_id: @user.id, receiver_id: my_friends_ids, accepted: true).pluck(:id)
+    friendships     = Friendship.where(id: friendships_ids.uniq)
 
     @requests_received_id = {}
     requests_received.each do |request|
