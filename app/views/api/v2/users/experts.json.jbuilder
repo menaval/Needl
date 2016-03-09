@@ -6,6 +6,7 @@ json.experts           @all_experts do |expert|
   json.score                   expert.score
   json.invisible               false
   json.correspondence_score    0
+  json.mutual_restaurants      @mutual_restaurants[expert.id]
   json.recommendations         @experts_recommendations[expert.id] ? @experts_recommendations[expert.id] : []
   json.wishes                  @experts_wishes[expert.id] ? @experts_wishes[expert.id] : []
   json.followings              @experts_followings[expert.id] ? @experts_followings : []

@@ -61,6 +61,46 @@ class ApplicationController < ActionController::Base
 
   end
 
+  def fetch_experts_info(experts_ids)
+
+    experts = User.where(id: experts_ids)
+
+    @experts_recommendations = {}
+    @experts_public_recommendations = {}
+    Recommendation.where(user_id: experts_ids).each do |recommendation|
+        @experts_recommendations[recommendation.user_id] ||= []
+        @experts_recommendations[recommendation.user_id] << recommendation.restaurant_id
+      if recommendation.public == true
+        @experts_public_recommendations[recommendation.user_id] ||= []
+        @experts_public_recommendations[recommendation.user_id] << recommendation.restaurant_id
+      end
+    end
+
+    @experts_wishes = {}
+    Wish.where(user_id: experts_ids).each do |wish|
+      @experts_wishes[wish.user_id] ||= []
+      @experts_wishes[wish.user_id] << wish.restaurant_id
+    end
+
+    @experts_followers = {}
+    Followership.where(following_id: experts_ids).each do |followership|
+      @experts_followers[followership.following_id] ||= []
+      @experts_followers[followership.following_id] << followership.follower_id
+    end
+
+    @experts_followings = {}
+    Followership.where(follower_id: experts_ids).each do |followership|
+      @experts_followers[followership.follower_id] ||= []
+      @experts_followers[followership.follower_id] << followership.following_id
+    end
+
+    @mutual_restaurants = {}
+    experts.each do |expert|
+      @mutual_restaurants[expert.id] = Restaurant.joins(:recommendations).where(recommendations: {user_id: expert.id, public: true}).pluck(:id) & @user.my_restaurants_ids
+    end
+
+  end
+
   def identify_or_create_restaurant
 
     # Si c'est une nouvelle recommandation on check que la personne a bien choisi un resto parmis la liste et on identifie ou crée le restaurant via la fonction
