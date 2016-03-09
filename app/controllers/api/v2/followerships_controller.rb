@@ -50,8 +50,18 @@ class Api::V2::FollowershipsController < ApplicationController
    following = User.find(params["following_id"].to_i)
    Followership.create(follower_id: user.id, following_id: following.id)
    @tracker.track(user.id, 'Followership Created', { "follower" => user.name, "following" => following.name})
-   render json: {message: "success"}
+
    # renvoyer restaurants, activities
+   activities_from_user_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/activities/#{following.id}.json?user_email=#{user.email}&user_token=#{user.authentication_token}")))
+   activities_from_user_info.each { |k, v| activities_from_user_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
+
+   new_restaurants_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/restaurants.json?user_email=#{user.email}&user_token=#{user.authentication_token}")))
+   new_restaurants_info.each { |k, v| new_restaurants_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
+
+   render json: {
+     activities: activities_from_user_info,
+     restaurants: new_restaurants_info
+   }
   end
 
   def destroy
@@ -69,8 +79,9 @@ class Api::V2::FollowershipsController < ApplicationController
 
     followership.destroy
     @tracker.track(user.id, 'Followership Destroyed', { "user" => @user.name, "following" => following.name})
-    render json: {message: "success"}
+
     # renvoyer restaurants
+    redirect_to api_v2_restaurants_path(:user_email => params["user_email"], :user_token => params["user_token"])
   end
 
 end
