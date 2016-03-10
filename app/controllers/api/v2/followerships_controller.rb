@@ -21,7 +21,7 @@ class Api::V2::FollowershipsController < ApplicationController
   def create
    user = User.find_by(authentication_token: params["user_token"])
    following = User.find(params["following_id"].to_i)
-   Followership.create(follower_id: user.id, following_id: following.id)
+   followership = Followership.create(follower_id: user.id, following_id: following.id)
    @tracker.track(user.id, 'Followership Created', { "follower" => user.name, "following" => following.name})
 
    # renvoyer restaurants, activities
@@ -33,7 +33,8 @@ class Api::V2::FollowershipsController < ApplicationController
 
    render json: {
      activities: activities_from_user_info,
-     restaurants: user_restaurants_info
+     restaurants: user_restaurants_info,
+     followership_id: followership.id
    }
   end
 
