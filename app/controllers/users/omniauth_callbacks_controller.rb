@@ -109,7 +109,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         puts "user rejected"
       end
     end
-  User.end
+  end
 
   def link_account_to_facebook(auth)
     @user = User.find_by(authentication_token: params["user_token"])
