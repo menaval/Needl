@@ -6,6 +6,7 @@ json.authentication_token  @user.authentication_token
 json.number_of_recos       @recos.length
 json.score                 @user.score
 json.picture               @user.picture
+json.facebook_linked       @user.token ? true : false
 json.followings            @user.followings.pluck(:id)
 json.public                @user.public
 if @user.id != @myself.id
