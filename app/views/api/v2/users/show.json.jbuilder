@@ -3,6 +3,7 @@ json.id                        @user.id
 json.name                      @user.name.split(" ")[0]
 json.fullname                  @user.name
 json.picture                   @user.picture
+json.facebook_linked           @user.token ? true : false
 json.score                     @user.score
 json.invisible                 @invisible
 json.correspondence_score      @correspondence_score
