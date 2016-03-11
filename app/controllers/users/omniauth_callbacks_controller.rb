@@ -32,68 +32,72 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def facebook_access_token
-    @user = User.find_for_facebook_oauth(request.env["omniauth.auth"])
-    #  Pas hyper sur que ca serve a quelque chose puisque les nouvelles personnes n'ont pas d'expire_at
-    if @user.token_expiry && @user.token_expiry < Time.now
-      @user.token = request.env["omniauth.auth"].credentials.token
-      if request.env["omniauth.auth"].credentials.expires_at
-        @user.token_expiry = Time.at(request.env["omniauth.auth"].credentials.expires_at)
-      else
-        @user.token_expiry = nil
+    if params["link_to_facebook"] == "true"
+      link_account_to_facebook(request.env["omniauth.auth"])
+    else
+      @user = User.find_for_facebook_oauth(request.env["omniauth.auth"])
+      #  Pas hyper sur que ca serve a quelque chose puisque les nouvelles personnes n'ont pas d'expire_at
+      if @user.token_expiry && @user.token_expiry < Time.now
+        @user.token = request.env["omniauth.auth"].credentials.token
+        if request.env["omniauth.auth"].credentials.expires_at
+          @user.token_expiry = Time.at(request.env["omniauth.auth"].credentials.expires_at)
+        else
+          @user.token_expiry = nil
+        end
+        @user.save
       end
-      @user.save
-    end
 
-    puts "#{request.env["omniauth.auth"]}"
+      puts "#{request.env["omniauth.auth"]}"
 
-    # Pour tous ceux qui sont rentrés sur l'app avant qu'on mette e système pour récupérer la date de naissance
-    # if @user.birthday == nil
-    #   @user.birthday = Date.parse(request.env["omniauth.auth"].extra.raw_info.birthday)
-    #   @user.save
-    # end
+      # Pour tous ceux qui sont rentrés sur l'app avant qu'on mette e système pour récupérer la date de naissance
+      # if @user.birthday == nil
+      #   @user.birthday = Date.parse(request.env["omniauth.auth"].extra.raw_info.birthday)
+      #   @user.save
+      # end
 
-    if @user.persisted?
-      puts "user persisted"
-      sign_in @user#, event: :authentication
+      if @user.persisted?
+        puts "user persisted"
+        sign_in @user#, event: :authentication
 
-      # Si c'est un signup
+        # Si c'est un signup
 
-      if @user.sign_in_count == 2
+        if @user.sign_in_count == 2
 
-        # On track l'arrivée sur Mixpanel
+          # On track l'arrivée sur Mixpanel
 
-        # automatiquement il suit Needl à son arrivée
-        Followership.create(follower_id: @user.id, following_id: 553)
+          # automatiquement il suit Needl à son arrivée
+          Followership.create(follower_id: @user.id, following_id: 553)
 
-        @tracker.people.set(@user.id, {
-          "gender" => @user.gender,
-          "name" => @user.name,
-          "$email": @user.email
-        })
-        @tracker.track(@user.id, 'signup', {"user" => @user.name} )
+          @tracker.people.set(@user.id, {
+            "gender" => @user.gender,
+            "name" => @user.name,
+            "$email": @user.email
+          })
+          @tracker.track(@user.id, 'signup', {"user" => @user.name} )
 
-        accept_all_friends
+          accept_all_friends
 
-        # On ajoute le nouveau membre sur la mailing liste de mailchimp
-        if @user.email.include?("needlapp.com") == false && Rails.env.development? != true
+          # On ajoute le nouveau membre sur la mailing liste de mailchimp
+          if @user.email.include?("needlapp.com") == false && Rails.env.development? != true
 
-          begin
-            @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
-            @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
-            @gibbon.lists(@list_id).members.create(
-              body: {
-                email_address: @user.email,
-                status: "subscribed",
-                merge_fields: {
-                  FNAME: @user.name.partition(" ").first,
-                  LNAME: @user.name.partition(" ").last,
-                  TOKEN: @user.authentication_token,
-                  GENDER: @user.gender ? @user.gender : ""
+            begin
+              @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
+              @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
+              @gibbon.lists(@list_id).members.create(
+                body: {
+                  email_address: @user.email,
+                  status: "subscribed",
+                  merge_fields: {
+                    FNAME: @user.name.partition(" ").first,
+                    LNAME: @user.name.partition(" ").last,
+                    TOKEN: @user.authentication_token,
+                    GENDER: @user.gender ? @user.gender : ""
+                  }
                 }
-              }
-            )
-          rescue Gibbon::MailChimpError
-            puts "error catched --------------------------------------------"
+              )
+            rescue Gibbon::MailChimpError
+              puts "error catched --------------------------------------------"
+            end
           end
         end
 
@@ -108,9 +112,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
   end
 
-  def link_account_to_facebook
+  def link_account_to_facebook(auth)
     @user = User.find_by(authentication_token: params["user_token"])
-    @user.link_account_to_facebook
+    @user.link_account_to_facebook(auth)
     @tracker.track(@user.id, 'Account Linked to Facebook', {"user" => @user.name} )
     accept_new_friends
     render json: {message: success}
