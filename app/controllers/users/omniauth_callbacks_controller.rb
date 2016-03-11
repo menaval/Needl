@@ -109,14 +109,14 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         puts "user rejected"
       end
     end
-  end
+  User.end
 
   def link_account_to_facebook(auth)
     @user = User.find_by(authentication_token: params["user_token"])
     @user.link_account_to_facebook(auth)
     @tracker.track(@user.id, 'Account Linked to Facebook', {"user" => @user.name} )
     accept_new_friends
-    render json: {message: success}
+    render json: {message: "success"}
     # renvoyer des infos particulières ? (les activités, restaurants et profils de chaque nouvel utilisateur j'imagine)
   end
 
