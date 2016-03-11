@@ -98,17 +98,16 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
             rescue Gibbon::MailChimpError
               puts "error catched --------------------------------------------"
             end
+
           end
-        end
-
       #  Si c'est un login
-
+        else
+          @tracker.track(@user.id, 'signin', {"user" => @user.name} )
+        end
+        render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
       else
-        @tracker.track(@user.id, 'signin', {"user" => @user.name} )
+        puts "user rejected"
       end
-      render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
-    else
-      puts "user rejected"
     end
   end
 
