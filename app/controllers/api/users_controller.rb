@@ -78,7 +78,7 @@ module Api
       @user = User.find_by(authentication_token: params["user_token"])
       app_version = params["version"]
       @user.app_version = app_version
-      @user.platform = params["platform"]
+      @user.platform = params["platform"] ? params["platform"] : "ios"
       @user.save
       @last_version = @user.app_version == "2.0.2" && @user.platform == "ios"
     end
