@@ -57,6 +57,7 @@ class Api::V2::UsersController < ApplicationController
     end
 
     fetch_experts_info(all_experts_ids)
+    @all_experts = @all_experts.sort_by {|x| @experts_followers[x.id]}
 
   end
 
