@@ -59,8 +59,8 @@ class Api::V2::FriendshipsController < ApplicationController
 
     @all_followings = {}
     Followership.where(follower_id: my_friends_ids).each do |followership|
-      @all_followers[followership.follower_id] ||= []
-      @all_followers[followership.follower_id] << followership.following_id
+      @all_followings[followership.follower_id] ||= []
+      @all_followings[followership.follower_id] << followership.following_id
     end
 
     @all_public_recos = {}
