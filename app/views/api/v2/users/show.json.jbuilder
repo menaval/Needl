@@ -17,6 +17,9 @@ json.description               @user.description
 json.tags                      @user.tags
 json.public_recommendations    @user.my_public_recos.pluck(:id)
 json.url                       @user.url
+if @user.id == @myself.id
+  json.thanks                  @thanks
+end
 
 
 

@@ -32,6 +32,11 @@ class Api::V2::UsersController < ApplicationController
     else
       @invisible = false
       @correspondence_score = 0
+      friends_thanking_me = Recommendation.find_by_sql("SELECT * FROM recommendations WHERE friends_thanking @> '{#{@myself.id}}'")
+      @thanks = []
+      friends_thanking_me.each do |reco|
+        @thanks << {friend: reco.user_id, restaurant: reco.restaurant_id, reco: reco.id}
+      end
     end
 
   end
