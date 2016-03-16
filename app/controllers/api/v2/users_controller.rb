@@ -48,8 +48,12 @@ class Api::V2::UsersController < ApplicationController
 
   def experts
     @user = User.find_by(authentication_token: params["user_token"])
-    @all_experts = User.where(public: true).where.not(id: @user.followings.pluck(:id))
+    @my_friends_ids = @user.my_friends_ids
+    @my_experts_ids = @user.followings.pluck(:id)
+    @all_experts = User.where(public: true).where.not(id: @my_experts_ids)
     all_experts_ids = @all_experts.pluck(:id)
+    @restaurants = Restaurant.joins(:recommendations).where(recommendations: {user_id: all_experts_ids, public: true})
+    restaurants_ids = @restaurants.pluck(:id)
 
     @mutual_restaurants = {}
     @all_experts.each do |expert|
@@ -58,6 +62,15 @@ class Api::V2::UsersController < ApplicationController
 
     fetch_experts_info(all_experts_ids)
     @all_experts = @all_experts.sort_by {|x| @experts_followers[x.id]}
+
+    wishes                                = Wish.where(user_id: @my_friends_ids + [@user.id])
+    restaurant_pictures                   = RestaurantPicture.where(restaurant_id: restaurants_ids)
+    restaurant_subways                    = RestaurantSubway.where(restaurant_id: restaurants_ids)
+    restaurant_types                      = RestaurantType.where(restaurant_id: restaurants_ids)
+    # elements de l'algorithme du score
+
+    score_variables
+    fetch_restaurants_infos(wishes, restaurant_pictures, restaurant_types)
 
   end
 

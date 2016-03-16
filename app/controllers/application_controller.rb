@@ -25,6 +25,71 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def score_variables
+
+    score_coefficients
+    split_friends_by_categories
+
+    @all_friends_category_1_recommending = {}
+    @all_friends_category_2_recommending = {}
+    @all_friends_category_3_recommending = {}
+    @all_experts_recommending = {}
+    @all_friends_category_1_wishing = {}
+    @all_friends_category_2_wishing = {}
+    @all_friends_category_3_wishing = {}
+
+  end
+
+
+
+  def score_coefficients
+
+    @recommendation_coefficient_category_1   = 15
+    @recommendation_coefficient_category_2   = 16
+    @recommendation_coefficient_category_3   = 17
+    @recommendation_coefficient_expert       = 14
+    @wish_coefficient_category_1             = 7
+    @wish_coefficient_category_2             = 8
+    @wish_coefficient_category_3             = 9
+    @me_recommending_coefficient             = 6
+    @me_wishing_coefficient                  = 10
+
+  end
+
+  def score_allocation_recommendations(recommendation)
+
+    if @category_1.include?(recommendation.user_id)
+      @all_friends_category_1_recommending[recommendation.restaurant_id] ||= []
+      @all_friends_category_1_recommending[recommendation.restaurant_id] << recommendation.user_id
+    elsif @category_2.include?(recommendation.user_id)
+      @all_friends_category_2_recommending[recommendation.restaurant_id] ||= []
+      @all_friends_category_2_recommending[recommendation.restaurant_id] << recommendation.user_id
+    elsif @category_3.include?(recommendation.user_id)
+      @all_friends_category_3_recommending[recommendation.restaurant_id] ||= []
+      @all_friends_category_3_recommending[recommendation.restaurant_id] << recommendation.user_id
+    elsif @my_experts_ids.include?(recommendation.user_id)
+      @all_experts_recommending[recommendation.restaurant_id] ||= []
+      @all_experts_recommending[recommendation.restaurant_id] << recommendation.user_id
+    end
+
+  end
+
+  def score_allocation_wishes(wish)
+
+    if @category_1.include?(wish.user_id)
+      @all_friends_category_1_wishing[wish.restaurant_id] ||= []
+      @all_friends_category_1_wishing[wish.restaurant_id] << wish.user_id
+    elsif @category_2.include?(wish.user_id)
+      @all_friends_category_2_wishing[wish.restaurant_id] ||= []
+      @all_friends_category_2_wishing[wish.restaurant_id] << wish.user_id
+    elsif @category_3.include?(wish.user_id)
+      @all_friends_category_3_wishing[wish.restaurant_id] ||= []
+      @all_friends_category_3_wishing[wish.restaurant_id] << wish.user_id
+    end
+
+  end
+
+
   def split_friends_by_categories
 
     @category_1 = []
@@ -59,6 +124,62 @@ class ApplicationController < ActionController::Base
 
     end
 
+  end
+
+  def fetch_restaurants_infos(wishes, restaurant_pictures, restaurant_types)
+
+    # associer les ambiances, occasions et amis recommandant aux restaurants avec une seule requête. De même pour récupérer dans chacun des restaurants quels sont les amis qui recommandent
+
+    @all_ambiences = {}
+    @all_strengths = {}
+    @all_occasions = {}
+    @all_friends_and_experts_recommending = {}
+
+    recommendations_i_trust.each do |recommendation|
+      @all_ambiences[recommendation.restaurant_id] ||= []
+      @all_ambiences[recommendation.restaurant_id] << recommendation.strengths
+      @all_strengths[recommendation.restaurant_id] ||= []
+      @all_strengths[recommendation.restaurant_id] << recommendation.strengths
+      @all_occasions[recommendation.restaurant_id] ||= []
+      if recommendation.occasions
+        @all_occasions[recommendation.restaurant_id] << recommendation.occasions
+      end
+      @all_friends_and_experts_recommending[recommendation.restaurant_id] ||= []
+      @all_friends_and_experts_recommending[recommendation.restaurant_id] << recommendation.user_id
+      score_allocation_recommendations(recommendation)
+    end
+
+    # récupérer en une seule requête tous les amis qui ont wishlisté les restaurants
+
+    @all_friends_wishing   = {}
+    wishes.each do |wish|
+      @all_friends_wishing[wish.restaurant_id] ||= []
+      @all_friends_wishing[wish.restaurant_id] << wish.user_id
+      score_allocation_wishes(wish)
+    end
+
+
+    @all_pictures = {}
+    restaurant_pictures.each do |restaurant_picture|
+      @all_pictures[restaurant_picture.restaurant_id] ||= []
+      @all_pictures[restaurant_picture.restaurant_id] << restaurant_picture.picture
+    end
+
+    @all_types = {}
+    restaurant_types.each do |restaurant_type|
+      @all_types[restaurant_type.restaurant_id] ||= []
+      @all_types[restaurant_type.restaurant_id] << restaurant_type.type_id
+    end
+
+  end
+
+  def recommendations_i_trust
+    t = Recommendation.arel_table
+    if @my_experts_ids != []
+      Recommendation.where(t[:user_id].eq_any(@my_friends_ids + [@user.id]).or(t[:user_id].eq_any(@my_experts_ids).and(t[:public].eq(true))))
+    else
+      Recommendation.where(t[:user_id].eq_any(@my_friends_ids + [@user.id]))
+    end
   end
 
   def fetch_experts_info(experts_ids)
