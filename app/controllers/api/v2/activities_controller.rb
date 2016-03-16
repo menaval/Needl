@@ -18,7 +18,7 @@ class Api::V2::ActivitiesController < ApplicationController
       @activities << {user_id: reco.user_id, restaurant_id: reco.restaurant_id, date: reco.created_at, url: reco.url ? reco.url : "", user_type: "me" , notification_type: "recommendation", strengths: reco.strengths, ambiences: reco.ambiences, occasions: reco.occasions, review: reco.review, friends_thanking: reco.friends_thanking, experts_thanking: reco.experts_thanking}
     end
 
-    Recommendation.where("user_id = ? AND public = ?", my_experts_ids, true).each do |reco|
+    Recommendation.where(user_id: my_experts_ids, public: true).each do |reco|
       @activities << {user_id: reco.user_id, restaurant_id: reco.restaurant_id, date: reco.created_at, url: reco.url ? reco.url : "", user_type: "following" , notification_type: "recommendation", strengths: reco.strengths, ambiences: reco.ambiences, occasions: reco.occasions, review: reco.review, friends_thanking: reco.friends_thanking, experts_thanking: reco.experts_thanking}
     end
 
