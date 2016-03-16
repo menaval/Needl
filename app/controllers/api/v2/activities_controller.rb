@@ -11,15 +11,15 @@ class Api::V2::ActivitiesController < ApplicationController
     @activities = []
 
     Recommendation.where(user_id: my_visible_friends_ids).each do |reco|
-      @activities << {user_id: reco.user_id, restaurant_id: reco.restaurant_id, date: reco.created_at, user_type: "friend" , notification_type: "recommendation", strengths: reco.strengths, ambiences: reco.ambiences, occasions: reco.occasions, review: reco.review, friends_thanking: reco.friends_thanking, experts_thanking: reco.experts_thanking}
+      @activities << {user_id: reco.user_id, restaurant_id: reco.restaurant_id, date: reco.created_at, url: reco.url ? reco.url : "", user_type: "friend" , notification_type: "recommendation", strengths: reco.strengths, ambiences: reco.ambiences, occasions: reco.occasions, review: reco.review, friends_thanking: reco.friends_thanking, experts_thanking: reco.experts_thanking}
     end
 
     Recommendation.where(user_id: @user.id).each do |reco|
-      @activities << {user_id: reco.user_id, restaurant_id: reco.restaurant_id, date: reco.created_at, user_type: "me" , notification_type: "recommendation", strengths: reco.strengths, ambiences: reco.ambiences, occasions: reco.occasions, review: reco.review, friends_thanking: reco.friends_thanking, experts_thanking: reco.experts_thanking}
+      @activities << {user_id: reco.user_id, restaurant_id: reco.restaurant_id, date: reco.created_at, url: reco.url ? reco.url : "", user_type: "me" , notification_type: "recommendation", strengths: reco.strengths, ambiences: reco.ambiences, occasions: reco.occasions, review: reco.review, friends_thanking: reco.friends_thanking, experts_thanking: reco.experts_thanking}
     end
 
     Recommendation.where("user_id = ? AND public = ?", my_experts_ids, true).each do |reco|
-      @activities << {user_id: reco.user_id, restaurant_id: reco.restaurant_id, date: reco.created_at, user_type: "following" , notification_type: "recommendation", strengths: reco.strengths, ambiences: reco.ambiences, occasions: reco.occasions, review: reco.review, friends_thanking: reco.friends_thanking, experts_thanking: reco.experts_thanking}
+      @activities << {user_id: reco.user_id, restaurant_id: reco.restaurant_id, date: reco.created_at, url: reco.url ? reco.url : "", user_type: "following" , notification_type: "recommendation", strengths: reco.strengths, ambiences: reco.ambiences, occasions: reco.occasions, review: reco.review, friends_thanking: reco.friends_thanking, experts_thanking: reco.experts_thanking}
     end
 
     Wish.where(user_id: my_visible_friends_ids).each do |wish|
@@ -37,7 +37,7 @@ class Api::V2::ActivitiesController < ApplicationController
     @activities = []
 
     Recommendation.where(user_id: friend_id).each do |reco|
-      @activities << {user_id: reco.user_id, restaurant_id: reco.restaurant_id, date: reco.created_at, user_type: friend_id == @user.id ? "me" : "friend" , notification_type: "recommendation", strengths: reco.strengths, ambiences: reco.ambiences, occasions: reco.occasions, review: reco.review, friends_thanking: reco.friends_thanking, experts_thanking: reco.experts_thanking}
+      @activities << {user_id: reco.user_id, restaurant_id: reco.restaurant_id, date: reco.created_at, url: reco.url ? reco.url : "", user_type: friend_id == @user.id ? "me" : "friend" , notification_type: "recommendation", strengths: reco.strengths, ambiences: reco.ambiences, occasions: reco.occasions, review: reco.review, friends_thanking: reco.friends_thanking, experts_thanking: reco.experts_thanking}
     end
 
     Wish.where(user_id: friend_id).each do |wish|
