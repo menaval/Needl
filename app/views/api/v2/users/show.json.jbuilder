@@ -10,6 +10,7 @@ json.correspondence_score      @correspondence_score
 json.recommendations           @recos
 json.wishes                    @wishes
 json.followings                @user.followings.pluck(:id)
+json.friends                   @friends
 json.public                    @user.public
 json.public_score              @user.public_score
 json.number_of_followers       @user.followers.length

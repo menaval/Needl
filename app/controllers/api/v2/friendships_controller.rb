@@ -30,9 +30,15 @@ class Api::V2::FriendshipsController < ApplicationController
     @infos = {}
     friendships.each do |friendship|
       if friendship.sender_id == @user.id
-        @infos[friendship.receiver_id] = {friendship_id: friendship.id, invisibility: friendship.receiver_invisible}
+        @infos[friendship.receiver_id] = {friendship_id: friendship.id, invisibility: friendship.receiver_invisible, friends: []}
+        User.where(id: User.find(friendship.receiver_id).my_friends_ids).each do |friend|
+          @infos[friendship.receiver_id][:friends] << {id: friend.id, name: friend.name, picture: friend.picture, score: friend.score}
+        end
       else
-        @infos[friendship.sender_id] = {friendship_id: friendship.id, invisibility: friendship.sender_invisible}
+        @infos[friendship.sender_id] = {friendship_id: friendship.id, invisibility: friendship.sender_invisible, friends: []}
+        User.where(id: User.find(friendship.sender_id).my_friends_ids).each do |friend|
+          @infos[friendship.sender_id][:friends] << {id: friend.id, name: friend.name, picture: friend.picture, score: friend.score}
+        end
       end
     end
 

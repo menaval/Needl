@@ -23,6 +23,11 @@ class Api::V2::UsersController < ApplicationController
     @recos = @user.my_recos.pluck(:id)
     @wishes = @user.my_wishes.pluck(:id)
     @friendship_id = 0
+    @friends = []
+
+    User.where(id: @user.my_friends_ids).each do |friend|
+      @friends << {id: friend.id, name: friend.name, picture: friend.picture, score: friend.score}
+    end
 
     if @myself.id != @user.id && @myself.my_friends_ids.include?(@user.id)
       friendship = Friendship.find_by(sender_id: [@myself.id, @user.id], receiver_id: [@myself.id, @user.id])

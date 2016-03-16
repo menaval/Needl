@@ -30,6 +30,7 @@ json.friends                @friends do |friend|
   json.recommendations            @friends_recommendations[friend.id] ? @friends_recommendations[friend.id] : []
   json.wishes                     @friends_wishes[friend.id] ? @friends_wishes[friend.id] : []
   json.followings                 @all_followings[friend.id] ? @all_followings[friend.id] : []
+  json.friends                    @infos[friend.id][:friends]
   json.public                     friend.public
   json.public_score               friend.public_score
   json.number_of_followers        @all_followers[friend.id] ? @all_followers[friend.id].length : 0
