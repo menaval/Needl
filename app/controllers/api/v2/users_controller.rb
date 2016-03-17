@@ -74,6 +74,59 @@ class Api::V2::UsersController < ApplicationController
 
   end
 
+  def update
+
+    user        = User.find_by(authentication_token: params["user_token"])
+    name        = params["name"] ? params["name"] : user.name
+    email       = params["email"] ? params["email"] : user.email
+    picture     = params["picture"] ? params["picture"] : user.picture
+    public      = params["public"] && Recommendation.find_by_sql("SELECT * FROM recommendations WHERE friends_thanking @> '{#{user.id}}'").length >= 20 ? params["public"] : user.public
+    description = params["description"] ? params["description"] : user.description
+    tags        = params["tags"] ? params["tags"] : user.tags
+
+
+    # On actualise la base de données mailchimp. Ne pas oublier de le faire quand la personne change son oauth token qu'il faut mettre en place également
+    mail_encrypted = Digest::MD5.hexdigest(user.email)
+    gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
+    list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
+
+    if user.email == email
+
+
+    gibbon.lists(list_id).members(mail_encrypted).update(
+      body: {
+        merge_fields: {
+          FNAME: name.partition(" ").first,
+          LNAME: name.partition(" ").last
+        }
+      }
+    )
+
+    else
+
+      # On ne peut pas actualiser une adresse mail sur mailchimp, il faut supprimer l'utilisateur et le recréer
+     status = gibbon.lists(list_id).members(mail_encrypted).retrieve["status"]
+     gibbon.lists(list_id).members(mail_encrypted).delete
+     gibbon.lists(list_id).members.create(
+       body: {
+         email_address: email,
+         status: status,
+         merge_fields: {
+           FNAME: name.partition(" ").first,
+           LNAME: name.partition(" ").last
+         }
+       }
+     )
+
+    end
+
+    user.update_attributes(name: name, email: email, picture: picture, public: public, description: description, tags: tags)
+
+    render json: {message: success}
+
+  end
+
+
   def pertinent_experts
     @user = User.find_by(authentication_token: params["user_token"])
     @all_experts = User.where(public: true).where.not(id: @user.followings.pluck(:id))
@@ -82,6 +135,7 @@ class Api::V2::UsersController < ApplicationController
     fetch_experts_info(all_experts_ids)
 
   end
+
 
   def new_parse_installation
 

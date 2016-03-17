@@ -70,7 +70,7 @@ Rails.application.routes.draw do
     end
 
     namespace :v2 do
-      resources :users, only: [:index, :show] do
+      resources :users, only: [:index, :show, :update] do
         collection do
           get  :welcome_ceo
           get  :reset_badge_to_zero
@@ -95,7 +95,7 @@ Rails.application.routes.draw do
       end
       resources :followerships, only: [:index, :create, :destroy]
       resources :wishes, only: [:index, :new, :create, :destroy]
-      resources :registrations, only: [:edit, :update, :new, :create]
+      resources :registrations, only: [:new, :create]
       resources :sessions, only: [:create]
       resources :activities, only: [:index, :show]
       resources :user_wishlist_pictures, only: [:new, :create]
