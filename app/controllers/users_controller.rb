@@ -11,7 +11,6 @@ class UsersController < ApplicationController
   #   password = params["password"]
   #   @user.update_attributes(password: password)
   #   render(:json => {notice: "Ton mot de passe a bien été changé !"}, :status => 409, :layout => false)
-
   # end
 
 end

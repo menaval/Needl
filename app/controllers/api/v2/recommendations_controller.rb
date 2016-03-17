@@ -112,7 +112,7 @@ class Api::V2::RecommendationsController < ApplicationController
   private
 
   def recommendation_params
-    params.require(:recommendation).permit(:review, { strengths: [] }, { ambiences: [] }, { occasions: [] }, { friends_thanking: [] }, { experts_thanking: [] })
+    params.require(:recommendation).permit(:review, { strengths: [] }, { ambiences: [] }, { occasions: [] }, { friends_thanking: [] }, { experts_thanking: [] }, :url, :public)
   end
 
 
