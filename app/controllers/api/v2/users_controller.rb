@@ -122,7 +122,7 @@ class Api::V2::UsersController < ApplicationController
 
     user.update_attributes(name: name, email: email, picture: picture, public: public, description: description, tags: tags)
 
-    render json: {message: success}
+    render json: {message: "success"}
 
   end
 
