@@ -136,9 +136,13 @@ class Api::V2::UsersController < ApplicationController
   end
 
   def update_password
-    @user = User.find_by(email: params["email"])
-    @user.send_update_password_email
-    render json: {message: "success"}
+    if User.find_by(email: params["email"])
+      @user = User.find_by(email: params["email"])
+      @user.send_update_password_email
+      render json: {message: "success"}
+    else
+      render json: {error_message: "no_account", status: 403}
+    end
   end
 
   def new_parse_installation
