@@ -392,7 +392,7 @@ class ApplicationController < ActionController::Base
   end
 
   def pages_or_subscribers_controller?
-    controller_name == "pages" || controller_name == "subscribers"  || (controller_name == "users" && (action_name == "update_password" || action_name == "change_password") # Brought by the `high_voltage` gem
+    controller_name == "pages" || controller_name == "subscribers"  || (controller_name == "users" && (action_name == "update_password" || action_name == "change_password")) # Brought by the `high_voltage` gem
   end
 
   def user_not_authorized
