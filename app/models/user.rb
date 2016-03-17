@@ -162,7 +162,6 @@ class User < ActiveRecord::Base
   end
 
   def link_account_to_facebook(auth)
-    self.provider = auth.provider
     self.uid = auth.uid
     self.gender = auth.extra.raw_info.gender
     # a remettre quand on aura été validé
