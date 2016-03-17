@@ -10,7 +10,7 @@ class Api::V2::RegistrationsController < ApplicationController
         password = params['password']
         all_emails = User.all.pluck(:email)
         if all_emails.include?(email)
-          render json: {error_message: "account_already_exists"}
+          render json: {error_message: "account_already_exists", status: 401}
         else
           @user = User.new(name: name, email: email, provider: "mail", emails: [email], password: password)
           @user.save
@@ -20,35 +20,35 @@ class Api::V2::RegistrationsController < ApplicationController
           Followership.create(follower_id: @user.id, following_id: 553)
           # On track l'arrivée sur Mixpanel
 
-          # @tracker.people.set(@user.id, {
-            # "gender" => @user.gender,
-            # "name" => @user.name,
-            # "$email": @user.email
-          # })
-          # @tracker.track(@user.id, 'signup', {"user" => @user.name} )
-    #
-          # On ajoute le nouveau membre sur la mailing liste de mailchimp
-          # if @user.email.include?("needlapp.com") == false && Rails.env.development? != true
-    #
-            # begin
-              # @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
-              # @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
-              # @gibbon.lists(@list_id).members.create(
-                # body: {
-                  # email_address: @user.email,
-                  # status: "subscribed",
-                  # merge_fields: {
-                    # FNAME: @user.name.partition(" ").first,
-                    # LNAME: @user.name.partition(" ").last,
-                    # TOKEN: @user.authentication_token,
-                    # GENDER: @user.gender ? @user.gender : ""
-                  # }
-                # }
-              # )
-            # rescue Gibbon::MailChimpError
-              # puts "error catched --------------------------------------------"
-            # end
-          # end
+          @tracker.people.set(@user.id, {
+            "gender" => @user.gender,
+            "name" => @user.name,
+            "$email": @user.email
+          })
+          @tracker.track(@user.id, 'signup', {"user" => @user.name} )
+
+          On ajoute le nouveau membre sur la mailing liste de mailchimp
+          if @user.email.include?("needlapp.com") == false && Rails.env.development? != true
+
+            begin
+              @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
+              @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
+              @gibbon.lists(@list_id).members.create(
+                body: {
+                  email_address: @user.email,
+                  status: "subscribed",
+                  merge_fields: {
+                    FNAME: @user.name.partition(" ").first,
+                    LNAME: @user.name.partition(" ").last,
+                    TOKEN: @user.authentication_token,
+                    GENDER: @user.gender ? @user.gender : ""
+                  }
+                }
+              )
+            rescue Gibbon::MailChimpError
+              puts "error catched --------------------------------------------"
+            end
+          end
 
           render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
 

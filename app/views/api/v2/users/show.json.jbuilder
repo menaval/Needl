@@ -22,6 +22,7 @@ json.public_recommendations    @user.my_public_recos.pluck(:id)
 json.url                       @user.url
 if @user.id == @myself.id
   json.thanks                  @thanks
+  json.provider                @user.provider
 end
 
 
