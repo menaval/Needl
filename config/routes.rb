@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :users, only: [:show] do
     collection do
       get :welcome_ceo
+      get :change_password
     end
   end
   resources :friendships, only: [:index, :new, :create, :destroy] do

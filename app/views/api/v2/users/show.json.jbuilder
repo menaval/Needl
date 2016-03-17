@@ -6,6 +6,8 @@ json.picture                   @user.picture
 json.facebook_linked           @user.token ? true : false
 json.score                     @user.score
 json.invisible                 @invisible
+json.app_version               @user.app_version
+json.platform                  @user.platform
 json.correspondence_score      @correspondence_score
 json.recommendations           @recos
 json.wishes                    @wishes
