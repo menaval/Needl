@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     collection do
       get :welcome_ceo
       get :change_password
+      post :update_password
     end
   end
   resources :friendships, only: [:index, :new, :create, :destroy] do
@@ -97,7 +98,11 @@ Rails.application.routes.draw do
       resources :followerships, only: [:index, :create, :destroy]
       resources :wishes, only: [:index, :new, :create, :destroy]
       resources :registrations, only: [:new, :create]
-      resources :sessions, only: [:create]
+      resources :sessions, only: [:create] do
+        collection do
+          post :update_infos
+        end
+      end
       resources :activities, only: [:index, :show]
       resources :user_wishlist_pictures, only: [:new, :create]
       resources :restaurants, only: [:show, :index, :update] do

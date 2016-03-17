@@ -25,4 +25,9 @@ class Api::V2::SessionsController < ApplicationController
     # la requete postman
     # http://localhost:3000/api/sessions.json?user[email]=yolo4@gmail.co&user[password]=12345678
   end
+
+  def update_infos
+    @user = User.find_by(authentication_token: params["user_token"])
+    render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
+  end
 end
