@@ -136,8 +136,9 @@ class Api::V2::UsersController < ApplicationController
   end
 
   def update_password
-    @user = User.find_by(authentication_token: params["user_token"])
+    @user = User.find_by(email: params["email"])
     @user.send_update_password_email
+    render json: {message: "success"}
   end
 
   def new_parse_installation

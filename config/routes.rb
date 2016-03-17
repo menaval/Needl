@@ -83,6 +83,7 @@ Rails.application.routes.draw do
           post :new_parse_installation
           post :contacts_access
           post :invite_contact
+          post :update_password
         end
       end
       resources :recommendations, only: [:index, :create, :destroy, :update]
