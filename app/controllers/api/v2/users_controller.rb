@@ -133,7 +133,11 @@ class Api::V2::UsersController < ApplicationController
     all_experts_ids = @all_experts.pluck(:id)
 
     fetch_experts_info(all_experts_ids)
+  end
 
+  def update_password
+    @user = User.find_by(authentication_token: params["user_token"])
+    @user.send_update_password_email
   end
 
   def new_parse_installation

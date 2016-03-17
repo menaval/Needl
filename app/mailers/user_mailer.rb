@@ -63,6 +63,13 @@ class UserMailer < ApplicationMailer
 
   end
 
+  def update_password(user)
+    @user = user
+    @tracker = Mixpanel::Tracker.new(ENV['MIXPANEL_TOKEN'])
+    @tracker.track(@user.id, 'Password Forgotten', { "user" => @user.name, "type" => "Mail"})
+    mail(to: @user.email, subject: "Réinitialisez votre mot de passe sur Needl", from: "Valentin de Needl <valentin.menard@needlapp.com>")
+  end
+
   # def thank_contacts(user, contacts_infos, restaurant_id)
 
   #   @user = user
