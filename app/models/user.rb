@@ -197,7 +197,7 @@ class User < ActiveRecord::Base
   end
 
   def send_update_password_email
-    UserMailer.update_password(self)
+    UserMailer.update_password(self).deliver
   end
 
   # def send_thank_contacts_email(contacts_infos, restaurant_id)
