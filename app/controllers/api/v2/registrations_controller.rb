@@ -27,7 +27,7 @@ class Api::V2::RegistrationsController < ApplicationController
           })
           @tracker.track(@user.id, 'signup', {"user" => @user.name} )
 
-          On ajoute le nouveau membre sur la mailing liste de mailchimp
+          # On ajoute le nouveau membre sur la mailing liste de mailchimp
           if @user.email.include?("needlapp.com") == false && Rails.env.development? != true
 
             begin
