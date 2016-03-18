@@ -184,7 +184,7 @@ class Api::V2::UsersController < ApplicationController
     list = params["contact_list"]
     users = User.all
 
-    redirect_to new_api_friendship_path(:user_email => params["user_email"], :user_token => params["user_token"])
+    render json: {message: "success"}
     ImportedContact.create(user_id: @user.id, list: list, imported: false)
 
   end
@@ -202,7 +202,7 @@ class Api::V2::UsersController < ApplicationController
 
     @user = User.find_by(authentication_token: params["user_token"])
     contact = params["contact"]
-    redirect_to new_api_friendship_path(:user_email => params["user_email"], :user_token => params["user_token"])
+    render json: {message: "success"}
 
     @contact_name = contact[:givenName] ? contact[:givenName] : ""
     contact_mail = contact[:emailAddresses] ? contact[:emailAddresses].first[:email].downcase.delete(' ') : ""
