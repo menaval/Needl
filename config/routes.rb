@@ -12,7 +12,6 @@ Rails.application.routes.draw do
   resources :users, only: [:show] do
     collection do
       get :welcome_ceo
-      get :change_password
       post :update_password
     end
   end

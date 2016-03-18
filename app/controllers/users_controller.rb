@@ -6,10 +6,6 @@ class UsersController < ApplicationController
 
   end
 
-  def change_password
-    @user = User.find_by(authentication_token: params["user_token"])
-  end
-
   def update_password
     @user = User.find_by(authentication_token: params["user_token"])
     password = params["password"]
