@@ -14,12 +14,12 @@ class Api::V2::SessionsController < ApplicationController
       render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
     # l'utilisateur a rempli la bonne adresse mail mais il s'est inscrit via facebook
     elsif @user != nil && @user.token != nil
-      render json: {error_message: "Facebook_account"}
+      render json: {error_message: "Facebook_account", status: 401}
     #  l'utilisateur a rempli la bonne adresse mais mauvais mot de passe
     elsif @user != nil && @user.valid_password?(password) == false
-      render json: {error_message: "wrong_password"}
+      render json: {error_message: "wrong_password", status: 401}
     else
-      render json: {error_message: "wrong_email"}
+      render json: {error_message: "wrong_email", status: 401}
     end
 
     # la requete postman
