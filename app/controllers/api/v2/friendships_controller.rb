@@ -125,6 +125,7 @@ class Api::V2::FriendshipsController < ApplicationController
     @friend_id = friendship.sender_id
     friendship.update_attribute(:accepted, true)
     @tracker.track(@user.id, 'accept_friend', { "user" => @user.name })
+    TasteCorrespondence.create(member_one_id: @user.id, member_two_id: @friend_id, number_of_shared_restaurants: 0, category: 1)
     notif_friendship("accepted")
 
     # on renvoie le profil, ses activités et les restaurants updatés
