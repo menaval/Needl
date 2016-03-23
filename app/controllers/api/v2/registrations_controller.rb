@@ -10,7 +10,7 @@ class Api::V2::RegistrationsController < ApplicationController
         password = params['password']
         all_emails = User.all.pluck(:email)
         if all_emails.include?(email)
-          render json: {error_message: "account_already_exists", status: 401}
+          render json: {error_message: "account_already_exists"}, status: 401
         else
           @user = User.new(name: name, email: email, provider: "mail", emails: [email], password: password)
           @user.save
