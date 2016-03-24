@@ -12,7 +12,7 @@ class Api::V2::RegistrationsController < ApplicationController
         if all_emails.include?(email)
           render(json: {error_message: "account_already_exists"}, status: 401)
         else
-          @user = User.new(name: name, email: email, provider: "mail", emails: [email], password: password)
+          @user = User.new(name: name, email: email, provider: "mail", picture: "https://s3-eu-west-1.amazonaws.com/needl/production/supports/no_photo.jpeg?X-Amz-Date=20160324T094744Z&X-Amz-Expires=300&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Signature=361833e8982069eef443e88a6e158963037cfe8b66313f018025f5a8bcdd00cc&X-Amz-Credential=ASIAIP5QPA6MMDWTC75A/20160324/eu-west-1/s3/aws4_request&X-Amz-SignedHeaders=Host&x-amz-security-token=AQoDYXdzEEMagALYzsKfi63vCcNg0nd2GFKyYe1mpOjSaortqJJWI0spfzpiL%2B90KT0eVrXXSgY82rVwelxvucGmh9qeZCAN4eQ151xEJYMyWJcJhGIq2QC9L6PkOi0k5yoxpqmFJABuNH0P7aR52pQItVQHMiumN5XJfTdVrlwueFyndRipTzDPx%2BHCryZsTW1LRbTZH4AXxGIla6QM6DIytNKOFIPb64JrcuPDiYMmUdjRIBoqoBsd6OPZw9Rty/0hakH4V/7zj8neqcxPOh4FLpJcD9Gd0q0netJR5KbHxtE1tKmvRwyMsqftqivhgkjhO8HMI3FDeQ5KJx4BZH5a66kk41xABqOCIPHuzrcF"emails: [email], password: password)
           @user.save
           sign_in @user
 
