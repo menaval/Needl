@@ -94,7 +94,7 @@ class Api::V2::RestaurantsController < ApplicationController
     restaurant_id  = params["id"]
     # passer en public fin du test
     if user.public == false
-      pictures = params["file"]
+      pictures = params["pictures"]
       pictures.each do |picture|
         RestaurantPicture.create(picture: picture, restaurant_id: restaurant_id)
       end
