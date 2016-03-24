@@ -112,7 +112,7 @@ Rails.application.routes.draw do
           get :user_updated
         end
         member do
-          post :add_pictures
+          post :add_picture
         end
       end
     end
