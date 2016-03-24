@@ -79,7 +79,6 @@ class Api::V2::UsersController < ApplicationController
     user        = User.find_by(authentication_token: params["user_token"])
     name        = params["name"] ? params["name"] : user.name
     email       = params["email"] ? params["email"] : user.email
-    picture     = params["picture"] ? params["picture"] : user.picture
     public      = params["public"] && Recommendation.find_by_sql("SELECT * FROM recommendations WHERE friends_thanking @> '{#{user.id}}'").length >= 20 ? params["public"] : user.public
     description = params["description"] ? params["description"] : user.description
     tags        = params["tags"] ? params["tags"] : user.tags
@@ -124,6 +123,13 @@ class Api::V2::UsersController < ApplicationController
 
     render json: {message: "success"}
 
+  end
+
+  def update_picture
+    user = User.find_by(authentication_token: params["user_token"])
+    user.picture = params["file"]
+    user.save
+    render json: {message: "success"}
   end
 
 
