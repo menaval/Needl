@@ -89,15 +89,13 @@ class Api::V2::RestaurantsController < ApplicationController
 
   end
 
-  def add_pictures
+  def add_picture
     user          = User.find_by(authentication_token: params["user_token"])
-    restaurant_id  = params["id"]
     # passer en public fin du test
     if user.public == false
-      pictures = params["pictures"]
-      pictures.each do |picture|
-        RestaurantPicture.create(picture: picture, restaurant_id: restaurant_id)
-      end
+      picture = params["file"]
+      restaurant_id  = params["id"]
+      RestaurantPicture.create(picture: picture, restaurant_id: restaurant_id, user_id: user.id)
     end
   end
 
