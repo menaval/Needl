@@ -92,11 +92,12 @@ class Api::V2::RestaurantsController < ApplicationController
   def add_picture
     user          = User.find_by(authentication_token: params["user_token"])
     # passer en public fin du test
-    if user.public == false
+    if user.public == true
       picture = params["file"]
       restaurant_id  = params["id"]
       RestaurantPicture.create(picture: picture, restaurant_id: restaurant_id, user_id: user.id)
     end
+    render json: {message: "sucess"}
   end
 
   private
