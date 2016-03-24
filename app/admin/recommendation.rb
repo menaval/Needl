@@ -1,6 +1,6 @@
 ActiveAdmin.register Recommendation do
 
-  permit_params :ambiences, :strengths, :review, :restaurant_id, :user_id, :occasions, :price_ranges, :friends_thanking, :contacts_thanking, :experts_thanking, :url
+  permit_params :ambiences, :strengths, :review, :restaurant_id, :user_id, :occasions, :price_ranges, :friends_thanking, :contacts_thanking, :experts_thanking, :url, :public
 
   filter :restaurant, collection: Restaurant.all.order(:name)
   filter :user, collection: User.all.order(:name)
@@ -16,6 +16,7 @@ ActiveAdmin.register Recommendation do
       f.input :url
       f.input :friends_thanking
       f.input :experts_thanking
+      f.input :public
     end
     f.actions
   end
