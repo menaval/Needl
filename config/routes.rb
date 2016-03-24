@@ -111,6 +111,9 @@ Rails.application.routes.draw do
           get :autocomplete
           get :user_updated
         end
+        member do
+          post :add_pictures
+        end
       end
     end
 
