@@ -96,6 +96,7 @@ class Api::V2::RestaurantsController < ApplicationController
       picture = params["file"]
       restaurant_id  = params["id"]
       RestaurantPicture.create(picture: picture, restaurant_id: restaurant_id, user_id: user.id)
+      @tracker.track(user.id, 'Add Picture', { "user" => user.name, "restaurant" => Restaurant.find(restaurant_id).name})
     end
     render json: {message: "sucess"}
   end

@@ -77,6 +77,19 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
           accept_all_friends
 
+          # s'il a reçu un point d'expertise
+          if params["friend_id"] != nil && params["restaurant_id"] != nil && Recommendation.where(user_id: params["friend_id"], restaurant_id: params["restaurant_id"]).length > 0
+            if @user.my_friends_ids.include?(params["friend_id"]) == false
+              Friendship.create(sender_id: params["friend_id"], receiver_id: @user.id, accepted: true)
+            end
+            reco = Recommendation.where(user_id: params["friend_id"], restaurant_id: params["restaurant_id"])
+            reco.friends_thanking += [@user.id]
+            reco.save
+            @user.score = 1
+            @user.save
+            @tracker.track(@user.id, 'Signup Thanked', { "user" => @user.name, "friend" => reco.user.name, "restaurant" => reco.restaurant.name})
+          end
+
           # On ajoute le nouveau membre sur la mailing liste de mailchimp
           if @user.email.include?("needlapp.com") == false && Rails.env.development? != true
 
