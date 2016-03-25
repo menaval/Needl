@@ -85,8 +85,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
             reco = Recommendation.where(user_id: params["friend_id"], restaurant_id: params["restaurant_id"]).first
             reco.friends_thanking += [@user.id]
             reco.save
-            @user.score = 1
-            @user.save
+            @user.update_attributes(score: 1)
             @tracker.track(@user.id, 'Signup Thanked', { "user" => @user.name, "friend" => reco.user.name, "restaurant" => reco.restaurant.name})
           end
 
