@@ -34,10 +34,15 @@ class Api::V2::RegistrationsController < ApplicationController
             reco.friends_thanking += [@user.id]
             reco.save
             puts "-----------------------------------------------------------------------------------------------"
-            puts "#{@user}"
+            puts "#{@user.score}"
+            @user.score = 1
+            @user.save
+            puts "-----------------------------------------------------------------------------------------------"
+            puts "#{@user.score}"
             @user.update_attributes(score: 1)
+            @user.save
             puts "------------------------------------------------"
-            puts "#{@user}"
+            puts "#{@user.score}"
             @tracker.track(@user.id, 'Signup Thanked', { "user" => @user.name, "friend" => reco.user.name, "restaurant" => reco.restaurant.name})
           end
 
