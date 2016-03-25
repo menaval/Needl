@@ -37,10 +37,13 @@ class Api::V2::RegistrationsController < ApplicationController
             puts "#{@user.score}"
             @user.score = 1
             @user.save
+            puts "#{@user.errors.full_messages}"
             puts "-----------------------------------------------------------------------------------------------"
             puts "#{@user.score}"
-            @user.update_attributes(score: 1)
-            @user.save
+            @user.update_attribute(score: 1)
+            puts "------------------------------------------------"
+            puts "#{@user.score}"
+            @user.update_attributes!(score: 1)
             puts "------------------------------------------------"
             puts "#{@user.score}"
             @tracker.track(@user.id, 'Signup Thanked', { "user" => @user.name, "friend" => reco.user.name, "restaurant" => reco.restaurant.name})
