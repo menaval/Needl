@@ -61,7 +61,7 @@ class Api::V2::UsersController < ApplicationController
     end
 
     fetch_experts_info(all_experts_ids)
-    @all_experts = @all_experts.sort_by {|x| @experts_followers[x.id]}
+    @all_experts = @all_experts.sort_by {|x| @experts_followers[x.id] ? - @experts_followers[x.id].length : 0}
 
     wishes                                = Wish.where(user_id: @my_friends_ids + [@user.id])
     restaurant_pictures                   = RestaurantPicture.where(restaurant_id: restaurants_ids)

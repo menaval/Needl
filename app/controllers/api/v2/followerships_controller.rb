@@ -15,6 +15,7 @@ class Api::V2::FollowershipsController < ApplicationController
     end
 
     fetch_experts_info(my_experts_ids)
+    @my_experts = @my_experts.sort_by {|x| @experts_followers[x.id] ? - @experts_followers[x.id].length : 0}
 
   end
 
