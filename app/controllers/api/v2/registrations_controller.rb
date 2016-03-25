@@ -16,6 +16,16 @@ class Api::V2::RegistrationsController < ApplicationController
           @user.save
           sign_in @user
 
+          # les personnes suivent automatiquement Needl
+          Followership.create(follower_id: @user.id, following_id: 553)
+          # On track l'arrivée sur Mixpanel
+
+          @tracker.people.set(@user.id, {
+            "gender" => @user.gender,
+            "name" => @user.name,
+            "$email": @user.email
+          })
+          @tracker.track(@user.id, 'signup', {"user" => @user.name} )
 
           # s'il a reçu un point d'expertise
           if params["friend_id"] != nil && params["restaurant_id"] != nil && Recommendation.where(user_id: params["friend_id"], restaurant_id: params["restaurant_id"]).length > 0
@@ -31,16 +41,6 @@ class Api::V2::RegistrationsController < ApplicationController
             @tracker.track(@user.id, 'Signup Thanked', { "user" => @user.name, "friend" => reco.user.name, "restaurant" => reco.restaurant.name})
           end
 
-          # les personnes suivent automatiquement Needl
-          Followership.create(follower_id: @user.id, following_id: 553)
-          # On track l'arrivée sur Mixpanel
-
-          @tracker.people.set(@user.id, {
-            "gender" => @user.gender,
-            "name" => @user.name,
-            "$email": @user.email
-          })
-          @tracker.track(@user.id, 'signup', {"user" => @user.name} )
 
           # On ajoute le nouveau membre sur la mailing liste de mailchimp
           if @user.email.include?("needlapp.com") == false && Rails.env.development? != true
@@ -64,6 +64,9 @@ class Api::V2::RegistrationsController < ApplicationController
               puts "error catched --------------------------------------------"
             end
           end
+
+          puts "---------------------------------------------------------"
+          puts "#{@user.score}"
 
           render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
 

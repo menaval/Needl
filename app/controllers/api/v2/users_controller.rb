@@ -44,6 +44,9 @@ class Api::V2::UsersController < ApplicationController
       end
     end
 
+    puts "---------------------------------------------------------"
+    puts "fetch me: #{@user.score}"
+
   end
 
   def experts
