@@ -211,8 +211,8 @@ class ApplicationController < ActionController::Base
 
     @experts_followings = {}
     Followership.where(follower_id: experts_ids).each do |followership|
-      @experts_followers[followership.follower_id] ||= []
-      @experts_followers[followership.follower_id] << followership.following_id
+      @experts_followings[followership.follower_id] ||= []
+      @experts_followings[followership.follower_id] << followership.following_id
     end
 
     @mutual_restaurants = {}
