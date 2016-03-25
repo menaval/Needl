@@ -40,7 +40,7 @@ class Api::V2::RegistrationsController < ApplicationController
             puts "#{@user.errors.full_messages}"
             puts "-----------------------------------------------------------------------------------------------"
             puts "#{@user.score}"
-            @user.update_attribute(score: 1)
+            @user.update_attribute(:score, 1)
             puts "------------------------------------------------"
             puts "#{@user.score}"
             @user.update_attributes!(score: 1)
