@@ -82,7 +82,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
             if @user.my_friends_ids.include?(params["friend_id"]) == false
               Friendship.create(sender_id: params["friend_id"], receiver_id: @user.id, accepted: true)
             end
-            reco = Recommendation.where(user_id: params["friend_id"], restaurant_id: params["restaurant_id"])
+            reco = Recommendation.where(user_id: params["friend_id"], restaurant_id: params["restaurant_id"]).first
             reco.friends_thanking += [@user.id]
             reco.save
             @user.score = 1

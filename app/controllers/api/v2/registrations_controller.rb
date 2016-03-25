@@ -20,7 +20,7 @@ class Api::V2::RegistrationsController < ApplicationController
           # s'il a reçu un point d'expertise
           if params["friend_id"] != nil && params["restaurant_id"] != nil && Recommendation.where(user_id: params["friend_id"], restaurant_id: params["restaurant_id"]).length > 0
             Friendship.create(sender_id: params["friend_id"], receiver_id: @user.id, accepted: true)
-            reco = Recommendation.where(user_id: params["friend_id"], restaurant_id: params["restaurant_id"])
+            reco = Recommendation.where(user_id: params["friend_id"], restaurant_id: params["restaurant_id"]).first
             reco.friends_thanking += [@user.id]
             reco.save
             @user.score = 1
