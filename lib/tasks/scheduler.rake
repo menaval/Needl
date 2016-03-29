@@ -233,23 +233,28 @@ def send_mailchimp_the_updates(user, type_selected_id, reco1, reco2, reco3)
   resto2 = Restaurant.find(reco2.restaurant_id)
   resto3 = Restaurant.find(reco3.restaurant_id)
 
-  # Burger - Thaï - Japonais - Italien - Français - Oriental - Pizza
-  #
-  # francais -> restos français
-  # italiens -> restos italiens
-  # japonais -> restos japonais
-  # burger   -> burgers
-  # Thaï     -> restos thaï
-  # Oriental -> restaurants orientaux
-  # Pizza    -> pizzerias
-
+  theme  = Type.find(type_selected_id).name
+  case theme
+  when "Français"
+    theme = "restos français"
+  when "Italien"
+    theme = "restos italiens"
+  when "Japonais"
+    theme = "restos japonais"
+  when "Thaï"
+    theme = "restos thaï"
+  when "Oriental"
+    theme = "restos orientaux"
+  when "Pizza"
+    theme = "pizzerias"
+  end
 
   # ici dans thème on va pouvoir changer chaque semaine le nom du thème suivant l'ID pour faire des beaux titres de mail
 
   gibbon.lists(list_id).members(mail_encrypted).upsert(
     body: {
       merge_fields: {
-        THEME: Type.find(type_selected_id).name,
+        THEME: theme,
         REST1NAME: resto1.name,
         REST1METRO: resto1.subway_name,
         REST1FR: User.find(reco1.user_id).name,
