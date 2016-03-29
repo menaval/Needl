@@ -233,6 +233,17 @@ def send_mailchimp_the_updates(user, type_selected_id, reco1, reco2, reco3)
   resto2 = Restaurant.find(reco2.restaurant_id)
   resto3 = Restaurant.find(reco3.restaurant_id)
 
+  # Burger - Thaï - Japonais - Italien - Français - Oriental - Pizza
+  #
+  # francais -> restos français
+  # italiens -> restos italiens
+  # japonais -> restos japonais
+  # burger   -> burgers
+  # Thaï     -> restos thaï
+  # Oriental -> restaurants orientaux
+  # Pizza    -> pizzerias
+
+
   # ici dans thème on va pouvoir changer chaque semaine le nom du thème suivant l'ID pour faire des beaux titres de mail
 
   gibbon.lists(list_id).members(mail_encrypted).upsert(

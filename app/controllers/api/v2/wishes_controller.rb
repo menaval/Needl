@@ -8,7 +8,7 @@ class Api::V2::WishesController < ApplicationController
   require 'json'
 
   def index
-    if params["origin"] == mail
+    if params["origin"] == "mail"
       create
     end
   end
