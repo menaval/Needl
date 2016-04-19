@@ -135,7 +135,7 @@ class RecommendationsController < ApplicationController
       longitude:    search.location.lng,
       price_range:  search.attributes.groups[0] ? search.attributes.groups[0].items[0].priceTier  : nil,
       picture_url:  search.photos.groups[0] ? "#{search.photos.groups[0].items[0].prefix}1000x1000#{search.photos.groups[0].items[0].suffix}" : "http://needl.s3.amazonaws.com/production/restaurant_pictures/pictures/000/restaurant%20default.jpg",
-      phone_number: search.contact.phone ? search.contact.phone : nil,
+      phone_number: search.contact.phone ? search.contact.phone : "",
       foursquare_id: @restaurant_id,
       foursquare_rating: search.rating
     )
