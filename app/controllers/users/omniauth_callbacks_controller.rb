@@ -65,8 +65,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
           # On track l'arrivée sur Mixpanel
 
-          # automatiquement il suit Needl à son arrivée
-          Followership.create(follower_id: @user.id, following_id: 553)
+          # les personnes suivent automatiquement les influenceurs
+          User.where(public: true).each do |influencer|
+            Followership.create(follower_id: @user.id, following_id: influencer.id)
+          end
 
           @tracker.people.set(@user.id, {
             "gender" => @user.gender,

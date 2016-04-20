@@ -16,8 +16,10 @@ class Api::V2::RegistrationsController < ApplicationController
           @user.save
           sign_in @user
 
-          # les personnes suivent automatiquement Needl
-          Followership.create(follower_id: @user.id, following_id: 553)
+          # les personnes suivent automatiquement les influenceurs
+          User.where(public: true).each do |influencer|
+            Followership.create(follower_id: @user.id, following_id: influencer.id)
+          end
           # On track l'arrivée sur Mixpanel
 
           @tracker.people.set(@user.id, {
