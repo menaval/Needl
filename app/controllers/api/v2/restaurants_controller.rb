@@ -152,7 +152,7 @@ class Api::V2::RestaurantsController < ApplicationController
   end
 
   def customize_postal_code(postal_code)
-    if postal_code != "" && postal_code != nil
+    if postal_code != "" && postal_code != nil && postal_code.length > 4
       if postal_code[3] == "0"
         return postal_code[4] + "ᵉ"
       else
