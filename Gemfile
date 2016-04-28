@@ -32,6 +32,7 @@ gem 'parse-ruby-client', :git => 'https://github.com/adelevie/parse-ruby-client'
 gem "rack-mini-profiler"
 
 gem "jquery-rails"
+gem 'jquery-slick-rails'
 gem "sass-rails", "~> 5.0"
 gem "uglifier"
 gem "bootstrap-sass"
