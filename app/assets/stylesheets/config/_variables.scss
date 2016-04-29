@@ -25,17 +25,54 @@ $navbar-font: 'Quicksand', "sans-serif";
 $base-size: 16px;
 $base-height: 1.4;
 
+// Responsive design
+$mobile-width: 350px;
+$tablet-width: 768px;
+$desktop-width: 1024px;
+
+@mixin small-mobile {
+  @media (max-width: #{$mobile-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media (min-width: #{$mobile-width}) and (max-width: #{$tablet-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{$tablet-width}) and (max-width: #{$desktop-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$desktop-width}) {
+    @content;
+  }
+}
+
 /* -------------------------------------
  * Colors
  * ------------------------------------- */
 // Scheme
 $red-light: #fcf4f4;
-$red: #EF582D;
-$blue: #469AE0;
 $yellow: #FDB631;
 $orange: #E67E22;
-$green: #38E1B2;
 $purple: #6452BD;
+
+$red: #FE3139;
+$red-hover: rgba(254, 49, 57, 0.8);
+$blue: #3A325D;
+$green: #9CE62A;
+$gray-dark: #837D9B;
+$gray: #C1BFCC;
+$gray-light: #EEEDF1;
+$white: #FFFFFF;
+$black: #000000;
+$transparent-white: rgba(255, 255, 255, 0.9);
 
 // Gray scale
 $gray-darker:  lighten(#000, 13.5%); // #222

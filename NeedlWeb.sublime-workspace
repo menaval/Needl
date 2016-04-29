@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"left",
+				"left"
+			],
+			[
 				"expe",
 				"expertsThanksIds"
 			],
@@ -510,15 +514,35 @@
 			[
 				"stly",
 				"styles"
-			],
-			[
-				"Re",
-				"RestaurantsStore"
 			]
 		]
 	},
 	"buffers":
 	[
+		{
+			"file": "app/assets/stylesheets/pages/_sign_in.scss",
+			"settings":
+			{
+				"buffer_size": 8258,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/views/layouts/application.html.erb",
+			"settings":
+			{
+				"buffer_size": 6845,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/views/devise/sessions/new.html.erb",
+			"settings":
+			{
+				"buffer_size": 5916,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -583,27 +607,48 @@
 		"/Users/gregoirehamaide/Documents/NeedlWeb",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts/app",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/pages",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers/api",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers/api/v2",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/api",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/registrations",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/sessions",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/unlocks",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/layouts",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/pages",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/config",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/db",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/db/migrate"
+		"/Users/gregoirehamaide/Documents/NeedlWeb/config"
 	],
 	"file_history":
 	[
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/registrations/new.html.erb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/config/_variables.scss",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/layout/_base.scss",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers/application_controller.rb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/layouts/application.html.erb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/sessions/new.html.erb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/pages/_about.scss",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/pages/about.html.erb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/pages/_sign_in.scss",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/Gemfile",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts/app/carousel.js",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/components/_carousel.scss",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/application.scss",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts/application.js",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts/app/slick.js",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/components/_slick_arrows.scss",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/.gitignore",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/restaurants/show.html.erb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/config/routes.rb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers/api/v2/users_controller.rb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers/api/v2/sessions_controller.rb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers/api/v2/registrations_controller.rb",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/pages/_user_change_password.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/pages/change_password.html.erb",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/db/schema.rb",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/config/_variables.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/layout/_navbar.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/pages/_index.scss",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts/application.js",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/Gemfile",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/README.md",
 		"/Users/gregoirehamaide/Documents/NeedlApp/src/actions/NotifsActions.js",
 		"/Users/gregoirehamaide/Documents/NeedlApp/src/stores/Notifs.js",
@@ -704,26 +749,7 @@
 		"/Users/gregoirehamaide/Documents/NeedlIOS/index.android.js",
 		"/Users/gregoirehamaide/Documents/NeedlIOS/src/stores/Me.js",
 		"/Users/gregoirehamaide/Documents/NeedlIOS/index.ios.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/pages/Restaurant.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/elements/Restaurant.android.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/ui/TabView.android.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/ui/TabView.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/pages/Filtre.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/.gitignore",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/utils/login.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/elements/Overlay.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/pages/InviteFriend.android.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/pages/Notifs.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/clipboard.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/pages/Profil.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/elements/Restaurant.ios.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/App.android.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/elements/Restaurant.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/package.json",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/pages/Carte.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/android/app/build.gradle",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/pages/InviteFriend.ios.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/pages/Reco/Step5.js"
+		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/pages/Restaurant.js"
 	],
 	"find":
 	{
@@ -751,6 +777,21 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"img",
+			"slick-prev",
+			"arrow-left",
+			"multiple-carousel",
+			"slick",
+			"link_to",
+			"mangerie",
+			"where",
+			"update",
+			":description",
+			"descrip",
+			"welcome",
+			"ceo",
+			"quicksand",
+			"status",
 			"new",
 			"wrap",
 			"after_js",
@@ -863,22 +904,7 @@
 			"imagemail",
 			"imagewrapper",
 			"contactname",
-			"contactInfoWrapper",
-			"searchContactsText",
-			"searchContactsButton",
-			"emptyText",
-			"emptyTextContainer",
-			"contactsList",
-			"needl",
-			"phonecon",
-			"liste",
-			"removere",
-			"'",
-			"console.log",
-			"aucun",
-			"addwish",
-			"Restaurants",
-			"handleSaveRecoSuccess"
+			"contactInfoWrapper"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -900,8 +926,102 @@
 	"groups":
 	[
 		{
+			"selected": 1,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "app/assets/stylesheets/pages/_sign_in.scss",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8258,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8020,
+								8020
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
+							"syntax": "Packages/Syntax Highlighting for Sass/Syntaxes/SCSS.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "app/views/layouts/application.html.erb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6845,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4284,
+								4284
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
+							"syntax": "Packages/Rails/HTML (Rails).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 412.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "app/views/devise/sessions/new.html.erb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5916,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1609,
+								2118
+							]
+						],
+						"settings":
+						{
+							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
+							"syntax": "Packages/Rails/HTML (Rails).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -953,6 +1073,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"route",
+				"config/routes.rb"
+			],
 			[
 				"pag",
 				"src/components/ui/Page.js"
@@ -1138,7 +1262,7 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 208.0,
+	"side_bar_width": 194.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

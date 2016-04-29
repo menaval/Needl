@@ -1,40 +1,148 @@
-<div class="logo">
-  <%= image_tag "needl-logo.png" %>
-</div>
-
-<div class="title">
-  <h2>La promesse d'une bonne soirée</h2>
-</div>
-
-<div class="socialDiv">
-  <div class="left">
-    <%= link_to "https://itunes.apple.com/fr/app/id1027312535", class: "left", id: 'appstore_redirection' do %>
-      <%= image_tag "apple_logo.png" %>
-      <button type="button" class="apple-button">Par ici !</button>
+<div class='section1'>
+  <div class='banner'>
+    <div class='left'>
+      <%= image_tag 'logo_white.png' %>
+      <!-- A rajouter quand on aura une page de notre philosophie
+      <span>
+        <%= link_to 'POURQUOI NEEDL ?', '#' %>
+      </span>
+      -->
+      <span>
+        <%= link_to 'LE BLOG', 'http://blog.needl.fr' %>
+      </span>
+    </div>
+    <div class='right'>
+      <%= mail_to 'contact@needl-app.com' do %>
+        <i class='fa fa-envelope'></i>
+      <% end %>
+      <%= link_to 'https://www.facebook.com/getneedl/', {target: 'blank'} do %>
+        <i class='fa fa-facebook'></i>
+      <% end %>
+      <%= link_to 'https://twitter.com/needlapp/', {target: 'blank'} do %>
+        <i class='fa fa-twitter'></i>
+      <% end %>
+      <%= link_to 'https://www.instagram.com/needlapp/', {target: 'blank'} do %>
+        <i class='fa fa-instagram'></i>
+      <% end %>
+    </div>
+  </div>
+  <div class='content'>
+    <div class='preview'>
+      <%= image_tag 'demo.gif' %>
+    </div>
+    <div class='infos'>
+      <div class='title'>NE LAISSE PLUS LES LONGUES JOURNÉES GÂCHER TES SOIRÉES</div>
+      <div class='subtitle'>Needl, la première app pour trouve en toute confiance où dîner en moins de 5 minutes</div>
+      <div class='download'>
+        <%= link_to 'http://download.needl-app.com/download-ios', {target: 'blank'} do %>
+          <%= image_tag 'download-ios.png' %>
+        <% end %>
+        <%= link_to 'https://play.google.com/apps/testing/com.needlios', {target: 'blank'} do %>
+          <%= image_tag 'download-android.png' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class='social'>
+    <%= mail_to 'contact@needl-app.com' do %>
+      <i class='fa fa-envelope'></i>
+    <% end %>
+    <%= link_to 'https://www.facebook.com/getneedl/', {target: 'blank'} do %>
+      <i class='fa fa-facebook'></i>
+    <% end %>
+    <%= link_to 'https://twitter.com/needlapp/', {target: 'blank'} do %>
+      <i class='fa fa-twitter'></i>
+    <% end %>
+    <%= link_to 'https://www.instagram.com/needlapp/', {target: 'blank'} do %>
+      <i class='fa fa-instagram'></i>
     <% end %>
   </div>
-  <div class="right">
-    <%= image_tag "android_logo.png" %>
-
-    <div class= "form">
-    	<form action='/subscribers' class="form-inline" id="mailing_android" method="post">
-      	<input name="email" type="text" class="form-input" placeholder="votre email">
-      	<input type="submit" value="A venir !" class="android-button">
-    	</form>
-    	<p id="message">Etre averti du lancement sur Androïd</p>
-  	</div>
-	</div>
 </div>
-
-<div class="social">
-  <%= link_to "https://www.facebook.com/getneedl", class: "left", id: 'facebook_redirection' do %>
-    <%= image_tag "facebook_white.png" %>
-  <% end %>
-
-  <%= link_to "https://instagram.com/needlapp/", class: "right", id: 'instagram_redirection' do %>
-    <%= image_tag "instagram_white.png" %>
-  <% end %>
-
+<div class='section2'>
+  <div class='speed'>
+    <%= image_tag 'speed.png' %>
+    <h1>Rapidité</h1>
+    <p>Trouve le restaurant qu’il te faut en moins d’une minute</p>
+  </div>
+  <div class='trust'>
+    <%= image_tag 'trust.png' %>
+    <h1>Confiance</h1>
+    <p>Accède aux restaurants que te recommande tes amis et les infleunceurs que tu suis</p>
+  </div>
+  <div class='social'>
+    <%= image_tag 'social.png' %>
+    <h1>Social</h1>
+    <p>Partage tes restaurants avec tes amis et remercie-les de t’avoir fait découvrir un restaurant</p>
+  </div>
+</div>
+<div class='section3'>
+  <h1>Ils parlent de nous</h1>
+  <div class='logos'>
+    <%= link_to 'http://bfmbusiness.bfmtv.com/mediaplayer/video/needl-part-a-la-recherche-des-bons-restos-recommandes-par-vos-amis-2704-802806.html', {target: 'blank'} do %>
+      <%= image_tag 'bfm.png' %>
+    <% end %>
+    <%= link_to 'http://www.gqmagazine.fr/culture-web/smartphone/diaporama/20-applis-food-a-avoir-dans-son-smartphone/31112#pour-faire-comme-vos-amis-needl', {target: 'blank'} do %>
+      <%= image_tag 'gq.png' %>
+    <% end %>
+    <%= link_to 'http://www.challenges.fr/challenges-soir/20160331.CHA7091/start-up-hec-et-l-ecole-42-cet-etonnant-cocktail-pour-deceler-des-talents.html', {target: 'blank'} do %>
+      <%= image_tag 'challenges.png' %>
+    <% end %>
+    <div class='hidden'>
+      <%= link_to 'https://itunes.apple.com/fr/app/id1027312535', {target: 'blank'} do %>
+        <%= image_tag 'lexpress.png' %>
+      <% end %>
+    </div>
+  </div>
+  <div class='citations'>
+    <div class='portanelli'>
+      <div class='inner'>
+        <div class='image'>
+          <%= image_tag 'portanelli.jpg' %>
+        </div>
+        <div class='review'>
+          <span class='comment'>
+            « Needl allie la fiabilité du bouche à oreille à l’efficacité du digital comme cela n’a jamais été fait auparavant »
+          </span>
+          <span class='author'>
+            Arnaud Portanelli, fondateur de Lingueo.
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class='houdebine'>
+      <div class='inner'>
+        <div class='image'>
+          <%= image_tag 'houdebine.jpg' %>
+        </div>
+        <div class='review'>
+          <span class='comment'>
+            « Needl est le moyen le plus efficace et le plus rapide de trouver un restaurant qui vous plaira pour passer une bonne soirée »
+          </span>
+          <span class='author'>
+            Vincent Houdebine, CEO de Tiresio.
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class='farber'>
+      <div class='inner'>
+        <div class='image'>
+          <%= image_tag 'farber.jpg' %>
+        </div>
+        <div class='review'>
+          <span class='comment'>
+            « Needl a trouvé la clé pour contrer les situations structurelles de faux avis »
+          </span>
+          <span class='author'>
+            Dimitri Farber, CEO de Tiller Systems.
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class='section4'>
+  <p>A très vite sur Needl !</p>
 </div>
 
 <div class="facebook-connect">
@@ -47,12 +155,10 @@
 
 <script>
   $(document).ready(function() {
-    if (window.location.search.indexOf('subscribed=true') > -1) {
-      $('#message').html('Nous faisons au plus vite !');
-    }
     mixpanel.track("landing page viewed");
-    mixpanel.track_forms("#mailing_android", "Submitted mail Android");
+    mixpanel.track_links("#playstore_redirection", "Redirection Play Store");
     mixpanel.track_links("#appstore_redirection", "Redirection AppStore");
+    mixpanel.track_links("#twitter_redirection", "Redirection Twitter");
     mixpanel.track_links("#facebook_redirection", "Redirection Facebook");
     mixpanel.track_links("#instagram_redirection", "Redirection Instagram");
   });

@@ -16,3 +16,6 @@
 # Brackets
 .brackets.json
 
+# Sublime Text
+*.sublime-workspace
+

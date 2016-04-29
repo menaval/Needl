@@ -8,6 +8,11 @@
 body {
   margin-top: 0px;
   background-color: $gray-lighter;
+
+  &.branch-banner-is-active {
+    padding-top: 76px;
+    margin-top: 0 !important
+  }
 }
 .wrap {
   margin-bottom: 60px;

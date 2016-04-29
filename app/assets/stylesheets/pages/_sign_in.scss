@@ -10,317 +10,470 @@ html {
 
   .wrap {
     background: image-url('mangerie.jpg') center center;
-    height: 100% !important;
     margin-bottom: 0;
 
-		@media (max-width: 350px) and (max-height: 500px) {
-			height: 110% !important;
-		}
+    @media (max-width: 350px) and (max-height: 500px) {
+      height: 110% !important;
+    }
   }
 
   .mixpanel {
     position: absolute;
     right: 0;
     bottom: 0;
+    // z-index: -1;
 
     img, a {
       margin: 0
     }
   }
 
-	.facebook-connect {
+  .facebook-connect {
     opacity: 0;
+    overflow: hidden;
+    width: 20px;
     position: absolute;
-    right: -10px;
-    top:0;
+    left: 0;
+    bottom: 0;
+
+    a {
+      width: 20px;
+    }
   }
 
-	.footer {
+  .footer {
     display: none;
   }
 
-	.flash-box {
+  .flash-box {
     display: none;
   }
 
-	.logo {
-    width: 100%;
-    float: left;
+  .section1 {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    height: 100vh;
+    background: image-url('background.png') center center;
 
-		img {
-      width: 150px;
-      margin: 15px calc(50% - 75px);
-			@media (max-width: 350px) {
-				width: 100px;
-      	margin: 15px calc(50% - 50px);
-			}
+    .banner {
+      display: flex;
+      flex-direction: row;
+      margin: 10px 0;
+      
+      .left {
+        display: flex;
+        flex: 1;
+        flex-direction: row;
+        align-items: center;
+        justify-content: left;
+
+        img {
+          width: 100px;
+          margin: 0 20px 20px 20px;
+        }
+
+        span {
+          margin: 0 20px;
+
+          a {
+            color: $white;
+            text-transform: uppercase;
+            text-decoration: none;
+
+            &:hover {
+              text-decoration: underline;
+              color: $red;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+
+      .right {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        @include small-mobile {
+          display: none;
+        }
+
+        @include mobile {
+          display: none;
+        }
+
+        i {
+          padding: 20px;
+          color: $white;
+          font-size: 15pt;
+
+          &:hover {
+            background-color: $red;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
+    .content {
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      margin: 0 0 50px 0;
+
+      .preview {
+        display: flex;
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          height: 400px;
+        }
+
+        @include small-mobile {
+          display: none;
+        }
+
+        @include mobile {
+          display: none;
+        }
+
+        @include tablet {
+          display: none;
+        }
+      }
+
+      .infos {
+        display: flex;
+        flex: 2;
+        flex-direction: column;
+        color: $white;
+        font-weight: 500;
+        padding: 0 20px;
+
+        .title {
+          font-size: 25pt;
+          text-align: center;
+          margin: 30px 0 10px 0;
+
+          @include small-mobile {
+            font-size: 16pt;
+          }
+
+          @include mobile {
+            font-size: 20pt;
+          }
+        }
+
+        .subtitle {
+          font-size: 22pt;
+          text-align: center;
+          margin: 30px 0 20px 0;
+
+          @include small-mobile {
+            font-size: 14pt;
+          }
+
+          @include mobile {
+            font-size: 17pt;
+          }
+        }
+
+        .download {
+          display: flex;
+          flex: 1;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          margin: 30px 0;
+
+          img {
+            width: 180px;
+            margin: 0 20px;
+
+            @include small-mobile {
+              width: 110px;
+            }
+
+            @include mobile {
+              width: 130px;
+            }
+
+            &:hover {
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+
+    .social {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      @include tablet {
+        display: none;
+      }
+
+      @include desktop {
+        display: none;
+      }
+
+      i {
+        padding: 20px;
+        color: $white;
+        font-size: 15pt;
+
+        &:hover {
+          background-color: $red;
+          cursor: pointer;
+        }
+      }
     }
   }
 
-	.title {
-    float: left;
-    width: 100%;
-    margin: 100px 0;
-    text-align: center;
-		background-color: rgba(20, 20, 20, 0.5);
+  .section2 {
+    padding: 50px 0;
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    background-color: #FF5D63;
 
-		@media (min-width: 750px) and (max-width: 950px) {
-      margin: 60px 0 10px 0;
+    @include small-mobile {
+      flex-direction: column;
+      padding: 25px 0;
     }
 
-    @media (min-width: 350px) and (max-width: 750px) {
-      margin: 20px 0 10px 0;
+    @include mobile {
+      flex-direction: column;
+      padding: 25px 0;
     }
 
-		@media (max-width: 350px) {
-      margin: 20px 0;
-    }
+    .speed, .social, .trust {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 40px;
+      padding: 10px;
 
-		h2 {
-			width: 70%;
-    	margin: 10px 15%;
-      color: white;
-      font-weight: 300;
-      font-size: 45px;
-
-      @media (min-width: 350px) and (max-width: 750px) {
-        font-size: 22px;
-				margin: 5px 15%;
+      @include small-mobile {
+        margin: 20px 10px;
       }
 
-			@media (max-width: 350px) {
-        font-size: 22px;
-				margin: 10px 15%;
+      @include mobile {
+        margin: 20px 10px;
       }
 
-			@media (min-width: 1500px) {
-      	width: 1000px;
-				margin: 10px calc(50% - 500px);
-    	}
-
-			@media (min-width: 750px) and (max-width: 950px) {
-				font-size: 35px;
-			}
-    }
-  }
-
-  .socialDiv {
-    float: left;
-    width: 70%;
-    margin: 10px 15% 0 15%;
-    text-align: center;
-
-    @media (max-width: 750px) {
-      width: 90%;
-	    margin: 10px 5% 0 5%;
-    }
-
-    .left {
-      width: 50%;
-      float: left;
-      @media (max-width: 350px) {
-        width: 100%;
-        margin: .2rem 0;
-      }
-
-			@media (min-width: 350px) and (max-width: 750px) {
-        width: 100%;
-        margin: .5rem 0;
-      }
-
-      p {
-        color: white;
-        margin-top: 10px;
-        font-weight: 100;
-        font-size: 15px;
+      @include tablet {
+        margin: 20px 20px;
       }
 
       img {
-        width: 44px;
-        margin: 0;
+        height: 70px;
 
-				@media (max-width: 350px) {
-					width: 30px;
-					margin: 0;
-				}
-
-				@media (min-width: 350px) and (max-width: 750px) {
-					width: 32px;
-					margin: 0;
-				}
-      }
-
-      a {
-        float: left;
-        width: 44px;
-				margin: 0 calc(50% - 22px);
-
-				@media (max-width: 350px) {
-					width: 30px;
-					margin: 0 calc(50% - 15px);
-				}
-
-				@media (min-width: 350px) and (max-width: 750px) {
-					width: 36px;
-					margin: 0 calc(50% - 18px);
-				}
-			}
-
-			.apple-button {
-        background-color: #FE3139;
-        border: none;
-        border-radius: 10px;
-        color: white;
-        box-shadow: none;
-        width: 150px;
-        margin: 15px calc(50% - 75px) 0 calc(50% - 75px);
-        height: 36px;
-
-				&:hover {
-					background-color: #827D9C;
-				}
-
-				@media (max-width: 350px) {
-					height: 25px;
-					width: 100px;
-	        margin: 10px calc(50% - 50px) 10px calc(50% - 50px);
-					border-radius: 6px;
-				}
-
-				@media (min-width: 350px) and (max-width: 750px) {
-	        margin: 12px calc(50% - 63px) 10px calc(50% - 63px);
-					height: 30px;
-					width: 126px;
-					border-radius: 8px;
-				}
-      }
-		}
-
-		.right {
-      width: 50%;
-      float: left;
-
-			@media (max-width: 350px) {
-        width: 100%;
-        margin: .2rem 0;
-      }
-
-			@media (min-width: 350px) and (max-width: 750px) {
-        width: 100%;
-        margin: .5rem 0;
-      }
-
-			p {
-        color: white;
-        margin: 10px 0 0 0;
-        font-weight: 100;
-        font-size: 15px;
-			}
-
-			img {
-				width: 44px;
-				margin: 0 calc(50% - 22px);
-
-				@media (max-width: 350px) {
-					width: 30px;
-					margin: 0 calc(50% - 15px);
-				}
-
-				@media (min-width: 350px) and (max-width: 750px) {
-					width: 32px;
-					margin: 0 calc(50% - 16px);
-				}
-      }
-
-			form {
-        margin-top: 15px;
-
-				.form-input {
-          border-radius: 10px;
-          height: 36px;
-					width: calc(100% - 120px);
-					padding: 0 0 0 8px;
-
-					&:focus {
-						outline: none;
-					}
-
-          @media (max-width: 350px) {
-            width: 150px;
-            margin: 0 calc(50% - 75px);
-	          border-radius: 6px;
-						height: 30px;
-						padding: 0 0 0 6px;
-          }
-
-					@media (min-width: 350px) and (max-width: 750px) {
-						width: 70%;
-						border-radius: 8px;
-            margin: 0 15%;
-						padding: 0 0 0 7px;
-					}
+        @include small-mobile {
+          height: 50px;
         }
+      }
 
-				.android-button {
-          background-color: #FE3139;
-          border: none;
-          border-radius: 10px;
-          color: white;
-          box-shadow: none;
-          height: 36px;
-          width: 100px;
+      h1 {
+        color: $white;
+        font-size: 18pt;
+        padding: 0;
 
-					&:hover {
-						background-color: #827D9C;
-					}
+        @include small-mobile {
+          font-size: 15pt;
+        }
+      }
 
-					@media (max-width: 350px) {
-						margin-top: 10px;
-						width: 150px;
-						height: 25px;
-						border-radius: 6px;
-					}
+      p {
+        color: $white;
+        font-size: 13pt;
+        text-align: center;
+        margin: 30px 0 0 0;
 
-					@media (min-width: 350px) and (max-width: 750px) {
-						margin-top: 12px;
-						width: 150px;
-						height: 30px;
-						border-radius: 8px;
-					}
+        @include small-mobile {
+          font-size: 11pt;
+          margin: 20px 0 0 0;
         }
       }
     }
   }
 
-	.social {
-		width: 200px;
-		position: absolute;
-		bottom: 0;
-		left: calc(50% - 100px);
+  .section3 {
+    padding: 20px 0;
+    background-color: $white;
 
-		a {
-			width: 40px;
-			float: left;
+    @include small-mobile {
+      padding: 10px 0;
+    }
 
-			&.left {
-				margin: 0 10px 0 calc(50% - 50px);
+    h1 {
+      color: $black;
+      font-size: 23pt;
+      margin: 10px 0 30px 0;
+      font-weight: normal;
 
-				img {
-					width: 45px;
-					max-width: 100px;
-					margin: 0 0 5px 0;
-				}
-			}
+      @include small-mobile {
+        font-size: 20pt;
+        margin: 5px 0 20px 0;
+      }
+    }
 
-			&.right {
-				margin: 0 calc(50% - 50px) 0 10px;
+    .logos {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      margin: 40px 0;
 
-				img {
-					margin: 7px 0 0 0;
-					width: 31px;
-				}
-			}
-		}
+      a {
+        margin: 0 40px;
 
-	}
+        @include small-mobile {
+          margin: 0 5px;
+        }
+
+        @include mobile {
+          margin: 0 20px;
+        }
+      }
+
+      img {
+        height: 60px;
+
+        @include small-mobile {
+          height: 40px;
+        }
+
+        @include mobile {
+          height: 50px; 
+        }
+      }
+    }
+
+    .citations {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      margin: 40px 75px;
+
+      @include small-mobile {
+        display: none;
+      }
+
+      @include mobile {
+        margin: 20px 30px;
+      }
+
+      @include tablet {
+        margin: 30px 40px;
+      }
+
+      .inner {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        .image {
+          margin: 0 20px;
+          min-width: 70px;
+
+          @include mobile {
+            margin: 0 10px;
+          }
+
+          @include tablet {
+            margin: 0 15px;
+          }
+
+          img {
+            width: 70px;
+            height: 70px;
+            border-radius: 35px;
+          }
+        }
+
+        .review {
+          display: flex;
+          flex-direction: column;
+          margin: 0 25px;
+          align-items: center;
+          justify-content: center;
+
+          .comment {
+            font-size: 14pt;
+            color: $gray-dark;
+            text-align: center;
+            margin: 5px 0;
+
+            @include mobile {
+              font-size: 11pt;
+            }
+
+            @include tablet {
+              font-size: 13pt;
+            }
+          }
+
+          .author {
+            font-size: 11pt;
+            color: $gray-dark;
+            font-style: italic;
+            margin: 5px 0;
+
+            @include mobile {
+              font-size: 9pt;
+            }
+
+            @include tablet {
+              font-size: 11pt;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .section4 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #FF5D63;
+    padding: 30px 0;
+
+    @include small-mobile {
+      padding: 20px 0 40px 0;
+    }
+
+    @include mobile {
+      padding: 20px 0 40px 0;
+    }
+
+    p {
+      color: $white;
+      font-size: 19pt;
+      text-align: center;
+      margin: 0;
+
+      @include small-mobile {
+        font-size: 16pt;
+      }
+    }
+  }
 }
