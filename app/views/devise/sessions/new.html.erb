@@ -2,17 +2,19 @@
   <div class='banner'>
     <div class='left'>
       <%= image_tag 'logo_white.png' %>
+      <!-- A rajouter quand on aura une page de notre philosophie
       <span>
-        <%= link_to 'A PROPOS', '#' %>
+        <%= link_to 'POURQUOI NEEDL ?', '#' %>
       </span>
-      <span>
-        <%= link_to 'CONTACT', '#' %>
-      </span>
+      -->
       <span>
         <%= link_to 'LE BLOG', 'http://blog.needl.fr' %>
       </span>
     </div>
     <div class='right'>
+      <%= mail_to 'contact@needl-app.com' do %>
+        <i class='fa fa-envelope'></i>
+      <% end %>
       <%= link_to 'https://www.facebook.com/getneedl/', {target: 'blank'} do %>
         <i class='fa fa-facebook'></i>
       <% end %>
