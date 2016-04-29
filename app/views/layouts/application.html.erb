@@ -34,6 +34,21 @@
   <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
   <!-- end jQuery -->
 
+  <!-- start branch -->
+  <script type="text/javascript">
+    (function(b,r,a,n,c,h,_,s,d,k){if(!b[n]||!b[n]._q){for(;s<_.length;)c(h,_[s++]);d=r.createElement(a);d.async=1;d.src="https://cdn.branch.io/branch-latest.min.js";k=r.getElementsByTagName(a)[0];k.parentNode.insertBefore(d,k);b[n]=h}})(window,document,"script","branch",function(b,r){b[r]=function(){b._q.push([r,arguments])}},{_q:[],_v:1},"addListener applyCode banner closeBanner creditHistory credits data deepview deepviewCta first getCode init link logout redeem referrals removeListener sendSMS setIdentity track validateCode".split(" "), 0);
+    branch.init('key_test_eln0dceslLCEV8U9nUfrvehpFxdpWl26');
+
+    branch.banner({
+        icon: 'https://s3-eu-west-1.amazonaws.com/needl/production/supports/App+Store+1024.png',
+        title: 'Needl',
+        description: 'Ne laisse plus les longues journées gâcher tes soirées',
+        showDesktop: false,
+        mobileSticky: true
+      }, {});
+  </script>
+  <!-- end branch -->
+
 
 </head>
 <body id="<%= "#{params[:controller].gsub(/\//, '_')}_#{params[:action]}" %>" >

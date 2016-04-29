@@ -520,26 +520,10 @@
 	"buffers":
 	[
 		{
-			"file": "app/views/devise/sessions/new.html.erb",
+			"file": "app/assets/stylesheets/pages/_sign_in.scss",
 			"settings":
 			{
-				"buffer_size": 5404,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/views/devise/registrations/new.html.erb",
-			"settings":
-			{
-				"buffer_size": 5404,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/assets/stylesheets/config/_variables.scss",
-			"settings":
-			{
-				"buffer_size": 1966,
+				"buffer_size": 8258,
 				"line_ending": "Unix"
 			}
 		},
@@ -547,23 +531,15 @@
 			"file": "app/views/layouts/application.html.erb",
 			"settings":
 			{
-				"buffer_size": 5849,
+				"buffer_size": 6845,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "app/assets/stylesheets/pages/_sign_in.scss",
+			"file": "app/views/devise/sessions/new.html.erb",
 			"settings":
 			{
-				"buffer_size": 5222,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/controllers/application_controller.rb",
-			"settings":
-			{
-				"buffer_size": 15502,
+				"buffer_size": 5916,
 				"line_ending": "Unix"
 			}
 		}
@@ -634,9 +610,6 @@
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts/app",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/config",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/layout",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/pages",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise",
@@ -649,17 +622,21 @@
 	],
 	"file_history":
 	[
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/registrations/new.html.erb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/config/_variables.scss",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/layout/_base.scss",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers/application_controller.rb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/layouts/application.html.erb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/sessions/new.html.erb",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/pages/_about.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/pages/about.html.erb",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/pages/_sign_in.scss",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/config/_variables.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/Gemfile",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts/app/carousel.js",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/components/_carousel.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/application.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts/application.js",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts/app/slick.js",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/sessions/new.html.erb",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/components/_slick_arrows.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/.gitignore",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/restaurants/show.html.erb",
@@ -772,11 +749,7 @@
 		"/Users/gregoirehamaide/Documents/NeedlIOS/index.android.js",
 		"/Users/gregoirehamaide/Documents/NeedlIOS/src/stores/Me.js",
 		"/Users/gregoirehamaide/Documents/NeedlIOS/index.ios.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/pages/Restaurant.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/elements/Restaurant.android.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/ui/TabView.android.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/ui/TabView.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/pages/Filtre.js"
+		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/pages/Restaurant.js"
 	],
 	"find":
 	{
@@ -953,61 +926,30 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "app/views/devise/sessions/new.html.erb",
+					"file": "app/assets/stylesheets/pages/_sign_in.scss",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5404,
+						"buffer_size": 8258,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								5404
+								8020,
+								8020
 							]
 						],
 						"settings":
 						{
 							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
-							"syntax": "Packages/Rails/HTML (Rails).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 32.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "app/views/devise/registrations/new.html.erb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5404,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5404,
-								5404
-							]
-						],
-						"settings":
-						{
-							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
-							"syntax": "Packages/Rails/HTML (Rails).sublime-syntax",
+							"syntax": "Packages/Syntax Highlighting for Sass/Syntaxes/SCSS.tmLanguage",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
@@ -1019,49 +961,51 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "app/assets/stylesheets/config/_variables.scss",
+					"buffer": 1,
+					"file": "app/views/layouts/application.html.erb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1966,
+						"buffer_size": 6845,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1320,
-								1320
+								4284,
+								4284
 							]
 						],
 						"settings":
 						{
 							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
-							"syntax": "Packages/Syntax Highlighting for Sass/Syntaxes/SCSS.tmLanguage"
+							"syntax": "Packages/Rails/HTML (Rails).sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 412.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "app/views/layouts/application.html.erb",
+					"buffer": 2,
+					"file": "app/views/devise/sessions/new.html.erb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5849,
+						"buffer_size": 5916,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1176,
-								1176
+								1609,
+								2118
 							]
 						],
 						"settings":
@@ -1075,68 +1019,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "app/assets/stylesheets/pages/_sign_in.scss",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5222,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								402,
-								402
-							]
-						],
-						"settings":
-						{
-							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
-							"syntax": "Packages/Syntax Highlighting for Sass/Syntaxes/SCSS.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 69.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "app/controllers/application_controller.rb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 15502,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								138,
-								140
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Ruby/Ruby.sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
+					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -1357,7 +1240,7 @@
 		[
 			[
 				"",
-				"~/Documents/NeedlBlog/NeedlBlog.sublime-project"
+				"~/Documents/NeedlApp/Needl.sublime-project"
 			]
 		],
 		"width": 380.0
