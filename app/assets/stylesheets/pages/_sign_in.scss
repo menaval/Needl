@@ -99,6 +99,14 @@ html {
         justify-content: center;
         align-items: center;
 
+        @include small-mobile {
+          display: none;
+        }
+
+        @include mobile {
+          display: none;
+        }
+
         i {
           padding: 20px;
           color: $white;
@@ -129,6 +137,18 @@ html {
         img {
           height: 400px;
         }
+
+        @include small-mobile {
+          display: none;
+        }
+
+        @include mobile {
+          display: none;
+        }
+
+        @include tablet {
+          display: none;
+        }
       }
 
       .infos {
@@ -142,13 +162,29 @@ html {
         .title {
           font-size: 25pt;
           text-align: center;
-          margin: 30px 0;
+          margin: 30px 0 10px 0;
+
+          @include small-mobile {
+            font-size: 16pt;
+          }
+
+          @include mobile {
+            font-size: 20pt;
+          }
         }
 
         .subtitle {
           font-size: 22pt;
           text-align: center;
-          margin: 30px 0;
+          margin: 30px 0 20px 0;
+
+          @include small-mobile {
+            font-size: 14pt;
+          }
+
+          @include mobile {
+            font-size: 17pt;
+          }
         }
 
         .download {
@@ -163,10 +199,44 @@ html {
             width: 180px;
             margin: 0 20px;
 
+            @include small-mobile {
+              width: 110px;
+            }
+
+            @include mobile {
+              width: 130px;
+            }
+
             &:hover {
               cursor: pointer;
             }
           }
+        }
+      }
+    }
+
+    .social {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+
+      @include tablet {
+        display: none;
+      }
+
+      @include desktop {
+        display: none;
+      }
+
+      i {
+        padding: 20px;
+        color: $white;
+        font-size: 15pt;
+
+        &:hover {
+          background-color: $red;
+          cursor: pointer;
         }
       }
     }
@@ -179,6 +249,16 @@ html {
     flex: 1;
     background-color: #FF5D63;
 
+    @include small-mobile {
+      flex-direction: column;
+      padding: 25px 0;
+    }
+
+    @include mobile {
+      flex-direction: column;
+      padding: 25px 0;
+    }
+
     .speed, .social, .trust {
       display: flex;
       flex: 1;
@@ -188,13 +268,34 @@ html {
       margin: 20px 40px;
       padding: 10px;
 
+      @include small-mobile {
+        margin: 20px 10px;
+      }
+
+      @include mobile {
+        margin: 20px 10px;
+      }
+
+      @include tablet {
+        margin: 20px 20px;
+      }
+
       img {
         height: 70px;
+
+        @include small-mobile {
+          height: 50px;
+        }
       }
 
       h1 {
         color: $white;
         font-size: 18pt;
+        padding: 0;
+
+        @include small-mobile {
+          font-size: 15pt;
+        }
       }
 
       p {
@@ -202,6 +303,11 @@ html {
         font-size: 13pt;
         text-align: center;
         margin: 30px 0 0 0;
+
+        @include small-mobile {
+          font-size: 11pt;
+          margin: 20px 0 0 0;
+        }
       }
     }
   }
@@ -210,11 +316,20 @@ html {
     padding: 20px 0;
     background-color: $white;
 
+    @include small-mobile {
+      padding: 10px 0;
+    }
+
     h1 {
       color: $black;
       font-size: 23pt;
       margin: 10px 0 30px 0;
       font-weight: normal;
+
+      @include small-mobile {
+        font-size: 20pt;
+        margin: 5px 0 20px 0;
+      }
     }
 
     .logos {
@@ -226,10 +341,26 @@ html {
 
       a {
         margin: 0 40px;
+
+        @include small-mobile {
+          margin: 0 5px;
+        }
+
+        @include mobile {
+          margin: 0 20px;
+        }
       }
 
       img {
         height: 60px;
+
+        @include small-mobile {
+          height: 40px;
+        }
+
+        @include mobile {
+          height: 50px; 
+        }
       }
     }
 
@@ -240,6 +371,18 @@ html {
       align-items: center;
       margin: 40px 75px;
 
+      @include small-mobile {
+        display: none;
+      }
+
+      @include mobile {
+        margin: 20px 30px;
+      }
+
+      @include tablet {
+        margin: 30px 40px;
+      }
+
       .inner {
         display: flex;
         flex-direction: row;
@@ -249,6 +392,14 @@ html {
         .image {
           margin: 0 20px;
           min-width: 70px;
+
+          @include mobile {
+            margin: 0 10px;
+          }
+
+          @include tablet {
+            margin: 0 15px;
+          }
 
           img {
             width: 70px;
@@ -269,6 +420,14 @@ html {
             color: $gray-dark;
             text-align: center;
             margin: 5px 0;
+
+            @include mobile {
+              font-size: 11pt;
+            }
+
+            @include tablet {
+              font-size: 13pt;
+            }
           }
 
           .author {
@@ -276,6 +435,14 @@ html {
             color: $gray-dark;
             font-style: italic;
             margin: 5px 0;
+
+            @include mobile {
+              font-size: 9pt;
+            }
+
+            @include tablet {
+              font-size: 11pt;
+            }
           }
         }
       }
@@ -290,11 +457,23 @@ html {
     background-color: #FF5D63;
     padding: 30px 0;
 
+    @include small-mobile {
+      padding: 20px 0 40px 0;
+    }
+
+    @include mobile {
+      padding: 20px 0 40px 0;
+    }
+
     p {
       color: $white;
       font-size: 19pt;
       text-align: center;
       margin: 0;
+
+      @include small-mobile {
+        font-size: 16pt;
+      }
     }
   }
 }
