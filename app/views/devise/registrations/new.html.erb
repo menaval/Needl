@@ -15,13 +15,13 @@
       <%= mail_to 'contact@needl-app.com' do %>
         <i class='fa fa-envelope'></i>
       <% end %>
-      <%= link_to 'https://www.facebook.com/getneedl/', {target: 'blank'} do %>
+      <%= link_to 'https://www.facebook.com/getneedl/', id: 'facebook_redirection', {target: 'blank'} do %>
         <i class='fa fa-facebook'></i>
       <% end %>
-      <%= link_to 'https://twitter.com/needlapp/', {target: 'blank'} do %>
+      <%= link_to 'https://twitter.com/needlapp/', id: 'twitter_redirection', {target: 'blank'} do %>
         <i class='fa fa-twitter'></i>
       <% end %>
-      <%= link_to 'https://www.instagram.com/needlapp/', {target: 'blank'} do %>
+      <%= link_to 'https://www.instagram.com/needlapp/', id: 'instagram_redirection', {target: 'blank'} do %>
         <i class='fa fa-instagram'></i>
       <% end %>
     </div>
@@ -34,10 +34,10 @@
       <div class='title'>NE LAISSE PLUS LES LONGUES JOURNÉES GÂCHER TES SOIRÉES</div>
       <div class='subtitle'>Needl, la première app pour trouver en toute confiance où dîner en moins d'une minute</div>
       <div class='download'>
-        <%= link_to 'http://download.needl-app.com/download-ios', {target: 'blank'} do %>
+        <%= link_to 'http://download.needl-app.com/download-ios', id: 'appstore_redirection', {target: 'blank'} do %>
           <%= image_tag 'download-ios.png' %>
         <% end %>
-        <%= link_to 'https://play.google.com/apps/testing/com.needlios', {target: 'blank'} do %>
+        <%= link_to 'https://play.google.com/apps/testing/com.needlios', id: 'playstore_redirection', {target: 'blank'} do %>
           <%= image_tag 'download-android.png' %>
         <% end %>
       </div>
@@ -47,13 +47,13 @@
     <%= mail_to 'contact@needl-app.com' do %>
       <i class='fa fa-envelope'></i>
     <% end %>
-    <%= link_to 'https://www.facebook.com/getneedl/', {target: 'blank'} do %>
+    <%= link_to 'https://www.facebook.com/getneedl/', id: 'facebook_redirection', {target: 'blank'} do %>
       <i class='fa fa-facebook'></i>
     <% end %>
-    <%= link_to 'https://twitter.com/needlapp/', {target: 'blank'} do %>
+    <%= link_to 'https://twitter.com/needlapp/', id: 'twitter_redirection', {target: 'blank'} do %>
       <i class='fa fa-twitter'></i>
     <% end %>
-    <%= link_to 'https://www.instagram.com/needlapp/', {target: 'blank'} do %>
+    <%= link_to 'https://www.instagram.com/needlapp/', id: 'instagram_redirection',{target: 'blank'} do %>
       <i class='fa fa-instagram'></i>
     <% end %>
   </div>
