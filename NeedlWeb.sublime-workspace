@@ -520,26 +520,34 @@
 	"buffers":
 	[
 		{
-			"file": "app/assets/stylesheets/pages/_sign_in.scss",
+			"file": "app/controllers/api/users_controller.rb",
 			"settings":
 			{
-				"buffer_size": 8258,
+				"buffer_size": 7654,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "app/views/layouts/application.html.erb",
+			"file": "app/controllers/api/v2/users_controller.rb",
 			"settings":
 			{
-				"buffer_size": 6845,
+				"buffer_size": 12140,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "app/views/devise/sessions/new.html.erb",
+			"file": "db/migrate/20160509134327_add_onboarding_to_users.rb",
 			"settings":
 			{
-				"buffer_size": 5916,
+				"buffer_size": 430,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "config/routes.rb",
+			"settings":
+			{
+				"buffer_size": 3337,
 				"line_ending": "Unix"
 			}
 		}
@@ -606,11 +614,9 @@
 	[
 		"/Users/gregoirehamaide/Documents/NeedlWeb",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts/app",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers/api",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers/api/v2",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/registrations",
@@ -618,19 +624,21 @@
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/unlocks",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/layouts",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/pages",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/config"
+		"/Users/gregoirehamaide/Documents/NeedlWeb/db"
 	],
 	"file_history":
 	[
+		"/Users/gregoirehamaide/Documents/NeedlWeb/db/migrate/20160509134327_add_onboarding_to_users.rb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers/api/recommendations_controller.rb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/pages/_sign_in.scss",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/layouts/application.html.erb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/sessions/new.html.erb",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/registrations/new.html.erb",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/config/_variables.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/layout/_base.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers/application_controller.rb",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/layouts/application.html.erb",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/sessions/new.html.erb",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/pages/_about.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/pages/about.html.erb",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/pages/_sign_in.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/Gemfile",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts/app/carousel.js",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/components/_carousel.scss",
@@ -747,9 +755,7 @@
 		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/pages/Liste.js",
 		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/ui/TabView.ios.js",
 		"/Users/gregoirehamaide/Documents/NeedlIOS/index.android.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/stores/Me.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/index.ios.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/pages/Restaurant.js"
+		"/Users/gregoirehamaide/Documents/NeedlIOS/src/stores/Me.js"
 	],
 	"find":
 	{
@@ -777,6 +783,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"private",
+			"notif_page",
 			"img",
 			"slick-prev",
 			"arrow-left",
@@ -902,9 +910,7 @@
 			"loadingwrapp",
 			"imagecheck",
 			"imagemail",
-			"imagewrapper",
-			"contactname",
-			"contactInfoWrapper"
+			"imagewrapper"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -926,100 +932,125 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 3,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "app/assets/stylesheets/pages/_sign_in.scss",
+					"file": "app/controllers/api/users_controller.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8258,
+						"buffer_size": 7654,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								8020,
-								8020
+								3765,
+								3765
 							]
 						],
 						"settings":
 						{
-							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
-							"syntax": "Packages/Syntax Highlighting for Sass/Syntaxes/SCSS.tmLanguage",
+							"syntax": "Packages/Ruby/Ruby.sublime-syntax",
 							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 850.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "app/controllers/api/v2/users_controller.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 12140,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6689,
+								6689
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Ruby/Ruby.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1793.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 1,
-					"file": "app/views/layouts/application.html.erb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6845,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4284,
-								4284
-							]
-						],
-						"settings":
-						{
-							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
-							"syntax": "Packages/Rails/HTML (Rails).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 412.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
 					"buffer": 2,
-					"file": "app/views/devise/sessions/new.html.erb",
+					"file": "db/migrate/20160509134327_add_onboarding_to_users.rb",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5916,
+						"buffer_size": 430,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1609,
-								2118
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
-							"syntax": "Packages/Rails/HTML (Rails).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/Ruby/Ruby.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "config/routes.rb",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3337,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2350,
+								2350
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Ruby/Ruby.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 537.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
