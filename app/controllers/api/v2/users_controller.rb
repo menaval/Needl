@@ -154,6 +154,29 @@ class Api::V2::UsersController < ApplicationController
     end
   end
 
+  def update_onboarding_status
+    user = User.find_by(authentication_token: params["user_token"])
+
+    case params["page"]
+    when 'map'
+      user.map_onboarding = true;
+    when 'restaurant'
+      user.restaurant_onboarding = true;
+    when 'followings'
+      user.followings_onboarding = true;
+    when 'profile'
+      user.profile_onboarding = true;
+    when 'recommendation'
+      user.recommendation_onboarding = true;
+    else 
+      puts 'error'
+    end
+
+    user.save
+    
+    render json: {message: "success"}
+  end
+
   def new_parse_installation
 
     client = Parse.create(application_id: ENV['PARSE_APPLICATION_ID'], api_key: ENV['PARSE_API_KEY'])

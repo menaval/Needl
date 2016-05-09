@@ -84,6 +84,7 @@ Rails.application.routes.draw do
           post :invite_contact
           post :update_password
           post :update_picture
+          post :update_onboarding_status
         end
       end
       resources :recommendations, only: [:index, :create, :destroy, :update]

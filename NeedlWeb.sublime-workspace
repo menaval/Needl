@@ -519,30 +519,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "app/assets/stylesheets/pages/_sign_in.scss",
-			"settings":
-			{
-				"buffer_size": 8258,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/views/layouts/application.html.erb",
-			"settings":
-			{
-				"buffer_size": 6845,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/views/devise/sessions/new.html.erb",
-			"settings":
-			{
-				"buffer_size": 5916,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -606,11 +582,8 @@
 	[
 		"/Users/gregoirehamaide/Documents/NeedlWeb",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts/app",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers/api",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/registrations",
@@ -622,15 +595,16 @@
 	],
 	"file_history":
 	[
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers/api/recommendations_controller.rb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/pages/_sign_in.scss",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/layouts/application.html.erb",
+		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/sessions/new.html.erb",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/registrations/new.html.erb",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/config/_variables.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/layout/_base.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/controllers/application_controller.rb",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/layouts/application.html.erb",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/devise/sessions/new.html.erb",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/pages/_about.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/views/pages/about.html.erb",
-		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/pages/_sign_in.scss",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/Gemfile",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/javascripts/app/carousel.js",
 		"/Users/gregoirehamaide/Documents/NeedlWeb/app/assets/stylesheets/components/_carousel.scss",
@@ -748,8 +722,7 @@
 		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/ui/TabView.ios.js",
 		"/Users/gregoirehamaide/Documents/NeedlIOS/index.android.js",
 		"/Users/gregoirehamaide/Documents/NeedlIOS/src/stores/Me.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/index.ios.js",
-		"/Users/gregoirehamaide/Documents/NeedlIOS/src/components/pages/Restaurant.js"
+		"/Users/gregoirehamaide/Documents/NeedlIOS/index.ios.js"
 	],
 	"find":
 	{
@@ -777,6 +750,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"notif_page",
 			"img",
 			"slick-prev",
 			"arrow-left",
@@ -903,8 +877,7 @@
 			"imagecheck",
 			"imagemail",
 			"imagewrapper",
-			"contactname",
-			"contactInfoWrapper"
+			"contactname"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -926,102 +899,8 @@
 	"groups":
 	[
 		{
-			"selected": 1,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "app/assets/stylesheets/pages/_sign_in.scss",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8258,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								8020,
-								8020
-							]
-						],
-						"settings":
-						{
-							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
-							"syntax": "Packages/Syntax Highlighting for Sass/Syntaxes/SCSS.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "app/views/layouts/application.html.erb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 6845,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4284,
-								4284
-							]
-						],
-						"settings":
-						{
-							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
-							"syntax": "Packages/Rails/HTML (Rails).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 412.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "app/views/devise/sessions/new.html.erb",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5916,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1609,
-								2118
-							]
-						],
-						"settings":
-						{
-							"color_scheme": "Packages/User/Color Highlighter/themes/Material-Theme-Darker.tmTheme",
-							"syntax": "Packages/Rails/HTML (Rails).sublime-syntax",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				}
 			]
 		}
 	],
