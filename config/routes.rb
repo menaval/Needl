@@ -117,5 +117,52 @@ Rails.application.routes.draw do
       end
     end
 
+    namespace :v3 do
+      resources :users, only: [:index, :show, :update] do
+        collection do
+          get  :welcome_ceo
+          get  :reset_badge_to_zero
+          get  :update_version
+          get  :score
+          get  :experts
+          get  :pertinent_experts
+          post :new_parse_installation
+          post :contacts_access
+          post :invite_contact
+          post :update_password
+          post :update_picture
+        end
+      end
+      resources :recommendations, only: [:index, :create, :destroy, :update]
+      resources :friendships, only: [:index, :destroy] do
+        collection do
+          post :ask
+          post :accept
+          post :refuse
+          post :make_invisible
+          post :make_visible
+        end
+      end
+      resources :followerships, only: [:index, :create, :destroy]
+      resources :wishes, only: [:index, :new, :create, :destroy]
+      resources :registrations, only: [:new, :create]
+      resources :sessions, only: [:create] do
+        collection do
+          post :update_infos
+        end
+      end
+      resources :activities, only: [:index, :show]
+      resources :user_wishlist_pictures, only: [:new, :create]
+      resources :restaurants, only: [:show, :index, :update] do
+        collection do
+          get :autocomplete
+          get :user_updated
+        end
+        member do
+          post :add_picture
+        end
+      end
+    end
+
   end
 end
