@@ -7,7 +7,6 @@ json.array! @activities do |activity|
   json.notification_type         activity[:notification_type]
   if activity[:notification_type] == "recommendation"
     json.strengths               activity[:strengths]
-    json.ambiences               activity[:ambiences]
     json.occasions               activity[:occasions]
     json.friends_thanking          activity[:friends_thanking]
     json.experts_thanking          activity[:experts_thanking]

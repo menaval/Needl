@@ -8,7 +8,6 @@ json.food                       [@restaurant.food_id, @restaurant.food_name]
 json.types                      @restaurant.types.pluck(:id)
 json.price_range                @restaurant.price_range
 json.phone_number               @restaurant.phone_number
-json.ambiences                  @restaurant.ambiences_from_my_friends_and_experts_api(@user)
 json.occasions                  @restaurant.occasions_from_my_friends_and_experts_api(@user)
 json.strengths                  @restaurant.strengths_from_my_friends_and_experts_api(@user)
 

@@ -137,7 +137,7 @@ class ApplicationController < ActionController::Base
 
     recommendations_i_trust.each do |recommendation|
       @all_ambiences[recommendation.restaurant_id] ||= []
-      @all_ambiences[recommendation.restaurant_id] << recommendation.strengths
+      @all_ambiences[recommendation.restaurant_id] << recommendation.ambiences
       @all_strengths[recommendation.restaurant_id] ||= []
       @all_strengths[recommendation.restaurant_id] << recommendation.strengths
       @all_occasions[recommendation.restaurant_id] ||= []
