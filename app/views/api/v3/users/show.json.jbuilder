@@ -20,6 +20,11 @@ json.description               @user.description
 json.tags                      @user.tags
 json.public_recommendations    @user.my_public_recos.pluck(:id)
 json.url                       @user.url
+json.map_overlay               @user.map_overlay
+json.restaurant_overlay        @user.restaurant_overlay
+json.followings_overlay        @user.followings_overlay
+json.profile_overlay           @user.profile_overlay
+json.recommendation_overlay    @user.recommendation_overlay
 if @user.id == @myself.id
   json.thanks                  @thanks
   json.provider                @user.provider
