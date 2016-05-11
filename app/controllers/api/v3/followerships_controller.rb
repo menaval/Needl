@@ -26,10 +26,10 @@ class Api::V3::FollowershipsController < ApplicationController
    @tracker.track(user.id, 'Followership Created', { "follower" => user.name, "following" => following.name})
 
    # renvoyer restaurants, activities
-   activities_from_user_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/activities/#{following.id}.json?user_email=#{user.email}&user_token=#{user.authentication_token}")))
+   activities_from_user_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v3/activities/#{following.id}.json?user_email=#{user.email}&user_token=#{user.authentication_token}")))
    activities_from_user_info.each { |k, v| activities_from_user_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
 
-   user_restaurants_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v2/restaurants/user_updated.json?user_id=#{following.id}&user_email=#{user.email}&user_token=#{user.authentication_token}")))
+   user_restaurants_info = JSON(Nokogiri.HTML(open("http://www.needl.fr/api/v3/restaurants/user_updated.json?user_id=#{following.id}&user_email=#{user.email}&user_token=#{user.authentication_token}")))
    user_restaurants_info.each { |k, v| user_restaurants_info[k] = v.encode("iso-8859-1").force_encoding("utf-8") if v.class == String }
 
    render json: {
