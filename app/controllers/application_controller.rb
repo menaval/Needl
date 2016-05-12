@@ -374,6 +374,7 @@ class ApplicationController < ActionController::Base
     if current_user.id == 40 || current_user.id == 49 || current_user.id == 632
       restaurants_path
     else
+      sign_out
       root_path
     end
   end
