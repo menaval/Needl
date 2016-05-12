@@ -26,7 +26,6 @@ class ApplicationController < ActionController::Base
   end
 
   def score_variables
-
     score_coefficients
     split_friends_by_categories
 
@@ -37,13 +36,9 @@ class ApplicationController < ActionController::Base
     @all_friends_category_1_wishing = {}
     @all_friends_category_2_wishing = {}
     @all_friends_category_3_wishing = {}
-
   end
 
-
-
   def score_coefficients
-
     @recommendation_coefficient_category_1   = 15
     @recommendation_coefficient_category_2   = 16
     @recommendation_coefficient_category_3   = 17
@@ -53,11 +48,9 @@ class ApplicationController < ActionController::Base
     @wish_coefficient_category_3             = 9
     @me_recommending_coefficient             = 6
     @me_wishing_coefficient                  = 10
-
   end
 
   def score_allocation_recommendations(recommendation)
-
     if @category_1.include?(recommendation.user_id)
       @all_friends_category_1_recommending[recommendation.restaurant_id] ||= []
       @all_friends_category_1_recommending[recommendation.restaurant_id] << recommendation.user_id
@@ -378,11 +371,15 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource_or_scope)
-    restaurants_path
+    if current_user.id == 40 || current_user.id == 49 || current_user.id == 632
+      restaurants_path
+    else
+      root_path
+    end
   end
 
   def after_sign_out_path_for(resource_or_scope)
-    restaurants_path
+    root_path
   end
 
   private

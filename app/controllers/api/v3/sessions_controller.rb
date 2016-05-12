@@ -23,10 +23,10 @@ class Api::V3::SessionsController < ApplicationController
 
         if Wish.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
           # already wishlisted
-          redirect_to wish_failed_subscribers_path
+          redirect_to wish_failed_subscribers_path(message: 'already_wishlisted')
         elsif Recommendation.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
           # already recommended
-          redirect_to wish_failed_subscribers_path
+          redirect_to wish_failed_subscribers_path(message: 'already_recommended')
         else            
           Wish.create(user_id: @user.id, restaurant_id: restaurant_id)
           redirect_to wish_success_subscribers_path
