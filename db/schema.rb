@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160509134327) do
+ActiveRecord::Schema.define(version: 20160512144722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -283,6 +283,7 @@ ActiveRecord::Schema.define(version: 20160509134327) do
     t.integer  "restaurant_id"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.integer  "influencer_id"
   end
 
   add_index "wishes", ["restaurant_id"], name: "index_wishes_on_restaurant_id", using: :btree
