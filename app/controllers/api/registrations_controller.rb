@@ -6,7 +6,6 @@ module Api
 
     def create
       name = params['name']
-      puts "#{params['name']}"
       email = params['email']
       password = params['password']
       all_emails = User.all.pluck(:email)

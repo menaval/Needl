@@ -1,0 +1,138 @@
+#subscribers_login {
+  .wrapper {
+    background-color: $white;
+    width: 600px;
+    margin: 0 calc(50% - 300px);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    .link {
+      margin: 10px 0 0 0;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .title {
+      margin: 10px 0 20px 0;
+      color: $blue;
+    }
+
+    .logo {
+      height: 80px;
+      margin: 0 0 15px 0;
+    }
+
+    .restaurant_image {
+      height: 130px;
+      margin: 0 0 50px 0;
+    }
+    
+    .facebook-login {
+      h1 {
+        margin: 0 0 20px 0;
+        color: $blue;
+      }
+
+      a {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        border-radius: 5px;
+        background-color: $blue-facebook;
+        padding: 15px 20px;
+        width: 300px;
+        color: $white;
+
+        .fa {
+          font-size: 16pt;
+          margin-right: 15px;
+        }
+
+        &:hover {
+          text-decoration: none;
+          background-color: $blue-facebook-hover;
+        }
+      }
+    }
+
+    .mail-login {
+      h1 {
+        margin: 0 0 20px 0;
+        color: $blue;
+      }
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 20px 0 0 0;
+
+      form {
+        width: 300px;
+      }
+    }
+
+    .signup {
+      h1 {
+        margin: 0 0 20px 0;
+        color: $blue;
+      }
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 20px 0 0 0;
+
+      form {
+        width: 300px;
+      }
+    }
+  }
+
+  .download {
+    width: 150px;
+    margin: 30px 0 0 0;
+  }
+
+  .footer {
+    display: none;
+  }
+}
+
+#subscribers_wish_success, #subscribers_wish_failed {
+  .wrapper {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    h1 {
+      margin: 10px 0 50px 0;
+      color: $blue;
+    }
+
+    .logo {
+      height: 80px;
+      margin: 0 0 15px 0;
+    }
+
+    a {
+      img {
+        width: 200px;
+      }
+    }
+  }
+
+
+  .footer {
+    display: none;
+  }
+}

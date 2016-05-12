@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       post :update_password
     end
   end
+
   resources :friendships, only: [:index, :new, :create, :destroy] do
     collection do
       post :answer_request
@@ -28,9 +29,16 @@ Rails.application.routes.draw do
       get :map_box
     end
   end
+
   resources :not_interested_relations, only: [:create]
 
-  resources :subscribers, only: [:create]
+  resources :subscribers, only: [:create] do
+    collection do
+      get :login
+      get :wish_success
+      get :wish_failed
+    end
+  end
 
   resources :recommendations, only: [:index, :new, :create, :destroy] do
     collection do

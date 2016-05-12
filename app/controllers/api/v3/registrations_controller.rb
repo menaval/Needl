@@ -4,10 +4,16 @@ class Api::V3::RegistrationsController < ApplicationController
       skip_before_filter :authenticate_user!
 
       def create
-        name = params['name'].downcase.titleize
-        puts "#{params['name']}"
-        email = params['email'].downcase
-        password = params['password']
+        if params['from'] == 'wish'
+          name = params['user']['name'].downcase.titleize
+          email = params['user']['email'].downcase
+          password = params['user']['password']
+        else 
+          name = params['name'].downcase.titleize
+          email = params['email'].downcase
+          password = params['password']
+        end
+
         all_emails = User.all.pluck(:email)
         if all_emails.include?(email)
           render(json: {error_message: "account_already_exists"}, status: 401)
@@ -36,8 +42,6 @@ class Api::V3::RegistrationsController < ApplicationController
             reco.friends_thanking += [@user.id]
             reco.save
             @user.update_attribute(:score, 1)
-            puts "------------------------------------------------"
-            puts "#{@user.score}"
             @tracker.track(@user.id, 'Signup Thanked', { "user" => @user.name, "friend" => reco.user.name, "restaurant" => reco.restaurant.name})
           end
 
@@ -61,14 +65,25 @@ class Api::V3::RegistrationsController < ApplicationController
                 }
               )
             rescue Gibbon::MailChimpError
-              puts "error catched --------------------------------------------"
             end
           end
 
-          puts "---------------------------------------------------------"
-          puts "#{@user.score}"
+          if params['from'] == 'wish'
+            restaurant_id = params['restaurant_id'].to_i
 
-          render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
+            if Wish.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
+              # already wishlisted
+              redirect_to wish_failed_subscribers_path(message: 'already_wishlisted')
+            elsif Recommendation.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
+              # already recommended
+              redirect_to wish_failed_subscribers_path(message: 'already_recommended')
+            else            
+              Wish.create(user_id: @user.id, restaurant_id: restaurant_id)
+              redirect_to wish_success_subscribers_path
+            end
+          else
+            render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
+          end
 
         end
 

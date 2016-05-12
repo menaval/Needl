@@ -74,6 +74,11 @@ $white: #FFFFFF;
 $black: #000000;
 $transparent-white: rgba(255, 255, 255, 0.9);
 
+$red-google: #D53F38;
+$blue-facebook: #3B5998;
+$blue-facebook-hover: lighten($blue-facebook, 5%);
+$blue-twitter: #4099FF;
+
 // Gray scale
 $gray-darker:  lighten(#000, 13.5%); // #222
 $gray-dark:    lighten(#000, 20%);   // #333

@@ -18,11 +18,36 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       sign_in user#, event: :authentication
       if user.sign_in_count == 1
         @tracker.track(current_user.id, 'signup', {"user" => user.name} )
-        redirect_to new_recommendation_path, notice: "Partage ta première reco avant de découvrir celles de tes amis"
+        if request.env['omniauth.params'].length > 0 && request.env['omniauth.params']['from'] == 'wish'
+          restaurant_id = request.env['omniauth.params']['restaurant_id'].to_i
+          if Wish.where(user_id: user.id, restaurant_id: restaurant_id).length > 0
+            # already wishlisted
+          elsif Recommendation.where(user_id: user.id, restaurant_id: restaurant_id).length > 0
+            # already recommended
+          else            
+            Wish.create(user_id: user.id, restaurant_id: restaurant_id)
+            redirect_to wish_success_subscribers_path
+          end
+
+        else
+          redirect_to new_recommendation_path, notice: "Partage ta première reco avant de découvrir celles de tes amis"
+        end
       else
         @tracker.track(current_user.id, 'signin', {"user" => user.name} )
+        if request.env['omniauth.params'].length > 0 && request.env['omniauth.params']['from'] == 'wish'
+          restaurant_id = request.env['omniauth.params']['restaurant_id'].to_i
+          if Wish.where(user_id: user.id, restaurant_id: restaurant_id).length > 0
+            # already wishlisted
+          elsif Recommendation.where(user_id: user.id, restaurant_id: restaurant_id).length > 0
+            # already recommended
+          else            
+            Wish.create(user_id: user.id, restaurant_id: restaurant_id)
+            redirect_to wish_success_subscribers_path
+          end
 
-        redirect_to root_path
+        else
+          redirect_to root_path
+        end
       end
 
     else

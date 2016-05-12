@@ -4,14 +4,36 @@ class Api::V3::SessionsController < ApplicationController
   skip_before_filter :authenticate_user!
 
   def create
-    email = params['email']
-    password = params['password']
+    if params['from'] == 'wish'
+      email = params['user']['email']
+      password = params['user']['password']
+    else 
+      email = params['email']
+      password = params['password']
+    end
+
     @user = User.find_by(email: email)
 
     # connection réussie
     if @user != nil && @user.valid_password?(password) == true
       sign_in @user
-      render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
+
+      if params['from'] == 'wish'
+        restaurant_id = params['restaurant_id'].to_i
+
+        if Wish.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
+          # already wishlisted
+          redirect_to wish_failed_subscribers_path
+        elsif Recommendation.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
+          # already recommended
+          redirect_to wish_failed_subscribers_path
+        else            
+          Wish.create(user_id: @user.id, restaurant_id: restaurant_id)
+          redirect_to wish_success_subscribers_path
+        end
+      else
+        render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
+      end
     # l'utilisateur a rempli la bonne adresse mail mais il s'est inscrit via facebook
     elsif @user != nil && @user.provider == "facebook"
       render(json: {error_message: "facebook_account"}, status: 401)

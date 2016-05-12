@@ -1,0 +1,43 @@
+<div class='wrapper'>
+  <%= link_to root_path do %>
+    <%= image_tag 'logo_red.png', class: 'logo' %>
+  <% end %>
+  <h1 class='title' id='title_login'>Connecte toi pour ajouter le restaurant <%= @restaurant.name %> à ta wishlist</h1>
+  <h1 class='title hidden' id='title_signup'>Inscris-toi pour ajouter le restaurant <%= @restaurant.name %> à ta wishlist</h1>
+  <%= image_tag @picture, class: 'restaurant_image' %>
+  <div class="facebook-login">
+    <%= link_to "/users/auth/facebook?from=wish&restaurant_id=#{@restaurant.id}", id: 'facebook-connect' do %>
+      <i class='fa fa-facebook'></i>
+      <span id='facebook-login'>Se connecter avec Facebook</span>
+      <span id='facebook-signup' class='hidden'>S'inscrire avec Facebook</span>
+    <% end %>
+  </div>
+  <div class="mail-login" id='login'>
+    <h1>Connexion par email</h1>
+    <%= simple_form_for(@user, :url => api_v3_sessions_path(@user, :from => 'wish', :restaurant_id => @restaurant.id)) do |f| %>
+      <%= f.error_notification %>
+
+      <%= f.input :email %>
+      <%= f.input :password, label: 'Mot de passe' %>
+
+      <%= f.button :submit, 'Se connecter' %>
+    <% end %>
+  </div>
+  <div class="signup hidden" id='signup'>
+    <h1>Crée ton compte</h1>
+    <%= simple_form_for(@user, :url => api_v3_registrations_path(@user, :from => 'wish', :restaurant_id => @restaurant.id)) do |f| %>
+      <%= f.error_notification %>
+
+      <%= f.input :name, label: 'Prénom et nom' %>
+      <%= f.input :email %>
+      <%= f.input :password, label: 'Mot de passe' %>
+
+      <%= f.button :submit, 'S\'inscrire' %>
+    <% end %>
+  </div>
+  <span id='no_account' class='link'>Je n'ai pas de compte</span>
+  <span id='already_account' class='link hidden'>J'ai déja un compte</span>
+  <%= link_to 'http://download.needl-app.com/download-ios-wish', {class: 'download', target: 'blank'} do %>
+    <%= image_tag 'download-ios.png' %>
+  <% end %>
+</div>
