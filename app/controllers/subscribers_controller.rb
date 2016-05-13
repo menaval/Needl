@@ -39,7 +39,7 @@ class SubscribersController < ApplicationController
             redirect_to wish_failed_subscribers_path(message: 'already_recommended')
           else
             Wish.create(user_id: current_user.id, restaurant_id: restaurant.id, influencer_id: influencer.id)
-            @tracker.track(user.id, 'New Wish', { "restaurant" => restaurant.name, "user" => user.name, "source" => "influencer", "influencer" => influencer.name })
+            @tracker.track(current_user.id, 'New Wish', { "restaurant" => restaurant.name, "user" => current_user.name, "source" => "influencer", "influencer" => influencer.name })
             redirect_to wish_success_subscribers_path
           end
         else
