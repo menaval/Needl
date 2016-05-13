@@ -50,6 +50,7 @@ class SubscribersController < ApplicationController
 
         if (Restaurant.where(id: params['restaurant_id'].to_i).length == 1)
           @restaurant = Restaurant.find(params['restaurant_id'].to_i)
+          @influencer_id = User.find(params['influencer_id'].to_i).id
           @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
         else
           redirect_to wish_failed_subscribers_path(message: 'restaurant_inexistant')

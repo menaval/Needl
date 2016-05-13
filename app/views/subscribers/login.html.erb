@@ -6,7 +6,7 @@
   <h1 class='title hidden' id='title_signup'>Inscris-toi pour ajouter le restaurant <%= @restaurant.name %> à ta wishlist</h1>
   <%= image_tag @picture, class: 'restaurant_image' %>
   <div class="facebook-login">
-    <%= link_to "/users/auth/facebook?from=wish&restaurant_id=#{@restaurant.id}", id: 'facebook-connect' do %>
+    <%= link_to "/users/auth/facebook?from=wish&restaurant_id=#{@restaurant.id}&influencer_id=#{@influencer_id}", id: 'facebook-connect' do %>
       <i class='fa fa-facebook'></i>
       <span id='facebook-login'>Se connecter avec Facebook</span>
       <span id='facebook-signup' class='hidden'>S'inscrire avec Facebook</span>

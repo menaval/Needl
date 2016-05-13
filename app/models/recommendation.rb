@@ -4,5 +4,4 @@ class Recommendation < ActiveRecord::Base
   belongs_to :restaurant
   attr_accessor :wish
   has_many :activities, as: :trackable, class_name: 'PublicActivity::Activity', dependent: :destroy
-  tracked owner: Proc.new { |controller, _model| controller.current_user }, only: [:create]
 end
