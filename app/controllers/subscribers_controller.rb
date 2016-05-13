@@ -23,35 +23,41 @@ class SubscribersController < ApplicationController
   end
 
   def login
-    @tracker.track(user.id, 'Wishlist From Influencer', { "influencer" => User.find(params['influencer_id'].to_i).name })
-    if current_user != nil
-      if (Restaurant.where(id: params['restaurant_id'].to_i).length == 1)
-        restaurant = Restaurant.find(params['restaurant_id'].to_i)
-        influencer = User.find(params['influencer_id'].to_i)
+    if params['influencer_id'] != nil && params['influencer_id'].to_i != 0 && User.where(id: params['influencer_id'].to_i).length == 1
+      @tracker.track('Wishlist From Influencer', { "influencer" => User.find(params['influencer_id'].to_i).name })
 
-        if Wish.where(user_id: current_user.id, restaurant_id: restaurant.id).length > 0
-          # already wishlisted
-          redirect_to wish_failed_subscribers_path(message: 'already_wishlisted')
-        elsif Recommendation.where(user_id: current_user.id, restaurant_id: restaurant.id).length > 0
-          # already recommended
-          redirect_to wish_failed_subscribers_path(message: 'already_recommended')
+      if current_user != nil # is already looged in, add wish immediately
+        if (Restaurant.where(id: params['restaurant_id'].to_i).length == 1)
+          restaurant = Restaurant.find(params['restaurant_id'].to_i)
+          influencer = User.find(params['influencer_id'].to_i)
+
+          if Wish.where(user_id: current_user.id, restaurant_id: restaurant.id).length > 0
+            # already wishlisted
+            redirect_to wish_failed_subscribers_path(message: 'already_wishlisted')
+          elsif Recommendation.where(user_id: current_user.id, restaurant_id: restaurant.id).length > 0
+            # already recommended
+            redirect_to wish_failed_subscribers_path(message: 'already_recommended')
+          else
+            Wish.create(user_id: current_user.id, restaurant_id: restaurant.id, influencer_id: influencer.id)
+            @tracker.track(user.id, 'New Wish', { "restaurant" => restaurant.name, "user" => user.name, "source" => "influencer", "influencer" => influencer.name })
+            redirect_to wish_success_subscribers_path
+          end
         else
-          Wish.create(user_id: current_user.id, restaurant_id: restaurant.id, influencer_id: influencer.id)
-          @tracker.track(user.id, 'New Wish', { "restaurant" => restaurant.name, "user" => user.name, "source" => "influencer", "influencer" => influencer.name })
-          redirect_to wish_success_subscribers_path
+          redirect_to wish_failed_subscribers_path(message: 'restaurant_inexistant')
         end
-      else
-        redirect_to wish_failed_subscribers_path(message: 'restaurant_inexistant')
-      end
-    else
-      @user = User.new
+      else # show login page to add wish
+        @user = User.new
 
-      if (Restaurant.where(id: params['restaurant_id'].to_i).length == 1)
-        @restaurant = Restaurant.find(params['restaurant_id'].to_i)
-        @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
-      else
-        redirect_to wish_failed_subscribers_path(message: 'restaurant_inexistant')
+        if (Restaurant.where(id: params['restaurant_id'].to_i).length == 1)
+          @restaurant = Restaurant.find(params['restaurant_id'].to_i)
+          @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
+        else
+          redirect_to wish_failed_subscribers_path(message: 'restaurant_inexistant')
+        end
       end
+
+    else
+      redirect_to root_path
     end
   end
 

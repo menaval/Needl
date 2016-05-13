@@ -23,11 +23,11 @@ class Api::V3::ActivitiesController < ApplicationController
     end
 
     Wish.where(user_id: my_visible_friends_ids).each do |wish|
-      @activities << {user_id: wish.user_id, restaurant_id: wish.restaurant_id, date: wish.created_at, user_type: "friend" , notification_type: "wish", review: "Sur ma wishlist"}
+      @activities << {user_id: wish.user_id, restaurant_id: wish.restaurant_id, date: wish.created_at, user_type: "friend" , notification_type: "wish", review: "Sur ma wishlist", influencer_id: wish.influencer_id}
     end
 
     Wish.where(user_id: @user.id).each do |wish|
-      @activities << {user_id: wish.user_id, restaurant_id: wish.restaurant_id, date: wish.created_at, user_type: "me" , notification_type: "wish", review: "Sur ma wishlist"}
+      @activities << {user_id: wish.user_id, restaurant_id: wish.restaurant_id, date: wish.created_at, user_type: "me" , notification_type: "wish", review: "Sur ma wishlist", influencer_id: wish.influencer_id}
     end
   end
 

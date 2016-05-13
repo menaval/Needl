@@ -5,6 +5,7 @@ json.array! @activities do |activity|
   json.url                       activity[:url]
   json.user_type                 activity[:user_type]
   json.notification_type         activity[:notification_type]
+  json.influencer_id             activity[:influencer_id]
   if activity[:notification_type] == "recommendation"
     json.strengths               activity[:strengths]
     json.occasions               activity[:occasions]
