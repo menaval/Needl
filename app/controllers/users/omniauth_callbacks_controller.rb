@@ -1,38 +1,38 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def facebook
-    user = User.find_for_facebook_oauth(request.env["omniauth.auth"])
-    if user.token_expiry  && user.token_expiry < Time.now
-      user.token = request.env["omniauth.auth"].credentials.token
-      user.token_expiry = Time.at(request.env["omniauth.auth"].credentials.expires_at)
-      user.save
+    @user = User.find_for_facebook_oauth(request.env["omniauth.auth"])
+    if @user.token_expiry  && @user.token_expiry < Time.now
+      @user.token = request.env["omniauth.auth"].credentials.token
+      @user.token_expiry = Time.at(request.env["omniauth.auth"].credentials.expires_at)
+      @user.save
     end
 
     # Pour tous ceux qui sont rentrés sur l'app avant qu'on mette e système pour récupérer la date de naissance
-    # if user.birthday == nil
-    #   user.birthday = Date.parse(request.env["omniauth.auth"].extra.raw_info.birthday)
-    #   user.save
+    # if @user.birthday == nil
+    #   @user.birthday = Date.parse(request.env["omniauth.auth"].extra.raw_info.birthday)
+    #   @user.save
     # end
 
-    if user.persisted?
-      sign_in user
-      if user.sign_in_count == 2
+    if @user.persisted?
+      sign_in @user
+      if @user.sign_in_count == 2
 
         # On track l'arrivée sur Mixpanel
 
         # les personnes suivent automatiquement les influenceurs
         User.where(public: true).each do |influencer|
-          Followership.create(follower_id: user.id, following_id: influencer.id)
+          Followership.create(follower_id: @user.id, following_id: influencer.id)
         end
 
-        @tracker.people.set(user.id, {
-          "gender" => user.gender,
-          "name" => user.name,
-          "$email": user.email
+        @tracker.people.set(@user.id, {
+          "gender" => @user.gender,
+          "name" => @user.name,
+          "$email": @user.email
         })
 
         if request.env['omniauth.params']['influencer_id'] != nil
-          @tracker.track(user.id, 'signup', {"user" => user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name } )
+          @tracker.track(@user.id, 'signup', {"@user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name } )
         end
 
         accept_all_friends
@@ -44,13 +44,13 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
             @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
             @gibbon.lists(@list_id).members.create(
               body: {
-                email_address: user.email,
+                email_address: @user.email,
                 status: "subscribed",
                 merge_fields: {
-                  FNAME: user.name.partition(" ").first,
-                  LNAME: user.name.partition(" ").last,
-                  TOKEN: user.authentication_token,
-                  GENDER: user.gender ? user.gender : ""
+                  FNAME: @user.name.partition(" ").first,
+                  LNAME: @user.name.partition(" ").last,
+                  TOKEN: @user.authentication_token,
+                  GENDER: @user.gender ? @user.gender : ""
                 }
               }
             )
@@ -62,15 +62,17 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
         if request.env['omniauth.params'].length > 0 && request.env['omniauth.params']['from'] == 'wish'
           restaurant_id = request.env['omniauth.params']['restaurant_id'].to_i
-          if Wish.where(user_id: user.id, restaurant_id: restaurant_id).length > 0
+          if Wish.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
             # already wishlisted
             redirect_to wish_failed_subscribers_path(message: 'already_wishlisted')
-          elsif Recommendation.where(user_id: user.id, restaurant_id: restaurant_id).length > 0
+          elsif Recommendation.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
             # already recommended
             redirect_to wish_failed_subscribers_path(message: 'already_recommended')
           else
-            Wish.create(user_id: user.id, restaurant_id: restaurant_id, influencer_id: request.env['omniauth.params']['influencer_id'].to_i)
-            @tracker.track(user.id, 'New Wish', { "restaurant" => Restaurant.find(restaurant_id).name, "user" => user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name })
+            puts '----------------'
+            puts request.env['omniauth.params']['influencer_id'].to_i
+            Wish.create(user_id: @user.id, restaurant_id: restaurant_id, influencer_id: request.env['omniauth.params']['influencer_id'].to_i)
+            @tracker.track(@user.id, 'New Wish', { "restaurant" => Restaurant.find(restaurant_id).name, "user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name })
             redirect_to wish_success_subscribers_path
           end
         else
@@ -78,19 +80,21 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         end
       else
         if request.env['omniauth.params']['influencer_id'] != nil
-          @tracker.track(user.id, 'signin', {"user" => user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name } )
+          @tracker.track(@user.id, 'signin', {"user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name } )
         end
         if request.env['omniauth.params'].length > 0 && request.env['omniauth.params']['from'] == 'wish'
           restaurant_id = request.env['omniauth.params']['restaurant_id'].to_i
-          if Wish.where(user_id: user.id, restaurant_id: restaurant_id).length > 0
+          if Wish.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
             # already wishlisted
             redirect_to wish_failed_subscribers_path(message: 'already_wishlisted')
-          elsif Recommendation.where(user_id: user.id, restaurant_id: restaurant_id).length > 0
+          elsif Recommendation.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
             # already recommended
             redirect_to wish_failed_subscribers_path(message: 'already_recommended')
           else
-            Wish.create(user_id: user.id, restaurant_id: restaurant_id, influencer_id: request.env['omniauth.params']['influencer_id'].to_i)
-            @tracker.track(user.id, 'New Wish', { "restaurant" => Restaurant.find(restaurant_id).name, "user" => user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name })
+            puts '----------------'
+            puts request.env['omniauth.params']['influencer_id'].to_i
+            Wish.create(user_id: @user.id, restaurant_id: restaurant_id, influencer_id: request.env['omniauth.params']['influencer_id'].to_i)
+            @tracker.track(@user.id, 'New Wish', { "restaurant" => Restaurant.find(restaurant_id).name, "user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name })
             redirect_to wish_success_subscribers_path
           end
 
