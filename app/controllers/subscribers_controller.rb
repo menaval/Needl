@@ -26,6 +26,10 @@ class SubscribersController < ApplicationController
     delta_latitude = 0.0004
     delta_longitude = 0.0008
 
+    if Rails.env.production? == true
+      @tracker.track('Wishlist Page From Influencer', { "influencer" => User.find(params['influencer_id'].to_i).name })
+    end
+
     url = request.referer
 
     if url != '' && url != nil
@@ -126,11 +130,8 @@ class SubscribersController < ApplicationController
     end
 
     if @restaurant != nil && params['influencer_id'] != nil && params['influencer_id'].to_i != 0 && User.where(id: params['influencer_id'].to_i).length == 1
-      if Rails.env.production? == true
-        @tracker.track('Wishlist From Influencer', { "influencer" => User.find(params['influencer_id'].to_i).name })
-      end
-
-      if current_user != nil # is already looged in, add wish immediately
+      if current_user != nil 
+        # is already looged in, add wish immediately
         influencer = User.find(params['influencer_id'].to_i)
 
         if Wish.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0
@@ -143,7 +144,9 @@ class SubscribersController < ApplicationController
           if @origin == 'db' || @origin = 'foursquare'
             Wish.create(user_id: current_user.id, restaurant_id: @restaurant.id, influencer_id: influencer.id)
           end
-          @tracker.track(current_user.id, 'New Wish', { "restaurant" => @restaurant.name, "user" => current_user.name, "source" => "influencer", "influencer" => influencer.name })
+          if Rails.env.production? == true
+            @tracker.track(current_user.id, 'New Wish', { "restaurant" => @restaurant.name, "user" => current_user.name, "source" => "influencer", "influencer" => influencer.name })
+          end
           redirect_to wish_success_subscribers_path
         end
       else # show login page to add wish

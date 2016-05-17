@@ -72,7 +72,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
             puts '----------------'
             puts request.env['omniauth.params']['influencer_id'].to_i
             Wish.create(user_id: @user.id, restaurant_id: restaurant_id, influencer_id: request.env['omniauth.params']['influencer_id'].to_i)
-            @tracker.track(@user.id, 'New Wish', { "restaurant" => Restaurant.find(restaurant_id).name, "user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name })
+            if Rails.env.production? == true
+              @tracker.track(@user.id, 'New Wish', { "restaurant" => Restaurant.find(restaurant_id).name, "user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name })
+            end
             redirect_to wish_success_subscribers_path
           end
         else
@@ -91,10 +93,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
             # already recommended
             redirect_to wish_failed_subscribers_path(message: 'already_recommended')
           else
-            puts '----------------'
-            puts request.env['omniauth.params']['influencer_id'].to_i
             Wish.create(user_id: @user.id, restaurant_id: restaurant_id, influencer_id: request.env['omniauth.params']['influencer_id'].to_i)
-            @tracker.track(@user.id, 'New Wish', { "restaurant" => Restaurant.find(restaurant_id).name, "user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name })
+            if Rails.env.production? == true
+              @tracker.track(@user.id, 'New Wish', { "restaurant" => Restaurant.find(restaurant_id).name, "user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name })
+            end
             redirect_to wish_success_subscribers_path
           end
 
