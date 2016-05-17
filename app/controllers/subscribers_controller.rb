@@ -28,8 +28,6 @@ class SubscribersController < ApplicationController
 
     url = request.referer
 
-    url = 'http://716lavie.com/la-laiterie-paris-75007-2/'
-
     if url != '' && url != nil
       domain = URI.parse(url).host.sub(/^www\./, '')
     else
