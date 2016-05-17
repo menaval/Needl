@@ -23,6 +23,8 @@ class SubscribersController < ApplicationController
   end
 
   def login
+    puts '----------------------'
+    puts request.referer
     if params['influencer_id'] != nil && params['influencer_id'].to_i != 0 && User.where(id: params['influencer_id'].to_i).length == 1
       @tracker.track('Wishlist From Influencer', { "influencer" => User.find(params['influencer_id'].to_i).name })
 
