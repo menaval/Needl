@@ -5,7 +5,6 @@ class Api::V2::RegistrationsController < ApplicationController
 
       def create
         name = params['name'].downcase.titleize
-        puts "#{params['name']}"
         email = params['email'].downcase
         password = params['password']
         all_emails = User.all.pluck(:email)
@@ -36,8 +35,6 @@ class Api::V2::RegistrationsController < ApplicationController
             reco.friends_thanking += [@user.id]
             reco.save
             @user.update_attribute(:score, 1)
-            puts "------------------------------------------------"
-            puts "#{@user.score}"
             @tracker.track(@user.id, 'Signup Thanked', { "user" => @user.name, "friend" => reco.user.name, "restaurant" => reco.restaurant.name})
           end
 
@@ -61,12 +58,9 @@ class Api::V2::RegistrationsController < ApplicationController
                 }
               )
             rescue Gibbon::MailChimpError
-              puts "error catched --------------------------------------------"
+              # MailChimpError
             end
           end
-
-          puts "---------------------------------------------------------"
-          puts "#{@user.score}"
 
           render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
 

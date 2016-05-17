@@ -17,6 +17,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if @user.persisted?
       sign_in @user
       if @user.sign_in_count == 2
+        # Création de compte
 
         # On track l'arrivée sur Mixpanel
 
@@ -55,7 +56,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
               }
             )
           rescue Gibbon::MailChimpError
-            puts "error catched --------------------------------------------"
+            # MailChimpError
           end
 
         end
@@ -69,18 +70,17 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
             # already recommended
             redirect_to wish_failed_subscribers_path(message: 'already_recommended')
           else
-            puts '----------------'
-            puts request.env['omniauth.params']['influencer_id'].to_i
             Wish.create(user_id: @user.id, restaurant_id: restaurant_id, influencer_id: request.env['omniauth.params']['influencer_id'].to_i)
             if Rails.env.production? == true
               @tracker.track(@user.id, 'New Wish', { "restaurant" => Restaurant.find(restaurant_id).name, "user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name })
             end
-            redirect_to wish_success_subscribers_path
+            redirect_to wish_success_subscribers_path(message: 'account_creation')
           end
         else
           redirect_to new_recommendation_path, notice: "Partage ta première reco avant de découvrir celles de tes amis"
         end
       else
+        # Log in
         if request.env['omniauth.params']['influencer_id'] != nil
           @tracker.track(@user.id, 'signin', {"user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name } )
         end
@@ -127,8 +127,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         @user.save
       end
 
-      puts "#{request.env["omniauth.auth"]}"
-
       # Pour tous ceux qui sont rentrés sur l'app avant qu'on mette e système pour récupérer la date de naissance
       # if @user.birthday == nil
       #   @user.birthday = Date.parse(request.env["omniauth.auth"].extra.raw_info.birthday)
@@ -136,7 +134,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       # end
 
       if @user.persisted?
-        puts "user persisted"
         sign_in @user#, event: :authentication
 
         # Si c'est un signup
@@ -168,8 +165,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
             reco.friends_thanking += [@user.id]
             reco.save
             @user.update_attribute(:score, 1)
-            puts "------------------------------------------------"
-            puts "#{@user.score}"
+
             @tracker.track(@user.id, 'Signup Thanked', { "user" => @user.name, "friend" => reco.user.name, "restaurant" => reco.restaurant.name})
           end
 
@@ -192,7 +188,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
                 }
               )
             rescue Gibbon::MailChimpError
-              puts "error catched --------------------------------------------"
+              # MailChimpError
             end
 
           end
@@ -202,7 +198,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         end
         render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
       else
-        puts "user rejected"
+        if Rails.env.development? == true
+          puts "user rejected"
+        end
       end
     end
   end

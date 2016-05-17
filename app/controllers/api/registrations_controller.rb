@@ -48,7 +48,7 @@ module Api
               # }
             # )
           # rescue Gibbon::MailChimpError
-            # puts "error catched --------------------------------------------"
+            # # MailChimpError
           # end
         # end
 

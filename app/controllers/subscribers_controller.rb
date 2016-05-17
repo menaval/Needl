@@ -40,7 +40,9 @@ class SubscribersController < ApplicationController
 
     case domain
       when "716lavie.com"
-        puts 'from 716lavie.com'
+        if Rails.env.development? == true
+          puts 'from 716lavie.com'
+        end
 
         page = Nokogiri.HTML(open(url))
 
@@ -51,7 +53,9 @@ class SubscribersController < ApplicationController
 
 
       when "mademoisellebonplan.fr"
-        puts 'from mademoisellebonplan.fr'
+        if Rails.env.development? == true
+          puts 'from mademoisellebonplan.fr'
+        end
 
         page = Nokogiri.HTML(open(url))
 
@@ -61,7 +65,9 @@ class SubscribersController < ApplicationController
         restaurant_ids = []
 
       when "glutencorner.com"
-        puts 'from glutencorner.com'
+        if Rails.env.development? == true
+          puts 'from glutencorner.com'
+        end
 
         page = Nokogiri.HTML(open(url))
 
@@ -83,7 +89,9 @@ class SubscribersController < ApplicationController
         restaurant_ids = []
 
       else
-        puts 'unknown to us'
+        if Rails.env.development? == true
+          puts 'unknown to us'
+        end
         restaurant_address = ''
         error_message = 'unknown_referer'
 

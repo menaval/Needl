@@ -26,8 +26,7 @@ class Api::V3::RecommendationsController < ApplicationController
       new_params["review"] = recommendation_params["review"] ? recommendation_params["review"] : "Je recommande !"
       new_params["friends_thanking"] = recommendation_params["friends_thanking"] ? recommendation_params["friends_thanking"].map{|x| x.to_i} : []
       new_params["experts_thanking"] = recommendation_params["experts_thanking"] ? recommendation_params["experts_thanking"].map{|x| x.to_i} : []
-      puts "------------------------------------------------------------------------------------------------"
-      puts "params: #{recommendation_params}"
+
       @recommendation = @user.recommendations.new(new_params)
       @recommendation.restaurant = @restaurant
       @recommendation.save
@@ -156,8 +155,7 @@ class Api::V3::RecommendationsController < ApplicationController
     # pour chaque utilisateur on va regarder si il a activé les notis et s'il l'a fait on lui envoie une notif, s'il ne l'a pas fait on lui envoie un mail
     friends_to_thank_ids.each do |friend_id|
       info = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id).get
-      puts "-----------------------------------------------------------------------"
-      puts "#{info.length}"
+
       if info.length > 0
         friends_to_notif_ids << friend_id
       else
@@ -211,9 +209,6 @@ class Api::V3::RecommendationsController < ApplicationController
     experts_previously_thanked = @recommendation.experts_thanking.map{|x| x.to_i}
     friends_newly_thanked      = new_params["friends_thanking"].map{|x| x.to_i}
     experts_newly_thanked      = new_params["experts_thanking"].map{|x| x.to_i}
-    puts "----------------------------------------------------------------------------"
-    puts "friends_previously_thanked: #{friends_previously_thanked}"
-    puts "friends_newly_thanked: #{friends_newly_thanked}"
 
     # On check ceux qui auraient été rajoutés avec l’update
     new_minus_old_friends      = friends_newly_thanked - friends_previously_thanked

@@ -44,9 +44,6 @@ class Api::V2::UsersController < ApplicationController
       end
     end
 
-    puts "---------------------------------------------------------"
-    puts "fetch me: #{@user.score}"
-
   end
 
   def experts
@@ -168,8 +165,10 @@ class Api::V2::UsersController < ApplicationController
       user.profile_onboarding = true;
     when 'recommendation'
       user.recommendation_onboarding = true;
-    else 
-      puts 'error'
+    else
+      if Rails.env.development? == true
+        puts 'error'
+      end
     end
 
     user.save

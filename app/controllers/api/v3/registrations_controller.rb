@@ -79,7 +79,7 @@ class Api::V3::RegistrationsController < ApplicationController
               redirect_to wish_failed_subscribers_path(message: 'already_recommended')
             else            
               Wish.create(user_id: @user.id, restaurant_id: restaurant_id)
-              redirect_to wish_success_subscribers_path
+              redirect_to wish_success_subscribers_path(message: 'account_creation')
             end
           else
             render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}

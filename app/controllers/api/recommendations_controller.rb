@@ -233,8 +233,6 @@ module Api
           @wish = Wish.new(user_id: @user.id, restaurant_id: @restaurant.id)
           @wish.restaurant = @restaurant
           @wish.save
-          puts "#{@restaurant.id}"
-          puts "#{@wish.restaurant_id}"
           @tracker.track(@user.id, 'New Wish', { "restaurant" => @restaurant.name, "user" => @user.name })
 
           #  Verifier si la wishlist vient de l'app ou d'un mail
@@ -244,9 +242,6 @@ module Api
             render(:json => {notice: "Le restaurant a bien été ajouté à ta wishlist ! Tu peux le retrouver en te connectant sur l'app !"}, :status => 409, :layout => false)
 
           else
-            puts "juste avant d'envoyer"
-            puts "#{@restaurant.id}"
-            puts "#{@wish.restaurant_id}"
             redirect_to api_restaurant_path(@wish.restaurant_id, :user_email => params["user_email"], :user_token => params["user_token"])
           end
         end
@@ -406,8 +401,7 @@ module Api
       # pour chaque utilisateur on va regarder si il a activé les notis et s'il l'a fait on lui envoie une notif, s'il ne l'a pas fait on lui envoie un mail
       friends_to_thank_ids.each do |friend_id|
         info = client.query(Parse::Protocol::CLASS_INSTALLATION).eq('user_id', friend_id).get
-        puts "-----------------------------------------------------------------------"
-        puts "#{info.length}"
+
         if info.length > 0
           friends_to_notif_ids << friend_id
         else
@@ -423,8 +417,6 @@ module Api
 
       # on envoie les notifs aux bonnes personnes s'il y en a
       if friends_to_notif_ids.length > 0
-        puts "---------------------------------------------------------------------------"
-        puts "#{friends_to_notif_ids}"
         data = { :alert => "#{@user.name} te remercie de lui avoir fait decouvrir #{@restaurant.name}. Tu gagnes 1 point d'expertise !", :badge => 'Increment', :type => 'thanks' }
         push = client.push(data)
         query = client.query(Parse::Protocol::CLASS_INSTALLATION).value_in('user_id', friends_to_notif_ids)
@@ -529,12 +521,9 @@ module Api
         when  1
           # Si c'était chic alors pas de changement
 
-          puts "pas de changement"
-
         when 2
           # Si c'était Festif  alors pas de changement
 
-          puts "pas de changement"
         when 3
           # Si c'était typique alors reste typique mais son id devient 6 dans la migrationon
 
