@@ -16,7 +16,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if @user.persisted?
       if request.env['omniauth.params']['origin'] == 'app'
-        @user.update_attribute(:android_temporary_token, request.env['omniauth.params']['token'])
+        if request.env['omniauth.params']['token'] != nil
+          @user.update_attribute(:android_temporary_token, request.env['omniauth.params']['token'])
+        end
         redirect_to new_subscriber_path
       else
         sign_in @user
