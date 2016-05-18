@@ -32,6 +32,8 @@ class SubscribersController < ApplicationController
 
     url = request.referer
 
+    url = 'http://because-gus.com/restaurant/la-creme-de-paris/'
+
     if url != '' && url != nil
       domain = URI.parse(url).host.sub(/^www\./, '')
     else
@@ -88,7 +90,94 @@ class SubscribersController < ApplicationController
         restaurant_address = page.css('p.recette-niveau')[2].text.strip
         restaurant_ids = []
 
+      when "because-gus.com"
+        if Rails.env.development? == true
+          puts 'from because-gus.com'
+        end
+
+        page = Nokogiri.HTML(open(url))
+
+        special_character_index = []
+
+        restaurant_name = page.css('h1.blog-title a').text.strip
+        special_character_index << restaurant_name.index('(') 
+        special_character_index << restaurant_name.index('-') 
+        special_character_index << restaurant_name.index('–') 
+        special_character_index << restaurant_name.index(':')
+        special_character_index_minimum = special_character_index.compact.min
+
+        if special_character_index_minimum != nil
+          restaurant_name = restaurant_name[0, special_character_index_minimum]
+        end
+        restaurant_name_in_array = restaurant_name.split(" ")
+
+        paragraphs = page.css('div.blog-excerpt p')
+        index = 0
+        key = 0
+        previous_is_numeric = false
+
+        # Try and find two consecutive paragraphs starting with a number
+        paragraphs.each do |paragraph|
+          first_letter = paragraph.text.strip[0, 1]
+
+          if numeric(first_letter)
+            if previous_is_numeric
+              key = index
+            else
+              previous_is_numeric = true
+            end
+          else
+            previous_is_numeric = false
+          end
+
+          index += 1
+        end
+
+        # no matches found while looping in the paragraphs
+        if key == 0 
+          # there might be the address here
+          if page.css('span.editor_black').length > 0
+            potential_address = page.css('span.editor_black')[0].text.strip
+
+            # Check if it's not a phone number
+            if (potential_address[2,1] != '.' || potential_address[5,1] != '.' || potential_address[8,1] != '.' || potential_address[11,1] != '.') && numeric(potential_address[0,1])
+              # Address found
+              restaurant_address = potential_address
+            else
+              # Address not found
+              if Rails.env.development? == true
+                puts 'unknown to us'
+              end
+
+              if Rails.env.production? == true
+                @tracker.track('Crawling failed', {'url' => url})
+              end
+
+              restaurant_address = ''
+              error_message = 'crawling_failed'
+            end
+          else
+            # Address not found
+            if Rails.env.development? == true
+              puts 'unknown to us'
+            end
+
+            if Rails.env.production? == true
+              @tracker.track('Crawling failed', {'url' => url})
+            end
+
+            restaurant_address = ''
+            error_message = 'crawling_failed'
+          end
+        else
+          # Address found
+          restaurant_address = paragraphs[key - 1].text.strip + " " + paragraphs[key].text.strip
+        end
+
+        restaurant_ids = []
+
       else
+        # Refere not in our db
         if Rails.env.development? == true
           puts 'unknown to us'
         end
@@ -274,6 +363,10 @@ class SubscribersController < ApplicationController
         error_message = 'multiple_restaurants'
       end
     end
+  end
+
+  def numeric(character)
+    character =~ /[[:digit:]]/
   end
 
 end
