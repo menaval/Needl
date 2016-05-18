@@ -228,50 +228,51 @@ ActiveRecord::Schema.define(version: 20160518161018) do
   add_index "user_wishlist_pictures", ["user_id"], name: "index_user_wishlist_pictures_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                     default: "",      null: false
-    t.string   "encrypted_password",        default: "",      null: false
+    t.string   "email",                     default: "",    null: false
+    t.string   "encrypted_password",        default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",             default: 1,       null: false
+    t.integer  "sign_in_count",             default: 1,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "provider",                  default: "email", null: false
-    t.string   "uid",                       default: "",      null: false
+    t.string   "provider"
+    t.string   "uid"
     t.string   "picture"
     t.string   "name"
     t.string   "token"
     t.datetime "token_expiry"
-    t.boolean  "admin",                     default: false,   null: false
+    t.boolean  "admin",                     default: false, null: false
     t.string   "picture_file_name"
     t.string   "picture_content_type"
     t.integer  "picture_file_size"
     t.datetime "picture_updated_at"
     t.string   "gender"
     t.string   "authentication_token"
-    t.boolean  "mandrill_subscribed",       default: true
-    t.string   "emails",                    default: [],      null: false, array: true
-    t.string   "phone_numbers",             default: [],                   array: true
+    t.string   "code"
+    t.string   "emails",                    default: [],    null: false, array: true
+    t.string   "phone_numbers",             default: [],                 array: true
     t.string   "app_version"
     t.date     "birthday"
-    t.integer  "score",                     default: 0,       null: false
-    t.string   "platform",                  default: "ios",   null: false
+    t.integer  "score",                     default: 0,     null: false
+    t.string   "platform",                  default: "ios", null: false
     t.boolean  "public",                    default: false
-    t.string   "description",               default: "",      null: false
-    t.string   "tags",                      default: [],      null: false, array: true
+    t.string   "description",               default: "",    null: false
+    t.string   "tags",                      default: [],    null: false, array: true
     t.integer  "public_score",              default: 0
-    t.string   "url",                       default: "",      null: false
-    t.integer  "newsletter_restaurants",    default: [],      null: false, array: true
-    t.integer  "newsletter_themes",         default: [],      null: false, array: true
+    t.string   "url",                       default: "",    null: false
+    t.integer  "newsletter_restaurants",    default: [],    null: false, array: true
+    t.integer  "newsletter_themes",         default: [],    null: false, array: true
     t.boolean  "map_onboarding",            default: false
     t.boolean  "restaurant_onboarding",     default: false
     t.boolean  "followings_onboarding",     default: false
     t.boolean  "profile_onboarding",        default: false
     t.boolean  "recommendation_onboarding", default: false
+    t.string   "android_temporary_token"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token", using: :btree
