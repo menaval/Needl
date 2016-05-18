@@ -36,6 +36,7 @@ Rails.application.routes.draw do
       get :login
       get :wish_success
       get :wish_failed
+      get :restaurant_failed
     end
   end
 

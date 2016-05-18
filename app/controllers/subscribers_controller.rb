@@ -29,7 +29,7 @@ class SubscribersController < ApplicationController
     url = request.referer
 
     if Rails.env.development? == true
-      url = 'http://www.italieaparis.net/adresses/adr/il-quadrifoglio-pizza-au-levain-naturel'
+      url = 'http://716lavie.com/hyotan-paris-75008-2/'
     end
 
     if url != '' && url != nil
@@ -188,7 +188,7 @@ class SubscribersController < ApplicationController
               end
 
               restaurant_address = ''
-              error_message = 'crawling_failed'
+              @error_message = 'crawling_failed'
             end
           else
             # Address not found
@@ -201,7 +201,7 @@ class SubscribersController < ApplicationController
             end
 
             restaurant_address = ''
-            error_message = 'crawling_failed'
+            @error_message = 'crawling_failed'
           end
         else
           # Address found
@@ -216,7 +216,7 @@ class SubscribersController < ApplicationController
           puts 'unknown to us'
         end
         restaurant_address = ''
-        error_message = 'unknown_referer'
+        @error_message = 'unknown_referer'
 
     end
 
@@ -252,16 +252,17 @@ class SubscribersController < ApplicationController
       else 
         if @restaurant == nil
           # multiple restaurants matching the location and name
+          @error_message = 'multiple_restaurants'
+
           if Rails.env.production? == true
             @tracker.track('Multiple restaurants found', {'url' => url})
-            error_message = 'multiple_restaurants'
           end
         end
       end
 
     else
       # no restaurants in specified zone from referer crawling and geocoder
-      error_message = 'error_with_geocoder'
+      @error_message = 'error_with_geocoder'
     end
 
     if @restaurant != nil
@@ -289,14 +290,18 @@ class SubscribersController < ApplicationController
           @influencer_id = influencer.id
           @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
         else
-          redirect_to wish_failed_subscribers_path(message: 'inexistant_restaurant')
+          redirect_to restaurant_failed_subscribers_path(message: 'inexistant_restaurant')
         end
       end
 
     else
-      case error_message
+      case @error_message
         when "multiple_restaurants"
-          redirect_to wish_failed_subscribers_path(message: 'multiple_restaurants')
+          redirect_to restaurant_failed_subscribers_path(message: 'multiple_restaurants')
+        
+        when "inexistant_restaurant"
+          redirect_to restaurant_failed_subscribers_path(message: 'inexistant_restaurant')
+
         else
           redirect_to root_path
 
@@ -332,9 +337,17 @@ class SubscribersController < ApplicationController
     
       when 'already_recommended'
         @message = 'Tu as déja recommandé ce restaurant'
-      
+
+      else 
+        @message = 'Une erreur s\'est produite lors de l\'ajout du restaurant à ta wishlist, ré-essaie un peu plus tard'
+
+    end
+  end
+
+  def restaurant_failed
+    case params['message']
       when 'inexistant_restaurant'
-        @message = 'Le restaurant que tu essaies de mettre sur ta wishlist n\'existe pas :\'('
+        @message = 'Le restaurant que tu essaies de mettre sur ta wishlist n\'existe pas dans notre base de données :\'( Nous allors y remédier au plus vite.'
 
       when 'multiple_restaurants'
         @message = 'Une erreur s\'est produite lors de l\'ajout du restaurant à ta wishlist, ré-essaie un peu plus tard'
@@ -393,10 +406,11 @@ class SubscribersController < ApplicationController
       )
       @origin = 'foursquare'
     else
-      # plusieurs restaurants correspondent à la recherche
+      # pas de restaurants correspondent à la recherche
+      @error_message = 'inexistant_restaurant'
+
       if Rails.env.production? == true
-        @tracker.track('Multiple restaurants found', { 'url' => url })
-        error_message = 'multiple_restaurants'
+        @tracker.track('No restaurants found', { 'url' => url })
       end
     end
   end
