@@ -159,6 +159,7 @@ Rails.application.routes.draw do
       resources :sessions, only: [:create] do
         collection do
           post :update_infos
+          post :android_session
         end
       end
       resources :activities, only: [:index, :show]

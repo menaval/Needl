@@ -48,6 +48,16 @@ class Api::V3::SessionsController < ApplicationController
     # http://localhost:3000/api/sessions.json?user[email]=yolo4@gmail.co&user[password]=12345678
   end
 
+  def android_session
+    @user = User.find_by(android_temporary_token: params['android_temporary_token'])
+
+    if @user != nil
+      render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
+    else
+      render(json: {error_message: "invalid_connection"}, status: 401)
+    end
+  end
+
   def update_infos
     @user = User.find_by(authentication_token: params["user_token"])
     render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
