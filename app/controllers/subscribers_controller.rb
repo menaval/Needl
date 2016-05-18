@@ -183,6 +183,17 @@ class SubscribersController < ApplicationController
     if current_user == nil
       redirect_to root_path
     end
+
+    case params['message']
+      when 'account_creation'
+        @message_welcome = "<h1>Bienvenue sur Needl !</h1><h2>Needl c'est l'application pour trouver où diner en moins de 5 minutes !</h2>"
+        @message = "<h3>Ton restaurant a bien été ajouté à ta wishlist ! Tu peux le retrouver sur l'application, disponible sur l'AppStore.</h3>"
+
+      else 
+        @message_welcome = nil
+        @message = "<h2>Ton restaurant a bien été ajouté à ta wishlist ! Tu peux le retrouver sur l'application, disponible sur l'AppStore.</h2>"
+
+    end
   end
 
   def wish_failed

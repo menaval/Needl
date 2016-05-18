@@ -118,16 +118,33 @@
     flex-direction: column;
 
     h1 {
-      margin: 10px 0 50px 0;
+      margin: 0 0 10px 0;
+      font-size: 20pt;
+      text-align: center;
+      color: $blue;
+    }
+
+    h2 {
+      margin: 0 20px 10px 20px;
+      font-size: 16pt;
+      text-align: center;
+      color: $blue;
+    }
+
+    h3 {
+      margin: 30px 0 10px 0;
+      font-size: 14pt;
+      text-align: center;
       color: $blue;
     }
 
     .logo {
       height: 80px;
-      margin: 0 0 15px 0;
+      margin: 10px 0 30px 0;
     }
 
-    a {
+    .download {
+      margin: 40px 0 0 0;
       img {
         width: 200px;
       }
