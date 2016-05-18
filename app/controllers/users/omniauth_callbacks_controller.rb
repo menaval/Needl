@@ -16,7 +16,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if @user.persisted?
       if request.env['omniauth.params']['origin'] == 'app'
-        redirect_to 'needl://connection?token=' +  @user.authentication_token
+        render json: {user: @user, nb_recos: Restaurant.joins(:recommendations).where(recommendations: { user_id: @user.id }).count, nb_wishes: Restaurant.joins(:wishes).where(wishes: {user_id: @user.id}).count}
       else
         sign_in @user
         if @user.sign_in_count == 2
