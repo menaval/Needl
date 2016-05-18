@@ -42,17 +42,17 @@ gem 'twilio-ruby', '~> 4.2.1'
 gem "uglifier"
 
 group :development, :test do
-  gem "spring"
   gem "annotate"
-  gem "binding_of_caller"
   gem "better_errors"
-  gem "quiet_assets"
+  gem "binding_of_caller"
+  gem "letter_opener"
   gem "pry-byebug"
   gem "pry-rails"
-  gem "letter_opener"
+  gem "quiet_assets"
+  gem "spring"
 end
 
 group :production do
-  gem "rails_12factor"
   gem "passenger"
+  gem "rails_12factor"
 end
