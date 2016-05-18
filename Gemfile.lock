@@ -388,7 +388,7 @@ DEPENDENCIES
   quiet_assets
   rack-mini-profiler
   rails (= 4.2.0)
-  rails-assets-underscore
+  rails-assets-underscore!
   rails-i18n
   rails_12factor
   sass-rails (~> 5.0)
