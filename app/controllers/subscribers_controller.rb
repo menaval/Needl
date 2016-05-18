@@ -29,7 +29,7 @@ class SubscribersController < ApplicationController
     url = request.referer
 
     if Rails.env.development? == true
-      url = 'http://716lavie.com/hyotan-paris-75008-2/'
+      url = 'http://italieaparis.net/adresses/adr/pizzeria-mipi'
     end
 
     if url != '' && url != nil

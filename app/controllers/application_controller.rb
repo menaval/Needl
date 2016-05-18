@@ -372,7 +372,7 @@ class ApplicationController < ActionController::Base
 
   def after_sign_in_path_for(resource_or_scope)
     if current_user.id == 40 || current_user.id == 49 || current_user.id == 426
-      restaurants_path
+      admin_root_path
     else
       sign_out
       root_path

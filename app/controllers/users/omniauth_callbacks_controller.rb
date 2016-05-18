@@ -15,93 +15,97 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     # end
 
     if @user.persisted?
-      sign_in @user
-      if @user.sign_in_count == 2
-        # Création de compte
-
-        # On track l'arrivée sur Mixpanel
-
-        # les personnes suivent automatiquement les influenceurs
-        User.where(public: true).each do |influencer|
-          Followership.create(follower_id: @user.id, following_id: influencer.id)
-        end
-
-        @tracker.people.set(@user.id, {
-          "gender" => @user.gender,
-          "name" => @user.name,
-          "$email": @user.email
-        })
-
-        if request.env['omniauth.params']['influencer_id'] != nil
-          @tracker.track(@user.id, 'signup', {"@user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name } )
-        end
-
-        accept_all_friends
-
-        if @user.email.include?("needlapp.com") == false && Rails.env.development? != true
-
-          begin
-            @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
-            @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
-            @gibbon.lists(@list_id).members.create(
-              body: {
-                email_address: @user.email,
-                status: "subscribed",
-                merge_fields: {
-                  FNAME: @user.name.partition(" ").first,
-                  LNAME: @user.name.partition(" ").last,
-                  TOKEN: @user.authentication_token,
-                  GENDER: @user.gender ? @user.gender : ""
-                }
-              }
-            )
-          rescue Gibbon::MailChimpError
-            # MailChimpError
-          end
-
-        end
-
-        if request.env['omniauth.params'].length > 0 && request.env['omniauth.params']['from'] == 'wish'
-          restaurant_id = request.env['omniauth.params']['restaurant_id'].to_i
-          if Wish.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
-            # already wishlisted
-            redirect_to wish_failed_subscribers_path(message: 'already_wishlisted')
-          elsif Recommendation.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
-            # already recommended
-            redirect_to wish_failed_subscribers_path(message: 'already_recommended')
-          else
-            Wish.create(user_id: @user.id, restaurant_id: restaurant_id, influencer_id: request.env['omniauth.params']['influencer_id'].to_i)
-            if Rails.env.production? == true
-              @tracker.track(@user.id, 'New Wish', { "restaurant" => Restaurant.find(restaurant_id).name, "user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name })
-            end
-            redirect_to wish_success_subscribers_path(message: 'account_creation')
-          end
-        else
-          redirect_to new_recommendation_path, notice: "Partage ta première reco avant de découvrir celles de tes amis"
-        end
+      if request.env['omniauth.params']['origin'] == 'app'
+        redirect_to 'needl://connection?token=' +  @user.authentication_token
       else
-        # Log in
-        if request.env['omniauth.params']['influencer_id'] != nil
-          @tracker.track(@user.id, 'signin', {"user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name } )
-        end
-        if request.env['omniauth.params'].length > 0 && request.env['omniauth.params']['from'] == 'wish'
-          restaurant_id = request.env['omniauth.params']['restaurant_id'].to_i
-          if Wish.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
-            # already wishlisted
-            redirect_to wish_failed_subscribers_path(message: 'already_wishlisted')
-          elsif Recommendation.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
-            # already recommended
-            redirect_to wish_failed_subscribers_path(message: 'already_recommended')
-          else
-            Wish.create(user_id: @user.id, restaurant_id: restaurant_id, influencer_id: request.env['omniauth.params']['influencer_id'].to_i)
-            if Rails.env.production? == true
-              @tracker.track(@user.id, 'New Wish', { "restaurant" => Restaurant.find(restaurant_id).name, "user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name })
-            end
-            redirect_to wish_success_subscribers_path
+        sign_in @user
+        if @user.sign_in_count == 2
+          # Création de compte
+
+          # On track l'arrivée sur Mixpanel
+
+          # les personnes suivent automatiquement les influenceurs
+          User.where(public: true).each do |influencer|
+            Followership.create(follower_id: @user.id, following_id: influencer.id)
           end
 
+          @tracker.people.set(@user.id, {
+            "gender" => @user.gender,
+            "name" => @user.name,
+            "$email": @user.email
+          })
+
+          if request.env['omniauth.params']['influencer_id'] != nil
+            @tracker.track(@user.id, 'signup', {"@user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name } )
+          end
+
+          accept_all_friends
+
+          if @user.email.include?("needlapp.com") == false && Rails.env.development? != true
+
+            begin
+              @gibbon = Gibbon::Request.new(api_key: ENV['MAILCHIMP_API_KEY'])
+              @list_id = ENV['MAILCHIMP_LIST_ID_NEEDL_USERS']
+              @gibbon.lists(@list_id).members.create(
+                body: {
+                  email_address: @user.email,
+                  status: "subscribed",
+                  merge_fields: {
+                    FNAME: @user.name.partition(" ").first,
+                    LNAME: @user.name.partition(" ").last,
+                    TOKEN: @user.authentication_token,
+                    GENDER: @user.gender ? @user.gender : ""
+                  }
+                }
+              )
+            rescue Gibbon::MailChimpError
+              # MailChimpError
+            end
+
+          end
+
+          if request.env['omniauth.params'].length > 0 && request.env['omniauth.params']['from'] == 'wish'
+            restaurant_id = request.env['omniauth.params']['restaurant_id'].to_i
+            if Wish.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
+              # already wishlisted
+              redirect_to wish_failed_subscribers_path(message: 'already_wishlisted')
+            elsif Recommendation.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
+              # already recommended
+              redirect_to wish_failed_subscribers_path(message: 'already_recommended')
+            else
+              Wish.create(user_id: @user.id, restaurant_id: restaurant_id, influencer_id: request.env['omniauth.params']['influencer_id'].to_i)
+              if Rails.env.production? == true
+                @tracker.track(@user.id, 'New Wish', { "restaurant" => Restaurant.find(restaurant_id).name, "user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name })
+              end
+              redirect_to wish_success_subscribers_path(message: 'account_creation')
+            end
+          else
+            redirect_to new_recommendation_path, notice: "Partage ta première reco avant de découvrir celles de tes amis"
+          end
         else
-          redirect_to root_path
+          # Log in
+          if request.env['omniauth.params']['influencer_id'] != nil
+            @tracker.track(@user.id, 'signin', {"user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name } )
+          end
+          if request.env['omniauth.params'].length > 0 && request.env['omniauth.params']['from'] == 'wish'
+            restaurant_id = request.env['omniauth.params']['restaurant_id'].to_i
+            if Wish.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
+              # already wishlisted
+              redirect_to wish_failed_subscribers_path(message: 'already_wishlisted')
+            elsif Recommendation.where(user_id: @user.id, restaurant_id: restaurant_id).length > 0
+              # already recommended
+              redirect_to wish_failed_subscribers_path(message: 'already_recommended')
+            else
+              Wish.create(user_id: @user.id, restaurant_id: restaurant_id, influencer_id: request.env['omniauth.params']['influencer_id'].to_i)
+              if Rails.env.production? == true
+                @tracker.track(@user.id, 'New Wish', { "restaurant" => Restaurant.find(restaurant_id).name, "user" => @user.name, "source" => "influencer", "influencer" => User.find(request.env['omniauth.params']['influencer_id'].to_i).name })
+              end
+              redirect_to wish_success_subscribers_path
+            end
+
+          else
+            redirect_to root_path
+          end
         end
       end
 
