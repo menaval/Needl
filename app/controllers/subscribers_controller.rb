@@ -26,11 +26,11 @@ class SubscribersController < ApplicationController
     delta_latitude = 0.0004
     delta_longitude = 0.0008
 
-    if Rails.env.production? == true
-      @tracker.track('Wishlist Page From Influencer', { "influencer" => User.find(params['influencer_id'].to_i).name })
-    end
-
     url = request.referer
+
+    if Rails.env.development? == true
+      url = 'http://www.italieaparis.net/adresses/adr/il-quadrifoglio-pizza-au-levain-naturel'
+    end
 
     if url != '' && url != nil
       domain = URI.parse(url).host.sub(/^www\./, '')
@@ -39,9 +39,31 @@ class SubscribersController < ApplicationController
     end
 
     case domain
+      when "italieaparis.net"
+        if Rails.env.development? == true
+          puts 'from italieaparis.net'
+        end
+
+        if Rails.env.production? == true
+          influencer = User.find(854)
+          @tracker.track('Wishlist Page From Influencer', {"influencer" => influencer.name})
+        end
+
+        page = Nokogiri.HTML(open(url))
+
+        restaurant_name = page.css('div.infos li')[0].text.strip
+        restaurant_name_in_array = restaurant_name.split(" ")
+        restaurant_address = page.css('div.infos li')[1].text.strip
+        restaurant_ids = []
+
       when "716lavie.com"
         if Rails.env.development? == true
           puts 'from 716lavie.com'
+        end
+
+        if Rails.env.production? == true
+          influencer = User.find(920)
+          @tracker.track('Wishlist Page From Influencer', {"influencer" => influencer.name})
         end
 
         page = Nokogiri.HTML(open(url))
@@ -51,10 +73,14 @@ class SubscribersController < ApplicationController
         restaurant_address = page.css('div.foodadress').text.strip
         restaurant_ids = []
 
-
       when "mademoisellebonplan.fr"
         if Rails.env.development? == true
           puts 'from mademoisellebonplan.fr'
+        end
+
+        if Rails.env.production? == true
+          influencer = User.find(759)
+          @tracker.track('Wishlist Page From Influencer', {"influencer" => influencer.name})
         end
 
         page = Nokogiri.HTML(open(url))
@@ -67,6 +93,11 @@ class SubscribersController < ApplicationController
       when "glutencorner.com"
         if Rails.env.development? == true
           puts 'from glutencorner.com'
+        end
+
+        if Rails.env.production? == true
+          influencer = User.find(765)
+          @tracker.track('Wishlist Page From Influencer', {"influencer" => influencer.name})
         end
 
         page = Nokogiri.HTML(open(url))
@@ -91,6 +122,11 @@ class SubscribersController < ApplicationController
       when "because-gus.com"
         if Rails.env.development? == true
           puts 'from because-gus.com'
+        end
+
+        if Rails.env.production? == true
+          influencer = User.find(852)
+          @tracker.track('Wishlist Page From Influencer', {"influencer" => influencer.name})
         end
 
         page = Nokogiri.HTML(open(url))
@@ -184,6 +220,10 @@ class SubscribersController < ApplicationController
 
     end
 
+    if Rails.env.development? == true 
+      influencer = User.find(1)
+    end
+
     if Geocoder.search(restaurant_address).first != nil
       latitude = Geocoder.search(restaurant_address).first.data["geometry"]["location"]["lat"]
       longitude = Geocoder.search(restaurant_address).first.data["geometry"]["location"]["lng"]
@@ -224,11 +264,9 @@ class SubscribersController < ApplicationController
       error_message = 'error_with_geocoder'
     end
 
-    if @restaurant != nil && params['influencer_id'] != nil && params['influencer_id'].to_i != 0 && User.where(id: params['influencer_id'].to_i).length == 1
+    if @restaurant != nil
       if current_user != nil 
         # is already looged in, add wish immediately
-        influencer = User.find(params['influencer_id'].to_i)
-
         if Wish.where(user_id: current_user.id, restaurant_id: @restaurant.id).length > 0
           # already wishlisted
           redirect_to wish_failed_subscribers_path(message: 'already_wishlisted')
@@ -248,7 +286,7 @@ class SubscribersController < ApplicationController
         @user = User.new
 
         if (@restaurant != nil)
-          @influencer_id = User.find(params['influencer_id'].to_i).id
+          @influencer_id = influencer.id
           @picture = @restaurant.restaurant_pictures.first ? @restaurant.restaurant_pictures.first.picture : @restaurant.picture_url
         else
           redirect_to wish_failed_subscribers_path(message: 'inexistant_restaurant')
