@@ -16,7 +16,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if @user.persisted?
       if request.env['omniauth.params']['origin'] == 'app'
-        redirect_to 'needl://user'
+        redirect_to new_subscribers_path
       else
         sign_in @user
         if @user.sign_in_count == 2

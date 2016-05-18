@@ -31,7 +31,7 @@ Rails.application.routes.draw do
 
   resources :not_interested_relations, only: [:create]
 
-  resources :subscribers, only: [:create] do
+  resources :subscribers, only: [:new, :create] do
     collection do
       get :login
       get :wish_success

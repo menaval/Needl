@@ -22,6 +22,10 @@ class SubscribersController < ApplicationController
     redirect_to root_path(:subscribed => true)
   end
 
+  def new
+    @message = 'SUCCESS'
+  end
+
   def login
     delta_latitude = 0.0004
     delta_longitude = 0.0008
