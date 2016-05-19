@@ -23,7 +23,9 @@ class SubscribersController < ApplicationController
   end
 
   def new
-    @message = 'SUCCESS'
+    if params['message'] == 'facebook_link'
+      @facebook_link = true
+    end
   end
 
   def login
