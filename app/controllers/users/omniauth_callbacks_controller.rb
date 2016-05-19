@@ -2,7 +2,8 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def facebook
     if request.env['omniauth.params']['action'] == 'facebook_link'
-      link_account_to_facebook(request.env["omniauth.auth"], 'facebook_link')
+      user = User.find_by(authentication_token: request.env['omniauth.params']['user_token'])
+      link_account_to_facebook(request.env["omniauth.auth"], 'facebook_link', user)
     else
       @user = User.find_for_facebook_oauth(request.env["omniauth.auth"])
       if @user.token_expiry  && @user.token_expiry < Time.now
@@ -216,8 +217,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     end
   end
 
-  def link_account_to_facebook(auth, callback)
-    @user = User.find_by(authentication_token: params["user_token"])
+  def link_account_to_facebook(auth, callback, user)
+    if callback == 'facebook_link'
+      @user = user
+    else
+      @user = User.find_by(authentication_token: params["user_token"])
+    end
     @user.link_account_to_facebook(auth)
     @tracker.track(@user.id, 'Account Linked to Facebook', {"user" => @user.name} )
     accept_new_friends
