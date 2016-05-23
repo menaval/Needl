@@ -46,4 +46,13 @@ class Api::V3::ActivitiesController < ApplicationController
 
   end
 
+  def marked_as_read
+    user = User.find_by(authentication_token: params["user_token"])
+    date = Time.now
+    user.notifications_read_date = date
+    user.save
+
+    render json: {message: "sucess", notification_date: date}
+  end
+
 end
