@@ -162,7 +162,11 @@ Rails.application.routes.draw do
           post :android_session
         end
       end
-      resources :activities, only: [:index, :show]
+      resources :activities, only: [:index, :show] do
+        collection do
+          get :marked_as_read
+        end
+      end
       resources :user_wishlist_pictures, only: [:new, :create]
       resources :restaurants, only: [:show, :index, :update] do
         collection do
