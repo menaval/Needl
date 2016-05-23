@@ -26,6 +26,7 @@ json.followings_onboarding     @user.followings_onboarding
 json.profile_onboarding        @user.profile_onboarding
 json.recommendation_onboarding @user.recommendation_onboarding
 if @user.id == @myself.id
+  json.notifications_read_date @user.notifications_read_date
   json.thanks                  @thanks
   json.provider                @user.provider
 end
