@@ -36,7 +36,7 @@ class SubscribersController < ApplicationController
     @client_ip = request.remote_ip
 
     if Rails.env.development? == true
-      url = 'http://italieaparis.net/adresses/adr/pizzeria-mipi'
+      url = 'http://www.glutencorner.com/restaurant/lula-lifestyle-shop-cantine-bio-paris-10e/'
     end
 
     if url != '' && url != nil
@@ -243,7 +243,7 @@ class SubscribersController < ApplicationController
         # search in title
         restaurants.each do |restaurant|
           restaurant_name_in_array.each do |word|
-            if is_comparable_in_title(word) && (restaurant.name.include? word)
+            if is_comparable_in_title(word) && (restaurant.name.downcase.include? word.downcase)
               restaurant_ids << restaurant.id
               found_restaurant = true
             end
