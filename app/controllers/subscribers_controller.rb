@@ -422,7 +422,7 @@ class SubscribersController < ApplicationController
       # pas de restaurants correspondent à la recherche
       @error_message = 'inexistant_restaurant'
 
-      if Rails.env.production? == true && tracked == false
+      if Rails.env.production? == true
         @tracker.track(@client_ip, 'No restaurants found', { 'url' => url })
       end
     end
