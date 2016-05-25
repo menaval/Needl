@@ -33,6 +33,7 @@ class SubscribersController < ApplicationController
     delta_longitude = 0.0008
 
     url = request.referer
+    client_ip = request.remote_ip
 
     if Rails.env.development? == true
       url = 'http://italieaparis.net/adresses/adr/pizzeria-mipi'
@@ -52,7 +53,7 @@ class SubscribersController < ApplicationController
 
         if Rails.env.production? == true
           influencer = User.find(854)
-          @tracker.track('--', 'Wishlist Page From Influencer', {"influencer" => influencer.name})
+          @tracker.track(client_ip, 'Wishlist Page From Influencer', {"influencer" => influencer.name})
         end
 
         page = Nokogiri.HTML(open(url))
@@ -69,7 +70,7 @@ class SubscribersController < ApplicationController
 
         if Rails.env.production? == true
           influencer = User.find(920)
-          @tracker.track('--', 'Wishlist Page From Influencer', {"influencer" => influencer.name})
+          @tracker.track(client_ip, 'Wishlist Page From Influencer', {"influencer" => influencer.name})
         end
 
         page = Nokogiri.HTML(open(url))
@@ -86,7 +87,7 @@ class SubscribersController < ApplicationController
 
         if Rails.env.production? == true
           influencer = User.find(759)
-          @tracker.track('--', 'Wishlist Page From Influencer', {"influencer" => influencer.name})
+          @tracker.track(client_ip, 'Wishlist Page From Influencer', {"influencer" => influencer.name})
         end
 
         page = Nokogiri.HTML(open(url))
@@ -103,7 +104,7 @@ class SubscribersController < ApplicationController
 
         if Rails.env.production? == true
           influencer = User.find(765)
-          @tracker.track('--', 'Wishlist Page From Influencer', {"influencer" => influencer.name})
+          @tracker.track(client_ip, 'Wishlist Page From Influencer', {"influencer" => influencer.name})
         end
 
         page = Nokogiri.HTML(open(url))
@@ -132,7 +133,7 @@ class SubscribersController < ApplicationController
 
         if Rails.env.production? == true
           influencer = User.find(852)
-          @tracker.track('--', 'Wishlist Page From Influencer', {"influencer" => influencer.name})
+          @tracker.track(client_ip, 'Wishlist Page From Influencer', {"influencer" => influencer.name})
         end
 
         page = Nokogiri.HTML(open(url))
@@ -190,7 +191,7 @@ class SubscribersController < ApplicationController
               end
 
               if Rails.env.production? == true
-                @tracker.track('--', 'Crawling failed', {'url' => url})
+                @tracker.track(client_ip, 'Crawling failed', {'url' => url})
               end
 
               restaurant_address = ''
@@ -203,7 +204,7 @@ class SubscribersController < ApplicationController
             end
 
             if Rails.env.production? == true
-              @tracker.track('--', 'Crawling failed', {'url' => url})
+              @tracker.track(client_ip, 'Crawling failed', {'url' => url})
             end
 
             restaurant_address = ''
@@ -261,7 +262,7 @@ class SubscribersController < ApplicationController
           @error_message = 'multiple_restaurants'
 
           if Rails.env.production? == true
-            @tracker.track('--', 'Multiple restaurants found', {'url' => url})
+            @tracker.track(client_ip, 'Multiple restaurants found', {'url' => url})
           end
         end
       end
@@ -416,7 +417,7 @@ class SubscribersController < ApplicationController
       @error_message = 'inexistant_restaurant'
 
       if Rails.env.production? == true
-        @tracker.track('--', 'No restaurants found', { 'url' => url })
+        @tracker.track(client_ip, 'No restaurants found', { 'url' => url })
       end
     end
   end
