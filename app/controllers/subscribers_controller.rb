@@ -238,15 +238,21 @@ class SubscribersController < ApplicationController
       restaurants = Restaurant.where(["latitude < ? and latitude > ? and longitude < ? and longitude > ?", latitude + delta_latitude, latitude - delta_latitude, longitude + delta_longitude, longitude - delta_longitude])
 
       if restaurants != nil && restaurants.length > 0
+        found_restaurant = false
+
+        # search in title
         restaurants.each do |restaurant|
           restaurant_name_in_array.each do |word|
             if is_comparable_in_title(word) && (restaurant.name.include? word)
               restaurant_ids << restaurant.id
-            else
-              # no words in common in the title
-              search_in_foursquare(restaurant_name, latitude, longitude, url)
+              found_restaurant = true
             end
           end
+        end
+
+        # no words in common in the title => search in foursquare
+        if found_restaurant == false
+          search_in_foursquare(restaurant_name, latitude, longitude, url)
         end
       else
         # no restaurants in specified zone in db, we search in Foursquare
@@ -416,7 +422,7 @@ class SubscribersController < ApplicationController
       # pas de restaurants correspondent à la recherche
       @error_message = 'inexistant_restaurant'
 
-      if Rails.env.production? == true
+      if Rails.env.production? == true && tracked == false
         @tracker.track(@client_ip, 'No restaurants found', { 'url' => url })
       end
     end
