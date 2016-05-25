@@ -52,7 +52,7 @@ class SubscribersController < ApplicationController
 
         if Rails.env.production? == true
           influencer = User.find(854)
-          @tracker.track('Wishlist Page From Influencer', {"influencer" => influencer.name})
+          @tracker.track('---', 'Wishlist Page From Influencer', {"influencer" => influencer.name})
         end
 
         page = Nokogiri.HTML(open(url))
@@ -69,7 +69,7 @@ class SubscribersController < ApplicationController
 
         if Rails.env.production? == true
           influencer = User.find(920)
-          @tracker.track('Wishlist Page From Influencer', {"influencer" => influencer.name})
+          @tracker.track('---', 'Wishlist Page From Influencer', {"influencer" => influencer.name})
         end
 
         page = Nokogiri.HTML(open(url))
@@ -86,7 +86,7 @@ class SubscribersController < ApplicationController
 
         if Rails.env.production? == true
           influencer = User.find(759)
-          @tracker.track('Wishlist Page From Influencer', {"influencer" => influencer.name})
+          @tracker.track('---', 'Wishlist Page From Influencer', {"influencer" => influencer.name})
         end
 
         page = Nokogiri.HTML(open(url))
@@ -103,7 +103,7 @@ class SubscribersController < ApplicationController
 
         if Rails.env.production? == true
           influencer = User.find(765)
-          @tracker.track('Wishlist Page From Influencer', {"influencer" => influencer.name})
+          @tracker.track('---', 'Wishlist Page From Influencer', {"influencer" => influencer.name})
         end
 
         page = Nokogiri.HTML(open(url))
@@ -132,7 +132,7 @@ class SubscribersController < ApplicationController
 
         if Rails.env.production? == true
           influencer = User.find(852)
-          @tracker.track('Wishlist Page From Influencer', {"influencer" => influencer.name})
+          @tracker.track('---', 'Wishlist Page From Influencer', {"influencer" => influencer.name})
         end
 
         page = Nokogiri.HTML(open(url))
