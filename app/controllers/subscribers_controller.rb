@@ -262,13 +262,16 @@ class SubscribersController < ApplicationController
       if restaurant_ids.uniq.length == 1
         @origin = 'db'
         @restaurant = Restaurant.find(restaurant_ids).first
-      else 
+      elsif restaurant_ids.uniq.length > 1
+        @error_message = 'multiple_restaurants'
+        @tracker.track(@client_ip, 'Multiple restaurants found', {'url' => url})
+      else
         if @restaurant == nil
-          # multiple restaurants matching the location and name
-          @error_message = 'multiple_restaurants'
+          # multiple restaurants matching the location and name from fou
+          @error_message = 'inexistant_restaurant'
 
           if Rails.env.production? == true
-            @tracker.track(@client_ip, 'Multiple restaurants found', {'url' => url})
+            @tracker.track(@client_ip, 'No restaurants found', { 'url' => url })
           end
         end
       end
@@ -418,13 +421,6 @@ class SubscribersController < ApplicationController
         foursquare_rating:  first_restaurant.rating
       )
       @origin = 'foursquare'
-    else
-      # pas de restaurants correspondent à la recherche
-      @error_message = 'inexistant_restaurant'
-
-      if Rails.env.production? == true
-        @tracker.track(@client_ip, 'No restaurants found', { 'url' => url })
-      end
     end
   end
 
